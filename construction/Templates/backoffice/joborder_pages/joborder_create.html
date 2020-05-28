@@ -1,0 +1,82 @@
+{% extends 'backoffice/index.html' %}
+{% load static %}
+{% load crispy_forms_tags%}
+{% block content %}
+
+<span class="text-uppercase page-subtitle">Project Task</span>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-inverse-primary">
+        <li class="breadcrumb-item active" aria-current="page">
+        Job Order
+        </li>
+        <li class="breadcrumb-item">
+        <a href="{% url 'joborder_list'%}">Job Order List</a>
+        </li>
+    </ol>
+</nav>   
+<form action="" method="POST" id="">
+    {% csrf_token%}
+    <div class="card">
+        <div class="card-header" id="card_header_content">
+            <h3 style="text-align: center;">Job Order Form</h3>
+        </div>
+        <div class="card-body">
+            <div class="col-lg-12">
+                <div class="row justify-content-center">
+                    <div class="form-group col-md-12">
+                        {{form.projectsite|as_crispy_field}} 
+                    </div>
+                    <div class="form-group col-md-6">
+                        {{form.date|as_crispy_field}}
+                    </div>
+                    <div class="form-group col-md-6">
+                        {{form.duration|as_crispy_field}}
+                    </div>
+                    <div class="form-group col-md-4">
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <th>Personnel</th>
+                        <th>Activity</th>
+                        <th>Duration</th>
+                        <th>Delete</th>
+                    </thead>
+                    {{ formset.management_form }}
+                    {% for form in formset.forms %}
+                    <tr class="formset_row">
+                        <td>{{form.personnel}}</td>
+                        <td>{{form.activity}}</td>
+                        <td>{{form.duration}}</td>
+                        <td>{{form.delete}}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <br>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    {{form.pic|as_crispy_field}}
+                    </div>
+                    <div class="form-group col-md-6">
+                        {{form.whm|as_crispy_field}}
+                    </div>
+                </div>
+            <button type="submit" class="btn btn-outline-primary" style="float:right">Submit</button>
+        </div>
+    </div>
+</form>
+
+{% endblock %}
+{%block javascript%}
+<script type="text/javascript">
+    $('.formset_row').formset({
+        addText: 'Add',
+        deleteText: 'Remove',
+        prefix: '{{ formset.prefix }}'
+    });
+</script>
+{%endblock%}

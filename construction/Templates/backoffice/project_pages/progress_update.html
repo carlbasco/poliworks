@@ -1,0 +1,47 @@
+{% extends 'backoffice/index.html' %}
+{% load static %}
+{% load crispy_forms_tags%}
+{% load humanize %}
+{% block content %}
+
+<div class="col col-md-10 " style="margin:auto;" >
+    <div class="card-header" id="headingOverview">
+        <h2 class="mb-0">Project Progress 
+            <a style="float:right; color:white;"title="Edit Project Progress"><i class="fa fa-edit"></i></a>
+        </h2>
+    </div>
+    <form action="" method="post">
+        {% csrf_token %}
+        <div class="card-body">
+            <div class="row">
+                <div class="chartjs-wrapper col-md-12">
+                    <h4>Project Site: </h4><h3>{{data.projectsite}}</h3>
+                </div>
+                <div class="col-md-12 table-responsive-xl">
+                    <table class="table table-bordered table-responsive-xl" id="table_progress">
+                        <thead>
+                            <th>Scope of Work</th>
+                            <th style="min-width: 150px;">Level</th>
+                            <th style="min-width: 150px;">Status</th>
+                        </thead>
+                        {{ formset.management_form}}
+                        {% for form in formset.forms %}
+                        {{ form.id }}
+                        <tr class="">
+                            <td>{{form.instance.scope_of_work}}</td>
+                            <td>{{form.level}}</td>
+                            <td>{{form.status}}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    <button type="submit" class="btn btn-outline-primary edit-delete-btn">Update</button>
+                    <a href="{% url 'progress_delete' data.id%}" class="btn btn-outline-danger edit-delete-btn">Delete</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
+
+

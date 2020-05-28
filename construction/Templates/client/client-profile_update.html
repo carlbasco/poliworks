@@ -1,0 +1,76 @@
+{% extends 'client/client-base.html'%}
+{% load crispy_forms_tags%}
+{% load static %}
+{% load humanize %}
+{% block content %}
+
+<div class="col-md-7 mx-auto">
+    <div class="card" id="profileupdate">
+        <div class="card-header " id="header_profileupdate">
+            <h2 style="text-align: center;">Edit Profile <a style="float:right; color:white;"title="Edit Project Progress"><i class="fa fa-edit"></i></a></h2>
+        </div>
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token%}
+            <div class=row>
+                <div class="mx-auto text-center" id="image_profileupdate">
+                    <img class="rounded-circle" src="{{request.user.profile.image.url}}" alt="User Avatar" width="110">
+                    <br>
+                    {{profile_form.image}}
+                </div>
+                <div class="card-body">
+                    <div class="col">
+                        <div class="form-row">
+                            <div class="col-md-4">
+                                {{user_form.first_name|as_crispy_field}}
+                            </div>
+                            <div class="col-md-3">
+                                {{user_form.middle_name|as_crispy_field}}
+                            </div>
+                            <div class="col-md-4">
+                                {{user_form.last_name|as_crispy_field}}
+                            </div>
+                            <div class="col-md-1">
+                                {{user_form.suffix|as_crispy_field}}
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                {{profile_form.birthdate|as_crispy_field}}
+                            </div>
+                            <div class="col-md-6">
+                                {{profile_form.sex|as_crispy_field}}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            {{profile_form.address|as_crispy_field}}
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-8">
+                                {{profile_form.zipcode|as_crispy_field}}
+                            </div>
+                            <div class="col-md-4">
+                                {{profile_form.phone|as_crispy_field}}
+                            </div>
+                        </div>
+                        <div class="form-row float_right">
+                            <a class="btn btn-outline-secondary quo-btn" href="{% url 'client_profile' %}" role="button" id="btn">Cancel</a>
+                            <button type="submit" class="btn btn-outline-primary quo-btn">Update</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}
+{% block javascript%}
+<script>
+    $(document).ready(function(){
+    $(function () {
+        $('#id_zipcode').select2()
+    })
+  })
+</script>
+{% endblock %}

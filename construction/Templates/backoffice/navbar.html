@@ -1,0 +1,87 @@
+{% load static %}
+<!-- NAVBAR -->
+<nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+    <div class="text-center navbar-brand-wrapper d-flex align-items-top justify-content-center">
+        <a class="navbar-brand brand-logo" href="{% url 'home'%}"> 
+        <img src="{% static 'images-poli/logo-3.png'%}"  class="d-inline-block align-top" alt=""></a>
+        <a class="navbar-brand brand-logo-mini" href="">
+        <img src="{% static 'images-poli/logo-poliworks.png'%}" alt="logo" /> </a>
+    </div>
+    <div class="navbar-menu-wrapper d-flex align-items-center">
+        <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+            <span class="mdi mdi-menu"></span>
+        </button>
+        <ul class="navbar-nav navbar-nav-left header-links d-none d-md-flex">
+            <!-- <li class="nav-item">
+                <a href="#" class="nav-link">Schedule</a>
+            </li>
+            <li class="nav-item active">
+                <a href="#" class="nav-link">
+                <i class="mdi mdi-elevation-rise"></i>Reports</a>
+            </li> -->
+        </ul>
+        <ul class="navbar-nav navbar-nav-right" id="usernav">
+            <!-- <li class="nav-item dropdown ml-4">
+                <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
+                    <i class="mdi mdi-bell-outline"></i>
+                    <span class="count bg-success">4</span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0" aria-labelledby="notificationDropdown">
+                    <a class="dropdown-item py-3 border-bottom">
+                        <p class="mb-0 font-weight-medium float-left">You have 4 new notifications </p>
+                        <span class="badge badge-pill badge-primary float-right">View all</span>
+                        </a>
+                        <a class="dropdown-item preview-item py-3">
+                        <div class="preview-thumbnail">
+                            <i class="mdi mdi-alert m-auto text-primary"></i>
+                        </div>
+                        <div class="preview-item-content">
+                            <h6 class="preview-subject font-weight-normal text-dark mb-1">Application Error</h6>
+                            <p class="font-weight-light small-text mb-0"> Just now </p>
+                        </div>
+                    </a>
+                    <a class="dropdown-item preview-item py-3">
+                        <div class="preview-thumbnail">
+                            <i class="mdi mdi-settings m-auto text-primary"></i>
+                        </div>
+                        <div class="preview-item-content">
+                            <h6 class="preview-subject font-weight-normal text-dark mb-1">Settings</h6>
+                            <p class="font-weight-light small-text mb-0"> Private message </p>
+                        </div>
+                    </a>
+                    <a class="dropdown-item preview-item py-3">
+                        <div class="preview-thumbnail">
+                            <i class="mdi mdi-airballoon m-auto text-primary"></i>
+                        </div>
+                        <div class="preview-item-content">
+                            <h6 class="preview-subject font-weight-normal text-dark mb-1">New user registration</h6>
+                            <p class="font-weight-light small-text mb-0"> 2 days ago </p>
+                        </div>
+                    </a>
+                </div>
+                    </li> -->
+                    <!-- <li class="nav-item d-none d-lg-block color-setting">
+                    <a class="nav-link" href="#">
+                    <i class="mdi mdi-tune"></i>
+                    </a>
+                </li> -->
+            <li class="nav-item dropdown d-xl-inline-block">
+                <span class="profile-text">Hello, {{request.user.groups.all.0}}</span>
+                <img class="img-xs rounded-circle" src="{{request.user.profile.image.url}}" alt="Profile image">
+            </li>
+            <li class="nav-item dropdown d-xl-inline-block" id="navdrpdwn">
+                <a class="nav-link dropdown-toggle" id="UserDropdown" href="#" data-toggle="dropdown" aria-expanded="false"></a>
+                <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
+                    <a class="dropdown-item" href="{% url 'userprofile'%}">Profile</a>
+                    <a class="dropdown-item" href="{% url 'change_password'%}">Change Password</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{% url 'signout' %}"  id="btn-signout">Sign out</a>
+                </div>
+            </li>
+        </ul>
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+            <span class="icon-menu"></span>
+        </button>
+    </div>
+</nav>
+<!-- END NAVBAR -->

@@ -1,0 +1,12 @@
+{%extends 'backoffice/index.html'%}
+{%load static%}
+{%load crispy% }
+{%load crispy_forms_tags%}
+{% block content %}
+<form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit"> Submit</button>
+</form>
+{%endblock%}
+

@@ -1,0 +1,90 @@
+{% extends 'backoffice/index.html' %}
+{% load static %}
+{% load crispy_forms_tags%}
+{% block content %}
+
+<span class="text-uppercase page-subtitle">Materials</span>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-inverse-primary">
+        <li class="breadcrumb-item active" aria-current="page">
+        External Order Form
+        </li>
+        <li class="breadcrumb-item">
+        <a href="{% url 'externalorder_list'%}">External Order List</a>
+        </li>
+    </ol>
+</nav>   
+<form action="" method="POST" id="">
+    {% csrf_token%}
+    <div class="card">
+        <div class="card-header" id="card_header_content">
+            <h3 style="text-align: center;">External Order Form</h3>
+        </div>
+        <div class="card-body">
+            <div class="col-lg-12">
+                <div class="row justify-content-center">
+                    <div class="form-group col-md-8">
+                        {{form.projectsite|as_crispy_field}} 
+                    </div>
+                    <div class="form-group col-md-4">
+                        {{form.date|as_crispy_field}}
+                    </div>
+                    <div class="form-group col-md-8">
+                        {{form.supplier|as_crispy_field}}
+                    </div>
+                    <div class="form-group col-md-4">
+                        {{form.whm|as_crispy_field}}
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <th>Article</th>
+                        <th>Unit</th>
+                        <th>Quantity</th>
+                        <th>Unit Price</th>
+                        <th>Total Price</th>
+                        <th>Delete</th>
+                    </thead>
+                    {{ formset.management_form }}
+                    {% for i in formset.forms %}
+                    <tr class="formset_row">
+                        <td>{{i.articles}}</td>
+                        <td>{{i.unit}}</td>
+                        <td>{{i.quantity}}</td>
+                        <td>{{i.unitprice}}</td>
+                        <td>{{i.totalprice}}</td>
+                        <td>{{i.delete}}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-8">
+                </div>
+                <div class="form-group col-md-4">
+                    <div class="form-group">
+                      <label for="total_amount">Total Amount</label>
+                      <input type="text"
+                        class="form-control" name="total_amount" id="total_amount" aria-describedby="helpId" placeholder="" value="0" readonly>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <button type="submit" class="btn btn-outline-primary" style="float:right">Submit</button>
+        </div>
+    </div>
+</form>
+{% endblock %}
+
+{%block javascript%}
+<script type="text/javascript">
+    $('.formset_row').formset({
+    addText: 'Add',
+    deleteText: 'Remove',
+    prefix: '{{ formset.prefix }}'
+    });
+</script>
+<script src="{% static 'assets/js/custom/externalorder.js'%}"></script>
+{%endblock%}

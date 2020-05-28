@@ -1,0 +1,176 @@
+{% load static %}
+<!-- SIDEBAR -->
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
+    <ul class="nav">
+        <li class="nav-item nav-profile">
+            <div class="nav-link">
+                <div class="user-wrapper">
+                    <div class="profile-image">
+                        <a href="{% url 'userprofile'%}">
+                            <img src="{{request.user.profile.image.url}}" alt="profile image"> 
+                        </a>
+                    </div>
+                    <div class="text-wrapper">
+                        <p class="profile-name">{{request.user}}</p>
+                        <div>
+                            <small class="designation text-muted">{{request.user.groups.all.0}}</small>
+                            <span class="status-indicator online"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#project-dropdown" aria-expanded="false" aria-controls="project-dropdown">
+                <i class="menu-icon mdi mdi-television"></i>
+                <span class="menu-title">Project</span>
+                <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="project-dropdown">
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item">
+                        <form action="{% url 'project_create'%}">
+                            <button class="btn btn-outline-primary btn-sm" id="btn-project">New Project
+                                <i class="mdi mdi-plus"></i>
+                            </button>
+                        </form>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'project_list'%}">List of Projects</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'quotation_create'%}">Quotation</a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#material-dropdown" aria-expanded="false" aria-controls="material-dropdown">
+                <img class="icn" src="https://img.icons8.com/dotty/20/000000/commodity.png">
+                <span class="menu-title">Materials</span>
+                <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="material-dropdown">
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{%url 'requisition_create'%}">Requisition</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'externalorder_create' %}">External Order</a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#account-dropdown" aria-expanded="false" aria-controls="account-dropdown">
+                <i class="menu-icon mdi mdi-account-multiple"></i>
+                <span class="menu-title">Project Task</span>
+                <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="account-dropdown">
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'joborder_create'%}">Job Order</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'rework_create'%}">Rework</a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+
+        <!-- <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#apps-dropdown" aria-expanded="false" aria-controls="apps-dropdown">
+        <i class="menu-icon mdi mdi-dna"></i>
+        <span class="menu-title">Apps</span>
+        <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="apps-dropdown">
+        <ul class="nav flex-column sub-menu">
+        <li class="nav-item">
+        <a class="nav-link" href="#">E-mail</a>
+        </li>
+        <li class="nav-item">
+        <a class="nav-link" href="#">Calendar</a>
+        </li>
+        <li class="nav-item">
+        <a class="nav-link" href="#">Todo List</a>
+        </li>
+        <li class="nav-item">
+        <a class="nav-link" href="#">Gallery</a>
+        </li>
+        </ul>
+        </div>
+        </li> -->
+
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#personnel-dropdown" aria-expanded="false" aria-controls="personnel-dropdown">
+                <i class="menu-icon mdi mdi-account-multiple"></i>
+                <span class="menu-title">Account</span>
+                <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="personnel-dropdown">
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'signupclient' %}">Create Account</a>
+                    </li>
+                    {% if request.user.groups.all.0.name == "Admin"%}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'admin:index'%}">Super User</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#report-dropdown" aria-expanded="false" aria-controls="report-dropdown">
+                <i class="menu-icon mdi mdi-elevation-rise"></i>
+                <span class="menu-title">Reports</span>
+                <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="report-dropdown">
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'issues' %}">Project Issues</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'dailyreport'%}">Daily Report</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Weekly Reports</a>
+                    </li>
+                </ul>
+            </div>
+        </li> 
+
+
+        <li class="nav-item" id="account">
+            <div class="btn-group dropup" >
+                <a class="nav-link " data-toggle="collapse" href="#option" aria-expanded="false" aria-controls="option aria-expanded="Dropup" id="bt-account">
+                    <i class="menu-icon mdi mdi-settings"></i>
+                    <span class="menu-title">Option</span>
+                    <i class="menu-arrow"></i>
+                </a>
+                <div class="dropdown-menu" id="option">
+                    <ul class="nav flex-column sub-menu" id="account_menu">
+                        <li class="nav-item">
+                            <a class="dropdown-item" href="{% url 'userprofile'%}">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="dropdown-item" href="{% url 'change_password'%}">Change Password</a>
+                        </li>
+                        <div class="dropdown-divider"></div>
+                        <li class="nav-item">
+                            <a class="dropdown-item" href="{% url 'signout' %}"  id="btn-signout">Sign out</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+    </ul>
+</nav>
+<!-- END SIDEBAR -->

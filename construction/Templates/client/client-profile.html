@@ -1,0 +1,88 @@
+{% extends 'client/client-base.html'%}
+{% load crispy_forms_tags%}
+{% load static %}
+{% load humanize %}
+{% block content %}
+
+<div class="col-md-8 mx-auto">
+    {% for message in messages %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Success! </strong>{{message}}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endfor %}
+</div>
+<div class="col-md-8 mx-auto pd-100">
+    <div class="card" id="profile">
+        <div class="card-header">
+            <h3>Account Details</h3>
+        </div>
+        <div class="card-body">
+            <div class=row>
+            
+                <div class="mx-auto my-auto text-center">
+                    <img class="rounded-circle" src="{{request.user.profile.image.url}}" alt="User Avatar" width="110">
+                    <br><br>
+                    <form action="">
+                        <button type="submit" class="mb-2 btn btn-sm btn-pill btn-outline-primary mr-2" formaction="{% url 'client_profile_update'%}" >Edit Profile</button>
+                    </form>
+                </div>
+                <div class="col-lg-9">
+                    <div class="col">
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label for="feFirstName">Name</label>
+                                <input type="text" class="form-control" value="{{request.user.full_name}}" readonly>
+                            </div>
+                            
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label>Birthdate</label>
+                                <input class="form-control" value="{{request.user.profile.birthdate}}" readonly>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Sex</label>
+                                <input class="form-control" value="{{request.user.profile.sex}}" readonly>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label>Contact Number</label>
+                                <input class="form-control" value="{{request.user.profile.phone}}" readonly>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Email</label>
+                                <input class="form-control" value="{{request.user.email}}" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Address</label>
+                            <input class="form-control" placeholder="1234 Main St" value="{{request.user.profile.address}}" readonly>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-7">
+                                <label for="feInputCity">Location</label>
+                                <input type="text" class="form-control" value="{{request.user.profile.zipcode.location}}" readonly>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="feInputState">City</label>
+                                <input type="text" class="form-control" value="{{request.user.profile.zipcode.city}}" readonly>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label for="inputZip">Zip Code</label>
+                                <input type="text" class="form-control" value="{{request.user.profile.zipcode.zipcode}}" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+    </div>
+</div>
+
+
+{% endblock %}

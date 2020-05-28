@@ -1,0 +1,80 @@
+a#bullet.navbar-brand{
+    font-weight: bolder;
+    font-size: xx-large;
+}
+nav.navbar .navbar-brand {
+    font-weight: bolder;
+    font-size: x-large;
+}
+a#bullet-sm.navbar-brand{
+    font-weight: bolder;
+    font-size: x-large;
+}
+.py-4{
+    /* background: rgb(38,108,170);
+    background: linear-gradient(45deg, rgba(38,108,170,1) 17%, rgba(177,177,177,1) 17%, rgba(167,172,177,1) 50%, rgba(38,108,170,1) 50%);  */
+    background: linear-gradient(45deg, rgba(177,177,177,1) 0%, rgba(177,177,177,1) 0%);
+}
+.d-sm-inline-block{
+    font-weight: bolder;
+}
+.justify-content-around{
+    margin:auto;
+}
+#contact{
+    margin:auto;
+}
+.pb-5 {
+    padding-bottom: 1rem;
+    padding-top: 1rem;
+    box-shadow: 1px 9px 35px -1px rgba(0,0,0,0.75);
+}
+section.features .text p{
+    font-size:1.3rem;
+}
+section#hero{
+    padding:200px;
+}
+img.img-fluid{
+    box-shadow: -5.665px 9.429px 35px 0px rgba(0, 0, 0, 0.2);
+}
+div.row.contact-details img{
+    margin-right: 15px;
+}
+.carousel-caption {
+    position: relative;
+    left: auto;
+    right: auto;
+}
+.carousel-caption p{
+    color:gray;
+}
+#titleproject{
+    text-align: center;
+}
+.hero-text {
+    font-size: 1.2rem;
+    color: black;
+    background-color: whitesmoke;
+}
+.w-100 {
+    box-shadow: -5.665px 9.429px 35px 0px rgba(0, 0, 0, 0.2);
+}
+@media (max-width: 991px) {
+    section#hero {
+      padding: 100px 0;
+    }
+  }
+  nav.navbar{
+    box-shadow: -5.665px 9.429px 35px 0px rgba(0, 0, 0, 0.2);
+  }
+#hero{
+    background-image: url('../../images-poli/floorplan.png');
+    background-size: cover;
+    background-position: center;
+}
+
+h1#title {
+    color: #00529C;
+    font-size: 3rem;
+}

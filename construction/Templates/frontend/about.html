@@ -1,0 +1,87 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+{% block content %}
+    <!-- navbar-->
+    <header class="header">
+      <nav class="navbar navbar-expand-lg fixed-top">
+        <a class="navbar-brand" href="{% url 'home'%}">
+          <img src="{% static 'images-poli/logo-poliworks.png' %}" width="70" height="35" class="d-inline-block align-top" alt="">
+          Poliworks
+        </a>
+        <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler navbar-toggler-right"><span></span><span></span><span></span></button>
+        <div id="navbarSupportedContent" class="collapse navbar-collapse">
+          <ul class="navbar-nav ml-auto align-items-start align-items-lg-center">
+            <li class="nav-item"><a href="{% url 'home'%}" class="nav-link link-scroll">Home </a></li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+    <section>
+      <div class="container">
+        <div class="row block">
+          <div class="col-lg-9">
+            <ul class="breadcrumb">
+              <li class="breadcrumb-item"><a href="{% url 'home'%}">Home</a></li>
+              <li class="breadcrumb-item">About Us</li>
+            </ul>
+            <h1>Poliworks</h1>
+            <p class="lead">Poliworks Inc. is a private corporation, PCAB licensed contractor, established in October 2012.
+              The company began serving its customers through simple maintenance and minor facilities repair; 
+              then it slowly expanded by offering more extensive construction services adding interior repairs, renovation and project fit outs. 
+              Today, Poliworksis now capable to cater more clients.
+              Being able to cater several industries; from commercial units, warehouses, medical laboratories and clinics, residential condo units and houses.</p>
+          </div>
+        </div>
+        <div class="row d-flex align-items-center block">
+          <div class="col-lg-6 image"><img src="{% static 'images-poli/handshake.png' %}"alt="..." class="img-fluid"></div>
+          <div class="col-lg-6 text">
+            <h2>Putting Value on What's Important</h2>
+            <p>The Company is all about flexibility; because we understand that every customer 
+            has their own ideas and preferences, we strive to incorporate these ideas and 
+            find the best possible outcome for each project, keeping in mind innovation and 
+            above all, quality results. We deliver cost effective solutions to fit any budget 
+            constraints.</p>
+          </div>
+        </div>
+        <div class="row d-flex align-items-center block">
+          <div class="col-lg-6 text text-right order-2 order-lg-1">
+            <p>Whether it is your dream house, corporate office expansion, facilities improvements,
+              building restoration, or an entirely new structure, our team will be there to lend a hand in designing it, offering multiple solutions for your different needs. From the inception to commissioning, to actual fully operational facility, we will endeavor in not only meeting your requirements but exceed expectations.
+              Our clients turn to us for our hands-on approach project management technique and
+              knowledge-driven solutions for their complex construction projects. We are always here to build your ideas!
+              </p>
+          </div>
+          <div class="col-lg-6 image order-1 order-lg-2"><img src="{% static 'images-poli/build.png' %}" alt="..." class="img-fluid"></div>
+        </div>
+        <!-- <div class="block">       
+          <blockquote class="blockquote">
+            <p class="mb-0">Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi. Aenean fermentum</p>
+            <footer class="blockquote-footer">Someone famous in 
+              <cite title="Source Title">Source Title</cite>
+            </footer>
+          </blockquote>
+        </div>
+        <div class="row d-flex align-items-center block">
+          <div class="col-lg-6 image"><img src="img/feature-3.png" alt="..." class="img-fluid"></div>
+          <div class="col-lg-6 text">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus magna. Cras in mi at felis aliquet congue. Ut a est eget ligula molestie gravida. Curabitur massa. Donec eleifend, libero at sagittis mollis, tellus est malesuada tellus, at luctus turpis elit sit amet quam. Vivamus pretium ornare est.</p>
+          </div>
+        </div>
+        <div class="row block no-margin-bottom">
+          <div class="col-lg-9">
+            <p><strong>Pellentesque habitant morbi tristique</strong> senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. <em>Aenean ultricies mi vitae est.</em> Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, <code>commodo vitae</code>, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. <a href="#">Donec non enim</a> in turpis pulvinar facilisis. Ut felis.</p>
+            <h2>Header Level 2</h2>
+            <ol>
+              <li>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</li>
+              <li>Aliquam tincidunt mauris eu risus.</li>
+            </ol>
+            <h3>Header Level 3</h3>
+            <ul>
+              <li>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</li>
+              <li>Aliquam tincidunt mauris eu risus.                    </li>
+            </ul>
+          </div>
+        </div>
+      </div> -->
+    </section>
+{% endblock %}

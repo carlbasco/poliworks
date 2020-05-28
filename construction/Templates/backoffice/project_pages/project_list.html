@@ -1,0 +1,117 @@
+{% extends 'backoffice/index.html' %}
+{% load static %}
+{% load crispy_forms_tags%}
+{% block content %}
+
+<div class="row">
+    <div class="col-md-4 grid-margin stretch-card">
+        <div class="card aligner-wrapper" id="card_completed">
+            <div class="card-body" >
+                <div class="absolute left top bottom h-100 v-strock-2 bg-success"></div>
+                <p class="text-muted mb-2">Completed Projects</p>
+                <div class="d-flex align-items-center">
+                    <h1 class="font-weight-medium mb-2">{{completed}}</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 grid-margin stretch-card" >
+        <div class="card aligner-wrapper" id="card_ongoing">
+            <div class="card-body">
+                <div class="absolute left top bottom h-100 v-strock-2 bg-primary"></div>
+                <p class="text-muted mb-2">On-going Projects</p>
+                <div class="d-flex align-items-center">
+                    <h1 class="font-weight-medium mb-2">{{ongoing}}</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 grid-margin stretch-card">
+        <div class="card aligner-wrapper"id="card_pending">
+            <div class="card-body">
+                <div class="absolute left top bottom h-100 v-strock-2 bg-warning"></div>
+                <p class="text-muted mb-2">Pending Projects</p>
+                <div class="d-flex align-items-center">
+                    <h1 class="font-weight-medium mb-2">{{pending}}</h1>
+                    <!-- <h5 class="font-weight-medium text-success ml-2">+296.6%</h5> -->
+                </div>
+                <!-- <div class="d-flex align-items-center">
+                    <div class="bg-danger dot-indicator"></div>
+                    <p class="text-muted mb-0 ml-2">Payout for next week $100 </p>
+                </div> -->
+            </div>
+        </div>
+      </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+    <h4 class="card-title">List of Projects</h4>
+        <div class="table-responsive">
+            <div class="row">
+                <div class="col-12">
+                    <div id="order-listing_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <table id="order-listing" class="table dataTable no-footer" role="grid" aria-describedby="order-listing_info">
+                                    <thead>
+                                        <tr role="row">
+                                            <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                                aria-label="Project: activate to sort column ascending" style="width: 100px;">Project
+                                            </th>
+                                            <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                                aria-label="Client: activate to sort column ascending" style="width: 71px;">
+                                                Client
+                                            </th>
+                                            <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                                aria-label="Project Manager: activate to sort column ascending" style="width: 51px;">
+                                                Project Manager
+                                            </th>
+                                            <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                                aria-label="Person In-Charge: activate to sort column ascending" style="width: 73px;">
+                                                Person In-Charge
+                                            </th>
+                                            <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                                aria-label="Date Started: activate to sort column ascending" style="width: 52px;">
+                                                Date Started
+                                            </th>
+                                            <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                                aria-label="Status: activate to sort column ascending" style="width: 52px;">
+                                                Status
+                                            </th>
+                                            <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                                ria-label="Actions: activate to sort column ascending" style="width: 53px;">
+                                                Actions
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for i in data%}
+                                        <tr role="row" class="odd">
+                                            <td>{{i.projectsite}}</td>
+                                            <td>{{i.client}}</td>
+                                            <td>{{i.pm}}</td>
+                                            <td>{{i.pic}}</td>
+                                            <td>{{i.startdate}}</td>
+                                            {% if i.status == "Pending" %}
+                                                <td><label class="badge badge-warning">{{i.status}}</label></td>
+                                                {% elif i.status == "On-going"%}
+                                                <td><label class="badge badge-primary">{{i.status}}</label></td>
+                                                {% else%}
+                                                <td><label class="badge badge-success">{{i.status}}</label></td>
+                                            {% endif %}
+                                            <td><a class="btn btn-outline-primary" href="{% url 'project_detail' i.id%}">View</a></td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

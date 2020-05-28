@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Poliworks Inc.</title>
+    <!-- Bootstrap CSS-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" 
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" 
+          crossorigin="anonymous">
+    <!-- Google fonts - Open Sans-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800">
+    <!-- Custom Font Icons CSS-->
+    <link rel="stylesheet" href="{% static 'frontend/css/landy-iconfont.css' %}">
+    <!-- default stylesheet-->
+    <link rel="stylesheet" href="{% static 'frontend/css/style.css' %}">
+    <!-- Custom stylesheet-->
+    <link rel="stylesheet" href="{% static 'frontend/css/custom.css' %}">
+    
+  </head>
+  <body>
+    {% block content%}
+
+    {% endblock %}
+    
+    {% include 'frontend/footer.html' %}
+    <!-- Javascript files-->
+    {% block extra_js %}
+    {% endblock extra_js %}
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"> </script>
+    <script src="{%static 'frontend/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{%static 'frontend/vendor/jquery.cookie/jquery.cookie.js' %}"> </script>
+    <script src="{%static 'frontend/vendor/owl.carousel/owl.carousel.min.js' %}"></script>
+    <script src="{%static 'frontend/js/front.js' %}"></script>
+  </body>
+</html>

@@ -1,0 +1,181 @@
+#navbar{
+    width: 100%;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    transition: all 0.5s;
+    margin-bottom: 50px;
+    box-shadow: 0px -14px 43px 0px rgba(0,0,0,0.75);
+}
+.navbar-brand {
+    font-weight: bolder;
+    font-size: x-large;
+}
+a, p, h1, h2, h3 , h4 ,h5, h6{
+    font-family: "Open Sans", sans-serif;
+}
+a.nav-link{
+    font-size: 1.1rem;
+    color: black;
+}
+@media (min-width: 992px){
+    #navbar{
+        padding-left: 3rem;
+        padding-right: 3rem;
+    }
+}
+@media(max-width:992px){
+    a.navbar-brand{
+        margin:auto;
+    }
+}
+li.projectdetails{
+    padding-bottom:20px;
+}
+.card-header{
+    background-color: rgba(38,108,170,1);
+    color:white;
+    text-align: center;
+}
+.btn-cardheader{
+    color:white;
+}
+.btn-cardheader:hover, .btn-cardheader:active{
+    color: white;
+    font-weight: bolder;
+    text-decoration: none;
+}
+
+.ul-projectdetails{
+    padding-left: 0;
+    margin-top: 1rem;
+    list-style-type:none;
+}
+a#btn-signout{
+    border-color:white;
+    text-align: center!important;
+
+}
+#btn-signout:hover{
+    color: #fff;
+    background-color: #dc3545;
+}
+a.dropdown-item:hover{
+    background-color:#428bca;
+}
+.dropdown-menu {
+    display: block;
+    visibility: hidden;
+    opacity:0;
+    transform: translateY(50px);
+    transition:.5s ease all;
+}
+.dropdown-menu.show {
+    display: block;
+    visibility: visible;
+    opacity:1;
+    transform: translateY(0px);
+    transition:.5s ease all;
+    margin-left: 20px;
+}
+.dropdown-item{
+    text-align: center!important;
+}
+#profile_image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+#profile_link{
+    margin-top: -5px;
+}
+li.nav-item{
+    padding-right: 15px;
+    text-align: center;
+}
+#profile_link{
+    color:black;
+    text-decoration: none;
+}
+#profile_link:hover{
+    font-weight: bold;
+}
+div#accordion {
+    margin-bottom: 20px;
+}
+#foot {
+    background-color: lightgray!important;
+    left: 0!important;
+    bottom: 0!important;
+    width: 100%!important;
+    padding-bottom: 1.5rem!important;
+
+}
+div#accordionExample {
+    margin-bottom: 25px;
+}
+body {
+    background-color: whitesmoke;
+}
+.quo-btn{
+    width:130px;
+    margin:10px;
+    float: right;
+}
+h6.sub{
+    color:gray;
+}
+.boldtxt{
+    color:black;
+    font-weight: bold;
+}
+.modal-footer {
+    background-color: #ecf0f1;
+}
+h5#exampleModalLabel {
+    font-weight: 600;
+    padding-left: 20px;
+}
+.modal-header {
+    border-bottom: 0;
+}
+p.ptxt {
+    padding-left: 20px;
+    color: gray;
+}
+
+.center{
+    text-align: center;
+}
+.td_100{
+    width: 100px;
+}
+.scope{
+    min-width: 250px;
+}
+div#image_profileupdate{
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+#change_password{
+    padding-bottom: 100px;
+}
+.float_right{
+    float: right;
+}
+ #profileupdate {
+    padding-bottom: 100px;
+    border: 0;
+}
+
+#profile{
+    border:0;
+}
+
+#my_project, #view_project  {
+    padding-bottom: 50px;
+}
+
+.pd-100{
+    padding-bottom:100px
+}

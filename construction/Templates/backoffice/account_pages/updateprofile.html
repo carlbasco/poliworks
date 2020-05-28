@@ -1,0 +1,88 @@
+{% extends 'backoffice/index.html' %}
+{% load static %}
+{% load crispy_forms_tags %}          
+{% block content %}
+<div class="col-lg-8" style="margin:auto;">
+    <div class="card ">
+        <div class="card-header " id="card_header_content">
+            <h3 style="text-align: center;">User Profile <a style="float:right; color:white;"title="Edit Project Progress"><i class="fa fa-edit"></i></a></h3>
+        </div>
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token%}
+            <div class=row>
+                <div class="mx-auto text-center">
+                    <div id="pf">
+                        <img class="rounded-circle" src="{{request.user.profile.image.url}}" alt="User Avatar" width="110">
+                        <br>
+                        <h4 class="mb-0">{{user.groups.all.0}}</h4>
+                        <br>
+                        <div id="customprofilepic">
+                            {{profile_form.image}}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="mb-4">
+                        <div class="card-header border-bottom">
+                            <h4>Account Details</h4>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item p-3">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-row">
+                                            <div class="form-group col-md-4">
+                                                {{user_form.first_name|as_crispy_field}}
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                {{user_form.middle_name|as_crispy_field}}
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                {{user_form.last_name|as_crispy_field}}
+                                            </div>
+                                            <div class="form-group col-md-1">
+                                                {{user_form.suffix|as_crispy_field}}
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6">
+                                                {{profile_form.birthdate|as_crispy_field}}
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                {{profile_form.sex|as_crispy_field}}
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            {{profile_form.address|as_crispy_field}}
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6">
+                                                {{profile_form.province|as_crispy_field}}
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                {{profile_form.city|as_crispy_field}}
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            {{profile_form.phone|as_crispy_field}}
+                                        </div>
+                                        <div class="form-row" style="float: right;">
+                                            <a href="{% url 'userprofile'%}" class="btn btn-outline-secondary ">Cancel</a>
+                                            <button type="submit" class="btn btn-outline-primary" >Update</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript%}
+<script src="{% static 'assets/js/custom/province-city.js'%}"></script>
+<style>span.select2-selection.select2-selection--single {height: 35px;}</style>
+{% endblock %}

@@ -1,0 +1,10 @@
+#bg-site{
+    background: url("../../images-poli/build.png") no-repeat center center;
+        background-size: cover;
+}
+html, body {
+    height: 100%;
+  }
+  .full-height {
+    height: 100%;
+  }  

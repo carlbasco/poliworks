@@ -1,0 +1,272 @@
+.navbar.default-layout .navbar-brand-wrapper .navbar-brand img {
+    height: 50px;
+    width: 100px;
+}
+.navbar.default-layout .navbar-brand-wrapper .brand-logo-mini img {
+    height: 50px;
+    width: 70px;
+    padding: 5px;
+}
+.sidebar{
+    background-color: white;
+}
+.navbar.default-layout .navbar-menu-wrapper {
+    background-color: rgba(38,108,170,1);
+}
+
+.navbar.default-layout {
+    background: rgba(38,108,170,1);
+}
+#foottxt{
+    text-align: right;
+}
+.footer a{
+    color:rgba(38,108,170,1);
+}
+#account{
+    position: absolute;
+    bottom:0;   
+    margin:auto;
+    visibility: hidden;
+    
+}
+
+#account_menu{
+    padding: 0 0 0 0!important;
+}
+
+.card-title {
+    font-weight: bolder;
+    color: #404852;
+    font-size: 20px;
+}
+.sidebar .nav .nav-item .nav-link .menu-title {
+    font-size: 17px;
+}
+.sidebar .nav .nav-item.nav-profile .nav-link .user-wrapper .text-wrapper .profile-name {
+    font-weight: bold;
+    font-size: 15px;
+}
+.icn{
+    padding-right: 19px;
+}
+#footer{
+    padding:1px 1px;
+}
+@media only screen and (max-width: 991px){
+    #account{
+        visibility: visible;
+    }
+}
+
+ul#usernav{
+    visibility: hidden!important;
+}
+
+@media only screen and (min-width: 992px){
+    ul#usernav {
+       visibility: visible!important;
+    }
+}
+
+#account_menu{
+    width: 260px;
+}
+#bt-account{
+    padding: 0 4.2rem 0 4.2rem;
+    width: 260px;
+}
+.form-control, .asColorPicker-input, .dataTables_wrapper select, .jsgrid .jsgrid-table .jsgrid-filter-row input[type=text], .jsgrid .jsgrid-table .jsgrid-filter-row select, .jsgrid .jsgrid-table .jsgrid-filter-row input[type=number], .select2-container--default .select2-selection--single, .select2-container--default .select2-selection--single .select2-search__field, .tt-hint, .tt-query, .typeahead {
+    border: 1px solid lightgray;    
+    padding-top:0;
+    padding-bottom:0;
+    height: 2rem;
+}
+span.menu-title{
+    color:black;
+}
+i.menu-con, a.nav-link:hover{
+    font-weight: bolder;
+    color:black;
+}
+@media (min-width: 992px){
+    .sidebar-icon-only .sidebar .nav.sub-menu .nav-item .nav-link:hover {
+        text-align: left;
+        color: black;
+        font-weight: bold;
+    }
+}
+.wizard > .content {
+    min-height: 35em;
+}
+.content-wrapper {
+    /* background: lightgray; */
+    background: #f5f6f8;
+        background-image: initial;
+        background-position-x: initial;
+        background-position-y: initial;
+        background-size: initial;
+        background-attachment: initial;
+        background-origin: initial;
+        background-clip: initial;
+        background-color: rgb(245, 246, 248);
+}
+.footer{
+    padding:5px
+}
+.wizard > .content > .body input {
+    display: block;
+    border: 1px solid lightgray;
+}
+.page-header.row.no-gutters.py-4 {
+    padding-top: 0px!important;
+    padding-bottom: 0px !important;
+}
+.card{
+    border-radius: 25px;
+}
+.card .card-header {
+    background: #ffffff;
+    padding: 1.88rem 1.81rem;
+    border-bottom: 1px solid #f2f2f2 !important;
+}
+#pf {
+    padding-top: 20px;
+}
+.card > .list-group:last-child .list-group-item:last-child {
+    border-top: 0;
+}
+.border-bottom {
+    border-bottom: 0;
+}
+/* @media only screen and (max-width:700px) {
+    div#customprofilepic a {
+        display: inline-block;
+        padding-left: 20px;
+        padding-right: 20px;
+        word-wrap: break-word;
+    }
+  } */
+a {
+    word-wrap: break-all;
+}
+input#id_image {
+    margin-left: 10%;
+}
+span.profile-text {
+    color: white;
+}
+li#navdrpdwn {
+    margin-left: 0;
+}
+div#newprojectform {
+    padding: 2rem;
+}
+select.custom-select.custom-select-sm.form-control {
+    width: 50px;
+}
+input:focus{
+    border-color:whitesmoke;
+}
+.select2-container--open .select2-dropdown--above {
+    border: 1px solid gray;
+}
+.select2-container--open .select2-dropdown--below {
+    border: 1px solid gray;
+}
+#headingOne, div#headingTwo, div#headingThree, div#headingOverview{
+    background-color: rgba(38,108,170,1);
+    color:white;
+}
+.btn-cardheader{
+    color:white;
+}
+.btn-cardheader:hover, .btn-cardheader:active{
+    color: white;
+    font-weight: bolder;
+    text-decoration: none;
+}
+ul{
+    padding-left: 0;
+    margin-top: 1rem;
+    list-style-type:none;
+}
+li.projectdetails, li.quotation{
+    font-weight: 800;
+}
+li.projectdetails h5, li.quotation h5{
+    color:gray;
+    font-weight: normal;
+}
+table.table-borderless td{
+    text-align: center;
+}
+table.table-borderless th{
+    font-weight: bold;
+}
+.table-bordered th, .table-bordered td {
+    border: 1px solid lightgray !important;
+}
+#quotation_view{
+    color: white;
+    background-color: rgba(38,108,170,1);
+    text-align: center;
+}
+
+#head_tbl{
+    border-top: 1px solid lightgray;
+    border-bottom: 2px solid lightgray;
+}
+span.txt{
+    font-weight: bold;
+}
+#card_header_content{
+    background-color: rgba(38,108,170,1);
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+    color:white;
+}
+.edit-delete-btn{
+    float: right;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 15px;
+}
+a.dropdown-item{
+    font-size: 1rem;
+}
+.dropdown-item{
+    text-align: center!important;
+}
+a.dropdown-item:hover{
+    background-color:#428bca;
+}
+a#btn-signout{
+    border-color:white;
+    text-align: center!important;
+}
+#btn-signout:hover{
+    color: #fff;
+    background-color: #dc3545;
+}
+
+@media only screen and (max-width:420px) {
+    .select2 {
+        width:200px !important;
+    }
+}
+@media (max-width: 991px){
+    .navbar.default-layout .navbar-menu-wrapper {
+        width: 245px!important;
+    }
+}
+.navbar.default-layout {
+    height: 62px!important;
+}
+
+.navbar-menu-wrapper.d-flex.align-items-center {
+    height: 61px;
+}
+#card_completed, #card_ongoing, #card_pending{
+    border-radius: 0px;
+}
