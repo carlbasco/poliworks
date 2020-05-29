@@ -107,7 +107,7 @@ class Profile(models.Model):
     phone = models.CharField(('Phone'),blank=True, help_text='Contact phone number', max_length=15)
     address = models.CharField(max_length=255, blank=True, help_text='Apartment, suite, unit, building, floor, street, barangay')
     province = models.ForeignKey(Province, on_delete=models.SET_NULL, verbose_name='Province', null=True)
-    city = models.ForeignKey(City, on_delete=models.SET_NULL, verbose_name='City/Municipality', null=True)
+    city = models.ForeignKey(City, on_delete=models.SET_NULL, verbose_name='City', null=True)
     # zipcode = models.ForeignKey(ZipCode, on_delete=models.DO_NOTHING, help_text='Barangay/City/Zipcode',verbose_name='Location')
     class Meta:
         verbose_name='Profile'
@@ -122,11 +122,10 @@ class Profile(models.Model):
         return str(self.user)
 
 class ProjectSite(models.Model):
-    projectsite = models.CharField(('Project Site'),max_length=255, null=True)
+    projectsite = models.CharField(('Project Name'),max_length=255, null=True)
     address = models.CharField(('Address'), max_length=255, null=True, help_text='Apartment, suite, unit, building, floor, street, barangay')
     province = models.ForeignKey(Province, on_delete=models.SET_NULL, verbose_name='Province', null=True)
-    city = models.ForeignKey(City, on_delete=models.SET_NULL, verbose_name='City/Municipality', null=True)
-    # zipcode = models.ForeignKey(ZipCode, on_delete=models.CASCADE, help_text='Barangay/City/Zipcode',verbose_name='Location')
+    city = models.ForeignKey(City, on_delete=models.SET_NULL, verbose_name='City', null=True)
     pm = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='projectsite_pm', 
         verbose_name='Project Manager', limit_choices_to={'groups__name': "Project Manager"})
     pic = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True,blank=True,

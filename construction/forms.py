@@ -88,7 +88,6 @@ class SignupFormWHM(forms.ModelForm):
         return email
 
     def clean_confirm_password(self):
-        
         password = self.cleaned_data.get("password")
         cpassword = self.cleaned_data.get("cpassword")
         if password and cpassword and password != cpassword:
@@ -96,7 +95,6 @@ class SignupFormWHM(forms.ModelForm):
         return cpassword
 
     def save(self, commit=True):
-       
         user = super(SignupFormWHM, self).save(commit=False)
         user.set_password(self.cleaned_data["password"])
         if commit:
@@ -120,7 +118,6 @@ class SignupFormPIC(forms.ModelForm):
         return email
 
     def clean_confirm_password(self):
-        
         password = self.cleaned_data.get("password")
         cpassword = self.cleaned_data.get("cpassword")
         if password and cpassword and password != cpassword:
@@ -128,7 +125,6 @@ class SignupFormPIC(forms.ModelForm):
         return cpassword
 
     def save(self, commit=True):
-       
         user = super(SignupFormPIC, self).save(commit=False)
         user.set_password(self.cleaned_data["password"])
         if commit:
@@ -192,9 +188,20 @@ class UserEditForm(forms.ModelForm):
 #################################################################################################################################
 class ProjectForm(forms.ModelForm):
     class Meta:
-        model=ProjectSite
-        fields='__all__'
-        exclude=('whm', 'pic')
+        model = ProjectSite
+        fields = '__all__'
+        exclude = ('whm', 'pic')
+
+class ProjectUpdateForm(forms.ModelForm):
+    class Meta:
+        model = ProjectSite
+        fields = '__all__'
+        exclude = ('pm', 'client')
+
+class ProjectUpdateStaffForm(forms.ModelForm):
+    class Meta:
+        model = ProjectSite
+        fields = ('whm', 'pic')
         
 class ProjectViewForm(forms.ModelForm):
     class Meta:

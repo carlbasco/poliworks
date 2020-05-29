@@ -27,6 +27,7 @@ urlpatterns = [
     path('backoffice/createproject/', views.ProjectCreateView, name="project_create"),
     path('backoffice/project_list', views.ProjectListView, name="project_list"),
     path('backoffice/project/view/<int:pk>', views.ProjectDetailView, name="project_detail"),
+    path('backoffice/project/view/<int:pk>/update', views.ProjectUpdateView, name="project_update"),
 
     #Quotation
     path('backoffice/project/create_quotation', views.QuotationCreateView.as_view(), name="quotation_create"),
@@ -43,7 +44,7 @@ urlpatterns = [
     path('backoffice/task/joborder', views.JobOrderCreateView.as_view(), name="joborder_create"),
     path('backoffice/task/joborder/list', views.JobOrderListView, name="joborder_list"),
     path('backoffice/task/joborder/<int:pk>', views.JobOrderDetailView, name="joborder_detail"),
-    path('backoffice/task/joborder/<str:pk>/edit', views.JobOrderUpdateView.as_view(), name="joborder_update"),
+    path('backoffice/task/joborder/<int:pk>/edit', views.JobOrderUpdateView.as_view(), name="joborder_update"),
     path('backoffice/task/joborder/<int:pk>/delete', views.JobOrderDeleteView, name="joborder_delete"),
 
     #Rework
@@ -73,8 +74,8 @@ urlpatterns = [
 
     #client
     path('myproject/', views.Client_home, name="client_home"),
-    path('myproject/view/<str:pk>', views.ClientProjectView, name="client_view_project"),
-    path('myproject/view/quotation/<str:pk>', views.ClientQuotationView, name="client_quotation"),
+    path('myproject/view/<int:pk>', views.ClientProjectView, name="client_view_project"),
+    path('myproject/view/quotation/<int:pk>', views.ClientQuotationView, name="client_quotation"),
     path('profile', views.ClientProfileView, name="client_profile"),
     path('profile/edit', views.ClientProfileUpdateView, name="client_profile_update"),
     path('profile/changepassword', views.ClientChangePasswordView, name="client_change_password"),
@@ -87,8 +88,8 @@ urlpatterns = [
 
 
     #api get method
-    path('backoffice/project/quotation/api/<str:pk>/', views.ScopeOfWork_api, name="ScopeOfWork_api"),
-    path('backoffice/materials/api/<str:pk>/', views.Inventory_api, name="Inventory_api"),
-    path('api/city/<str:pk>', views.City_api, name="Inventory_api"),
+    path('backoffice/project/quotation/api/<int:pk>/', views.ScopeOfWork_api, name="ScopeOfWork_api"),
+    path('backoffice/materials/api/<int:pk>/', views.Inventory_api, name="Inventory_api"),
+    path('api/city/<int:pk>', views.City_api, name="Inventory_api"),
     
 ]

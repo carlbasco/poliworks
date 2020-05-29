@@ -9,14 +9,21 @@
     </div>
 </div>
 {% for message in messages %}
-<div class="alert alert-success alert-dismissible fade show" role="alert">
-    <strong>Success! </strong>{{message}}
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-</div>
+    <div class="col-md-10 mx-auto">
+        <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+            {% if message.extra_tags == "success" %}
+                <strong>Success! </strong>
+            {% else %}
+                <strong>Error! </strong>
+            {% endif %}
+            {{message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
 {% endfor %}
-<div class="card">
+<div class="card card-form col-md-10 " style="margin: auto;">
     <div class=row>
         <div class="mx-auto my-auto text-center">
             <div id="pf-x">
@@ -34,61 +41,52 @@
                 <h3>Account Details</h3>
             </div>
             <div class="card-body">
-                
-                    
-                        <div class="row">
-                            <div class="col">
-                                <div class="form-row">
-                                    <div class="form-group col-md-12">
-                                        <label for="feFirstName">Name</label>
-                                        <input type="text" class="form-control" value="{{request.user.full_name}}" readonly>
-                                    </div>
-                                    
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-md-6">
-                                        <label>Birthdate</label>
-                                        <input class="form-control" value="{{request.user.profile.birthdate}}" readonly>
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label>Sex</label>
-                                        <input class="form-control" value="{{request.user.profile.sex}}" readonly>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-md-6">
-                                        <label>Contact Number</label>
-                                        <input class="form-control" value="{{request.user.profile.phone}}" readonly>
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label>Email</label>
-                                        <input class="form-control" value="{{request.user.email}}" readonly>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label>Address</label>
-                                    <input class="form-control" placeholder="1234 Main St" value="{{request.user.profile.address}}" readonly>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-md-6">
-                                        <label for="feInputCity">Location</label>
-                                        <input type="text" class="form-control" value="{{request.user.profile.zipcode.location}}" readonly>
-                                    </div>
-                                    <div class="form-group col-md-3">
-                                        <label for="feInputState">City</label>
-                                        <input type="text" class="form-control" value="{{request.user.profile.city}}" readonly>
-                                    </div>
-                                    <div class="form-group col-md-3">
-                                        <label for="inputZip">Province </label>
-                                        <input type="text" class="form-control" value="{{request.user.profile.province}}" readonly>
-                                    </div>
-                                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label for="feFirstName">Name</label>
+                                <input type="text" class="form-control" value="{{request.user.full_name}}" readonly>
+                            </div>
+                            
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label>Birthdate</label>
+                                <input class="form-control" value="{{request.user.profile.birthdate}}" readonly>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Sex</label>
+                                <input class="form-control" value="{{request.user.profile.sex}}" readonly>
                             </div>
                         </div>
-                    
-              
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label>Contact Number</label>
+                                <input class="form-control" value="{{request.user.profile.phone}}" readonly>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Email</label>
+                                <input class="form-control" value="{{request.user.email}}" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Address</label>
+                            <input class="form-control" placeholder="1234 Main St" value="{{request.user.profile.address}}" readonly>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="feInputState">City</label>
+                                <input type="text" class="form-control" value="{{request.user.profile.city}}" readonly>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="inputZip">Province </label>
+                                <input type="text" class="form-control" value="{{request.user.profile.province}}" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            
         </div>
     </div>
 </div>

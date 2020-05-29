@@ -129,7 +129,7 @@ def signuppm(request):
             profile=profile.save(False)
             profile.user=user
             profile.save()
-            messages.info(request,'Project Manager account created successfully')
+            messages.success(request,'Project Manager account created successfully', extra_tags="success")
             return redirect('signuppm')
     else:
         user = SignupFormPM()
@@ -155,7 +155,7 @@ def editprofile(request):
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
-            messages.info(request, ' Your Profile has been updated')
+            messages.success(request, ' Your Profile has been updated', extra_tags="success")
             return redirect('userprofile')
     else:
         user_form = UserEditForm(instance=user)
@@ -192,6 +192,23 @@ def ProjectCreateView(request):
             return redirect('project_create')
     context = {'form':form}
     return render(request, 'backoffice/project_pages/project_create.html', context)
+
+@login_required(login_url='signin')
+@allowed_users(allowed_roles=['Admin','Project Manager'])
+def ProjectUpdateView(request,pk):
+    data = ProjectSite.objects.get(id=pk)
+    if request.method == 'POST':
+        form = ProjectUpdateForm(request.POST,instance=data)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Project Details has been updated!', extra_tags="success")
+            return redirect('project_detail', pk=data.id)
+        else:
+            messages.info(request, 'Failed to update Project', extra_tags="warning")
+    else:
+        form = ProjectUpdateForm(instance=data)
+    context = {'form':form, 'data':data}
+    return render(request, 'backoffice/project_pages/project_update.html', context)
 
 @login_required(login_url='signin')
 @allowed_users(allowed_roles=['Admin','Project Manager','Person In-Charge'])
