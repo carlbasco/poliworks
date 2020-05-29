@@ -126,6 +126,7 @@ i.menu-con, a.nav-link:hover{
     border-radius: 25px;
 }
 .card .card-header {
+    border-top-right-radius: 25px;
     background: #ffffff;
     padding: 1.88rem 1.81rem;
     border-bottom: 1px solid #f2f2f2 !important;
@@ -269,4 +270,21 @@ a#btn-signout{
 }
 #card_completed, #card_ongoing, #card_pending{
     border-radius: 0px;
+}
+#changepassword_body{
+    background-color: white;
+    border-radius: 25px;
+}
+
+.sidebar .nav.sub-menu {
+    background-color: white;
+}
+
+.sidebar .nav:not(.sub-menu) > .nav-item:hover:not(.nav-profile) > .nav-link {
+    background: #428bca;
+    color: white;
+}
+
+.sidebar .nav .nav-item .nav-link[aria-expanded="true"] {
+    background: white;
 }
