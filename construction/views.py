@@ -46,7 +46,7 @@ def signin(request):
             else:
                 return redirect('project_list')
         else:
-            messages.info(request, 'email or password is incorrect')
+            messages.warning(request, 'Email or Password is incorrect', extra_tags="danger")
     return render(request, 'frontend/signin.html')
 
 def signout(request):
