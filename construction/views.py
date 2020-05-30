@@ -388,7 +388,7 @@ def ProgressUpdateView(request,pk):
             if data.total_progress == 100:
                 data3.status = "Completed"
                 data3.save()
-                messages.success(request,"Progress has been updated!")
+                messages.success(request,"Progress has been updated!", extra_tags="success")
                 return redirect('project_detail', pk=data3.id)
             else:
                 data3.status = "On-going"

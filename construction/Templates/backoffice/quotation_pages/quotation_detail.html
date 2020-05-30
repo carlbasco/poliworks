@@ -82,10 +82,10 @@
                 {% if data.status == "Accepted" %}
                 <form action="" method="post">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-outline-success edit-delete-btn">Create as Progress</button>
+                    <button type="submit" class="btn btn-outline-primary edit-delete-btn">Create as Progress</button>
                 </form>
                 {% else %}
-                    <a href="{% url 'quotation_update' data.id %}" class="btn btn-outline-primary edit-delete-btn">Edit</a>
+                    <!-- <a href="{% url 'quotation_update' data.id %}" class="btn btn-outline-primary edit-delete-btn">Edit</a> -->
                 {% endif %}
             </div>
         </div>
