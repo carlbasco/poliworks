@@ -49,6 +49,7 @@
                             </tr>
                         </thead>
                     <tbody>
+                        {% if data2 %}
                         {% for i in data2 %}
                         <tr>
                             <td>{{i.subject}}</td>
@@ -63,8 +64,15 @@
                             {% endif %}
                             <td><a href="{% url 'quotation_detail' i.id%}" class="btn btn-outline-primary view-btn">View</a></td>
                         </tr>
-
                         {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="5">
+                                <p class="text-center">No Data Available</p><br>
+                                <a href="{% url 'quotation_create'%}">Create Quotation</a>
+                            </td>
+                        </tr>
+                        {% endif%}
                     </tbody>
                     </table>
                 </div>
@@ -125,7 +133,7 @@
         </div>
 
         <div class="col col-md-7 ">
-            <div class="card">
+            <div class="card mb-4">
                 <div class="card-header" id="headingOverview">
                     <h3>Overview</h3> 
                 </div>
@@ -160,22 +168,26 @@
                     </div>
             </div>
         </div>
+        
         <div class="card">
-            {% if data3 %}
             <div class="card-header" id="headingOverview">
-                <h2 class="mb-0">Work Details
-                    <a href="{% url 'progress_update' data3.id %}"style="float:right; color:white;"title="Edit Project Progress"><i class="fa fa-edit"></i></a>
-                </h2>
+                <h3>Work Details
+                    {% if data3 %}
+                        <a href="{% url 'progress_update' data3.id %}"style="float:right; color:white;"title="Edit Project Progress"><i class="fa fa-edit"></i></a>
+                    {% endif %}
+                </h3>
             </div>
             <div class="card-body">
                 <div class="row">
+                    {% if data3 %}
                     <div class="mx-auto d-flex align-items-center ">
                         <div class="forth circle " data-value="{{data3.total_progress}}">
                             <strong></strong>
                         </div>
                         <h3>Project Progress</h3>
                     </div>
-                    <div class="col-md-12 table-responsive-xl">
+                    {% endif %}
+                    <div class="col-md-12 table-responsive">
                         <table class="table table-bordered table-responsive-xl" id="table_progress">
                             <thead>
                                 <tr>
@@ -185,31 +197,36 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                {% if data4 %}
                                 {% for i in data4 %}
-                                <tr>
-                                    <td>{{i.scope_of_work}}</td>
-                                    {% if i.level == 1 %}
-                                        <td>Low</td>
-                                    {% elif i.level == 3 %}
-                                        <td>Medium</td>
-                                    {% else %}
-                                        <td>High</td>
-                                    {% endif%}
-                                    {% if i.status == "Pending"%}
-                                        <td><span class="badge badge-warning">{{i.status}}</span></td>
-                                    {% elif i.status == "On-going"%}
-                                        <td><span class="badge badge-primary">{{i.status}}</span></td>
-                                    {% else %}
-                                        <td><span class="badge badge-success">{{i.status}}</span></td>
-                                    {% endif %}
-                                </tr>
+                                    <tr>
+                                        <td>{{i.scope_of_work}}</td>
+                                        {% if i.level == 1 %}
+                                            <td>Low</td>
+                                        {% elif i.level == 3 %}
+                                            <td>Medium</td>
+                                        {% else %}
+                                            <td>High</td>
+                                        {% endif%}
+                                        {% if i.status == "Pending"%}
+                                            <td><span class="badge badge-warning">{{i.status}}</span></td>
+                                        {% elif i.status == "On-going"%}
+                                            <td><span class="badge badge-primary">{{i.status}}</span></td>
+                                        {% else %}
+                                            <td><span class="badge badge-success">{{i.status}}</span></td>
+                                        {% endif %}
+                                    </tr>
                                 {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="3"><p class="text-center">No data available</p></td>
+                                    </tr>
+                                {% endif %}
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-            {% endif %}
         </div>
     </div>
 </section>

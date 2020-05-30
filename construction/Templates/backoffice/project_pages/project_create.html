@@ -4,7 +4,7 @@
 {% block content %}
 <form action="" method="POST">
     {% csrf_token%}
-    <div class="col-lg-8  m-auto">
+    <div class="col-md-8  m-auto">
         <div class="card" >
             <div class="card-header" id="card_header_content">
                 <h3 style="text-align: center;">New Project</h3>
@@ -18,7 +18,7 @@
                         <div class="form-group col-md-8">
                             {{form.pm|as_crispy_field}}
                         </div>
-                        <div class="form-group col-lg-8">
+                        <div class="form-group col-md-8">
                             {{form.client|as_crispy_field}}
                         </div>
                         <div class="form-group col-md-10">
@@ -27,13 +27,13 @@
                         <div class="form-group col-md-8">
                             {{form.projectsite|as_crispy_field}}
                         </div>
-                        <div class="form-group col-lg-8">
+                        <div class="form-group col-md-8">
                             {{form.typeofproject|as_crispy_field}}
                         </div>
-                        <div class="form-group col-lg-8">
+                        <div class="form-group col-md-8">
                             {{form.lotarea|as_crispy_field}}
                         </div>
-                        <!-- <div class="form-group col-lg-8">
+                        <!-- <div class="form-group col-md-8">
                             <label for="">Design upload</label>
                         </div> -->
                         <div class="form-group col-md-8">

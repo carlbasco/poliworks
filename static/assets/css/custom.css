@@ -288,3 +288,17 @@ a#btn-signout{
 img#dp {
     margin-bottom: 5px;
 }
+.btn-outline-secondary:not(:disabled):not(.disabled):active, .btn-outline-secondary:not(:disabled):not(.disabled).active, .show > .btn-outline-secondary.dropdown-toggle {
+    color: white;
+    background-color: gray;
+    border-color: #e6eef2;
+}
+
+.btn-outline-secondary:hover {
+    color: white!important;
+    background-color: gray;
+    border-color: #e6eef2;
+}
+.btn.btn-outline-secondary, .ajax-upload-dragdrop .btn-outline-secondary.ajax-file-upload, .swal2-modal .swal2-buttonswrapper .btn-outline-secondary.swal2-styled, .wizard > .actions a.btn-outline-secondary {
+    color: black;
+}
