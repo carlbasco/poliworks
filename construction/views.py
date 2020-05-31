@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
+from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.decorators import login_required
 
@@ -66,14 +67,11 @@ def signupclient(request):
             profile=profile.save(False)
             profile.user=user
             profile.save()
-            subject='Hi! Welcome to Poliworks Inc. Website'
-            message = 'You may now access your account by logging in on our website(?? websiteurl.com ??).\n You may change your password by going to sign in page and request for a forgot password'
-            messages.success(request,'Client account has been created')
-            reciepient = [user.email]
-            send_mail(
-                subject, message, EMAIL_HOST_USER, reciepient, fail_silently = True
-            )
-            return redirect('signupclient')
+            password_form = PasswordResetForm({'email':user.email})
+            if password_form.is_valid():
+                password_form.save(request= request, email_template_name='email/welcome.html', subject_template_name='email/welcome_subject.txt')
+                messages.success(request,'Client account has been created')
+                return redirect('signupclient')
     else:
         user = SignupFormClient()
         profile = ProfileForm()
