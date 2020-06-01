@@ -9,10 +9,9 @@ var x=0;
 load_quotation();
 
 function load_quotation(){
-    $('.sow').select2()
     count();
     get_quotation_cost();
-    set_cost();
+    $('.sow').select2()
     remove_btn_click();
 }
 

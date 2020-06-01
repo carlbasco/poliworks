@@ -334,7 +334,7 @@ def QuotationDetailView(request,pk):
     if request.method == "POST":
         try:
             data3 = ProjectProgress.objects.get(projectsite=project.id)
-            messages.warning(request, "Creating Work Progress failed. Please delete the previous one to create a new Work Progress", extra_tags="warning")
+            messages.warning(request, "There is an existing Work Progress. Please delete the previous one to create a new Work Progress", extra_tags="warning")
             return redirect('quotation_detail',pk=data.id)
         except ObjectDoesNotExist:
             data3 = ProjectProgress.objects.create(projectsite=data.projectsite) 
