@@ -302,13 +302,12 @@ class QuotationUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         if formset.is_valid():
             formset.instance = self.object
             formset.save()
-            quotation = self.object
-            data2 = Quotation.objects.get(id=quotation.id)
+            data2 = self.object
             data3 = QuotationDetails.objects.filter(quotation=data2.id)
-            quotation.amount = 0
+            data2.amount = 0
             for i in data3:
-                quotation.amount +=i.unitcost()
-            quotation.save()
+                data2.amount +=i.unitcost()
+            data2.save()
             return super(QuotationUpdateView, self).form_valid(form)
         
     def get_success_url(self):
