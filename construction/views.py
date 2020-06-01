@@ -63,15 +63,15 @@ def signupclient(request):
         user = SignupFormClient(request.POST)
         profile = ProfileForm(request.POST)
         if user.is_valid() and profile.is_valid():
-            user=user.save()
-            profile=profile.save(False)
-            profile.user=user
+            user = user.save()
+            profile = profile.save(False)
+            profile.user = user
             profile.save()
-            password_form = PasswordResetForm({'email':user.email})
-            if password_form.is_valid():
-                password_form.save(request= request, email_template_name='email/welcome.html', subject_template_name='email/welcome_subject.txt')
-                messages.success(request,'Client account has been created')
-                return redirect('signupclient')
+        password_form = PasswordResetForm({'email':user.email})
+        if password_form.is_valid():
+            password_form.save(request= request, email_template_name='email/welcome.html', subject_template_name='email/welcome_subject.txt')
+            messages.success(request,'Client account has been created')
+            return redirect('signupclient')
     else:
         user = SignupFormClient()
         profile = ProfileForm()
