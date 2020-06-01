@@ -50,7 +50,6 @@
             <table id="tbl_quotation" class="table table-responsive-sm">
                 <thead>
                     <th style="width:150px;">Scope of Work</th>
-                    <th style="min-width: 100px;">Cost</th>
                     <th style="min-width: 100px;">Unit</th>
                     <th style="min-width: 100px;">Quantity</th>
                     <th style="min-width: 150px;">Total Cost</th>
@@ -60,7 +59,6 @@
                 {% for i in formset.forms %}
                 <tr class="formset_row">
                     <td style="width:150px;">{{i.scope_of_work}}</td>
-                    <td>{{i.cost}}</td>
                     <td>{{i.unit}}</td>
                     <td>{{i.quantity}}</td>
                     <td>{{i.tcost}}</td>

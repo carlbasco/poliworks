@@ -178,12 +178,13 @@ class ScopeOfWork(models.Model):
         return self.scope
     
     def __str__(self):
-        return self.scope
+        scope = '%s %s %s' % (self.scope," - ",self.materialcost+self.laborcost+self.subbid)
+        return scope.strip()
         
 class Quotation(models.Model):
     status_choice = {('Pending','Pending'),('Accepted','Accepted'),('Rejected','Rejected')}
     projectsite = models.ForeignKey(ProjectSite, on_delete=models.CASCADE, related_name='quotation', verbose_name='Project Site')
-    subject = models.CharField(('Subject'),max_length=255, blank=True, null=True)
+    subject = models.CharField(('Subject'),max_length=255, null=True)
     date = models.DateField(('Date'),default=datetime.date.today)
     amount = models.FloatField(('Total Amount'), default=0)
     status = models.CharField(('Status'), max_length=255, default='Pending',choices=status_choice)

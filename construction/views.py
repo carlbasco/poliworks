@@ -202,7 +202,7 @@ def ProjectUpdateView(request,pk):
             messages.success(request, 'Project Details has been updated!', extra_tags="success")
             return redirect('project_detail', pk=data.id)
         else:
-            messages.info(request, 'Failed to update Project', extra_tags="warning")
+            messages.warning(request, 'Failed to update Project', extra_tags="warning")
     else:
         form = ProjectUpdateForm(instance=data)
     context = {'form':form, 'data':data}
@@ -265,6 +265,7 @@ class QuotationCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
             formset.instance = self.object
             formset.save()
             quotation = self.object
+            quotation.amount = 0
             quotation_list = formset.save()
             for i in quotation_list:
                 i.cost = i.unitcost
@@ -280,10 +281,10 @@ class QuotationUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     login_url ="signin"
     redirect_field_name = "redirect_to"
     model = Quotation
-    fields=('projectsite','subject','date',)
+    fields = ('subject',)
     template_name = 'backoffice/quotation_pages/quotation_update.html'
     success_message = "Quotation has been updated"
-
+    
     @method_decorator(staff_only, name='dispatch')
     def dispatch(self, *args, **kwargs):
         return super(QuotationUpdateView, self).dispatch(*args, **kwargs)
@@ -307,7 +308,9 @@ class QuotationUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
             quotation.amount = 0
             quotation_list = formset.save()
             for i in quotation_list:
+                i.cost = i.unitcost
                 quotation.amount += i.unitcost()
+                i.save()
             quotation.save()
             return super(QuotationUpdateView, self).form_valid(form)
         
@@ -330,8 +333,8 @@ def QuotationDetailView(request,pk):
     data2 = QuotationDetails.objects.filter(quotation=data.id)
     if request.method == "POST":
         try:
-            data3 = ProjectProgress.objects.get(projectsite_id=data.id)
-            messages.info(request, "Creating Work Progress failed. Please delete the previous one to create a new Work Progress", extra_tags="warning")
+            data3 = ProjectProgress.objects.get(projectsite=project.id)
+            messages.warning(request, "Creating Work Progress failed. Please delete the previous one to create a new Work Progress", extra_tags="warning")
             return redirect('quotation_detail',pk=data.id)
         except ObjectDoesNotExist:
             data3 = ProjectProgress.objects.create(projectsite=data.projectsite) 
@@ -887,11 +890,17 @@ def ClientChangePasswordView(request):
 #################################################################################################################################
 @login_required(login_url = 'signin')
 @api_view(['GET'])
+def ScopeOfWorks_api(request):
+    scope_of_work = ScopeOfWork.objects.all()
+    serializer = ScopeOfWorkSerializer(scope_of_work, many=True)
+    return Response(serializer.data)
+
+@login_required(login_url = 'signin')
+@api_view(['GET'])
 def ScopeOfWork_api(request, pk):
     scope_of_work = ScopeOfWork.objects.filter(id=pk)
     serializer = ScopeOfWorkSerializer(scope_of_work, many=True)
     return Response(serializer.data)
-
 
 login_required(login_url = 'signin')
 @api_view(['GET'])

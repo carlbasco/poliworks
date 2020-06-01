@@ -216,7 +216,6 @@ class ProjectViewForm(forms.ModelForm):
 #################################################################################################################################
 #################################################################################################################################
 class QuotationForm(forms.ModelForm):
-    cost = forms.FloatField(widget=forms.NumberInput(attrs={'class':'form-control cost','readonly':'true'}))
     tcost = forms.FloatField(widget=forms.NumberInput(attrs={'class':'form-control tcost','readonly':'true'}))
     class Meta:
         model=Quotation

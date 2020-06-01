@@ -52,7 +52,9 @@
                         <td>{{i.personnel}}</td>
                         <td>{{i.activity}}</td>
                         <td>{{i.duration}}</td>
-                        <td>{{i.delete}}</td>
+                        {% if formset.can_delete %}
+                            {{ i.DELETE }}
+                        {% endif %}
                     </tr>
                     {% endfor %}
                 </table>

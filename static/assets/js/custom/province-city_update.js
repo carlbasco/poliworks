@@ -11,7 +11,7 @@ var province = $(this).val()
     else{
         $.ajax({
         method: 'GET',
-        url:'http://127.0.0.1:8000/api/city/'+province,
+        url:'http://127.0.0.1:8000/backoffice/api/city/'+province,
             success:function(data){
                 $('#div_id_city').show();
                 select.empty();

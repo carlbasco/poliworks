@@ -23,33 +23,31 @@
 {% endfor %}
 <form action="" method="POST">
 {% csrf_token%}
-    <div class="card card-form">
+    <div class="card">
         <div class="card-header" id="card_header_content">
             <h3 style="text-align: center;">Quotation Form</h3>
         </div>
         <div class="card-body">
             <div class="col-lg-12">
                 <div class="row justify-content-center">
-                    <div class="form-group col-md-10">Project Site:
-                        <strong>{{form.instance.projectsite}} </strong>
+                    <div class="form-group col-md-8">
+                        <label>Project Site:</label>
+                        <input type="text" class="form-control" value="{{form.instance.projectsite}}" disabled>
                     </div>
-                    <div class="form-group col-md-2">
-                        Date:
-                        <strong>{{form.instance.date}}</strong>
+                    <div class="form-group col-md-4">
+                        <label>Datee:</label>
+                        <input type="text" class="form-control" value="{{form.instance.date}}" disabled>
                     </div>
-                    <div class="form-group col-md-10">
-                        Subject:
-                        <strong>{{form.instance.subject}}</strong>
+                    <div class="form-group col-md-8">
+                        {{form.subject|as_crispy_field}}
                     </div>
-                    <div class="form-group col-md-2">
-                        
+                    <div class="form-group col-md-4">
                     </div>
                 </div>
             </div>
             <table id="tbl_quotation" class="table table-responsive-sm">
                 <thead>
                     <th style="width:150px;">Scope of Work</th>
-                    <th style="min-width: 100px;">Cost</th>
                     <th style="min-width: 100px;">Unit</th>
                     <th style="min-width: 100px;">Quantity</th>
                     <th style="min-width: 150px;">Total Cost</th>
@@ -60,11 +58,15 @@
                 {{i.id}}
                 <tr class="formset_row">
                     <td style="width:150px;">{{i.scope_of_work}}</td>
-                    <td>{{i.cost}}</td>
                     <td>{{i.unit}}</td>
                     <td>{{i.quantity}}</td>
                     <td>{{i.tcost}}</td>
-                    <td>{{i.delete}}</td>
+                    <td>
+                        {% if formset.can_delete %}
+                            {{ i.DELETE }}
+                        {% endif %}
+                    </td>
+                    
                 </tr>
                 {% endfor %}
             </table>

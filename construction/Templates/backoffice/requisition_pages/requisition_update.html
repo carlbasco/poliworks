@@ -52,7 +52,9 @@
                         <td>{{i.articles}}</td>
                         <td>{{i.unit}}</td>
                         <td>{{i.quantity}}</td>
-                        <td>{{i.delete}}</td>
+                        {% if formset.can_delete %}
+                            {{ i.DELETE }}
+                        {% endif %}
                     </tr>
                     {% endfor %}
                 </table>

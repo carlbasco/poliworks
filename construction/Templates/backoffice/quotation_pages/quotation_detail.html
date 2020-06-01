@@ -17,17 +17,17 @@
 </nav>
 {% for message in messages %}
     <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
-        {% if message.tags == "success" %}
-        <strong>Success! </strong>
+        {% if message.extra_tags == "success" %}
+            <strong>Success! </strong>
         {% else %}
             <strong>Error! </strong>
         {% endif %}
         {{message}}
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
+            <span aria-hidden="true">&times;</span>
         </button>
     </div>
-{% endfor%}
+{% endfor %}
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col col-md-10">
@@ -62,7 +62,7 @@
                         <tbody>
                             {% for i in data2 %}
                             <tr>
-                                <td scope="row">{{i.scope_of_work}}</td>
+                                <td scope="row">{{i.scope_of_work.scope}}</td>
                                 <td>{{i.unit}}</td>
                                 <td class="quantity">{{i.quantity}}</td>
                                 <td class="money text-right">{{i.unitcost|intcomma}}</td>
@@ -85,7 +85,7 @@
                     <button type="submit" class="btn btn-outline-primary edit-delete-btn">Create as Progress</button>
                 </form>
                 {% else %}
-                    <!-- <a href="{% url 'quotation_update' data.id %}" class="btn btn-outline-primary edit-delete-btn">Edit</a> -->
+                    <a href="{% url 'quotation_update' data.id %}" class="btn btn-outline-primary edit-delete-btn">Edit</a>
                 {% endif %}
             </div>
         </div>

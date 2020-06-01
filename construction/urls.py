@@ -88,8 +88,9 @@ urlpatterns = [
 
 
     #api get method
-    path('backoffice/project/quotation/api/<int:pk>/', views.ScopeOfWork_api, name="ScopeOfWork_api"),
-    path('backoffice/materials/api/<int:pk>/', views.Inventory_api, name="Inventory_api"),
-    path('api/city/<int:pk>', views.City_api, name="Inventory_api"),
+    path('backoffice/api/scope', views.ScopeOfWorks_api, name="ScopeOfWorks_api"),
+    path('backoffice/api/scope/<str:pk>', views.ScopeOfWork_api, name="ScopeOfWork_api"),
+    path('backoffice/api/materials/<str:pk>/', views.Inventory_api, name="Inventory_api"),
+    path('backoffice/api/city/<int:pk>', views.City_api, name="Inventory_api"),
     
 ]

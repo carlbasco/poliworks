@@ -39,7 +39,7 @@
                             <tbody>
                                 {% for i in data2 %}
                                 <tr>
-                                    <td scope="row" class="scope">{{i.scope_of_work}}</td>
+                                    <td scope="row" class="scope">{{i.scope_of_work.scope}}</td>
                                     <td class="td_100">{{i.unit}}</td>
                                     <td class="td_100 center">{{i.quantity}}</td>
                                     <td class="text-right money">{{i.unitcost|intcomma}}</td>
