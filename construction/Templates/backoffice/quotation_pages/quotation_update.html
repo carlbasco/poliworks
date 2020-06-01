@@ -1,15 +1,16 @@
 {% extends 'backoffice/index.html' %}
 {% load static %}
 {% load crispy_forms_tags%}
+{% load humanize %}
 {% block content %}
 <span class="text-uppercase page-subtitle">Project</span>
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb bg-inverse-primary">
-        <li class="breadcrumb-item active" aria-current="page">
-        Quotation Form
+        <li class="breadcrumb-item">
+            <a href="{% url 'quotation_create'%}">Quotation Create</a>
         </li>
         <li class="breadcrumb-item">
-        <a href="{% url 'quotation_list'%}">Quotation List</a>
+            <a href="{% url 'quotation_list'%}">Quotation List</a>
         </li>
     </ol>
 </nav>
@@ -50,7 +51,6 @@
                     <th style="width:150px;">Scope of Work</th>
                     <th style="min-width: 100px;">Unit</th>
                     <th style="min-width: 100px;">Quantity</th>
-                    <th style="min-width: 150px;">Total Cost</th>
                     <th>Delete</th>
                 </thead>
                 {{ formset.management_form }}
@@ -60,7 +60,6 @@
                     <td style="width:150px;">{{i.scope_of_work}}</td>
                     <td>{{i.unit}}</td>
                     <td>{{i.quantity}}</td>
-                    <td>{{i.tcost}}</td>
                     <td>
                         {% if formset.can_delete %}
                             {{ i.DELETE }}
@@ -77,13 +76,13 @@
                 <div class="form-group col-md-4">
                     <div class="form-group">
                       <label for="total_amount">Total Amount</label>
-                      <input type="text"
-                        class="form-control" name="total_amount" id="total_amount" aria-describedby="helpId" placeholder="" value="0" readonly>
+                      <input type="text"class="form-control" aria-describedby="helpId" placeholder="" value="{{form.instance.amount|intcomma}}" readonly>
+                      <small class="form-text text-muted float-right"><i>The total amount will be updated once you submit this form</i> </small>
                     </div>
                 </div>
             </div>
             <div class="btn-grp">
-                <button type="button" id="sbmt-modal" class="btn btn-outline-primary edit-delete-btn" data-toggle="modal" data-target="#calculate">Update</button>
+                <button type="button" id="sbmt-modal" class="btn btn-outline-primary edit-delete-btn" data-toggle="modal" data-target="#calculate">Submit</button>
                 <div class="modal fade" id="calculate" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
@@ -115,6 +114,10 @@
         addText: 'Add',
         deleteText: 'Remove',
         prefix: '{{ formset.prefix }}'
+    });
+    $('.sow').select2();
+    $('.add-row').click(function(){
+        $('.sow').select2();
     })
 </script>
 <script src="{% static 'assets/js/custom/quotation_update.js'%}"></script>

@@ -237,9 +237,14 @@ QuotationFormSet = inlineformset_factory(Quotation, QuotationDetails,
     }
 )
 
+class QuotationUpdateForm(forms.ModelForm):
+    class Meta:
+        model=Quotation
+        fields='__all__'
+
 QuotationUpdateFormSet = inlineformset_factory(
     Quotation, QuotationDetails,
-    form=QuotationForm,
+    form=QuotationUpdateForm,
     extra=0,
     can_delete=True,
     widgets={

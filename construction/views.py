@@ -268,9 +268,7 @@ class QuotationCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
             quotation.amount = 0
             quotation_list = formset.save()
             for i in quotation_list:
-                i.cost = i.unitcost
                 quotation.amount += i.unitcost()
-                i.save()
             quotation.save()
             return super(QuotationCreateView, self).form_valid(form)
         
@@ -305,12 +303,11 @@ class QuotationUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
             formset.instance = self.object
             formset.save()
             quotation = self.object
+            data2 = Quotation.objects.get(id=quotation.id)
+            data3 = QuotationDetails.objects.filter(quotation=data2.id)
             quotation.amount = 0
-            quotation_list = formset.save()
-            for i in quotation_list:
-                i.cost = i.unitcost
-                quotation.amount += i.unitcost()
-                i.save()
+            for i in data3:
+                quotation.amount +=i.unitcost()
             quotation.save()
             return super(QuotationUpdateView, self).form_valid(form)
         
