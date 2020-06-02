@@ -329,7 +329,7 @@ def QuotationDetailView(request,pk):
     data2 = QuotationDetails.objects.filter(quotation=data.id)
     if request.method == "POST":
         try:
-            data3 = ProjectProgress.objects.get(projectsite=project.id)
+            data3 = ProjectProgress.objects.get(projectsite=data.projectsite.id)
             messages.warning(request, "There is an existing Work Progress. Please delete the previous one to create a new Work Progress", extra_tags="warning")
             return redirect('quotation_detail',pk=data.id)
         except ObjectDoesNotExist:
@@ -338,7 +338,7 @@ def QuotationDetailView(request,pk):
             data3.save()
             for i in data2:
                 data4 = ProjectProgressDetails.objects.create(projectprogress=data3)
-                scope = ScopeOfWork.objects.get(scope=i.scope_of_work)
+                scope = ScopeOfWork.objects.get(scope=i.scope_of_work.scope)
                 data4.scope_of_work = scope.scope
                 data4.save()
             data4.save()
@@ -360,7 +360,6 @@ def QuotationDeleteView(request,pk):
         return redirect('quotation_list')
     context={'data':data,'data2':data2,}
     return render(request, 'backoffice/quotation_pages/quotation_delete.html', context)
-
 
 @login_required(login_url = 'signin')
 @allowed_users(allowed_roles = ['Admin','Project Manager'])
