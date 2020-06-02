@@ -83,5 +83,19 @@
     deleteText: 'Remove',
     prefix: '{{ formset.prefix }}'
     });
+    
+    jQuery(function ($) {        
+    $('form').bind('submit', function () {
+        $('#id_projectsite').prop('disabled', false);
+        $('#id_supplier').prop('disabled', false);
+        $('#id_date').prop('disabled', false);
+        $('#id_whm').prop('disabled', false);
+    });
+    
+    $('#id_projectsite').prop('disabled', 'disabled');
+    $('#id_supplier').prop('disabled', 'disabled');
+    $('#id_date').prop('disabled', 'disabled');
+    $('#id_whm').prop('disabled', 'disabled');
+});
 </script>
 {%endblock%}

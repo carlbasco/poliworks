@@ -45,8 +45,11 @@
                             {{profile_form.address|as_crispy_field}}
                         </div>
                         <div class="form-row">
-                            <div class="col-md-8">
-                                {{profile_form.zipcode|as_crispy_field}}
+                            <div class="col-md-6">
+                                {{profile_form.city|as_crispy_field}}
+                            </div>
+                            <div class="col-md-6">
+                                {{profile_form.province|as_crispy_field}}
                             </div>
                             <div class="col-md-4">
                                 {{profile_form.phone|as_crispy_field}}

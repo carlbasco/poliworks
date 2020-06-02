@@ -342,7 +342,7 @@ ExternalOrderUpdateFormSet = inlineformset_factory(ExternalOrder, ExternalOrderD
     can_delete=True,
     widgets={
         'quantity':forms.NumberInput(attrs={'class':'form-control','required': 'true'}),
-        'unit':forms.TextInput(attrs={'class':'form-control'}),
+        'unit':forms.TextInput(attrs={'class':'form-control','required': 'true'}),
         'articles':forms.TextInput(attrs={'class':'form-control','required': 'true'}),
         'unitprice':forms.NumberInput(attrs={'class':'form-control','required': 'true'})
     }    

@@ -14,14 +14,6 @@
         </li>
     </ol>
 </nav>
-{% for message in messages %}
-<div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
-    <strong>Success! </strong>{{message}}
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-</div>  
-{% endfor %}
 <form action="" method="POST">
 {% csrf_token%}
     <div class="card">
@@ -36,7 +28,7 @@
                         <input type="text" class="form-control" value="{{form.instance.projectsite}}" disabled>
                     </div>
                     <div class="form-group col-md-4">
-                        <label>Datee:</label>
+                        <label>Date:</label>
                         <input type="text" class="form-control" value="{{form.instance.date}}" disabled>
                     </div>
                     <div class="form-group col-md-8">

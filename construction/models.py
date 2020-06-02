@@ -231,7 +231,7 @@ class Personnel(models.Model):
     middle_name = models.CharField(('Middle Name'), max_length=255, blank=True)
     last_name = models.CharField(('Last Nane'), max_length=255)
     suffix = models.CharField(('Suffix'), max_length=50, blank=True)
-    contact = models.CharField(('Contach Number'), max_length=20)
+    contact = models.CharField(('Contact Number'), max_length=20)
     skill = models.ForeignKey(PersonnelSkill, on_delete=models.CASCADE, related_name='personnel')
     choice={('Company Worker', 'Company Worker'), ('Subcontractor','Subcontractor')}
     personnel_type = models.CharField(('Type of Personnel'),max_length=255, choices=choice)
@@ -288,8 +288,6 @@ class Rework(models.Model):
 #         verbose_name_plural='Rework Form Details'
 #         verbose_name='Rework Form Details'
 
-
-
 class Inventory(models.Model):
     alternate_code = models.CharField(verbose_name="Alternate Code", max_length=255, null=True, blank=True)
     item_code = models.CharField(verbose_name="Item Code", max_length=255, null=True, blank=True)
@@ -332,7 +330,7 @@ class ExternalOrder(models.Model):
     supplier = models.CharField(max_length=255)
     date = models.DateField(default=datetime.date.today, verbose_name='Date')
     whm = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='externalorder_whm', verbose_name='Prepared By', 
-        limit_choices_to={'groups__name': "Warehouseman"})
+        limit_choices_to={'groups__name': "Warehouseman"}, help_text="Warehouseman")
     amount = models.FloatField(verbose_name='Amount', default=0)
     class Meta:
         verbose_name_plural = 'Outside Purchases'

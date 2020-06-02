@@ -42,14 +42,14 @@ urlpatterns = [
 
     #JobOrder
     path('backoffice/task/joborder', views.JobOrderCreateView.as_view(), name="joborder_create"),
-    path('backoffice/task/joborder/list', views.JobOrderListView, name="joborder_list"),
+    path('backoffice/task/joborder_list', views.JobOrderListView, name="joborder_list"),
     path('backoffice/task/joborder/<int:pk>', views.JobOrderDetailView, name="joborder_detail"),
     path('backoffice/task/joborder/<int:pk>/edit', views.JobOrderUpdateView.as_view(), name="joborder_update"),
     path('backoffice/task/joborder/<int:pk>/delete', views.JobOrderDeleteView, name="joborder_delete"),
 
     #Rework
     path('backoffice/task/rework', views.ReworkCreateView, name="rework_create"),
-    path('backoffice/task/rework/list', views.ReworkListView, name="rework_list"),
+    path('backoffice/task/rework_list', views.ReworkListView, name="rework_list"),
     path('backoffice/task/rework/<int:pk>', views.ReworkDetailView, name="rework_detail"),
     path('backoffice/task/rework/<int:pk>/edit', views.ReworkUpdateView, name="rework_update"),
     path('backoffice/task/rework/<int:pk>/delete', views.ReworkDeleteView, name="rework_delete"),

@@ -67,10 +67,11 @@ def signupclient(request):
             profile = profile.save(False)
             profile.user = user
             profile.save()
-        password_form = PasswordResetForm({'email':user.email})
+        account = User.objects.get(id = profile.user.id)
+        password_form = PasswordResetForm({'email':account.email})
         if password_form.is_valid():
             password_form.save(request= request, email_template_name='email/welcome.html', subject_template_name='email/welcome_subject.txt')
-            messages.success(request,'Client account has been created')
+            messages.success(request,'Client account has been created', extra_tags="success")
             return redirect('signupclient')
     else:
         user = SignupFormClient()
@@ -89,7 +90,7 @@ def signupwhm(request):
             profile=profile.save(False)
             profile.user=user
             profile.save()
-            messages.info(request, 'Warehouseman account created successfully')
+            messages.success(request, 'Warehouseman account created successfully', extra_tags='success')
             return redirect('signupwhm')
     else:
         user = SignupFormWHM()
@@ -108,7 +109,7 @@ def signuppic(request):
             profile=profile.save(False)
             profile.user=user
             profile.save()
-            messages.info(request,'Person In-Charge account created successfully')
+            messages.success(request,'Person In-Charge account created successfully',extra_tags="success")
             return redirect('signuppic')
     else:
         user = SignupFormPIC()
@@ -581,12 +582,12 @@ class ExternalOrderUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateVie
         if formset.is_valid():
             formset.instance = self.object
             formset.save()
-            externalorder = self.object
-            externalorder.amount = 0
-            externalorderdetail = formset.save()
-            for i in externalorderdetail:
-                externalorder.amount += i.get_total()
-            externalorder.save()
+            data2 = self.object
+            data3 = ExternalOrderDetails.objects.filter(externalorder=data2.id)
+            data2.amount = 0
+            for i in data3:
+                data2.amount += i.get_total()
+            data2.save()
             return super(ExternalOrderUpdateView, self).form_valid(form)
 
     def get_success_url(self):
