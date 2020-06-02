@@ -14,9 +14,9 @@
         </li>
     </ol>
 </nav> 
-<form action="" method="POST">
+<form action="" method="POST" class="col-md-10 mx-auto">
     {% csrf_token%}   
-    <div class="card card-form">
+    <div class="card card-form ">
         <div class="card-header" id="card_header_content">
             <h3 style="text-align: center;">Requisition Form</h3>
         </div>
@@ -24,16 +24,16 @@
             <div class="col-lg-12">
                 <div class="row">
                     <div class="form-group col-md-9">
-                        <strong>ProjectSite: </strong>
-                        {{form.instance.projectsite}} 
+                        
+                        {{form.projectsite|as_crispy_field}} 
                     </div>
                     <div class="form-group col-md-3">
-                        <strong>Date: </strong>
-                        {{form.instance.date}}
+                       
+                        {{form.date|as_crispy_field}}
                     </div>
                     <div class="form-group col-md-6">
-                        <strong>Send to: </strong>
-                        {{form.instance.admin}}
+                       
+                        {{form.admin|as_crispy_field}}
                     </div>
                 </div>
             </div>
@@ -52,9 +52,11 @@
                         <td>{{i.articles}}</td>
                         <td>{{i.unit}}</td>
                         <td>{{i.quantity}}</td>
-                        {% if formset.can_delete %}
-                            {{ i.DELETE }}
-                        {% endif %}
+                        <td>
+                            {% if formset.can_delete %}
+                                {{ i.DELETE }}
+                            {% endif %}
+                        </td>
                     </tr>
                     {% endfor %}
                 </table>
@@ -62,9 +64,8 @@
             <br>
             <div class="row">
             <div class="form-group col-md-8"></div>
-                <div class="form-group col-md-4 text-right">
-                    <strong>Prepared by: </strong>
-                    {{form.instance.whm}}
+                <div class="form-group col-md-4">
+                    {{form.whm|as_crispy_field}}
                 </div>
             </div>
             <button type="submit" class="btn btn-outline-primary" style="float:right">Submit</button>
@@ -81,5 +82,5 @@
         prefix: '{{ formset.prefix }}'
     });
 </script>
-<script src="{% static 'assets/js/custom/requisition.js'%}"></script>
+<script src="{% static 'assets/js/custom/requisition_update.js'%}"></script>
 {%endblock%}

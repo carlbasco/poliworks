@@ -281,7 +281,7 @@ class ClientQuotationForm(forms.ModelForm):
 #################################################################################################################################
 #################################################################################################################################        
 class RequisitionForm(forms.ModelForm):
-    unit = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control','readonly':'true'}))
+    unit = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control unit','readonly':'true'}))
     class Meta:
         model=Requisition
         fields='__all__'
@@ -306,7 +306,7 @@ RequisitionUpdateFormSet = inlineformset_factory(
     can_delete=True,
     exclude=('status',),
     widgets={
-        'quantity':forms.NumberInput(attrs={'class':'form-control'}),
+        'quantity':forms.NumberInput(attrs={'class':'form-control', 'required':'true'}),
         'articles':forms.Select(attrs={'class':'form-control art'})
     }
 )
