@@ -22,7 +22,7 @@ from django.conf.urls import url, include
 admin.autodiscover()
 
 urlpatterns = [
-    path('superuser/', admin.site.urls, name='superuser'),
+    path('file_maintenance/', admin.site.urls, name='superuser'),
     path('', include('construction.urls')),
 ]
 

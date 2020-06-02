@@ -65,12 +65,11 @@
                 </div>
             </div>
             <div class="btn-grp">
-                <form action="{% url 'requisition_delete' data.id%}">
-                    <button type="submit" class="btn btn-outline-danger edit-delete-btn">Delete</button>
-                </form>
-                <form action="{% url 'requisition_update' data.id%}">
-                    <button type="submit" class="btn btn-outline-primary edit-delete-btn">Edit</button>
-                </form>
+                <a href="{% url 'requisition_delete' data.id%}" class="btn btn-outline-danger float-right mr-3">Delete</a>
+                <a href="{% url 'requisition_update' data.id%}" class="btn btn-outline-primary float-right mr-3">Edit</a>
+                {% if request.user.groups.all.0.name == "Admin"%}
+                <a href="" class="btn btn-outline-success float-right mr-3">Comply Request</a>
+                {% endif %}
             </div>
         </div>
     </div>
