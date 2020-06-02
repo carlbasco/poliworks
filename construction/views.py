@@ -312,7 +312,8 @@ class QuotationUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
             return super(QuotationUpdateView, self).form_valid(form)
         
     def get_success_url(self):
-        return reverse_lazy("quotation_list")
+        data=self.kwargs['pk']
+        return reverse_lazy("quotation_detail", kwargs={'pk': data})
 
 @login_required(login_url='signin')
 @allowed_users(allowed_roles=['Admin','Project Manager'])
@@ -480,7 +481,8 @@ class RequisitionUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView)
             return super(RequisitionUpdateView, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy("requisition_list")
+        data=self.kwargs['pk']
+        return reverse_lazy("requisition_detail", kwargs={'pk': data})
 
 @login_required(login_url='signin')
 @allowed_users(allowed_roles=['Admin','Warehouseman'])
@@ -591,7 +593,8 @@ class ExternalOrderUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateVie
             return super(ExternalOrderUpdateView, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy("externalorder_list")
+        data=self.kwargs['pk']
+        return reverse_lazy("externalorder_detail", kwargs={'pk': data})
 
 @login_required(login_url = 'signin')
 @allowed_users(allowed_roles = ['Admin','Warehouseman'])
@@ -685,7 +688,8 @@ class JobOrderUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
             return super(JobOrderUpdateView, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy("joborder_list")
+        data=self.kwargs['pk']
+        return reverse_lazy("joborder_detail", kwargs={'pk': data})
 
 @login_required(login_url = 'signin')
 @allowed_users(allowed_roles = ['Admin','Project Manager','Person In-Charge'])
