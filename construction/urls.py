@@ -93,4 +93,10 @@ urlpatterns = [
     path('backoffice/api/materials/<str:pk>/', views.Inventory_api, name="Inventory_api"),
     path('backoffice/api/city/<int:pk>', views.City_api, name="Inventory_api"),
     
+    #PM's page
+    path('backoffice/pm/project_list', views.ProjectListView_PM, name="project_list_pm"),
+    path('backoffice/pm/task/rework_list', views.ReworkListView_PM, name="rework_list_pm"),
+
+    #PIC's page
+    path('backoffice/pic/project_list', views.ProjectListView_PIC, name="project_list_pic"),
 ]

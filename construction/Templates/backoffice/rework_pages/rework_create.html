@@ -10,7 +10,11 @@
         Rework Form
         </li>
         <li class="breadcrumb-item">
-        <a href="{% url 'rework_list'%}">Rework List</a>
+            {% if request.user.groups.all.0.name == "Admin"%}
+                <a href="{% url 'rework_list'%}">Rework List</a>
+            {% elif request.user.groups.all.0.name == "Project Manager"%}
+                <a href="{% url 'rework_list_pm'%}">Rework List</a>
+            {% endif %}
         </li>
     </ol>
 </nav>  

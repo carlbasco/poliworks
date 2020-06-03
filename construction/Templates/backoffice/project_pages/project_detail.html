@@ -11,8 +11,8 @@
 </div>
 <div class="col-md-12 mx-auto">
     {% for message in messages %}
-        <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
-            {% if message.extra_tags == "success" %}
+        <div class="alert alert-{{message.level_tag}} alert-dismissible fade show" role="alert">
+            {% if message.level_tag  == "success" %}
                 <strong>Success! </strong>
             {% else %}
                 <strong>Error! </strong>
@@ -27,109 +27,114 @@
 <section>
     <div class="row">
         <div class="accordion col col-md-5" id="accordionExample">
-        <div class="card">
-        <div class="card-header" id="headingOne">
-            <h2 class="mb-0">
-            <button class="btn btn-link collapsed btn-cardheader" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-            QUOTATION
-            </button>
-            </h2>
-        </div>
-        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-borderless">
-                        <thead>
+            {% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Project Manager"%}
+            <div class="card">
+            <div class="card-header" id="headingOne">
+                <h2 class="mb-0">
+                <button class="btn btn-link collapsed btn-cardheader" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                QUOTATION
+                </button>
+                </h2>
+            </div>
+            <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-borderless">
+                            <thead>
+                                <tr>
+                                <th>Subject</th>
+                                <th>Date</th>
+                                <th>Total Amount</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                                </tr>
+                            </thead>
+                        <tbody>
+                            {% if data2 %}
+                            {% for i in data2 %}
                             <tr>
-                            <th>Subject</th>
-                            <th>Date</th>
-                            <th>Total Amount</th>
-                            <th>Status</th>
-                            <th>Action</th>
+                                <td>{{i.subject}}</td>
+                                <td>{{i.date}}</td>
+                                <td>{{i.amount}}</td>
+                                {% if i.status == "Rejected"%}
+                                    <td><span class="badge badge-danger">{{i.status}}</span></td>
+                                {% elif i.status == "Pending"%}
+                                    <td><span class="badge badge-primary">{{i.status}}</span></td>
+                                {% else %}
+                                    <td><span class="badge badge-success">{{i.status}}</span></td>
+                                {% endif %}
+                                <td><a href="{% url 'quotation_detail' i.id%}" class="btn btn-outline-primary view-btn">View</a></td>
                             </tr>
-                        </thead>
-                    <tbody>
-                        {% if data2 %}
-                        {% for i in data2 %}
-                        <tr>
-                            <td>{{i.subject}}</td>
-                            <td>{{i.date}}</td>
-                            <td>{{i.amount}}</td>
-                            {% if i.status == "Rejected"%}
-                                <td><span class="badge badge-danger">{{i.status}}</span></td>
-                            {% elif i.status == "Pending"%}
-                                <td><span class="badge badge-primary">{{i.status}}</span></td>
+                            {% endfor %}
                             {% else %}
-                                <td><span class="badge badge-success">{{i.status}}</span></td>
+                            <tr>
+                                <td colspan="5">
+                                    <p class="text-center">No Data Available</p><br>
+                                    <a href="{% url 'quotation_create'%}">Create Quotation</a>
+                                </td>
+                            </tr>
+                            {% endif%}
+                        </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            </div>
+            {% endif %}
+            <div class="card">
+                <div class="card-header" id="headingTwo">
+                    <h2 class="mb-0">
+                    <button class="btn btn-link btn-cardheader" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    PROJECT DETAILS</button>
+                    </h2>
+                </div>
+                <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                    <div class="card-body">
+                        <ul class="ul-projectdetails">
+                            <li class="projectdetails">Client:<h5>{{data.client}}</h5></li>
+                            <li class="projectdetails">Project Manager:<h5>{{data.pm}}</h5></li>
+                            <li class="projectdetails">Person In-Charge: <h5>{{data.pic}}</h5></li>
+                            <li class="projectdetails">Project Type: <h5>{{data.typeofproject}}</h5></li>
+                            <li class="projectdetails">Lot Area: <h5>{{data.lotarea}}</h5></li>
+                            <li class="projectdetails">Address: <h5>{{data.address}}</h5> </li>
+                            <li class="projectdetails">City: <h5>{{data.city}}</h5> </li>
+                            <li class="projectdetails">Province: <h5>{{data.province}}</h5> </li>
+                            {% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Project Manager"%}
+                                <a class="btn btn-outline-primary float-right ml-3" href="{% url 'project_update' data.id%}">Edit Project Details</a></td>
                             {% endif %}
-                            <td><a href="{% url 'quotation_detail' i.id%}" class="btn btn-outline-primary view-btn">View</a></td>
-                        </tr>
-                        {% endfor %}
-                        {% else %}
-                        <tr>
-                            <td colspan="5">
-                                <p class="text-center">No Data Available</p><br>
-                                <a href="{% url 'quotation_create'%}">Create Quotation</a>
-                            </td>
-                        </tr>
-                        {% endif%}
-                    </tbody>
-                    </table>
+                            <br>
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </div>
-        </div>
 
-        <div class="card">
-            <div class="card-header" id="headingTwo">
-                <h2 class="mb-0">
-                <button class="btn btn-link btn-cardheader" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                PROJECT DETAILS</button>
-                </h2>
-            </div>
-            <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionExample">
-                <div class="card-body">
-                    <ul class="ul-projectdetails">
-                        <li class="projectdetails">Client:<h5>{{data.client}}</h5></li>
-                        <li class="projectdetails">Project Manager:<h5>{{data.pm}}</h5></li>
-                        <li class="projectdetails">Person In-Charge: <h5>{{data.pic}}</h5></li>
-                        <li class="projectdetails">Project Type: <h5>{{data.typeofproject}}</h5></li>
-                        <li class="projectdetails">Lot Area: <h5>{{data.lotarea}}</h5></li>
-                        <li class="projectdetails">Address: <h5>{{data.address}}</h5> </li>
-                        <li class="projectdetails">City: <h5>{{data.city}}</h5> </li>
-                        <li class="projectdetails">Province: <h5>{{data.province}}</h5> </li>
-                        <a class="btn btn-outline-primary float-right ml-3" href="{% url 'project_update' data.id%}">Edit Project Details</a></td>
-                        <br>
-                    </ul>
+            <div class="card">
+                <div class="card-header" id="headingThree">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed  btn-cardheader" type="button" data-toggle="collapse" data-target="#personnel" aria-expanded="false" aria-controls="collapseThree">
+                        Workers</button>
+                    </h2>
+                </div>
+                <div id="personnel" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                    <div class="card-body">
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="card">
-            <div class="card-header" id="headingThree">
-                <h2 class="mb-0">
-                    <button class="btn btn-link collapsed  btn-cardheader" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                    Reports</button>
-                </h2>
-            </div>
-            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
-                <div class="card-body">
-                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+
+            <div class="card">
+                <div class="card-header" id="headingThree">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed  btn-cardheader" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        Reports</button>
+                    </h2>
+                </div>
+                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                    <div class="card-body">
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="card">
-            <div class="card-header" id="headingThree">
-                <h2 class="mb-0">
-                    <button class="btn btn-link collapsed  btn-cardheader" type="button" data-toggle="collapse" data-target="#personnel" aria-expanded="false" aria-controls="collapseThree">
-                    Workers</button>
-                </h2>
-            </div>
-            <div id="personnel" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
-                <div class="card-body">
-                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                </div>
-            </div>
-        </div>
         </div>
 
         <div class="col col-md-7 ">
@@ -172,8 +177,10 @@
         <div class="card">
             <div class="card-header" id="headingOverview">
                 <h3>Work Details
-                    {% if data3 %}
-                        <a href="{% url 'progress_update' data3.id %}"style="float:right; color:white;"title="Edit Project Progress"><i class="fa fa-edit"></i></a>
+                    {% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Project Manager"%}
+                        {% if data3 %}
+                            <a href="{% url 'progress_update' data3.id %}"style="float:right; color:white;"title="Edit Project Progress"><i class="fa fa-edit"></i></a>
+                        {% endif %}
                     {% endif %}
                 </h3>
             </div>

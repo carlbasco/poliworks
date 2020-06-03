@@ -21,6 +21,7 @@
             </div>
         </li>
 
+        {% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Project Manager" or request.user.groups.all.0.name == "Person In-Charge"%}
         <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#project-dropdown" aria-expanded="false" aria-controls="project-dropdown">
                 <i class="menu-icon mdi mdi-television"></i>
@@ -30,22 +31,34 @@
             <div class="collapse" id="project-dropdown">
                 <ul class="nav flex-column sub-menu">
                     <li class="nav-item">
+                        {% if request.user.groups.all.0.name == "Admin"%}
                         <form action="{% url 'project_create'%}">
                             <button class="btn btn-outline-primary btn-sm" id="btn-project">New Project
                                 <i class="mdi mdi-plus"></i>
                             </button>
                         </form>
+                        {% endif %}
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'project_list'%}">List of Projects</a>
+                        {% if request.user.groups.all.0.name == "Admin"%}
+                            <a class="nav-link" href="{% url 'project_list'%}">List of Projects</a>
+                        {% elif request.user.groups.all.0.name == "Project Manager"%}
+                            <a class="nav-link" href="{% url 'project_list_pm'%}">List of Projects</a>
+                        {% elif request.user.groups.all.0.name == "Person In-Charge"%}
+                            <a class="nav-link" href="{% url 'project_list_pic'%}">List of Projects</a>
+                        {% endif %}
                     </li>
+                    {% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Project Manager"%}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'quotation_create'%}">Quotation</a>
                     </li>
+                    {% endif %}
                 </ul>
             </div>
         </li>
+        {% endif %}
 
+        {% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Warehouseman"%}
         <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#material-dropdown" aria-expanded="false" aria-controls="material-dropdown">
                 <img class="icn" src="https://img.icons8.com/dotty/20/000000/commodity.png">
@@ -63,7 +76,9 @@
                 </ul>
             </div>
         </li>
+        {% endif %}
 
+        {% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Person In-Charge" or request.user.groups.all.0.name == "Project Manager"%}
         <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#account-dropdown" aria-expanded="false" aria-controls="account-dropdown">
                 <i class="menu-icon mdi mdi-account-multiple"></i>
@@ -72,40 +87,22 @@
             </a>
             <div class="collapse" id="account-dropdown">
                 <ul class="nav flex-column sub-menu">
+                    {% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Person In-Charge"%}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'joborder_create'%}">Job Order</a>
                     </li>
+                    {% endif %}
+                    {% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Project Manager"%}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'rework_create'%}">Rework</a>
                     </li>
+                    {% endif %}
                 </ul>
             </div>
         </li>
-
-        <!-- <li class="nav-item">
-        <a class="nav-link" data-toggle="collapse" href="#apps-dropdown" aria-expanded="false" aria-controls="apps-dropdown">
-        <i class="menu-icon mdi mdi-dna"></i>
-        <span class="menu-title">Apps</span>
-        <i class="menu-arrow"></i>
-        </a>
-        <div class="collapse" id="apps-dropdown">
-        <ul class="nav flex-column sub-menu">
-        <li class="nav-item">
-        <a class="nav-link" href="#">E-mail</a>
-        </li>
-        <li class="nav-item">
-        <a class="nav-link" href="#">Calendar</a>
-        </li>
-        <li class="nav-item">
-        <a class="nav-link" href="#">Todo List</a>
-        </li>
-        <li class="nav-item">
-        <a class="nav-link" href="#">Gallery</a>
-        </li>
-        </ul>
-        </div>
-        </li> -->
-
+        {% endif %}
+        
+        {% if request.user.groups.all.0.name == "Admin"%}
         <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#personnel-dropdown" aria-expanded="false" aria-controls="personnel-dropdown">
                 <i class="menu-icon mdi mdi-account-multiple"></i>
@@ -117,14 +114,15 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'signupclient' %}">Create Account</a>
                     </li>
-                    {% if request.user.groups.all.0.name == "Admin"%}
+                    
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'admin:index'%}">File Maintenance</a>
                     </li>
-                    {% endif %}
+                    
                 </ul>
             </div>
         </li>
+        {% endif %}
 
         <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#report-dropdown" aria-expanded="false" aria-controls="report-dropdown">
@@ -134,15 +132,19 @@
             </a>
             <div class="collapse" id="report-dropdown">
                 <ul class="nav flex-column sub-menu">
+                    {% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Warehouseman"%}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'issues' %}">Project Issues</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'dailyreport'%}">Daily Report</a>
                     </li>
+                    {% endif %}
+                    {% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Person In-Charge"%}
                     <li class="nav-item">
                         <a class="nav-link" href="#">Weekly Reports</a>
                     </li>
+                    {% endif %}
                 </ul>
             </div>
         </li> 

@@ -4,21 +4,11 @@
 {% load humanize %}
 {% block content %}
 <span class="text-uppercase page-subtitle">Project</span>
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb bg-inverse-primary">
-        <li class="breadcrumb-item">
-            <a href="{% url 'quotation_create'%}">Quotation Create</a>
-        </li>
-        <li class="breadcrumb-item">
-            <a href="{% url 'quotation_list'%}">Quotation List</a>
-        </li>
-    </ol>
-</nav>
 <form action="" method="POST">
 {% csrf_token%}
-    <div class="card">
+    <div class="card card-form">
         <div class="card-header" id="card_header_content">
-            <h3 style="text-align: center;">Quotation Form</h3>
+            <h3 style="text-align: center;">Quotation Update Form</h3>
         </div>
         <div class="card-body">
             <div class="col-lg-12">

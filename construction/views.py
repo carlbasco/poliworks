@@ -44,6 +44,12 @@ def signin(request):
             group = request.user.groups.all()[0].name
             if group == 'Client':
                 return redirect('client_home')
+            elif group == "Project Manager":
+                return redirect('project_list_pm')
+            elif group == "Person In-Charge":
+                return redirect('project_list_pic')
+            elif group == "Warehouseman":
+                return redirect('requisition_create')
             else:
                 return redirect('project_list')
         else:
@@ -210,7 +216,7 @@ def ProjectUpdateView(request,pk):
     return render(request, 'backoffice/project_pages/project_update.html', context)
 
 @login_required(login_url='signin')
-@allowed_users(allowed_roles=['Admin','Project Manager','Person In-Charge'])
+@admin_only
 def ProjectListView(request):
     data = ProjectSite.objects.all()
     data2 = ProjectSite.objects.filter(status="Completed")
@@ -223,8 +229,48 @@ def ProjectListView(request):
     return render(request,'backoffice/project_pages/project_list.html', context)
 
 @login_required(login_url='signin')
+@pm_only
+def ProjectListView_PM(request):
+    data = ProjectSite.objects.filter(pm=request.user)
+    data2 = ProjectSite.objects.filter(status="Completed")
+    data3 = ProjectSite.objects.filter(status="On-going")
+    data4 = ProjectSite.objects.filter(status="Pending")
+    completed = data2.count()
+    ongoing = data3.count()
+    pending = data4.count()
+    context={'data':data, 'completed':completed, 'ongoing':ongoing, 'pending':pending}
+    return render(request,'backoffice/project_pages/project_list.html', context)
+
+@login_required(login_url='signin')
+@pic_only
+def ProjectListView_PIC(request):
+    data = ProjectSite.objects.filter(pic=request.user)
+    data2 = ProjectSite.objects.filter(status="Completed")
+    data3 = ProjectSite.objects.filter(status="On-going")
+    data4 = ProjectSite.objects.filter(status="Pending")
+    completed = data2.count()
+    ongoing = data3.count()
+    pending = data4.count()
+    context={'data':data, 'completed':completed, 'ongoing':ongoing, 'pending':pending}
+    return render(request,'backoffice/project_pages/project_list.html', context)
+
+@login_required(login_url='signin')
 @staff_only
 def ProjectDetailView(request, pk):
+    data = ProjectSite.objects.get(id=pk)
+    data2 = Quotation.objects.filter(projectsite_id=data.id)
+    try:
+        data3 = ProjectProgress.objects.get(projectsite_id=data.id)
+        data4 = ProjectProgressDetails.objects.filter(projectprogress=data3.id)
+    except ObjectDoesNotExist:
+        context={'data':data, 'data2':data2}
+        return render(request, 'backoffice/project_pages/project_detail.html', context)
+    context={'data':data, 'data2':data2,'data3':data3,'data4':data4,}
+    return render(request, 'backoffice/project_pages/project_detail.html', context)
+
+@login_required(login_url='signin')
+@staff_only
+def ProjectDetailView_PIC(request, pk):
     data = ProjectSite.objects.get(id=pk)
     data2 = Quotation.objects.filter(projectsite_id=data.id)
     try:
@@ -274,7 +320,9 @@ class QuotationCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
             return super(QuotationCreateView, self).form_valid(form)
         
     def get_success_url(self):
-        return reverse_lazy("quotation_list")
+        data = self.object
+        data2 = data.projectsite.id
+        return reverse_lazy("project_detail", kwargs={'pk': data2})
 
 class QuotationUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     login_url ="signin"
@@ -316,7 +364,7 @@ class QuotationUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         return reverse_lazy("quotation_detail", kwargs={'pk': data})
 
 @login_required(login_url='signin')
-@allowed_users(allowed_roles=['Admin','Project Manager'])
+@allowed_users(allowed_roles=['Admin'])
 def QuotationListView(request):
     data = Quotation.objects.all().order_by('date')
     data2 = QuotationDetails.objects.all()
@@ -359,7 +407,10 @@ def QuotationDeleteView(request,pk):
     if request.method == 'POST':
         data.delete()
         messages.success(request, 'Quotion has been deleted!', extra_tags='success')
-        return redirect('quotation_list')
+        # if request.user.groups.all()[0].name=="Project Manager":
+        return redirect('project_detail', pk=data.projectsite.id)
+        # else:
+        #     return redirect('quotation_list')
     context={'data':data,'data2':data2,}
     return render(request, 'backoffice/quotation_pages/quotation_delete.html', context)
 
@@ -760,6 +811,13 @@ def ReworkListView(request):
 
 @login_required(login_url = 'signin')
 @allowed_users(allowed_roles = ['Admin','Project Manager', 'Person In-Charge'])
+def ReworkListView_PM(request):
+    data = Rework.objects.filter(pm=request.user)
+    context={'data':data}
+    return render(request, 'backoffice/rework_pages/rework_list.html', context) 
+
+@login_required(login_url = 'signin')
+@allowed_users(allowed_roles = ['Admin','Project Manager', 'Person In-Charge'])
 def ReworkDetailView(request,pk):
     data = Rework.objects.get(id=pk)
     context={'data':data}
@@ -803,7 +861,7 @@ def dailyreport(request):
         if form.is_valid():
             post = form.save(commit=False)
             for f in files:
-                report = DailyReport(projectsite=post.projectsite, image=f)
+                report = DailyReportForm(projectsite=post.projectsite, image=f)
                 report.save()
             return redirect('dailyreport')
     context={'form':form}

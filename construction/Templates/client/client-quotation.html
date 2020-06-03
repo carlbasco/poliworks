@@ -6,98 +6,101 @@
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col col-md-8">
-            <div class="card-header">
-                <h2 class="mb-0">Quotation</h2>
-            </div>
-            <div class="card-body">
-            <form action="" method="post">
-                {%csrf_token%}
-                <div class="row"> 
-                    <div class = "col-md-8">
-                        <h6 class="sub">Project Site: <span class="boldtxt">{{data.projectsite}}</span></h6>
-                    </div>
-                    <div class="col-md-4 ml-auto">
-                        <h6 class="sub">Date: <span class="boldtxt">{{data.date}}</span></h6>
-                    </div>
-                    <div class = "col-md-8">
-                        <h6 class="sub">Subject: <span class="boldtxt">{{data.subject}}</span></h6>
-                    </div>
-                    <div class="col-md-4 ml-auto">
-                        <h6 class="sub">Status: <span class="boldtxt">{{data.status}}</span></h6>
-                    </div>
+            <div class="card mb-5">
+                <div class="card-header">
+                    <h2 class="mb-0">Quotation</h2>
                 </div>
-                <div class="table-responsive-lg">
-                    <table class="table">
-                        <thead class="thead">
-                            <tr>
-                                <th class="scope">Scope of Work</th>
-                                <th>Unit</th>
-                                <th>Quantity</th>
-                                <th class="center">Cost</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                                {% for i in data2 %}
+                <div class="card-body">
+                <form action="" method="post">
+                    {%csrf_token%}
+                    <div class="row"> 
+                        <div class = "col-md-8">
+                            <h6 class="sub">Project Site: <span class="boldtxt">{{data.projectsite}}</span></h6>
+                        </div>
+                        <div class="col-md-4 ml-auto">
+                            <h6 class="sub">Date: <span class="boldtxt">{{data.date}}</span></h6>
+                        </div>
+                        <div class = "col-md-8">
+                            <h6 class="sub">Subject: <span class="boldtxt">{{data.subject}}</span></h6>
+                        </div>
+                        <div class="col-md-4 ml-auto">
+                            <h6 class="sub">Status: <span class="boldtxt">{{data.status}}</span></h6>
+                        </div>
+                    </div>
+                    <div class="table-responsive-lg">
+                        <table class="table">
+                            <thead class="thead">
                                 <tr>
-                                    <td scope="row" class="scope">{{i.scope_of_work.scope}}</td>
-                                    <td class="td_100">{{i.unit}}</td>
-                                    <td class="td_100 center">{{i.quantity}}</td>
-                                    <td class="text-right money">{{i.unitcost|intcomma}}</td>
+                                    <th class="scope">Scope of Work</th>
+                                    <th>Unit</th>
+                                    <th>Quantity</th>
+                                    <th class="center">Cost</th>
                                 </tr>
-                                {% endfor %}
-                                <tr>
-                                    <td></td>
-                                    <td colspan="2"><span class="boldtxt">TOTAL COST</span></td>
-                                    <td class="text-right boldtxt">{{data.amount|intcomma}}</td>
-                                </tr>
-                            </tbody>
-                    </table>
-                </div>
-                {% if data.status == "Pending"%}
-                <button type="button" class="btn btn-outline-primary quo-btn" data-toggle="modal" data-target="#acceptmodal">Accept</button>
-                <div class="modal fade" id="acceptmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Confirmation</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <p class="ptxt">Are you sure you want to accept it?</p> 
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
-                                <button type="submit" value="Accepted" class="btn btn-outline-primary" name="status" id="status_accept">Accept</button>
+                                </thead>
+                                <tbody>
+                                    {% for i in data2 %}
+                                    <tr>
+                                        <td scope="row" class="scope">{{i.scope_of_work.scope}}</td>
+                                        <td class="td_100">{{i.unit}}</td>
+                                        <td class="td_100 center">{{i.quantity}}</td>
+                                        <td class="text-right money">{{i.unitcost|intcomma}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                    <tr>
+                                        <td></td>
+                                        <td colspan="2"><span class="boldtxt">TOTAL COST</span></td>
+                                        <td class="text-right boldtxt">{{data.amount|intcomma}}</td>
+                                    </tr>
+                                </tbody>
+                        </table>
+                    </div>
+                    {% if data.status == "Pending"%}
+                    <button type="button" class="btn btn-outline-primary quo-btn" data-toggle="modal" data-target="#acceptmodal">Accept</button>
+                    <div class="modal fade" id="acceptmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Confirmation</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="ptxt">Are you sure you want to accept it?</p> 
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" value="Accepted" class="btn btn-outline-primary" name="status" id="status_accept">Accept</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <button type="button" class="btn btn-outline-danger quo-btn" data-toggle="modal" data-target="#rejectmodal">Reject</button>
-                <div class="modal fade" id="rejectmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Confirmation</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <p class="ptxt">Are you sure you want to reject it?</p> 
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
-                                <button type="submit" value="Rejected" class="btn btn-outline-danger" name="status" id="status_accept">Reject</button>
+                    <button type="button" class="btn btn-outline-danger quo-btn" data-toggle="modal" data-target="#rejectmodal">Reject</button>
+                    <div class="modal fade" id="rejectmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Confirmation</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="ptxt">Are you sure you want to reject it?</p> 
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" value="Rejected" class="btn btn-outline-danger" name="status" id="status_accept">Reject</button>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    {% endif %}
+    
+                </form>
                 </div>
-                {% endif %}
-
-            </form>
             </div>
+            
         </div>
         
     </div>
