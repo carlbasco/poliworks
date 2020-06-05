@@ -38,14 +38,6 @@ class UserAdmin(BaseUserAdmin):
 
 admin.site.register(User, UserAdmin)
 
-# @admin.register(ZipCode)
-# class ViewAdmin(ImportExportModelAdmin):
-#     exclude = ('id', )
-#     list_display=('location', 'city', 'zipcode')
-#     search_fields=('location','city', 'zipcode')
-#     ordering=('city','location')
-#     list_per_page=20
-
 @admin.register(Province)
 class ProvinceAdmin(ImportExportModelAdmin):
     list_display=('id','name',)
@@ -68,6 +60,10 @@ class projectdetails(ImportExportModelAdmin):
         'pm', 'client','projectsite','typeofproject','startdate','status'
     )
 
+@admin.register(PersonnelSkill)
+class personnel_skill(ImportExportModelAdmin):
+    exclude=('id', )
+
 @admin.register(ScopeOfWorkCategory)
 class ScopeOfWorkCategory(ImportExportModelAdmin):
     list_display=('category',)
@@ -81,8 +77,7 @@ class ScopeOfWork(ImportExportModelAdmin):
     list_filter=('category',)
     ordering=('pk',)
 
-admin.site.register(PersonnelSkill)
-# admin.site.register(Personnel)
+
 @admin.register(Personnel)
 class PersonnelAdmin(admin.ModelAdmin):
     list_display = ('full_name','skill','personnel_type')

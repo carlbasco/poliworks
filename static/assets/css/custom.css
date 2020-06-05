@@ -302,3 +302,6 @@ img#dp {
 .btn.btn-outline-secondary, .ajax-upload-dragdrop .btn-outline-secondary.ajax-file-upload, .swal2-modal .swal2-buttonswrapper .btn-outline-secondary.swal2-styled, .wizard > .actions a.btn-outline-secondary {
     color: black;
 }
+.select2 {
+    width:100%!important;
+    }

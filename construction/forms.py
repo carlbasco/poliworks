@@ -440,6 +440,7 @@ class PersonnelForm(forms.ModelForm):
     class Meta:
         model=Personnel
         fields='__all__'
+        exclude = ('status','projectsite')
 
 class SkillForm(forms.ModelForm):
     class Meta:

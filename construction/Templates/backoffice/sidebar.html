@@ -87,6 +87,9 @@
             </a>
             <div class="collapse" id="account-dropdown">
                 <ul class="nav flex-column sub-menu">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'personnel_create'%}">Personnel</a>
+                    </li>
                     {% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Person In-Charge"%}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'joborder_create'%}">Job Order</a>

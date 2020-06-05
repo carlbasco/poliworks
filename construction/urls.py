@@ -47,6 +47,13 @@ urlpatterns = [
     path('backoffice/task/joborder/<int:pk>/edit', views.JobOrderUpdateView.as_view(), name="joborder_update"),
     path('backoffice/task/joborder/<int:pk>/delete', views.JobOrderDeleteView, name="joborder_delete"),
 
+    #Personnel
+    path('backoffice/personnel/add', views.PersonnelCreateView, name="personnel_create"),
+    path('backoffice/personnel/list',views.PersonnelListView, name="personnel_list"),
+    path('backoffice/personnel/<int:pk>',views.PersonnelDetailView, name="personnel_detail"),
+    path('backoffice/personnel/<int:pk>/edit',views.PersonnelUpdateView, name="personnel_update"),
+    path('backoffice/personnel/<int:pk>/delete',views.PersonnelDeleteView, name="personnel_delete"),
+
     #Rework
     path('backoffice/task/rework', views.ReworkCreateView, name="rework_create"),
     path('backoffice/task/rework_list', views.ReworkListView, name="rework_list"),
@@ -89,8 +96,8 @@ urlpatterns = [
 
     #api get method
     path('backoffice/api/scope', views.ScopeOfWorks_api, name="ScopeOfWorks_api"),
-    path('backoffice/api/scope/<str:pk>', views.ScopeOfWork_api, name="ScopeOfWork_api"),
-    path('backoffice/api/materials/<str:pk>/', views.Inventory_api, name="Inventory_api"),
+    path('backoffice/api/scope/<int:pk>', views.ScopeOfWork_api, name="ScopeOfWork_api"),
+    path('backoffice/api/materials/<int:pk>/', views.Inventory_api, name="Inventory_api"),
     path('backoffice/api/city/<int:pk>', views.City_api, name="Inventory_api"),
     
     #PM's page

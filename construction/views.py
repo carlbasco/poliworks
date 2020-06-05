@@ -268,19 +268,6 @@ def ProjectDetailView(request, pk):
     context={'data':data, 'data2':data2,'data3':data3,'data4':data4,}
     return render(request, 'backoffice/project_pages/project_detail.html', context)
 
-@login_required(login_url='signin')
-@staff_only
-def ProjectDetailView_PIC(request, pk):
-    data = ProjectSite.objects.get(id=pk)
-    data2 = Quotation.objects.filter(projectsite_id=data.id)
-    try:
-        data3 = ProjectProgress.objects.get(projectsite_id=data.id)
-        data4 = ProjectProgressDetails.objects.filter(projectprogress=data3.id)
-    except ObjectDoesNotExist:
-        context={'data':data, 'data2':data2}
-        return render(request, 'backoffice/project_pages/project_detail.html', context)
-    context={'data':data, 'data2':data2,'data3':data3,'data4':data4,}
-    return render(request, 'backoffice/project_pages/project_detail.html', context)
 
 #################################################################################################################################
 #################################################################################################################################
@@ -704,6 +691,14 @@ class JobOrderCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         if formset.is_valid():
             formset.instance = self.object
             formset.save()
+            data = Personnel.objects.all()
+            data2 = formset
+            data3 = self.object
+            for i in data2:
+                if i.personnel == data.id:
+                    data.status = "Currently Assigned"
+                    data.projectsite = data3.projectsite
+            data.save()
             return super(JobOrderCreateView, self).form_valid(form)
 
     def get_success_url(self):
@@ -769,6 +764,64 @@ def JobOrderDeleteView(request,pk):
         return redirect("joborder_list")
     context = {'data':data,'data2':data2}
     return render(request, 'backoffice/joborder_pages/joborder_delete.html', context)
+
+#################################################################################################################################
+#################################################################################################################################
+@login_required(login_url = 'signin')
+@admin_only
+def PersonnelCreateView(request):
+    data = Personnel.objects.all()
+    if request.method == 'POST':
+        form = PersonnelForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, str(form.first_name)+" "+str(form.last_name)+ "Has been added to the list", extra_tags=success)
+            return redirect('personnel_create')
+    else:
+        form = PersonnelForm()
+    context={'form':form, 'data':data}
+    return render(request, 'backoffice/personnel_pages/personnel_create.html', context)        
+
+@login_required(login_url = 'signin')
+@staff_only
+def PersonnelListView(request):
+    data = Personnel.objects.all()
+    context = {'data':data}
+    return render(request, 'backoffice/personnel_pages/personnel_create.html', context)
+
+
+@login_required(login_url = 'signin')
+@staff_only
+def PersonnelDetailView(request, pk):
+    data = Personnel.objects.get(id=pk)
+    context = {'data':data}
+    return render(request, 'backoffice/personnel_pages/personnel_detail.html', context)
+
+@login_required(login_url = 'signin')
+@admin_only
+def PersonnelDeleteView(request, pk):
+    data = Personnel.objects.get(id=pk)
+    if request.method == 'POST':
+        data.delete()
+        messages.success(request, 'Personnel has been deleted!', extra_tags='success')
+        return redirect("personnel_create")
+    context = {'data':data}
+    return render(request, 'backoffice/personnel_pages/personnel_delete.html', context)
+
+@login_required(login_url = 'signin')
+@admin_only
+def PersonnelUpdateView(request, pk):
+    data = Personnel.objects.get(id=pk)
+    if request.method == 'POST':
+        form = PersonnelForm(request.POST, instance=data)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Personnel Information has been added to the list", extra_tags=success)
+            return redirect('personnel_detail', pk=data.id)
+    else:
+        form = PersonnelForm(instance=data)
+    context={'form':form, 'data':data}
+    return render(request, 'backoffice/personnel_pages/personnel_update.html', context)
 
 #################################################################################################################################
 #################################################################################################################################

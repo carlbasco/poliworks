@@ -18,17 +18,6 @@ def profile_upload_path(instance, filename):
 def project_upload_path(instance, filename):
     return 'Projects/{0}/{1}'.format(instance.ProjectSite, filename)
 
-# class ZipCode(models.Model):
-#     location = models.CharField(max_length=255)
-#     city = models.CharField(max_length=255)
-#     zipcode = models.IntegerField()
-#     def __str__(self):
-#         address='%s %s %s %s %s '%(self.location, ', ',self.city,' - ',self.zipcode)
-#         return address.strip()
-#     class Meta:
-#         verbose_name_plural='Location'
-#         ordering = ['location']
-
 class Province(models.Model):
     name = models.CharField(max_length=255, null=True, blank=True)
     def __str__(self):
@@ -231,10 +220,18 @@ class Personnel(models.Model):
     middle_name = models.CharField(('Middle Name'), max_length=255, blank=True)
     last_name = models.CharField(('Last Nane'), max_length=255)
     suffix = models.CharField(('Suffix'), max_length=50, blank=True)
+    sex = {('Male','Male'),('Female', 'Female')}
+    sex = models.CharField(('Sex'),max_length=10, choices=sex)
     contact = models.CharField(('Contact Number'), max_length=20)
-    skill = models.ForeignKey(PersonnelSkill, on_delete=models.CASCADE, related_name='personnel')
     choice={('Company Worker', 'Company Worker'), ('Subcontractor','Subcontractor')}
     personnel_type = models.CharField(('Type of Personnel'),max_length=255, choices=choice)
+    skill = models.ForeignKey(PersonnelSkill, on_delete=models.CASCADE, related_name='personnel')
+    address = models.CharField(max_length=255, blank=True, help_text='Apartment, suite, unit, building, floor, street, barangay')
+    city = models.ForeignKey(City, on_delete=models.SET_NULL, verbose_name='City', null=True, blank=True)
+    province = models.ForeignKey(Province, on_delete=models.SET_NULL, verbose_name='Province', null=True, blank=True)
+    status ={('Currently Assigned', 'Currently Assigned'), ('Available', 'Available')}
+    status = models.CharField(('Status'), max_length=255, choices=status, default="Available")
+    projectsite = models.ForeignKey(ProjectSite, on_delete=models.SET_NULL, null=True, blank=True)
     class Meta:
         verbose_name_plural = 'Personnel'
         verbose_name = 'Personnel'
@@ -264,6 +261,9 @@ class JobOrderTask(models.Model):
     personnel = models.ForeignKey(Personnel,on_delete=models.CASCADE, related_name='jobordertask', verbose_name='Personnel')
     activity = models.CharField(('Activity of the Week'), max_length=255)
     duration = models.CharField(('Duration'), max_length=255, blank=True, null=True)
+    status = {('Pending','Pending'),('Done','Done')}
+    status = models.CharField(('Status'), max_length=255, choices=status, default="Pending")
+    completion_date = models.DateField(null=True, blank=True)
     class Meta:
         verbose_name = 'Job Order Task'
         verbose_name_plural = 'Job Order Tasks'
@@ -301,7 +301,6 @@ class Inventory(models.Model):
 
     def __str__(self):
         return self.description
-
 
 class Requisition(models.Model):
     projectsite = models.ForeignKey(ProjectSite, on_delete=models.CASCADE, related_name='requisition_project',verbose_name='Project Site')
@@ -429,6 +428,3 @@ class DailyReport(models.Model):
     class Meta:
         verbose_name_plural='Site Photos'
         verbose_name='Site Photos'
-
-
-

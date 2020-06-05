@@ -66,7 +66,7 @@ def pic_only(view_func):
             return HttpResponse("You cannot view this page")
     return wrapper_func 
 
-def pic_only(view_func):
+def whm_only(view_func):
     def wrapper_func(request, *args, **kwargs):
         group = None
         if request.user.groups.exists():

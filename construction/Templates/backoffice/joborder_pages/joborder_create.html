@@ -16,58 +16,61 @@
 </nav>   
 <form action="" method="POST" id="">
     {% csrf_token%}
-    <div class="card card-form">
-        <div class="card-header" id="card_header_content">
-            <h3 style="text-align: center;">Job Order Form</h3>
-        </div>
-        <div class="card-body">
-            <div class="col-lg-12">
-                <div class="row justify-content-center">
-                    <div class="form-group col-md-12">
-                        {{form.projectsite|as_crispy_field}} 
-                    </div>
-                    <div class="form-group col-md-6">
-                        {{form.date|as_crispy_field}}
-                    </div>
-                    <div class="form-group col-md-6">
-                        {{form.duration|as_crispy_field}}
-                    </div>
-                    <div class="form-group col-md-4">
-                        
+    <div class="col-md-10 mx-auto">
+        <div class="card card-form">
+            <div class="card-header" id="card_header_content">
+                <h3 style="text-align: center;">Job Order Form</h3>
+            </div>
+            <div class="card-body">
+                <div class="col-lg-12">
+                    <div class="row justify-content-center">
+                        <div class="form-group col-md-12">
+                            {{form.projectsite|as_crispy_field}} 
+                        </div>
+                        <div class="form-group col-md-6">
+                            {{form.date|as_crispy_field}}
+                        </div>
+                        <div class="form-group col-md-6">
+                            {{form.duration|as_crispy_field}}
+                        </div>
+                        <div class="form-group col-md-4">
+                            
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <th>Personnel</th>
-                        <th>Activity</th>
-                        <th>Duration</th>
-                        <th>Delete</th>
-                    </thead>
-                    {{ formset.management_form }}
-                    {% for form in formset.forms %}
-                    <tr class="formset_row">
-                        <td>{{form.personnel}}</td>
-                        <td>{{form.activity}}</td>
-                        <td>{{form.duration}}</td>
-                        <td>{{form.delete}}</td>
-                    </tr>
-                    {% endfor %}
-                </table>
-            </div>
-            <br>
-            <div class="row">
-                <div class="form-group col-md-6">
-                    {{form.pic|as_crispy_field}}
-                    </div>
-                    <div class="form-group col-md-6">
-                        {{form.whm|as_crispy_field}}
-                    </div>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <th>Personnel</th>
+                            <th>Activity</th>
+                            <th>Duration</th>
+                            <th>Delete</th>
+                        </thead>
+                        {{ formset.management_form }}
+                        {% for form in formset.forms %}
+                        <tr class="formset_row">
+                            <td>{{form.personnel}}</td>
+                            <td>{{form.activity}}</td>
+                            <td>{{form.duration}}</td>
+                            <td>{{form.delete}}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
                 </div>
-            <button type="submit" class="btn btn-outline-primary" style="float:right">Submit</button>
+                <br>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        {{form.pic|as_crispy_field}}
+                        </div>
+                        <div class="form-group col-md-6">
+                            {{form.whm|as_crispy_field}}
+                        </div>
+                    </div>
+                <button type="submit" class="btn btn-outline-primary" style="float:right">Submit</button>
+            </div>
         </div>
     </div>
+    
 </form>
 
 {% endblock %}
