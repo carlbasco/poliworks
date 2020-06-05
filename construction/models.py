@@ -246,9 +246,9 @@ class Personnel(models.Model):
 
 class JobOrder(models.Model):
     projectsite = models.ForeignKey(ProjectSite, on_delete=models.CASCADE, related_name='joborder', verbose_name='Project Site')
-    date = models.DateField(('Date Given'))
-    duration = models.DateField(('Duration'))
-    pic = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='joborder_pic', verbose_name='Prepared by', 
+    date = models.DateField(('Date Given'), help_text="Format: yyyy-mm-dd")
+    duration = models.DateField(('Duration'), help_text="Format: yyyy-mm-dd")
+    pic = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='joborder_pic', verbose_name='Project In-Charge', 
         limit_choices_to={'groups__name': "Person In-Charge"})
     whm = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='joborder_whm', verbose_name='Send to', 
         limit_choices_to={'groups__name': "Warehouseman"})
@@ -260,7 +260,9 @@ class JobOrderTask(models.Model):
     joborder = models.ForeignKey(JobOrder, on_delete=models.CASCADE, related_name='jobordertask', verbose_name='Joborder')
     personnel = models.ForeignKey(Personnel,on_delete=models.CASCADE, related_name='jobordertask', verbose_name='Personnel')
     activity = models.CharField(('Activity of the Week'), max_length=255)
-    duration = models.CharField(('Duration'), max_length=255, blank=True, null=True)
+    date = models.DateField(('From'), blank=True, null=True)
+    date2 = models.DateField(('To'), blank=True, null=True)
+    remarks = models.CharField(('Remarks'), max_length=255, blank=True, null=True)
     status = {('Pending','Pending'),('Done','Done')}
     status = models.CharField(('Status'), max_length=255, choices=status, default="Pending")
     completion_date = models.DateField(null=True, blank=True)

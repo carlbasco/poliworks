@@ -366,9 +366,11 @@ JobOrderFormSet = inlineformset_factory(
     extra=1,
     can_delete=True,
     widgets={
-        'personnel':forms.Select(attrs={'class':'form-control', }),
+        'personnel':forms.Select(attrs={'class':'form-control personnel',}),
         'activity':forms.TextInput( attrs={'class':'form-control'}),
-        'duration':forms.TextInput(attrs={'class':'form-control'})
+        'date':forms.DateInput( attrs={'class':'form-control dateinput'}),
+        'date2':forms.DateInput( attrs={'class':'form-control dateinput'}),
+        'remarks':forms.TextInput(attrs={'class':'form-control'})
     }  
 )
 
