@@ -256,6 +256,9 @@ class JobOrder(models.Model):
         verbose_name = 'Job Order'
         verbose_name_plural = 'Job Orders'
 
+    def __str__(self):
+        return self.projectsite
+
 class JobOrderTask(models.Model):
     joborder = models.ForeignKey(JobOrder, on_delete=models.CASCADE, related_name='jobordertask', verbose_name='Joborder')
     personnel = models.ForeignKey(Personnel,on_delete=models.CASCADE, related_name='jobordertask', verbose_name='Personnel')
@@ -269,6 +272,7 @@ class JobOrderTask(models.Model):
     class Meta:
         verbose_name = 'Job Order Task'
         verbose_name_plural = 'Job Order Tasks'
+
 
 class Rework(models.Model):
     projectsite=models.ForeignKey(ProjectSite, on_delete=models.CASCADE, related_name='reworkform', verbose_name='Project Site')

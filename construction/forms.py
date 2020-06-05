@@ -351,6 +351,7 @@ ExternalOrderUpdateFormSet = inlineformset_factory(ExternalOrder, ExternalOrderD
 #################################################################################################################################
 #################################################################################################################################
 class JobOrderForm(forms.ModelForm):
+    personnel = forms.ModelChoiceField(queryset=Personnel.objects.filter(status="Available"), widget=forms.Select(attrs={'class':'form-control personnel', 'required': 'true'}))
     class Meta:
         model=JobOrder
         fields='__all__'
@@ -363,10 +364,10 @@ class JobOrderTasksForm(forms.ModelForm):
 JobOrderFormSet = inlineformset_factory(
     JobOrder, JobOrderTask,
     form=JobOrderForm,
+    exclude=('completion_date', 'status', ),
     extra=1,
     can_delete=True,
     widgets={
-        'personnel':forms.Select(attrs={'class':'form-control personnel',}),
         'activity':forms.TextInput( attrs={'class':'form-control'}),
         'date':forms.DateInput( attrs={'class':'form-control dateinput'}),
         'date2':forms.DateInput( attrs={'class':'form-control dateinput'}),

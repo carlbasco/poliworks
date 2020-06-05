@@ -684,6 +684,12 @@ class JobOrderCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
             data["formset"] = JobOrderFormSet()
         return data
 
+    # def get_queryset(self):
+    #     queryset = Personnel.objects.all()
+    #     return queryset
+    def data2(self):
+        return Personnel.objects.all()
+
     def form_valid(self, form):
         context = self.get_context_data()
         formset = context["formset"]
@@ -691,14 +697,13 @@ class JobOrderCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         if formset.is_valid():
             formset.instance = self.object
             formset.save()
-            data = Personnel.objects.all()
-            data2 = formset
-            data3 = self.object
-            for i in data2:
-                if i.personnel == data.id:
-                    data.status = "Currently Assigned"
-                    data.projectsite = data3.projectsite
-            data.save()
+            data2 = self.object
+            data3 = JobOrderTask.objects.filter(joborder=data2.id)
+            for i in data3:
+                data4 = Personnel.objects.get(id=i.personnel.id)
+                data4.status = "Currently Assigned"
+                data4.projectsite = data2.projectsite
+                data4.save()
             return super(JobOrderCreateView, self).form_valid(form)
 
     def get_success_url(self):
@@ -775,7 +780,7 @@ def PersonnelCreateView(request):
         form = PersonnelForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, str(form.first_name)+" "+str(form.last_name)+ "Has been added to the list", extra_tags=success)
+            messages.success(request, "New personnel has been added to the list", extra_tags=success)
             return redirect('personnel_create')
     else:
         form = PersonnelForm()

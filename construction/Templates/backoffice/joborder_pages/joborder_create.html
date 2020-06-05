@@ -14,14 +14,15 @@
         </li>
     </ol>
 </nav>   
-<form action="" method="POST" id="">
-    {% csrf_token%}
-    <div class="col-md-12 mx-auto">
-        <div class="card card-form">
-            <div class="card-header" id="card_header_content">
-                <h3 style="text-align: center;">Job Order Form</h3>
-            </div>
-            <div class="card-body">
+
+<div class="col-md-12 mb-5">
+    <div class="card card-form">
+        <div class="card-header" id="card_header_content">
+            <h3 style="text-align: center;">Job Order Form</h3>
+        </div>
+        <div class="card-body">
+            <form action="" method="POST" id="">
+                {% csrf_token%}
                 <div class="col-lg-12">
                     <div class="row justify-content-center">
                         <div class="form-group col-md-12">
@@ -43,8 +44,7 @@
                         <thead>
                             <th style="min-width: 250px;">Personnel</th>
                             <th style="min-width: 350px;">Activity</th>
-                            <th style="min-width: 150px;">Duration</th>
-                            <th style="min-width: 150px;">Duration</th>
+                            <th class="text-center" style="min-width: 150px;" colspan="2">Duration</th>
                             <th style="min-width: 350px;">Remarks</th>
                             <th>Delete</th>
                         </thead>
@@ -73,17 +73,83 @@
                 <div class="row mt-3">
                     <div class="form-group col-md-6">
                         {{form.pic|as_crispy_field}}
-                        </div>
-                        <div class="form-group col-md-6">
-                            {{form.whm|as_crispy_field}}
+                    </div>
+                    <div class="form-group col-md-6">
+                        {{form.whm|as_crispy_field}}
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-outline-primary" style="float:right">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-12 mb-5">
+    <div class="card">
+        <div class="card-body">
+        <h4 class="card-title">List of Personnel</h4>
+            <div class="table-responsive">
+                <div class="row">
+                    <div class="col-12">
+                        <div id="order-listing_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table id="order-listing" class="table dataTable no-footer" role="grid" aria-describedby="order-listing_info">
+                                        <thead>
+                                            <tr role="row">
+                                                <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                                    aria-label="Client: activate to sort column ascending" style="width: 50px;">
+                                                    Full Name
+                                                </th>
+                                                <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                                    aria-label="Status: activate to sort column ascending" style="width: 50px;">
+                                                    Type of Personnel
+                                                </th>
+                                                <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                                    ria-label="Actions: activate to sort column ascending" style="width: 50px;">
+                                                    Skill
+                                                </th>
+                                                <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                                    ria-label="Actions: activate to sort column ascending" style="width: 50px;">
+                                                    Status
+                                                </th>
+                                                <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                                    ria-label="Actions: activate to sort column ascending" style="width: 50px;">
+                                                    Project Site
+                                                </th>
+                                                <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                                    ria-label="Actions: activate to sort column ascending" style="width: 50px;">
+                                                    Action
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for i in view.data2%}
+                                            <tr role="row" class="odd">
+                                                <td>{{i.full_name}}</td>
+                                                <td>{{i.personnel_type}}</td>
+                                                <td>{{i.skill}}</td>
+                                                {% if i.status == "Currently Assigned" %}
+                                                    <td class="text-center"><label class="badge badge-warning">{{i.status}}</label></td>
+                                                    <td class="text-center">{{i.projectsite}}</td>
+                                                    {% elif i.status == "Available"%}
+                                                    <td class="text-center"><label class="badge badge-primary">{{i.status}}</label></td>
+                                                    <td class="text-center">N/A</td>
+                                                {% endif %}
+                                                <td class="text-center"><a class="btn btn-primary" href="{% url 'personnel_detail' i.id %}">View</a></td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                <button type="submit" class="btn btn-outline-primary" style="float:right">Submit</button>
+                </div>
             </div>
         </div>
     </div>
-    
-</form>
+</div>
 
 {% endblock %}
 {%block javascript%}
@@ -93,7 +159,7 @@
         deleteText: 'Remove',
         prefix: '{{ formset.prefix }}'
     });
-    
+
     $('.personnel').select2()
     $('#id_projectsite').select2()
     $('#id_pic').select2()
