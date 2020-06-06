@@ -259,13 +259,14 @@ def ProjectListView_PIC(request):
 def ProjectDetailView(request, pk):
     data = ProjectSite.objects.get(id=pk)
     data2 = Quotation.objects.filter(projectsite_id=data.id)
+    data5 = Personnel.objects.filter(projectsite_id=data.id)
     try:
         data3 = ProjectProgress.objects.get(projectsite_id=data.id)
         data4 = ProjectProgressDetails.objects.filter(projectprogress=data3.id)
     except ObjectDoesNotExist:
         context={'data':data, 'data2':data2}
         return render(request, 'backoffice/project_pages/project_detail.html', context)
-    context={'data':data, 'data2':data2,'data3':data3,'data4':data4,}
+    context={'data':data, 'data2':data2,'data3':data3,'data4':data4, 'data5':data5, }
     return render(request, 'backoffice/project_pages/project_detail.html', context)
 
 
@@ -684,9 +685,6 @@ class JobOrderCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
             data["formset"] = JobOrderFormSet()
         return data
 
-    # def get_queryset(self):
-    #     queryset = Personnel.objects.all()
-    #     return queryset
     def data2(self):
         return Personnel.objects.all()
 
@@ -746,12 +744,52 @@ class JobOrderUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 @allowed_users(allowed_roles = ['Admin','Project Manager','Person In-Charge'])
 def JobOrderListView(request):
     data = JobOrder.objects.all().order_by('date')
-    data2 = JobOrderTask.objects.all()
-    context = {'data':data, 'data2':data2}
+    context = {'data':data,}
     return render(request, 'backoffice/joborder_pages/joborder_list.html', context)
 
 @login_required(login_url = 'signin')
-@allowed_users(allowed_roles = ['Admin','Project Manager','Person In-Charge'])
+@pic_only
+def JobOrderListView_PIC(request):
+    data = JobOrder.objects.filter(pic=request.user).order_by('date')
+    context = {'data':data,}
+    return render(request, 'backoffice/joborder_pages/joborder_list.html', context)
+
+@login_required(login_url = 'signin')
+@whm_only
+def JobOrderListView_WHM(request):
+    data = JobOrder.objects.filter(whm=request.user).order_by('date')
+    context = {'data':data,}
+    return render(request, 'backoffice/joborder_pages/joborder_list.html', context)
+
+@login_required(login_url = 'signin')
+@whm_only
+def JobOrderReportView(request,pk):
+    data = JobOrder.objects.get(id=pk)
+    if request.method == 'POST':
+        formset = JobOrderReportFormSet(request.POST, instance=data)
+        if formset.is_valid():
+            formset.save()
+            data2 = JobOrderTask.objects.filter(joborder=data.id)
+            for i in data2:
+                if i.status == "Done":
+                    i.completion_date = datetime.date.today()
+                    i.save()
+                else:
+                    i.completion_date = None
+                    i.save()
+            messages.success(request, "Job Order status has been updated!", extra_tags="success")
+            return redirect('joborder_detail', pk=data.id)
+        else:
+            print(formset.errors)
+            messages.warning(request, "Failed")
+            return redirect('joborder_detail', pk=data.id)
+    else:
+        formset = JobOrderReportFormSet(instance=data)
+    context = {'formset': formset, 'data':data}
+    return render(request, 'backoffice/joborder_pages/joborder_report.html', context)
+
+@login_required(login_url = 'signin')
+@allowed_users(allowed_roles = ['Admin','Warehouseman','Person In-Charge'])
 def JobOrderDetailView(request,pk):
     data = JobOrder.objects.get(id=pk)
     data2 = JobOrderTask.objects.filter(joborder=data.id)

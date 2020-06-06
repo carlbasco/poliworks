@@ -88,7 +88,9 @@
             <div class="collapse" id="account-dropdown">
                 <ul class="nav flex-column sub-menu">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'personnel_create'%}">Personnel</a>
+                        {% if request.user.groups.all.0.name == "Admin" %}
+                            <a class="nav-link" href="{% url 'personnel_create'%}">Personnel</a>
+                        {% endif %}
                     </li>
                     {% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Person In-Charge"%}
                     <li class="nav-item">
@@ -136,17 +138,22 @@
             <div class="collapse" id="report-dropdown">
                 <ul class="nav flex-column sub-menu">
                     {% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Warehouseman"%}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'issues' %}">Project Issues</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'dailyreport'%}">Daily Report</a>
-                    </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'issues' %}">Project Issues</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'dailyreport'%}">Daily Report</a>
+                        </li>
+                            {% if request.user.groups.all.0.name == "Warehouseman"%}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'joborder_list_whm' %}">Job Order</a>
+                            </li>
+                            {% endif %}
                     {% endif %}
                     {% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Person In-Charge"%}
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Weekly Reports</a>
-                    </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Weekly Reports</a>
+                        </li>
                     {% endif %}
                 </ul>
             </div>

@@ -1,0 +1,86 @@
+{% extends 'backoffice/index.html' %}
+{% load static %}
+{% load crispy_forms_tags%}
+{% block content %}
+
+<span class="text-uppercase page-subtitle">Project Task</span>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-inverse-primary">
+        <li class="breadcrumb-item active" aria-current="page">
+        Job Order
+        </li>
+        <li class="breadcrumb-item">
+        <a href="{% url 'joborder_list'%}">Job Order List</a>
+        </li>
+    </ol>
+</nav>   
+
+<div class="col-md-12 mb-5">
+    <div class="card card-form">
+        <div class="card-header" id="card_header_content">
+            <h3 style="text-align: center;">Job Order Form</h3>
+        </div>
+        <div class="card-body">
+            <div class="row"> 
+                <div class = "col-md-6">
+                    <h6 class="sub">Project Site: <span class="txt">{{data.projectsite}}</span></h6>
+                </div>
+                <div class="col-md-3 ">
+                    <h6 class="sub">Date Given: <span class="txt">{{data.date}}</span></h6>
+                </div>
+                <div class = "col-md-3">
+                    <h6 class="sub">Duration: <span class="txt">{{data.duration}}</span></h6>
+                </div>
+                <div class="col-md-6 ">
+                    <h6 class="sub">Prepared By: <span class="txt">{{data.pic}}</span></h6>
+                </div>
+                <div class="col-md-6 ">
+                    <h6 class="sub">Send to: <span class="txt">{{data.whm}}</span></h6>
+                </div>
+            </div>
+            <form action="" method="POST" id="">
+                {% csrf_token%}
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <th style="min-width: 150px;">Personnel</th>
+                            <th style="min-width: 250px;">Activity</th>
+                            <th class="text-center" style="min-width: 150px;">Duration</th>
+                            <th style="min-width: 350px;">Remarks</th>
+                            <th style="min-width: 150px;">Status</th>
+                        </thead>
+                        {{ formset.management_form }}
+                        {% for form in formset.forms %}
+                        {{form.id}}
+                        <tr class="formset_row">
+                            <td rowspan="2">{{form.instance.personnel}}</td>
+                            <td rowspan="2">{{form.instance.activity}}</td>
+                            <td>
+                                <label>From</label>
+                                {{form.instance.date}}
+                            </td>
+                            <td rowspan="2">{{form.remarks}}</td>
+                            <td rowspan="2">{{form.status}}</td>
+                        </tr>
+                        <tr class="formset_row">
+                            <td>
+                                <label>To</label>
+                                {{form.instance.date2}}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <br>
+                <button type="submit" class="btn btn-outline-primary" style="float:right">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}
+{%block javascript%}
+
+{% endblock %}

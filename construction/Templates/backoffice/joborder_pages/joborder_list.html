@@ -4,16 +4,18 @@
 {% block content %}
 
 <span class="text-uppercase page-subtitle">Project Task</span>
+{% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Person In-Charge" %}
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb bg-inverse-primary">
         <li class="breadcrumb-item">
-            <a href="{% url 'joborder_create'%}">Job Order List</a>
+            <a href="{% url 'joborder_create'%}">Job Order</a>
         </li>
         <li class="breadcrumb-item active" aria-current="page">
         Job Order List
         </li>
     </ol>
 </nav>
+{% endif %}
 <div class="col-md-12 mx-auto">
     {% for message in messages %}
         <div class="alert alert-{{message.level_tag}} alert-dismissible fade show" role="alert">

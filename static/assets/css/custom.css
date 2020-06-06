@@ -304,4 +304,10 @@ img#dp {
 }
 .select2 {
     width:100%!important;
-    }
+}
+a.btn.btn-outline-success:hover {
+    color: white;
+}
+a.btn.btn-outline-success{
+    color: #19d895;
+}

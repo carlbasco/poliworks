@@ -46,6 +46,7 @@ urlpatterns = [
     path('backoffice/task/joborder/<int:pk>', views.JobOrderDetailView, name="joborder_detail"),
     path('backoffice/task/joborder/<int:pk>/edit', views.JobOrderUpdateView.as_view(), name="joborder_update"),
     path('backoffice/task/joborder/<int:pk>/delete', views.JobOrderDeleteView, name="joborder_delete"),
+    path('backoffice/task/joborder/<int:pk>/report', views.JobOrderReportView, name="joborder_report"),
 
     #Personnel
     path('backoffice/personnel/add', views.PersonnelCreateView, name="personnel_create"),
@@ -106,4 +107,9 @@ urlpatterns = [
 
     #PIC's page
     path('backoffice/pic/project_list', views.ProjectListView_PIC, name="project_list_pic"),
+    path('backoffice/pic/joborder_list', views.JobOrderListView_PIC, name="joborder_list_pic"),
+
+    #whm page
+    path('backoffice/whm/joborder_list', views.JobOrderListView_WHM, name="joborder_list_whm"),
+
 ]

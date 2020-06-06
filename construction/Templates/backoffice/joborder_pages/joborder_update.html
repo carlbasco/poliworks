@@ -21,54 +21,63 @@
             <h3 style="text-align: center;">Job Order Form</h3>
         </div>
         <div class="card-body">
-            <div class="col-lg-12">
-                <div class="row justify-content-center">
-                    <div class="form-group col-md-12">
-                        {{form.projectsite|as_crispy_field}} 
+            <form action="" method="POST" id="">
+                {% csrf_token%}
+                <div class="col-lg-12">
+                    <div class="row justify-content-center">
+                        <div class="form-group col-md-12">
+                            {{form.projectsite|as_crispy_field}} 
+                        </div>
+                        <div class="form-group col-md-6">
+                            {{form.date|as_crispy_field}}
+                        </div>
+                        <div class="form-group col-md-6">
+                            {{form.duration|as_crispy_field}}
+                        </div>
+                        <div class="form-group col-md-4">
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <th style="min-width: 250px;">Personnel</th>
+                            <th style="min-width: 350px;">Activity</th>
+                            <th class="text-center" style="min-width: 150px;" colspan="2">Duration</th>
+                            <th>Delete</th>
+                        </thead>
+                        {{ formset.management_form }}
+                        {% for form in formset.forms %}
+                        <tr class="formset_row">
+                            <td>{{form.personnel}}</td>
+                            <td>{{form.activity}}</td>
+                            <td>
+                                <label>From</label>
+                                {{form.date}}
+                                <small class="form-text text-muted">Format: yyyy-mm-dd</small>
+                            </td>
+                            <td>
+                                <label>To</label>
+                                {{form.date2}}
+                                <small class="form-text text-muted">Format: yyyy-mm-dd</small>
+                            </td>
+                            <td>{{form.DELETE}}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <br>
+                <div class="row mt-3">
+                    <div class="form-group col-md-6">
+                        {{form.pic|as_crispy_field}}
                     </div>
                     <div class="form-group col-md-6">
-                        {{form.date|as_crispy_field}}
-                    </div>
-                    <div class="form-group col-md-6">
-                        {{form.duration|as_crispy_field}}
-                    </div>
-                    <div class="form-group col-md-4">
-                        
+                        {{form.whm|as_crispy_field}}
                     </div>
                 </div>
-            </div>
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <th>Personnel</th>
-                        <th>Activity</th>
-                        <th>Duration</th>
-                        <th>Delete</th>
-                    </thead>
-                    {{ formset.management_form }}
-                    {% for i in formset.forms %}
-                    {{i.id}}
-                    <tr class="formset_row">
-                        <td>{{i.personnel}}</td>
-                        <td>{{i.activity}}</td>
-                        <td>{{i.duration}}</td>
-                        {% if formset.can_delete %}
-                            {{ i.DELETE }}
-                        {% endif %}
-                    </tr>
-                    {% endfor %}
-                </table>
-            </div>
-            <br>
-            <div class="row">
-                <div class="form-group col-md-6">
-                    {{form.pic|as_crispy_field}}
-                </div>
-                <div class="form-group col-md-6">
-                    {{form.whm|as_crispy_field}}
-                </div>
-            </div>
-            <button type="submit" class="btn btn-outline-primary" style="float:right">Submit</button>
+                <button type="submit" class="btn btn-outline-primary" style="float:right">Submit</button>
+            </form>
         </div>
     </div>
 </form>
@@ -81,5 +90,17 @@
         deleteText: 'Remove',
         prefix: '{{ formset.prefix }}'
     });
+
+    $('.personnel').select2()
+    $('#id_projectsite').select2()
+    $('#id_pic').select2()
+    $('#id_whm').select2()
+
+    $('.add-row').click(function(){
+        $(".dateinput").datepicker({
+            format:'yyyy-mm-dd',
+        });
+    })
 </script>
-{%endblock%}
+<style>span.select2-selection.select2-selection--single {height: 30px;}</style>
+{% endblock %}

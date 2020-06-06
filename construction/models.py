@@ -266,7 +266,7 @@ class JobOrderTask(models.Model):
     date = models.DateField(('From'), blank=True, null=True)
     date2 = models.DateField(('To'), blank=True, null=True)
     remarks = models.CharField(('Remarks'), max_length=255, blank=True, null=True)
-    status = {('Pending','Pending'),('Done','Done')}
+    status = {('Pending','Pending'),('On-going','On-going'),('Done','Done')}
     status = models.CharField(('Status'), max_length=255, choices=status, default="Pending")
     completion_date = models.DateField(null=True, blank=True)
     class Meta:
@@ -287,12 +287,6 @@ class Rework(models.Model):
         verbose_name_plural='Rework Form'
         verbose_name='Rework Form'
 
-# class ReworkDetails(models.Model):
-#     rework=models.ForeignKey(Rework, on_delete=models.CASCADE, related_name='instruction', verbose_name='Rework Form')
-#     instruction=models.TextField()
-#     class Meta:
-#         verbose_name_plural='Rework Form Details'
-#         verbose_name='Rework Form Details'
 
 class Inventory(models.Model):
     alternate_code = models.CharField(verbose_name="Alternate Code", max_length=255, null=True, blank=True)

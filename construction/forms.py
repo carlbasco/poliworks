@@ -356,6 +356,11 @@ class JobOrderForm(forms.ModelForm):
         model=JobOrder
         fields='__all__'
 
+class JobOrderUpdateForm(forms.ModelForm):
+    class Meta:
+        model=JobOrder
+        fields='__all__'
+
 class JobOrderTasksForm(forms.ModelForm):
     class Meta:
         model=JobOrderTask
@@ -364,26 +369,39 @@ class JobOrderTasksForm(forms.ModelForm):
 JobOrderFormSet = inlineformset_factory(
     JobOrder, JobOrderTask,
     form=JobOrderForm,
-    exclude=('completion_date', 'status', ),
+    exclude=('completion_date', 'status', 'remarks'),
     extra=1,
     can_delete=True,
     widgets={
         'activity':forms.TextInput( attrs={'class':'form-control'}),
         'date':forms.DateInput( attrs={'class':'form-control dateinput'}),
         'date2':forms.DateInput( attrs={'class':'form-control dateinput'}),
-        'remarks':forms.TextInput(attrs={'class':'form-control'})
     }  
 )
 
 JobOrderUpdateFormSet = inlineformset_factory(
     JobOrder, JobOrderTask,
-    form=JobOrderForm,
+    form=JobOrderUpdateForm,
+    exclude=('completion_date', 'status',),
     extra=0,
     can_delete=True,
     widgets={
-        'personnel':forms.Select(attrs={'class':'form-control', }),
+        'personnel':forms.Select(attrs={'class':'form-control personnel'}),
         'activity':forms.TextInput( attrs={'class':'form-control'}),
-        'duration':forms.TextInput(attrs={'class':'form-control'})
+        'date':forms.DateInput( attrs={'class':'form-control dateinput'}),
+        'date2':forms.DateInput( attrs={'class':'form-control dateinput'}),
+    }  
+)
+
+JobOrderReportFormSet = inlineformset_factory(
+    JobOrder, JobOrderTask,
+    form=JobOrderUpdateForm,
+    exclude=('activity', 'date','date2','personnel','completion_date',),
+    extra=0,
+    can_delete=False,
+    widgets={
+        'remarks':forms.TextInput(attrs={'class':'form-control'}),
+        'status':forms.Select(attrs={'class':'form-control'}),
     }  
 )
 

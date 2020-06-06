@@ -32,52 +32,55 @@
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col col-md-10">
-            <div class="card-header" id="quotation_view">
-                <h2 class="mb-0">Requisition</h2>
-            </div>
-            <div class="card-body">
-                <div class="row"> 
-                    <div class = "col-md-8">
-                        <h6 class="sub">Project Site: <span class="txt">{{data.projectsite}}</span></h6>
+            <div class="card">
+                <div class="card-header" id="quotation_view">
+                    <h2 class="mb-0">Requisition</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row"> 
+                        <div class = "col-md-8">
+                            <h6 class="sub">Project Site: <span class="txt">{{data.projectsite}}</span></h6>
+                        </div>
+                        <div class="col-md-4 ">
+                            <h6 class="sub">Date Created: <span class="txt">{{data.date}}</span></h6>
+                        </div>
+                        <div class = "col-md-8">
+                            <h6 class="sub">Send to: <span class="txt">{{data.admin}}</span></h6>
+                        </div>
+                        <div class="col-md-4">
+                            <h6 class="sub">Prepared by: <span class="txt">{{data.whm}}</span></h6>
+                        </div>
                     </div>
-                    <div class="col-md-4 ">
-                        <h6 class="sub">Date Created: <span class="txt">{{data.date}}</span></h6>
-                    </div>
-                    <div class = "col-md-8">
-                        <h6 class="sub">Send to: <span class="txt">{{data.admin}}</span></h6>
-                    </div>
-                    <div class="col-md-4">
-                        <h6 class="sub">Prepared by: <span class="txt">{{data.whm}}</span></h6>
+                    <div class="table-responsive-lg col-lg-12">
+                        <table class="table">
+                            <thead class="thead" id="head_tbl">
+                                <tr>
+                                    <th class="text-center">Articles</th>
+                                    <th class="text-center">Unit</th>
+                                    <th class="text-center">Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in data2 %}
+                                <tr>
+                                    <td>{{i.articles}}</td>
+                                    <td class="text-center">{{i.articles.unit}}</td>
+                                    <td class="text-center">{{i.quantity}}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <div class="table-responsive-lg col-lg-12">
-                    <table class="table">
-                        <thead class="thead" id="head_tbl">
-                            <tr>
-                                <th class="text-center">Articles</th>
-                                <th class="text-center">Unit</th>
-                                <th class="text-center">Quantity</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for i in data2 %}
-                            <tr>
-                                <td>{{i.articles}}</td>
-                                <td class="text-center">{{i.articles.unit}}</td>
-                                <td class="text-center">{{i.quantity}}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                <div class="btn-grp mb-5">
+                    <a href="{% url 'requisition_delete' data.id%}" class="btn btn-outline-danger float-right mr-5">Delete</a>
+                    <a href="{% url 'requisition_update' data.id%}" class="btn btn-outline-primary float-right mr-3">Edit</a>
+                    {% if request.user.groups.all.0.name == "Admin"%}
+                    <a href="" class="btn btn-outline-success float-right mr-3">Comply Request</a>
+                    {% endif %}
                 </div>
             </div>
-            <div class="btn-grp">
-                <a href="{% url 'requisition_delete' data.id%}" class="btn btn-outline-danger float-right mr-3">Delete</a>
-                <a href="{% url 'requisition_update' data.id%}" class="btn btn-outline-primary float-right mr-3">Edit</a>
-                {% if request.user.groups.all.0.name == "Admin"%}
-                <a href="" class="btn btn-outline-success float-right mr-3">Comply Request</a>
-                {% endif %}
-            </div>
+            
         </div>
     </div>
 </div>
