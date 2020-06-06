@@ -16,7 +16,7 @@ def profile_upload_path(instance, filename):
     return 'profile_image/{0}/{1}'.format(instance.user, filename)
 
 def project_upload_path(instance, filename):
-    return 'Projects/{0}/{1}'.format(instance.ProjectSite, filename)
+    return 'Projects/{0}/{1}'.format(instance.projectsite, filename)
 
 class Province(models.Model):
     name = models.CharField(max_length=255, null=True, blank=True)
@@ -422,7 +422,7 @@ class RequestForTheWeek(models.Model):
         verbose_name='Request for the Next Week'
         
 class DailyReport(models.Model):
-    projectsite=models.ForeignKey(ProjectSite, on_delete=models.CASCADE)
+    projectsite=models.ForeignKey(ProjectSite, on_delete=models.CASCADE, null=True, blank=True)
     image=models.FileField(upload_to=project_upload_path, verbose_name='Photos')
     date=models.DateField(default=datetime.date.today)
     class Meta:

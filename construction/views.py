@@ -952,12 +952,13 @@ def projectissues(request):
 def dailyreport(request):
     form = DailyReportForm()
     if request.method == 'POST':
-        form = DailyReportForm(request .POST, request.FILES)
+        form = DailyReportForm(request.POST, request.FILES)
         files = request.FILES.getlist('image')
         if form.is_valid():
             post = form.save(commit=False)
+            projectsite = post.projectsite
             for f in files:
-                report = DailyReportForm(projectsite=post.projectsite, image=f)
+                report = DailyReport(projectsite=projectsite, image=f)
                 report.save()
             return redirect('dailyreport')
     context={'form':form}

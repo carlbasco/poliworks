@@ -8,10 +8,14 @@
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb bg-inverse-primary">
         <li class="breadcrumb-item">
-            <a href="{% url 'joborder_create'%}">Job Order Create</a>
+            <a href="{% url 'joborder_create'%}">Job Order</a>
         </li>
         <li class="breadcrumb-item">
-            <a href="{% url 'joborder_list'%}">Job Order List</a>
+            {% if request.user.groups.all.0.name == "Person In-Charge"%}
+                <a href="{% url 'joborder_list_pic'%}">Job Order List</a>
+            {% else %}
+                <a href="{% url 'joborder_list'%}">Job Order List</a>
+            {% endif %}
         </li>
     </ol>
 </nav> 
