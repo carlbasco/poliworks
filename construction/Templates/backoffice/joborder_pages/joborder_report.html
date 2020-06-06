@@ -44,8 +44,8 @@
                     <table class="table">
                         <thead>
                             <th style="min-width: 150px;">Personnel</th>
-                            <th style="min-width: 250px;">Activity</th>
-                            <th class="text-center" style="min-width: 150px;">Duration</th>
+                            <th style="min-width: 150px;">Activity</th>
+                            <th style="min-width: 150px;">Duration</th>
                             <th style="min-width: 350px;">Remarks</th>
                             <th style="min-width: 150px;">Status</th>
                         </thead>
@@ -56,7 +56,7 @@
                             <td rowspan="2">{{form.instance.personnel}}</td>
                             <td rowspan="2">{{form.instance.activity}}</td>
                             <td>
-                                <label>From</label>
+                                <label>From:</label>
                                 {{form.instance.date}}
                             </td>
                             <td rowspan="2">{{form.remarks}}</td>
@@ -64,7 +64,7 @@
                         </tr>
                         <tr class="formset_row">
                             <td>
-                                <label>To</label>
+                                <label>To:</label>
                                 {{form.instance.date2}}
                             </td>
                         </tr>
