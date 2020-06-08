@@ -68,6 +68,7 @@ urlpatterns = [
     path('backoffice/materials/requisition/<int:pk>', views.RequisitionDetailView, name="requisition_detail"),
     path('backoffice/materials/requisition/<int:pk>/edit', views.RequisitionUpdateView.as_view(), name="requisition_update"),
     path('backoffice/materials/requisition/<int:pk>/delete', views.RequisitionDeleteView, name="requisition_delete"),
+    path('backoffice/materials/requisition/<int:pk>/action', views.RequisitionActionView, name="requisition_action"),
     
     #ExternalOrder
     path('backoffice/materials/create_externalorder', views.ExternalOrderCreateView.as_view(), name="externalorder_create"),

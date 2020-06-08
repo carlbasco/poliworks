@@ -57,7 +57,7 @@ class SignupFormClient(forms.ModelForm):
             raise forms.ValidationError("email is taken")
         return email
 
-    def clean_password2(self):
+    def clean_cpassword(self):
         password = self.cleaned_data.get("password")
         cpassword = self.cleaned_data.get("cpassword")
         if password and cpassword and password != cpassword:
@@ -87,7 +87,7 @@ class SignupFormWHM(forms.ModelForm):
             raise forms.ValidationError("email is taken")
         return email
 
-    def clean_confirm_password(self):
+    def clean_cpassword(self):
         password = self.cleaned_data.get("password")
         cpassword = self.cleaned_data.get("cpassword")
         if password and cpassword and password != cpassword:
@@ -117,7 +117,7 @@ class SignupFormPIC(forms.ModelForm):
             raise forms.ValidationError("email is taken")
         return email
 
-    def clean_confirm_password(self):
+    def clean_cpassword(self):
         password = self.cleaned_data.get("password")
         cpassword = self.cleaned_data.get("cpassword")
         if password and cpassword and password != cpassword:
@@ -147,7 +147,7 @@ class SignupFormPM(forms.ModelForm):
             raise forms.ValidationError("email is taken")
         return email
 
-    def clean_confirm_password(self):
+    def clean_cpassword(self):
         password = self.cleaned_data.get("password")
         cpassword = self.cleaned_data.get("cpassword")
         if password and cpassword and password != cpassword:
@@ -285,6 +285,11 @@ class RequisitionForm(forms.ModelForm):
     class Meta:
         model=Requisition
         fields='__all__'
+
+class RequisitionActionForm(forms.ModelForm):
+    class Meta:
+        model=Requisition
+        fields='__all__'
         
 
 RequisitionFormSet = inlineformset_factory(
@@ -308,6 +313,16 @@ RequisitionUpdateFormSet = inlineformset_factory(
     widgets={
         'quantity':forms.NumberInput(attrs={'class':'form-control', 'required':'true'}),
         'articles':forms.Select(attrs={'class':'form-control art'})
+    }
+)
+
+RequisitionActionFormSet = inlineformset_factory(
+    Requisition, RequisitionDetails, 
+    form=RequisitionActionForm, 
+    exclude=('requisition','quantity','articles',),
+    extra=0,
+    widgets={
+        'status':forms.Select(attrs={'class':'form-control', }),
     }
 )
 #################################################################################################################################

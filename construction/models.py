@@ -218,7 +218,7 @@ class PersonnelSkill(models.Model):
 class Personnel(models.Model):
     first_name = models.CharField(('First Name'), max_length=255)
     middle_name = models.CharField(('Middle Name'), max_length=255, blank=True)
-    last_name = models.CharField(('Last Nane'), max_length=255)
+    last_name = models.CharField(('Last Name'), max_length=255)
     suffix = models.CharField(('Suffix'), max_length=50, blank=True)
     sex = {('Male','Male'),('Female', 'Female')}
     sex = models.CharField(('Sex'),max_length=10, choices=sex)
@@ -307,8 +307,10 @@ class Requisition(models.Model):
     date = models.DateField(default=datetime.date.today, verbose_name='Date')
     whm = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='requisition_whm', verbose_name='Prepared by', 
         help_text="Warehouseman" ,limit_choices_to={'groups__name': "Warehouseman"})
-    admin = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='requisition_admin', verbose_name='Send To?', 
-        help_text="Admin" ,limit_choices_to={'groups__name': "Admin"})
+    status = {('Pending', 'Pending'), ('Complied', 'Complied'), ('Completed', 'Completed')}
+    status = models.CharField( max_length=255, choices=status, default="Pending")
+    # admin = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='requisition_admin', verbose_name='Send To?', 
+    #     help_text="Admin" ,limit_choices_to={'groups__name': "Admin"})
     class Meta:
         verbose_name_plural = 'Requisition Form'
         verbose_name = 'Requisition Form'

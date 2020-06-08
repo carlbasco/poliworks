@@ -9,7 +9,8 @@ from .models import*
 
 admin.site.site_header='Poliworks Inc'
 admin.site.site_title='Poliworks Superuser'
-# admin.site.unregister(Group)
+admin.site.unregister(Group)
+admin.site.site_url ='/sign-in'
 
 class Profile(admin.TabularInline):
     model=Profile
@@ -77,10 +78,9 @@ class ScopeOfWork(ImportExportModelAdmin):
     list_filter=('category',)
     ordering=('pk',)
 
-
-@admin.register(Personnel)
-class PersonnelAdmin(admin.ModelAdmin):
-    list_display = ('full_name','skill','personnel_type')
+# @admin.register(Personnel)
+# class PersonnelAdmin(admin.ModelAdmin):
+#     list_display = ('full_name','skill','personnel_type')
 
 @admin.register(Inventory)
 class Inventory(ImportExportModelAdmin):

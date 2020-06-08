@@ -44,9 +44,6 @@
                         <div class="col-md-4 ">
                             <h6 class="sub">Date Created: <span class="txt">{{data.date}}</span></h6>
                         </div>
-                        <div class = "col-md-8">
-                            <h6 class="sub">Send to: <span class="txt">{{data.admin}}</span></h6>
-                        </div>
                         <div class="col-md-4">
                             <h6 class="sub">Prepared by: <span class="txt">{{data.whm}}</span></h6>
                         </div>
@@ -58,6 +55,7 @@
                                     <th class="text-center">Articles</th>
                                     <th class="text-center">Unit</th>
                                     <th class="text-center">Quantity</th>
+                                    <th class="text-center">Status</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -66,6 +64,15 @@
                                     <td>{{i.articles}}</td>
                                     <td class="text-center">{{i.articles.unit}}</td>
                                     <td class="text-center">{{i.quantity}}</td>
+                                    {% if i.status == "Pending" %}
+                                        <td class="text-center"><label class="badge badge-warning">{{i.status}}</label></td>
+                                    {% elif i.status == "Purchased"%}
+                                        <td class="text-center"><label class="badge badge-primary">{{i.status}}</label></td>
+                                    {% elif i.status == "Completed"%}
+                                        <td class="text-center"><label class="badge badge-success">{{i.status}}</label></td>
+                                    {% else %}
+                                        <td class="text-center"><label class="badge badge-danger">{{i.status}}</label></td>
+                                    {% endif %}
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -73,10 +80,18 @@
                     </div>
                 </div>
                 <div class="btn-grp mb-5">
-                    <a href="{% url 'requisition_delete' data.id%}" class="btn btn-outline-danger float-right mr-5">Delete</a>
-                    <a href="{% url 'requisition_update' data.id%}" class="btn btn-outline-primary float-right mr-3">Edit</a>
+                    {% if data.status != "Complied"%}
+                        <a href="{% url 'requisition_delete' data.id%}" class="btn btn-outline-danger float-right mr-5">Delete</a>
+                        <a href="{% url 'requisition_update' data.id%}" class="btn btn-outline-primary float-right mr-3">Edit</a>
+                    {% elif request.user.groups.all.0.name == "Admin"%}
+                        <a href="{% url 'requisition_delete' data.id%}" class="btn btn-outline-danger float-right mr-5">Delete</a>
+                    {% endif %}
                     {% if request.user.groups.all.0.name == "Admin"%}
-                    <a href="" class="btn btn-outline-success float-right mr-3">Comply Request</a>
+                        {% if data.status == "Complied"%}
+                            <a href="{% url 'requisition_action' data.id%}" class="btn btn-outline-primary float-right mr-3">Update Request</a>
+                        {% else %}
+                            <a href="{% url 'requisition_action' data.id%}" class="btn btn-outline-success float-right mr-3">Comply Request</a>
+                        {% endif%}
                     {% endif %}
                 </div>
             </div>

@@ -29,9 +29,6 @@
                     <div class="form-group col-md-4">
                         {{form.date|as_crispy_field}}
                     </div>
-                    <div class="form-group col-md-4">
-                        {{form.admin|as_crispy_field}}
-                    </div>
                 </div>
             </div>
             <div class="table-responsive">
@@ -74,7 +71,6 @@
         prefix: '{{ formset.prefix }}'
     });
     $('#id_projectsite').select2();
-    $('#id_admin').select2()
     $('#id_whm').select2()
 </script>
 <script src="{% static 'assets/js/custom/requisition.js'%}"></script>

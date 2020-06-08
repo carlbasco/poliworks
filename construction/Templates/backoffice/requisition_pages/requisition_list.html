@@ -28,6 +28,30 @@
         </div>
     {% endfor %}
 </div>
+<div class="row">
+    <div class="col-md-6 grid-margin stretch-card">
+        <div class="card aligner-wrapper" id="card_completed">
+            <div class="card-body" >
+                <div class="absolute left top bottom h-100 v-strock-2 bg-success"></div>
+                <p class="text-muted mb-2">Complied</p>
+                <div class="d-flex align-items-center">
+                    <h1 class="font-weight-medium mb-2">{{complied}}</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 grid-margin stretch-card" >
+        <div class="card aligner-wrapper" id="card_ongoing">
+            <div class="card-body">
+                <div class="absolute left top bottom h-100 v-strock-2 bg-primary"></div>
+                <p class="text-muted mb-2">Pending</p>
+                <div class="d-flex align-items-center">
+                    <h1 class="font-weight-medium mb-2">{{pending}}</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="card">
     <div class="card-body">
     <h4 class="card-title">List of Requisition</h4>
@@ -49,12 +73,12 @@
                                             Requested by
                                         </th>
                                         <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                            aria-label="Project Manager: activate to sort column ascending" style="width: 51px;">
-                                            Send to
-                                        </th>
-                                        <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
                                             aria-label="Person In-Charge: activate to sort column ascending" style="width: 73px;">
                                             Date
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                            aria-label="Project Manager: activate to sort column ascending" style="width: 51px;">
+                                            Status
                                         </th>
                                         <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
                                         aria-label="Actions: activate to sort column ascending" style="width: 53px;">
@@ -67,8 +91,14 @@
                                     <tr role="row" class="odd">
                                         <td>{{i.projectsite}}</td>
                                         <td>{{i.whm}}</td>
-                                        <td>{{i.admin}}</td>
                                         <td>{{i.date}}</td>
+                                        {% if i.status == "Pending" %}
+                                            <td><label class="badge badge-warning">{{i.status}}</label></td>
+                                        {% elif i.status == "Complied"%}
+                                            <td><label class="badge badge-primary">{{i.status}}</label></td>
+                                        {% else%}
+                                            <td><label class="badge badge-success">{{i.status}}</label></td>
+                                        {% endif %}
                                         <td>
                                             <form action="{% url 'requisition_detail' i.id%}">
                                                 <button class="btn btn-outline-primary view-btn">View</button>

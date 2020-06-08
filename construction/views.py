@@ -356,7 +356,15 @@ class QuotationUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 def QuotationListView(request):
     data = Quotation.objects.all().order_by('date')
     data2 = QuotationDetails.objects.all()
-    context={'data':data ,'data2':data2}
+    data3 = Quotation.objects.filter(status="Accepted")
+    data4 = Quotation.objects.filter(status="Pending")
+    data5 = Quotation.objects.filter(status="Decline")
+    accepted = data3.count()
+    pending = data4.count()
+    decline = data5.count()
+    context={
+        'data':data ,'data2':data2, 'accepted':accepted, 
+        'pending':pending, 'decline':decline,}
     return render(request, 'backoffice/quotation_pages/quotation_list.html', context)
 
 @login_required(login_url='signin')
@@ -462,7 +470,7 @@ class RequisitionCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView)
     login_url ="signin"
     redirect_field_name = "redirect_to"
     model = Requisition
-    fields = ('projectsite','date','admin','whm')
+    fields = ('projectsite','date','whm')
     template_name = 'backoffice/requisition_pages/requisition_create.html'
     success_message = "Requisition has been created"
 
@@ -528,7 +536,11 @@ class RequisitionUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView)
 def RequisitionListView(request):
     data = Requisition.objects.all().order_by('date')
     data2 = RequisitionDetails.objects.all()
-    context = {'data':data,'data2':data2}
+    data3 = Requisition.objects.filter(status="Complied")
+    data4 = Requisition.objects.filter(status="Pending")
+    complied = data3.count()
+    pending = data4.count()
+    context = {'data':data, 'data2':data2, 'complied':complied, 'pending':pending}
     return render(request, 'backoffice/requisition_pages/requisition_list.html',context)
 
 @login_required(login_url='signin')
@@ -552,6 +564,36 @@ def RequisitionDeleteView(request, pk):
 
     context= {'data':data, 'data2':data2,}
     return render(request, 'backoffice/requisition_pages/requisition_delete.html', context)
+
+def RequisitionActionView(request,pk):
+    data = Requisition.objects.get(id=pk)
+    data2 = RequisitionDetails.objects.filter(requisition=data.id)
+    if request.method == 'POST':
+        formset = RequisitionActionFormSet(request.POST, instance=data)
+        if formset.is_valid():
+            formset.save()
+            x=0 
+            y=0
+            for j in data2:
+                y+=1
+            for i in data2:
+                if i.status != "Pending":
+                    data.status = "Complied"
+                    data.save()
+                else:
+                    x+=1
+                    if x==y:
+                        data.status = "Pending"
+                        data.save()
+            messages.success(request, "Requistion has been complied", extra_tags="success")
+            return redirect('requisition_detail',pk=data.id)
+        else:
+            print(formset.errors)
+            return redirect('requisition_detail',pk=data.id)
+    else:
+        formset = RequisitionActionFormSet(instance=data)
+    context={'formset':formset, 'data':data, 'data2':data2}
+    return render(request, 'backoffice/requisition_pages/requisition_action.html', context)
 
 #################################################################################################################################
 #################################################################################################################################
@@ -774,6 +816,11 @@ def JobOrderReportView(request,pk):
                 if i.status == "Done":
                     i.completion_date = datetime.date.today()
                     i.save()
+                    data3 = Personnel.objects.get(id=i.personnel.id)
+                    print(data3)
+                    data3.status == "Available"
+                    print(data3.status)
+                    data3.save()
                 else:
                     i.completion_date = None
                     i.save()

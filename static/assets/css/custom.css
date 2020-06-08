@@ -311,3 +311,6 @@ a.btn.btn-outline-success:hover {
 a.btn.btn-outline-success{
     color: #19d895;
 }
+span.asteriskField {
+    color: red;
+}
