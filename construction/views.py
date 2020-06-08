@@ -865,7 +865,7 @@ def PersonnelCreateView(request):
         form = PersonnelForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, "New personnel has been added to the list", extra_tags=success)
+            messages.success(request, "New personnel has been added to the list", extra_tags='success')
             return redirect('personnel_create')
     else:
         form = PersonnelForm()
@@ -906,7 +906,7 @@ def PersonnelUpdateView(request, pk):
         form = PersonnelForm(request.POST, instance=data)
         if form.is_valid():
             form.save()
-            messages.success(request, "Personnel Information has been added to the list", extra_tags=success)
+            messages.success(request, "Personnel Information has been updated", extra_tags='success')
             return redirect('personnel_detail', pk=data.id)
     else:
         form = PersonnelForm(instance=data)

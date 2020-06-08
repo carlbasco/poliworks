@@ -85,7 +85,7 @@
                                                         aria-label="Status: activate to sort column ascending" style="width: 50px;">
                                                         Type of Personnel
                                                     </th>
-                                                    <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                                    <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
                                                         ria-label="Actions: activate to sort column ascending" style="width: 50px;">
                                                         Skill
                                                     </th>
@@ -108,7 +108,9 @@
                                                 <tr role="row" class="odd">
                                                     <td>{{i.full_name}}</td>
                                                     <td>{{i.personnel_type}}</td>
-                                                    <td>{{i.skill}}</td>
+                                                    <td>
+                                                        {{i.skill.all|join:", "}}
+                                                    </td>
                                                     {% if i.status == "Currently Assigned" %}
                                                         <td class="text-center"><label class="badge badge-warning">{{i.status}}</label></td>
                                                         <td class="text-center">{{i.projectsite}}</td>

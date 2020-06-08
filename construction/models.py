@@ -94,7 +94,7 @@ class Profile(models.Model):
     sex = models.CharField(('Sex'),max_length=10, choices=choices)
     birthdate = models.DateField(('Birth date'), help_text='Format: yyyy-mm-dd', null=True) 
     phone = models.CharField(('Phone'),blank=True, help_text='Contact phone number', max_length=15)
-    address = models.CharField(max_length=255, blank=True, help_text='Apartment, suite, unit, building, floor, street, barangay')
+    address = models.CharField(max_length=255, help_text='Apartment, suite, unit, building, floor, street, barangay')
     province = models.ForeignKey(Province, on_delete=models.SET_NULL, verbose_name='Province', null=True)
     city = models.ForeignKey(City, on_delete=models.SET_NULL, verbose_name='City', null=True)
     # zipcode = models.ForeignKey(ZipCode, on_delete=models.DO_NOTHING, help_text='Barangay/City/Zipcode',verbose_name='Location')
@@ -135,7 +135,8 @@ class ProjectSite(models.Model):
     startdate = models.DateField(('Start Project Date'),  help_text='Format: YYYY-MM-DD', blank=True)
     comdate = models.DateField(('Project Completion Date'), help_text='Format: YYYY-MM-DD', blank=True)
     mpd = models.DateField(('Maintenance Period End Date'), help_text='Format: YYYY-MM-DD', blank=True)
-    # design=models.ImageField(upload_to='images/projectdesign/%Y/%m/%d/', blank=True)
+    # 
+    # design=models.ImageField(upload_to=project_upload_path, blank=True, null=True)
     class Meta:
         verbose_name='Projects'
         verbose_name_plural='Projects'
@@ -215,6 +216,9 @@ class PersonnelSkill(models.Model):
     def __str__(self):
         return self.skill
 
+    def __unicode__(self):
+        return self.skill
+
 class Personnel(models.Model):
     first_name = models.CharField(('First Name'), max_length=255)
     middle_name = models.CharField(('Middle Name'), max_length=255, blank=True)
@@ -225,10 +229,10 @@ class Personnel(models.Model):
     contact = models.CharField(('Contact Number'), max_length=20)
     choice={('Company Worker', 'Company Worker'), ('Subcontractor','Subcontractor')}
     personnel_type = models.CharField(('Type of Personnel'),max_length=255, choices=choice)
-    skill = models.ForeignKey(PersonnelSkill, on_delete=models.CASCADE, related_name='personnel')
-    address = models.CharField(max_length=255, blank=True, help_text='Apartment, suite, unit, building, floor, street, barangay')
-    city = models.ForeignKey(City, on_delete=models.SET_NULL, verbose_name='City', null=True, blank=True)
-    province = models.ForeignKey(Province, on_delete=models.SET_NULL, verbose_name='Province', null=True, blank=True)
+    skill = models.ManyToManyField(PersonnelSkill, related_name='personnel')
+    address = models.CharField(max_length=255, null=True, help_text='Apartment, suite, unit, building, floor, street, barangay')
+    city = models.ForeignKey(City, on_delete=models.SET_NULL, verbose_name='City', null=True)
+    province = models.ForeignKey(Province, on_delete=models.SET_NULL, verbose_name='Province', null=True)
     status ={('Currently Assigned', 'Currently Assigned'), ('Available', 'Available')}
     status = models.CharField(('Status'), max_length=255, choices=status, default="Available")
     projectsite = models.ForeignKey(ProjectSite, on_delete=models.SET_NULL, null=True, blank=True)
