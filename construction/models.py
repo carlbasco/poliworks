@@ -136,7 +136,7 @@ class ProjectSite(models.Model):
     comdate = models.DateField(('Project Completion Date'), help_text='Format: YYYY-MM-DD', blank=True)
     mpd = models.DateField(('Maintenance Period End Date'), help_text='Format: YYYY-MM-DD', blank=True)
     # 
-    # design=models.ImageField(upload_to=project_upload_path, blank=True, null=True)
+    design=models.ImageField(upload_to=project_upload_path, blank=True, null=True)
     class Meta:
         verbose_name='Projects'
         verbose_name_plural='Projects'
@@ -428,7 +428,7 @@ class RequestForTheWeek(models.Model):
         verbose_name='Request for the Next Week'
         
 class DailyReport(models.Model):
-    projectsite=models.ForeignKey(ProjectSite, on_delete=models.CASCADE, null=True, blank=True)
+    projectsite=models.ForeignKey(ProjectSite, on_delete=models.CASCADE, null=True)
     image=models.FileField(upload_to=project_upload_path, verbose_name='Photos')
     date=models.DateField(default=datetime.date.today)
     class Meta:

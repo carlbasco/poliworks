@@ -2,7 +2,7 @@
 {% load static %}
 {% load crispy_forms_tags%}
 {% block content %}
-<form action="" method="POST">
+<form action="" method="POST" enctype="multipart/form-data">
     {% csrf_token%}
     <div class="col-lg-8"style="margin: auto;">
         <div class="card" >
@@ -45,11 +45,14 @@
                         <div class="form-group col-md-8">
                             {{form.lotarea|as_crispy_field}}
                         </div>
-                        <!-- <div class="form-group col-lg-8">
-                            <label for="">Design upload</label>
-                            <br>
-                            
-                        </div> -->
+                        <div class="form-group col-md-8">
+                            <label for="">Design </label>
+                            <div class="custom-file">
+                                {{form.design}}
+                                <label class="custom-file-label" for="customFile">Choose file</label>
+                            </div>
+                            <img id="design_img" src="#" alt="your image" />
+                        </div>
                         <div class="form-group col-md-8">
                             {{form.address|as_crispy_field}}
                         </div>
@@ -59,12 +62,6 @@
                         <div class="form-group col-md-8">
                             {{form.city|as_crispy_field}}
                         </div>
-                        <!-- <div class="form-group col-md-8">
-                            {#form.pic|as_crispy_field#}
-                        </div>
-                        <div class="form-group col-md-8">
-                            {#form.whm|as_crispy_field#}
-                        </div> -->
                         
                         <div class="form-group col-md-8">
                             {{form.startdate|as_crispy_field}}
@@ -93,6 +90,21 @@
 <script>
     $('#id_pic').select2();
     $('#id_whm').select2();
+    $('#design_img').hide();
+
+    var reader = new FileReader();
+    reader.onload = function (e) {
+        $('#design_img').show();
+        $('#design_img').attr('src', e.target.result);
+    }
+   function readURL(input) {
+        if (input.files && input.files[0]) {
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    $("#id_design").change(function(){
+        readURL(this);
+    });
 </script>
 <style>span.select2-selection.select2-selection--single {height: 30px;}</style>
 {% endblock %}

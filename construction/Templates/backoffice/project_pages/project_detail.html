@@ -109,6 +109,20 @@
             </div>
 
             <div class="card">
+                <div class="card-header" id="headingTwo">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed  btn-cardheader" type="button" data-toggle="collapse" data-target="#blueprint" aria-expanded="false" aria-controls="collapseThree">
+                        Blueprint</button>
+                    </h2>
+                </div>
+                <div id="blueprint" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                    <div class="card-body">
+                        <img src="{{data.design.url}}" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
                 <div class="card-header" id="headingThree">
                     <h2 class="mb-0">
                         <button class="btn btn-link collapsed  btn-cardheader" type="button" data-toggle="collapse" data-target="#personnel" aria-expanded="false" aria-controls="collapseThree">
@@ -128,16 +142,24 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for i in data5%}
-                                        <tr>
-                                            <td>{{i.full_name}}</td>
-                                            <td>{{i.personnel_type}}</td>
-                                            <td>{{i.skill}}</td>
-                                            <td>
-                                                <a class="btn btn-outline-primary" href="{% url 'personnel_detail' i.id%}">View</a>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
+                                    {% if data5 %}
+                                        {% for i in data5%}
+                                            <tr>
+                                                <td>{{i.full_name}}</td>
+                                                <td>{{i.personnel_type}}</td>
+                                                <td>"{{i.skill.all|join:'", "'}}"</td>
+                                                <td>
+                                                    <a class="btn btn-outline-primary" href="{% url 'personnel_detail' i.id%}">View</a>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="5">
+                                            <p class="text-center">No Data Available</p><br>
+                                        </td>
+                                    </tr>
+                                    {% endif%}
                                 </tbody>
                             </table>
                         </div>

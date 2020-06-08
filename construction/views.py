@@ -73,12 +73,12 @@ def signupclient(request):
             profile = profile.save(False)
             profile.user = user
             profile.save()
-        account = User.objects.get(id = profile.user.id)
-        password_form = PasswordResetForm({'email':account.email})
-        if password_form.is_valid():
-            password_form.save(request= request, email_template_name='email/welcome.html', subject_template_name='email/welcome_subject.txt')
-            messages.success(request,'Client account has been created', extra_tags="success")
-            return redirect('signupclient')
+            account = User.objects.get(id = profile.user.id)
+            password_form = PasswordResetForm({'email':account.email})
+            if password_form.is_valid():
+                password_form.save(request= request, email_template_name='email/welcome.html', subject_template_name='email/welcome_subject.txt')
+                messages.success(request,'Client account has been created', extra_tags="success")
+                return redirect('signupclient')
     else:
         user = SignupFormClient()
         profile = ProfileForm()
@@ -187,7 +187,7 @@ def ChangePasswordView(request):
 def ProjectCreateView(request):
     form = ProjectForm
     if request.method == 'POST':
-        form = ProjectForm(request.POST)
+        form = ProjectForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             messages.success(request, 'Project has been created!', extra_tags="success")
@@ -203,7 +203,7 @@ def ProjectCreateView(request):
 def ProjectUpdateView(request,pk):
     data = ProjectSite.objects.get(id=pk)
     if request.method == 'POST':
-        form = ProjectUpdateForm(request.POST,instance=data)
+        form = ProjectUpdateForm(request.POST, request.FILES, instance=data)
         if form.is_valid():
             form.save()
             messages.success(request, 'Project Details has been updated!', extra_tags="success")
@@ -776,6 +776,13 @@ class JobOrderUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         if formset.is_valid():
             formset.instance = self.object
             formset.save()
+            data2 = self.object
+            data3 = JobOrderTask.objects.filter(joborder=data2.id)
+            for i in data3:
+                data4 = Personnel.objects.get(id=i.personnel.id)
+                data4.status = "Currently Assigned"
+                data4.projectsite = data2.projectsite
+                data4.save()
             return super(JobOrderUpdateView, self).form_valid(form)
 
     def get_success_url(self):
@@ -817,10 +824,7 @@ def JobOrderReportView(request,pk):
                     i.completion_date = datetime.date.today()
                     i.save()
                     data3 = Personnel.objects.get(id=i.personnel.id)
-                    print(data3)
-                    data3.status == "Available"
-                    print(data3.status)
-                    data3.save()
+                    data3.status = "Available"
                 else:
                     i.completion_date = None
                     i.save()

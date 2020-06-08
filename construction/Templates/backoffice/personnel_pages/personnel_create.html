@@ -19,48 +19,51 @@
                 <h3 style="text-align: center;">Personnel Form</h3>
             </div>
             <div class=card-boy>
-                <form action="" method="POST">
-                    {% csrf_token%}
-                    <div class="row justify-content-center">
-                        <div class="form-group col-md-8 mt-5" style="min-width: 200px;">
-                            {{form.first_name|as_crispy_field}}
+                <div class="col-md-12">
+                    <form action="" method="POST">
+                        {% csrf_token%}
+                        <div class="row justify-content-center">
+                            <div class="form-group col-md-8 mt-5" style="min-width: 200px;">
+                                {{form.first_name|as_crispy_field}}
+                            </div>
+                            <div class="form-group col-md-8" style="min-width: 200px;">
+                                {{form.middle_name|as_crispy_field}}
+                            </div>
+                            <div class="form-group col-md-8" style="min-width: 200px;">
+                                {{form.last_name|as_crispy_field}}
+                            </div>
+                            <div class="form-group col-md-8" style="min-width: 200px;">
+                                {{form.suffix|as_crispy_field}}
+                            </div>
+                            <div class="form-group col-md-8" style="min-width: 200px;">
+                                {{form.sex|as_crispy_field}}
+                            </div>
+                            <div class="form-group col-md-8" style="min-width: 200px;">
+                                {{form.contact|as_crispy_field}}
+                            </div>
+                            <div class="form-group col-md-8" style="min-width: 200px;">
+                                {{form.personnel_type|as_crispy_field}}
+                            </div>
+                            <div class="form-group col-md-8" style="min-width: 200px;">
+                                {{form.skill|as_crispy_field}}
+                            </div>
+                            <div class="form-group col-md-8" style="min-width: 200px;">
+                                {{form.address|as_crispy_field}}
+                            </div>
+                            <div class="form-group col-md-8" style="min-width: 200px;">
+                                {{form.province|as_crispy_field}}
+                            </div>
+                            <div class="form-group col-md-8" style="min-width: 200px;">
+                                {{form.city|as_crispy_field}}
+                            </div>
+                            <div class="form-group col-md-8 ">
+                                <button type="submit" class="btn btn-outline-primary btn-rounded mb-5 float-right">Submit</button>
+                            </div>
+                            
                         </div>
-                        <div class="form-group col-md-8" style="min-width: 200px;">
-                            {{form.middle_name|as_crispy_field}}
-                        </div>
-                        <div class="form-group col-md-8" style="min-width: 200px;">
-                            {{form.last_name|as_crispy_field}}
-                        </div>
-                        <div class="form-group col-md-8" style="min-width: 200px;">
-                            {{form.suffix|as_crispy_field}}
-                        </div>
-                        <div class="form-group col-md-8" style="min-width: 200px;">
-                            {{form.sex|as_crispy_field}}
-                        </div>
-                        <div class="form-group col-md-8" style="min-width: 200px;">
-                            {{form.contact|as_crispy_field}}
-                        </div>
-                        <div class="form-group col-md-8" style="min-width: 200px;">
-                            {{form.personnel_type|as_crispy_field}}
-                        </div>
-                        <div class="form-group col-md-8" style="min-width: 200px;">
-                            {{form.skill|as_crispy_field}}
-                        </div>
-                        <div class="form-group col-md-8" style="min-width: 200px;">
-                            {{form.address|as_crispy_field}}
-                        </div>
-                        <div class="form-group col-md-8" style="min-width: 200px;">
-                            {{form.province|as_crispy_field}}
-                        </div>
-                        <div class="form-group col-md-8" style="min-width: 200px;">
-                            {{form.city|as_crispy_field}}
-                        </div>
-                        <div class="form-group col-md-8 ">
-                            <button type="submit" class="btn btn-outline-primary btn-rounded mb-5 float-right">Submit</button>
-                        </div>
-                        
-                    </div>
-                </form>
+                    </form>
+                </div>
+                
             </div>
         </div>
     </div>
@@ -108,9 +111,7 @@
                                                 <tr role="row" class="odd">
                                                     <td>{{i.full_name}}</td>
                                                     <td>{{i.personnel_type}}</td>
-                                                    <td>
-                                                        {{i.skill.all|join:", "}}
-                                                    </td>
+                                                    <td>"{{i.skill.all|join:'", "'}}"</td>
                                                     {% if i.status == "Currently Assigned" %}
                                                         <td class="text-center"><label class="badge badge-warning">{{i.status}}</label></td>
                                                         <td class="text-center">{{i.projectsite}}</td>
@@ -141,5 +142,9 @@
     $('#id_personnel_type').select2();
 </script>
 <script src="{% static 'assets/js/custom/province-city.js'%}"></script>
-<style>span.select2-selection.select2-selection--single {height: 35px;}</style>
+<style>
+    span.select2-selection.select2-selection--single {height: 35px;}
+    span.select2-selection.select2-selection--multiple {height: 120px;}
+</style>
+
 {% endblock %}

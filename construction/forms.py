@@ -191,12 +191,18 @@ class ProjectForm(forms.ModelForm):
         model = ProjectSite
         fields = '__all__'
         exclude = ('whm', 'pic')
+        widgets={
+            'design' : forms.FileInput(attrs={'class':'custom-file-input'})
+        }
 
 class ProjectUpdateForm(forms.ModelForm):
     class Meta:
         model = ProjectSite
         fields = '__all__'
         exclude = ('pm', 'client')
+        widgets={
+            'design' : forms.FileInput(attrs={'class':'custom-file-input'})
+        }
 
 class ProjectUpdateStaffForm(forms.ModelForm):
     class Meta:
@@ -384,13 +390,14 @@ class JobOrderTasksForm(forms.ModelForm):
 JobOrderFormSet = inlineformset_factory(
     JobOrder, JobOrderTask,
     form=JobOrderForm,
-    exclude=('completion_date', 'status', 'remarks'),
+    exclude=('completion_date', 'status',),
     extra=1,
     can_delete=True,
     widgets={
         'activity':forms.TextInput( attrs={'class':'form-control'}),
         'date':forms.DateInput( attrs={'class':'form-control dateinput'}),
         'date2':forms.DateInput( attrs={'class':'form-control dateinput'}),
+        'remarks':forms.TextInput( attrs={'class':'form-control'}),
     }  
 )
 
@@ -405,13 +412,14 @@ JobOrderUpdateFormSet = inlineformset_factory(
         'activity':forms.TextInput( attrs={'class':'form-control'}),
         'date':forms.DateInput( attrs={'class':'form-control dateinput'}),
         'date2':forms.DateInput( attrs={'class':'form-control dateinput'}),
+        'remarks':forms.TextInput( attrs={'class':'form-control'}),
     }  
 )
 
 JobOrderReportFormSet = inlineformset_factory(
     JobOrder, JobOrderTask,
     form=JobOrderUpdateForm,
-    exclude=('activity', 'date','date2','personnel','completion_date',),
+    exclude=('activity', 'date','date2','personnel','completion_date', 'remarks'),
     extra=0,
     can_delete=False,
     widgets={

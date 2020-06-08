@@ -104,7 +104,7 @@
                     <a href="{% url 'joborder_delete' data.id%}" class="btn btn-outline-danger float-right mr-3">Delete</a>
                     <a href="{% url 'joborder_update' data.id%}" class="btn btn-outline-primary float-right mr-3">Edit</a>
                     {% endif %}
-                    {% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Warehouseman"%}
+                    {% if request.user.groups.all.0.name == "Warehouseman"%}
                     <a href="{% url 'joborder_report' data.id%}" class="btn btn-outline-primary float-right mr-3">Update Report</a>
                     {% endif %}
                 </div>
