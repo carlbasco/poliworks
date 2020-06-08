@@ -502,7 +502,7 @@ class RequisitionUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView)
     login_url ="signin"
     redirect_field_name = "redirect_to"
     model = Requisition
-    fields = ('projectsite','date','admin','whm')
+    fields = ('projectsite','date','whm')
     template_name = 'backoffice/requisition_pages/requisition_update.html'
     success_message = "Requisition has been updated"
 
@@ -853,6 +853,13 @@ def JobOrderDeleteView(request,pk):
     data = JobOrder.objects.get(id=pk)
     data2 = JobOrderTask.objects.filter(joborder=data.id)
     if request.method == 'POST':
+        data2 = JobOrderTask.objects.filter(joborder=data.id)
+        for i in data2:
+            data3 = Personnel.objects.get(id=i.personnel.id)
+            print(data2)
+            data3.status = "Available"
+            print(data3)
+            data3.save()
         data.delete()
         messages.success(request, 'Job Order has been deleted!', extra_tags='success')
         return redirect("joborder_list")
@@ -976,7 +983,7 @@ def ReworkDeleteView(request, pk):
     data = Rework.objects.get(id=pk)
     if request.method == 'POST':
         data.delete()
-        messages.success(request, 'External Order has been deleted!', extra_tags='success')
+        messages.success(request, 'Rework has been deleted!', extra_tags='success')
         return redirect('rework_list')
     context={'data':data}
     return render(request, 'backoffice/rework_pages/rework_delete.html', context) 

@@ -320,7 +320,7 @@ class Requisition(models.Model):
         verbose_name = 'Requisition Form'
     
 class RequisitionDetails(models.Model):
-    status=(('Pending', 'Pending'),('Canceled', 'Canceled'),('Purchased', 'Purchased'),('Delivered', 'Delivered'))
+    status=(('Pending', 'Pending'),('Canceled', 'Canceled'),('To be Delivered', 'To be Delivered'),('Delivered', 'Delivered'))
     requisition = models.ForeignKey(Requisition, on_delete=models.CASCADE, related_name='requisitiondetail', verbose_name='Requesition')
     articles = models.ForeignKey(Inventory, on_delete=models.CASCADE, verbose_name="Articles")
     quantity = models.IntegerField(('Quantity'),default=1)
