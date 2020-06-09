@@ -29,21 +29,32 @@
     {% endfor %}
 </div>
 <div class="row">
-    <div class="col-md-6 grid-margin stretch-card">
+    <div class="col-md-4 grid-margin stretch-card">
         <div class="card aligner-wrapper" id="card_completed">
             <div class="card-body" >
                 <div class="absolute left top bottom h-100 v-strock-2 bg-success"></div>
-                <p class="text-muted mb-2">Complied</p>
+                <p class="text-muted mb-2">Closed</p>
                 <div class="d-flex align-items-center">
-                    <h1 class="font-weight-medium mb-2">{{complied}}</h1>
+                    <h1 class="font-weight-medium mb-2">{{closed}}</h1>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-md-6 grid-margin stretch-card" >
-        <div class="card aligner-wrapper" id="card_ongoing">
-            <div class="card-body">
+    <div class="col-md-4 grid-margin stretch-card">
+        <div class="card aligner-wrapper" id="card_delivered">
+            <div class="card-body" >
                 <div class="absolute left top bottom h-100 v-strock-2 bg-primary"></div>
+                <p class="text-muted mb-2">To be Delivered</p>
+                <div class="d-flex align-items-center">
+                    <h1 class="font-weight-medium mb-2">{{delivered}}</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 grid-margin stretch-card" >
+        <div class="card aligner-wrapper" id="card_pending">
+            <div class="card-body">
+                <div class="absolute left top bottom h-100 v-strock-2 bg-warning"></div>
                 <p class="text-muted mb-2">Pending</p>
                 <div class="d-flex align-items-center">
                     <h1 class="font-weight-medium mb-2">{{pending}}</h1>
@@ -95,6 +106,8 @@
                                         {% if i.status == "Pending" %}
                                             <td><label class="badge badge-warning">{{i.status}}</label></td>
                                         {% elif i.status == "Complied"%}
+                                            <td><label class="badge badge-info">{{i.status}}</label></td>
+                                        {% elif i.status == "To be Delivered"%}
                                             <td><label class="badge badge-primary">{{i.status}}</label></td>
                                         {% else%}
                                             <td><label class="badge badge-success">{{i.status}}</label></td>

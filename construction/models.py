@@ -311,7 +311,7 @@ class Requisition(models.Model):
     date = models.DateField(default=datetime.date.today, verbose_name='Date')
     whm = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='requisition_whm', verbose_name='Prepared by', 
         help_text="Warehouseman" ,limit_choices_to={'groups__name': "Warehouseman"})
-    status = {('Pending', 'Pending'), ('Complied', 'Complied'), ('Completed', 'Completed')}
+    status = {('Pending', 'Pending'), ('To be Delivered', 'To be Delivered'),('Closed', 'Closed')}
     status = models.CharField( max_length=255, choices=status, default="Pending")
     # admin = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='requisition_admin', verbose_name='Send To?', 
     #     help_text="Admin" ,limit_choices_to={'groups__name': "Admin"})
@@ -320,15 +320,30 @@ class Requisition(models.Model):
         verbose_name = 'Requisition Form'
     
 class RequisitionDetails(models.Model):
-    status=(('Pending', 'Pending'),('Canceled', 'Canceled'),('To be Delivered', 'To be Delivered'),('Delivered', 'Delivered'))
+    status=(('Canceled', 'Canceled'),('To be Delivered', 'To be Delivered'))
     requisition = models.ForeignKey(Requisition, on_delete=models.CASCADE, related_name='requisitiondetail', verbose_name='Requesition')
     articles = models.ForeignKey(Inventory, on_delete=models.CASCADE, verbose_name="Articles")
     quantity = models.IntegerField(('Quantity'),default=1)
-    # unit = models.CharField(('Unit'),max_length=255)
-    status = models.CharField(('Status'),max_length=255, choices=status, default='Pending')
+    status = models.CharField(('Status'),max_length=255, choices=status, null=True,)
+    status2 ={('Incomplete', 'Incomplete'), ('Not Recieved','Not Recieved'), ('Complete','Complete')}
+    status2 = models.CharField(('Action'), max_length=255, choices=status2, null=True, blank=True)
+    quantity2 = models.IntegerField(('Quantity Recieve'), null=True, blank=True)
     class Meta:
         verbose_name_plural='Requisition Form Details'
         verbose_name='Requisition Form Detail'
+
+class ProjectInventory(models.Model):
+    projectsite = models.OneToOneField(ProjectSite, on_delete=models.CASCADE, related_name='inventory_project',verbose_name='Project Site')
+    last_update = models.DateField(auto_now=True)
+    class Meta:
+        verbose_name_plural='ProjectSite Inventory'
+        verbose_name='ProjectSite Inventory'
+    
+class ProjectInventoryDetails(models.Model):
+    inventory = models.ForeignKey(ProjectInventory, on_delete=models.CASCADE, verbose_name='Project Site Inventory')
+    articles = models.ForeignKey(Inventory, on_delete=models.CASCADE, verbose_name="Articles")
+    quantity = models.IntegerField(('Quantity'), null=True, blank=True)
+    
 
 class ExternalOrder(models.Model):
     projectsite = models.ForeignKey(ProjectSite, on_delete=models.CASCADE, related_name='externalorder_project',verbose_name='Project Site')

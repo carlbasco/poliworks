@@ -112,5 +112,8 @@ urlpatterns = [
 
     #whm page
     path('backoffice/whm/joborder_list', views.JobOrderListView_WHM, name="joborder_list_whm"),
+    path('backoffice/whm/requisition/<int:pk>/action', views.RequisitionActionView_WHM, name="requisition_action_whm"),
+    path('backoffice/whm/inventory', views.ProjectInventoryList_WHM, name="inventory_whm"),
+    path('backoffice/whm/inventory/<int:pk>', views.ProjectInventoryDetail_WHM, name="inventory_whm_detail"),
 
 ]

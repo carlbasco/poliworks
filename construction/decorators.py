@@ -14,7 +14,7 @@ def unauthenticated_user(view_func):
             elif group == "Person In-Charge":
                 return redirect('project_list_pic')
             elif group == "Warehouseman":
-                return redirect('requisition_create')
+                return redirect('requisition_list')
             else:
                 return redirect('project_list')
         else:    

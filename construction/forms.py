@@ -293,6 +293,7 @@ class RequisitionForm(forms.ModelForm):
         fields='__all__'
 
 class RequisitionActionForm(forms.ModelForm):
+    
     class Meta:
         model=Requisition
         fields='__all__'
@@ -300,10 +301,10 @@ class RequisitionActionForm(forms.ModelForm):
 
 RequisitionFormSet = inlineformset_factory(
     Requisition, RequisitionDetails, 
-    form=RequisitionForm, 
-    extra=1,
-    can_delete=True,
-    exclude=('status',),
+    form = RequisitionForm, 
+    extra = 1,
+    can_delete = True,
+    exclude = ('status', 'status2', 'quantity2'),
     widgets={
         'quantity':forms.NumberInput(attrs={'class':'form-control'}),
         'articles':forms.Select(attrs={'class':'form-control art'})
@@ -315,7 +316,7 @@ RequisitionUpdateFormSet = inlineformset_factory(
     form=RequisitionForm, 
     extra=0,
     can_delete=True,
-    exclude=('status',),
+    exclude = ('status', 'status2', 'quantity2'),
     widgets={
         'quantity':forms.NumberInput(attrs={'class':'form-control', 'required':'true'}),
         'articles':forms.Select(attrs={'class':'form-control art'})
@@ -325,10 +326,19 @@ RequisitionUpdateFormSet = inlineformset_factory(
 RequisitionActionFormSet = inlineformset_factory(
     Requisition, RequisitionDetails, 
     form=RequisitionActionForm, 
-    exclude=('requisition','quantity','articles',),
+    exclude=('requisition','quantity','articles','quantity2'),
+    extra=0,
+    widgets={'status':forms.Select(attrs={'class':'form-control', 'required':True})}
+)
+
+RequisitionActionFormSet_whm = inlineformset_factory(
+    Requisition, RequisitionDetails, 
+    form=RequisitionActionForm, 
+    exclude=('requisition','quantity','articles','status'),
     extra=0,
     widgets={
-        'status':forms.Select(attrs={'class':'form-control', }),
+        'status2':forms.Select(attrs={'class':'form-control', 'required':True}),
+        'quantity2':forms.NumberInput(attrs={'class':'form-control', }),
     }
 )
 #################################################################################################################################

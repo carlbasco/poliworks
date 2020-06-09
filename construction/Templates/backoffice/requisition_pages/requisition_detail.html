@@ -64,14 +64,12 @@
                                     <td>{{i.articles}}</td>
                                     <td class="text-center">{{i.articles.unit}}</td>
                                     <td class="text-center">{{i.quantity}}</td>
-                                    {% if i.status == "Pending" %}
-                                        <td class="text-center"><label class="badge badge-warning">{{i.status}}</label></td>
-                                    {% elif i.status == "Purchased"%}
+                                    {% if i.status == "To be Delivered"%}
                                         <td class="text-center"><label class="badge badge-primary">{{i.status}}</label></td>
                                     {% elif i.status == "Completed"%}
                                         <td class="text-center"><label class="badge badge-success">{{i.status}}</label></td>
                                     {% else %}
-                                        <td class="text-center"><label class="badge badge-danger">{{i.status}}</label></td>
+                                        <td class="text-center"><label class="badge badge-warning">{{i.status}}</label></td>
                                     {% endif %}
                                 </tr>
                                 {% endfor %}
@@ -80,18 +78,20 @@
                     </div>
                 </div>
                 <div class="btn-grp mb-5">
-                    {% if data.status != "Complied"%}
-                        <a href="{% url 'requisition_delete' data.id%}" class="btn btn-outline-danger float-right mr-5">Delete</a>
-                        <a href="{% url 'requisition_update' data.id%}" class="btn btn-outline-primary float-right mr-3">Edit</a>
-                    {% elif request.user.groups.all.0.name == "Admin"%}
-                        <a href="{% url 'requisition_delete' data.id%}" class="btn btn-outline-danger float-right mr-5">Delete</a>
-                    {% endif %}
                     {% if request.user.groups.all.0.name == "Admin"%}
-                        {% if data.status == "Complied"%}
+                        <a href="{% url 'requisition_delete' data.id%}" class="btn btn-outline-danger float-right mr-5">Delete</a>
+                        {% if data.status == "To be Delivered" %}
                             <a href="{% url 'requisition_action' data.id%}" class="btn btn-outline-primary float-right mr-3">Update Request</a>
-                        {% else %}
+                        {% elif data.status == "Pending" %}
                             <a href="{% url 'requisition_action' data.id%}" class="btn btn-outline-success float-right mr-3">Comply Request</a>
                         {% endif%}
+                    {% else %}
+                        {% if data.status == "Pending" %}
+                            <a href="{% url 'requisition_delete' data.id%}" class="btn btn-outline-danger float-right mr-5">Delete</a>
+                            <a href="{% url 'requisition_update' data.id%}" class="btn btn-outline-primary float-right mr-3">Edit</a>
+                        {% elif data.status == "To be Delivered" %}
+                            <a href="{% url 'requisition_action_whm' data.id%}" class="btn btn-outline-primary float-right mr-5">Update Delivery</a>
+                        {% endif %}
                     {% endif %}
                 </div>
             </div>

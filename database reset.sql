@@ -1,0 +1,14 @@
+delete from `construction_requisition`;    
+delete from sqlite_sequence where name='`construction_requisition`';
+delete from `construction_requisitiondetails`;    
+delete from sqlite_sequence where name='`construction_requisitiondetails`';
+delete from `construction_externalorder`;    
+delete from sqlite_sequence where name='`construction_externalorder`';
+delete from `construction_externalorderdetails`;    
+delete from sqlite_sequence where name='`construction_externalorderdetails`';
+delete from `construction_joborder`;    
+delete from sqlite_sequence where name='`construction_joborder`';
+delete from `construction_jobordertask`;    
+delete from sqlite_sequence where name='`construction_jobordertask`';
+delete from `construction_rework`;    
+delete from sqlite_sequence where name='`construction_rework`';

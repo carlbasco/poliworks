@@ -14,6 +14,7 @@ from django.core.mail import send_mail
 from django.urls import reverse_lazy
 from django.http import HttpResponse
 from django.contrib import messages
+from django.db.models import Q
 from django.contrib.auth.forms import *
 from django.views.generic import *
 from .decorators import *
@@ -53,7 +54,7 @@ def signin(request):
             else:
                 return redirect('project_list')
         else:
-            messages.warning(request, 'Email or Password is incorrect', extra_tags="danger")
+            messages.warning(request, 'Email or Password is incorrect')
     return render(request, 'frontend/signin.html')
 
 def signout(request):
@@ -77,7 +78,7 @@ def signupclient(request):
             password_form = PasswordResetForm({'email':account.email})
             if password_form.is_valid():
                 password_form.save(request= request, email_template_name='email/welcome.html', subject_template_name='email/welcome_subject.txt')
-                messages.success(request,'Client account has been created', extra_tags="success")
+                messages.success(request,'Client account has been created')
                 return redirect('signupclient')
     else:
         user = SignupFormClient()
@@ -134,7 +135,7 @@ def signuppm(request):
             profile=profile.save(False)
             profile.user=user
             profile.save()
-            messages.success(request,'Project Manager account created successfully', extra_tags="success")
+            messages.success(request,'Project Manager account created successfully')
             return redirect('signuppm')
     else:
         user = SignupFormPM()
@@ -160,7 +161,7 @@ def editprofile(request):
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
-            messages.success(request, ' Your Profile has been updated', extra_tags="success")
+            messages.success(request, ' Your Profile has been updated')
             return redirect('userprofile')
     else:
         user_form = UserEditForm(instance=user)
@@ -174,7 +175,7 @@ def ChangePasswordView(request):
     if form.is_valid():
         form.save()
         update_session_auth_hash(request, form.user)
-        messages.success(request, "Password has been changed!", extra_tags="success")
+        messages.success(request, "Password has been changed!")
         return redirect('userprofile')
     context={'form':form,}
     return render(request, 'backoffice/account_pages/change_password.html', context)
@@ -190,10 +191,10 @@ def ProjectCreateView(request):
         form = ProjectForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Project has been created!', extra_tags="success")
+            messages.success(request, 'Project has been created!')
             return redirect('project_list')
         else:
-            messages.info(request, 'Failed on Creating Project', extra_tags="warning")
+            messages.info(request, 'Failed on Creating Project')
             return redirect('project_create')
     context = {'form':form}
     return render(request, 'backoffice/project_pages/project_create.html', context)
@@ -206,10 +207,10 @@ def ProjectUpdateView(request,pk):
         form = ProjectUpdateForm(request.POST, request.FILES, instance=data)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Project Details has been updated!', extra_tags="success")
+            messages.success(request, 'Project Details has been updated!')
             return redirect('project_detail', pk=data.id)
         else:
-            messages.warning(request, 'Failed to update Project', extra_tags="warning")
+            messages.warning(request, 'Failed to update Project')
     else:
         form = ProjectUpdateForm(instance=data)
     context = {'form':form, 'data':data}
@@ -376,7 +377,7 @@ def QuotationDetailView(request,pk):
     if request.method == "POST":
         try:
             data3 = ProjectProgress.objects.get(projectsite=data.projectsite.id)
-            messages.warning(request, "There is an existing Work Progress. Please delete the previous one to create a new Work Progress", extra_tags="warning")
+            messages.warning(request, "There is an existing Work Progress. Please delete the previous one to create a new Work Progress")
             return redirect('quotation_detail',pk=data.id)
         except ObjectDoesNotExist:
             data3 = ProjectProgress.objects.create(projectsite=data.projectsite) 
@@ -390,7 +391,7 @@ def QuotationDetailView(request,pk):
             data4.save()
             project.status = "On-going"
             project.save()
-            messages.success(request, "Work Progress has been created!", extra_tags="success")
+            messages.success(request, "Work Progress has been created!")
             return redirect('project_detail',pk=project.id)
     context = { 'data':data, 'data2':data2 }
     return render(request, 'backoffice/quotation_pages/quotation_detail.html', context)
@@ -433,7 +434,7 @@ def ProgressUpdateView(request,pk):
             if data.total_progress == 100:
                 data3.status = "Completed"
                 data3.save()
-                messages.success(request,"Progress has been updated!", extra_tags="success")
+                messages.success(request,"Progress has been updated!")
                 return redirect('project_detail', pk=data3.id)
             else:
                 data3.status = "On-going"
@@ -456,7 +457,7 @@ def ProgressDeleteView(request,pk):
         data.delete()
         data3.status ="Pending"
         data3.save()
-        messages.success(request, "Work Progress has been deleted", extra_tags="success")
+        messages.success(request, "Work Progress has been deleted")
         return redirect('project_detail', pk=data3.id)
     else:
         formset = ProgressFormset(instance=data)
@@ -536,11 +537,13 @@ class RequisitionUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView)
 def RequisitionListView(request):
     data = Requisition.objects.all().order_by('date')
     data2 = RequisitionDetails.objects.all()
-    data3 = Requisition.objects.filter(status="Complied")
-    data4 = Requisition.objects.filter(status="Pending")
-    complied = data3.count()
-    pending = data4.count()
-    context = {'data':data, 'data2':data2, 'complied':complied, 'pending':pending}
+    data3 = Requisition.objects.filter(status="Pending")
+    data4 = Requisition.objects.filter(status="To be Delivered")
+    data5 = Requisition.objects.filter(status="Closed")
+    pending = data3.count()
+    delivered = data4.count()
+    closed = data5.count()
+    context = {'data':data, 'data2':data2, 'pending':pending, 'delivered':delivered, 'closed':closed}
     return render(request, 'backoffice/requisition_pages/requisition_list.html',context)
 
 @login_required(login_url='signin')
@@ -568,32 +571,151 @@ def RequisitionDeleteView(request, pk):
 def RequisitionActionView(request,pk):
     data = Requisition.objects.get(id=pk)
     data2 = RequisitionDetails.objects.filter(requisition=data.id)
-    if request.method == 'POST':
-        formset = RequisitionActionFormSet(request.POST, instance=data)
-        if formset.is_valid():
-            formset.save()
-            x=0 
-            y=0
-            for j in data2:
-                y+=1
-            for i in data2:
-                if i.status != "Pending":
-                    data.status = "Complied"
-                    data.save()
-                else:
-                    x+=1
-                    if x==y:
-                        data.status = "Pending"
+    formset = RequisitionActionFormSet(instance=data)
+    if data.status != "Closed":
+        if request.method == 'POST':
+            formset = RequisitionActionFormSet(request.POST, instance=data)
+            if formset.is_valid():
+                formset.save()
+                total=0
+                canceled=0
+                to_be_delivered=0 
+                for i in data2:
+                    total+=1
+                for j in data2:
+                    if j.status =="To be Delivered":
+                        to_be_delivered+=1
+                    elif j.status =="Canceled":
+                        canceled+=1
+                for k in data2:
+                    if k.status == "To be Delivered":
+                        data.status = "To be Delivered"
                         data.save()
-            messages.success(request, "Requistion has been complied", extra_tags="success")
-            return redirect('requisition_detail',pk=data.id)
+                    else:
+                        if total == canceled:
+                            data.status == "Closed"
+                            data.save()
+                        elif total == to_be_delivered:
+                            data.save()
+                            data.status = "To be Delivered"
+                messages.success(request, "Requistion has been complied")
+                return redirect('requisition_detail',pk=data.id)
         else:
             print(formset.errors)
             return redirect('requisition_detail',pk=data.id)
     else:
-        formset = RequisitionActionFormSet(instance=data)
+        messages.warning(request, "Cannot update this requisition because it is closed")
+        return redirect('requisition_detail',pk=data.id)
     context={'formset':formset, 'data':data, 'data2':data2}
     return render(request, 'backoffice/requisition_pages/requisition_action.html', context)
+
+def RequisitionActionView_WHM(request,pk):
+    data = Requisition.objects.get(id=pk)
+    data2 = RequisitionDetails.objects.filter(requisition=data.id)
+    queryset = RequisitionDetails.objects.exclude(Q(status="Pending")| Q(status="Canceled"))
+    if request.method == 'POST':
+        formset = RequisitionActionFormSet_whm(request.POST, instance=data, queryset=queryset)
+        if data.status != "Completed":
+            if formset.is_valid():
+                formset.save()
+                for i in data2:
+                    if i.status2 == "Complete":
+                        i.quantity2 = i.quantity
+                    elif i.status2 == "Incomplete":
+                        if i.quantity < i.quantity2:
+                            for j in data2:
+                                j.status2 = None
+                                j.quantity2 = None
+                                j.save()
+                            messages.error(request,"Invalid Input. Quantity Recieved cannot be higher than Quantity")
+                            return redirect("requisition_action_whm", pk=data.id)
+                        elif i.quantity == i.quantity2:
+                            for j in data2:
+                                j.status2 = None
+                                j.quantity2 = None
+                                j.save()
+                            messages.error(request,'Invalid Input. Quantity Recieved cannot be equal to the Quantity when selected in action is "Incomplete"')
+                            return redirect("requisition_action_whm", pk=data.id)
+                        elif i.quantity2 == 0:
+                            for j in data2:
+                                j.status2 = None
+                                j.quantity2 = None
+                                j.save()
+                            messages.error(request,'Invalid Input. Please check your fields before you submit it"')
+                            return redirect("requisition_action_whm", pk=data.id)
+                try:
+                    data3 =  ProjectInventory.objects.get(projectsite=data.projectsite)
+                    for k in data2:
+                        if k.status2 !="Not Recieved" and k.status !="Pending" and k.status !="Canceled":
+                            try:
+                                data4 = ProjectInventoryDetails.objects.get(inventory=data3,articles=k.articles)
+                                data4.quantity += k.quantity2
+                                data4.save()
+                                k.status = "Delivered"
+                                k.save()
+                            except ObjectDoesNotExist:
+                                data4 = ProjectInventoryDetails.objects.create(inventory=data3, articles=k.articles, quantity=k.quantity2)
+                                data4.save()
+                                k.status = "Delivered"
+                                k.save()
+                    data3.last_update = datetime.date.today()
+                    data3.save()
+                    data.status = "Closed"
+                    data.save()
+                    messages.success(request, "Delivered Items has been added to Inventory")
+                    return redirect('requisition_detail',pk=data.id)
+                except ObjectDoesNotExist:
+                    data3 = ProjectInventory.objects.create(projectsite=data.projectsite)
+                    for k in data2:
+                        if k.status2 !="Not Recieved" and k.status !="Pending" and k.status !="Canceled":
+                            try:
+                                data4 = ProjectInventoryDetails.objects.get(inventory=data3, articles=k.articles)
+                                data4.quantity += k.quantity2
+                                data4.save()
+                                k.status = "Delivered"
+                                k.save()
+                            except ObjectDoesNotExist:
+                                data4 = ProjectInventoryDetails.objects.create(inventory=data3, articles=k.articles, quantity=k.quantity2)
+                                data4.save()
+                                k.status = "Delivered"
+                                k.save()
+                    data3.last_update = datetime.date.today()
+                    data3.save()
+                    data.status = "Closed"
+                    data.save()
+                    messages.success(request, "Delivered Items has been added to Inventory")
+                    return redirect('requisition_detail',pk=data.id)    
+            else:
+                print(formset.errors)
+                return redirect('requisition_detail',pk=data.id)
+        else:
+            messages.error(request, "This Requisition has been already added to inventory")
+            return redirect('requisition_detail', pk=data.id)
+    else:
+        formset = RequisitionActionFormSet_whm(instance=data, queryset=queryset)
+    context={'formset':formset, 'data':data, 'data2':data2}
+    return render(request, 'backoffice/requisition_pages/requisition_action_whm.html', context)
+
+def ProjectInventoryList_WHM(request):
+    user = request.user
+    data = ProjectSite.objects.filter(whm=user)
+    data2 = ProjectInventory.objects.all()
+    context = {'data2':data2}
+    return render(request, 'backoffice/inventory_pages/inventory_list_whm.html', context)
+
+def ProjectInventoryDetail_WHM(request,pk):
+    data = ProjectInventory.objects.get(id=pk)
+    data2 = ProjectInventoryDetails.objects.filter(inventory=data)
+    if request.method == "POST":
+        data2.delete()
+        data.delete()
+        messages.success(request, "Inventory has been deleted")
+        return redirect('inventory_whm')
+    context = {'data':data, 'data2':data2}
+    return render(request, 'backoffice/inventory_pages/inventory_detail_whm.html', context)
+
+
+
 
 #################################################################################################################################
 #################################################################################################################################
@@ -828,7 +950,7 @@ def JobOrderReportView(request,pk):
                 else:
                     i.completion_date = None
                     i.save()
-            messages.success(request, "Job Order status has been updated!", extra_tags="success")
+            messages.success(request, "Job Order status has been updated!")
             return redirect('joborder_detail', pk=data.id)
         else:
             print(formset.errors)
@@ -948,7 +1070,7 @@ def ReworkUpdateView(request,pk):
         form = ReworkForm(request.POST, instance=rework)
         if form.is_valid :
             form.save()
-            messages.success(request, 'Rework Form has been updated!', extra_tags="success")
+            messages.success(request, 'Rework Form has been updated!')
             return redirect('rework_list')
     else:
         form = ReworkForm(instance=rework)
@@ -1094,7 +1216,7 @@ def ClientChangePasswordView(request):
     if form.is_valid():
         form.save()
         update_session_auth_hash(request, form.user)
-        messages.success(request, "Password has been changed!", extra_tags="success")
+        messages.success(request, "Password has been changed!")
         return redirect('client_profile')
     context={'form':form,}
     return render(request, 'client/client-change_password.html', context)

@@ -67,6 +67,11 @@
             </a>
             <div class="collapse" id="material-dropdown">
                 <ul class="nav flex-column sub-menu">
+                    {% if request.user.groups.all.0.name == "Warehouseman" %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'inventory_whm' %}">ProjectSite Inventory</a>
+                    </li>
+                    {% endif %}
                     <li class="nav-item">
                         <a class="nav-link" href="{%url 'requisition_create'%}">Requisition</a>
                     </li>

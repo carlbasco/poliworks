@@ -43,30 +43,27 @@
                 <div class="table-responsive">
                     <table class="table">
                         <thead>
-                            <th style="min-width: 150px;">Personnel</th>
-                            <th style="min-width: 150px;">Activity</th>
-                            <th style="min-width: 150px;">Duration</th>
-                            <th style="min-width: 350px;">Remarks</th>
-                            <th style="min-width: 150px;">Status</th>
+                            <th style="min-width: 150px;" class="font-weight-bold">Personnel</th>
+                            <th style="min-width: 150px;" class="font-weight-bold">Activity</th>
+                            <th style="min-width: 150px;" class="font-weight-bold">Duration</th>
+                            <th style="min-width: 150px;" class="font-weight-bold">Status</th>
                         </thead>
                         {{ formset.management_form }}
                         {% for form in formset.forms %}
                         {{form.id}}
                         <tr class="formset_row">
-                            <td rowspan="2">{{form.instance.personnel}}</td>
-                            <td rowspan="2">{{form.instance.activity}}</td>
+                            <td >{{form.instance.personnel}}</td>
+                            <td>{{form.instance.activity}}</td>
                             <td>
                                 <label>From:</label>
                                 {{form.instance.date}}
                             </td>
-                            <td rowspan="2">{{form.remarks}}</td>
-                            <td rowspan="2">{{form.status}}</td>
-                        </tr>
-                        <tr class="formset_row">
                             <td>
                                 <label>To:</label>
                                 {{form.instance.date2}}
                             </td>
+                            
+                            <td rowspan="2">{{form.status}}</td>
                         </tr>
                         {% endfor %}
                     </table>
