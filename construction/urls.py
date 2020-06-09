@@ -78,7 +78,7 @@ urlpatterns = [
     path('backoffice/materials/externalorder/<int:pk>/delete', views.ExternalOrderDeleteView, name="externalorder_delete"),
 
     #Reports
-    path('backoffice/reports/daily', views.dailyreport, name="dailyreport"),
+    path('backoffice/reports/daily', views.dailysitephotos, name="dailyreport"),
     path('backoffice/reports/issues', views.projectissues, name="issues"),
 
     #client

@@ -452,39 +452,9 @@ class WeeklyStatusReportForm(forms.ModelForm):
         model=WeeklyStatusReport
         fields='__all__'
 
-class ProjectStatusForm(forms.ModelForm):
+class DailySitePhotostForm(forms.ModelForm):
     class Meta:
-        model=ProjectStatus
-        fields='__all__'
-
-class SitePhotosFrom(forms.ModelForm):
-    class Meta:
-        model=SitePhotos
-        fields='__all__'
-    
-class ManpowerForm(forms.ModelForm):
-    class Meta:
-        model=Manpower
-        fields='__all__'
-
-class ProjectSolutionForm(forms.ModelForm):
-    class Meta:
-        model=ProjectSolution
-        fields='__all__'
-
-class RequestForTheWeekForm(forms.ModelForm):
-    class Meta:
-        model=RequestForTheWeek
-        fields='__all__'
-
-class ProblemForm(forms.ModelForm):
-    class Meta:
-        model=ProjectIssues
-        fields='__all__'
-
-class DailyReportForm(forms.ModelForm):
-    class Meta:
-        model=DailyReport
+        model=DailySitePhotos
         fields='__all__'
         widgets={
             'image':forms.ClearableFileInput(attrs={'multiple': True})

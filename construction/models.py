@@ -377,30 +377,6 @@ class WeeklyStatusReport(models.Model):
     class Meta:
         verbose_name_plural='Weekly Status Report'
         verbose_name='Weekly Status Report'
-
-class ProjectStatus(models.Model):
-    reference=models.ForeignKey(WeeklyStatusReport, on_delete=models.CASCADE, related_name='projectstatus') 
-    status=models.CharField(max_length=255, blank=True)
-    target=models.CharField(max_length=255, blank=True)
-    class Meta:
-        verbose_name_plural='Project Status'
-        verbose_name='Project Status'
-
-class SitePhotos(models.Model):
-    reference=models.ForeignKey(WeeklyStatusReport, on_delete=models.CASCADE, related_name='sitephotos')
-    photos=models.FileField(upload_to=project_upload_path, verbose_name='Photos')
-    date=models.DateField(default=datetime.date.today)
-    class Meta:
-        verbose_name_plural='Site Photos'
-        verbose_name='Site Photos'
-
-class Manpower(models.Model):
-    reference=models.ForeignKey(WeeklyStatusReport, on_delete=models.CASCADE, related_name='manpower')
-    quantity=models.IntegerField(('Quantity'), default=1)
-    manpower=models.CharField(('Man Power'),max_length=255)
-    class Meta:
-        verbose_name_plural='Man Power'
-        verbose_name='Man Power'
     
 class ProjectIssues(models.Model):
     projectsite=models.ForeignKey(ProjectSite, on_delete=models.CASCADE, related_name='projectissue')
@@ -420,17 +396,6 @@ class ProjectIssues(models.Model):
     def get_projectsite(self):
         return self.projectsite
     
-class ProjectSolution(models.Model):
-    reference=models.ForeignKey(WeeklyStatusReport, on_delete=models.CASCADE)
-    problem=models.ForeignKey(
-        ProjectIssues,
-        on_delete=models.CASCADE,
-        related_name='problem',
-        verbose_name='projectissue')
-    solution=models.TextField('Possible Solution')
-    class Meta:
-        verbose_name_plural='Issues'
-        verbose_name='Issues'
 
 class RequestForTheWeek(models.Model):
     reference=models.ForeignKey(WeeklyStatusReport, on_delete=models.CASCADE, related_name='requestfortheweek')
@@ -442,7 +407,7 @@ class RequestForTheWeek(models.Model):
         verbose_name_plural='Request for the Next Week'
         verbose_name='Request for the Next Week'
         
-class DailyReport(models.Model):
+class DailySitePhotos(models.Model):
     projectsite=models.ForeignKey(ProjectSite, on_delete=models.CASCADE, null=True)
     image=models.FileField(upload_to=project_upload_path, verbose_name='Photos')
     date=models.DateField(default=datetime.date.today)

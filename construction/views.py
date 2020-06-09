@@ -1129,10 +1129,10 @@ def projectissues(request):
 
 @login_required(login_url = 'signin')
 @allowed_users(allowed_roles = ['Admin','Warehouseman'])
-def dailyreport(request):
-    form = DailyReportForm()
+def dailysitephotos(request):
+    form = DailySitePhotostForm()
     if request.method == 'POST':
-        form = DailyReportForm(request.POST, request.FILES)
+        form = DailySitePhotostForm(request.POST, request.FILES)
         files = request.FILES.getlist('image')
         if form.is_valid():
             post = form.save(commit=False)
@@ -1140,7 +1140,7 @@ def dailyreport(request):
             for f in files:
                 report = DailyReport(projectsite=projectsite, image=f)
                 report.save()
-            return redirect('dailyreport')
+            return redirect('dailysitephotos')
     context={'form':form}
     return render(request, 'backoffice/report_pages/dailyreport.html', context)
 
