@@ -7,13 +7,10 @@
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb bg-inverse-primary">
         <li class="breadcrumb-item">
-            <a href="{% url 'externalorder_create'%}">External Order Form</a>
-        </li>
-        <li class="breadcrumb-item">
-            <a href="{% url 'externalorder_list'%}">External Order List</a>
+            <a href="{% url 'dailyreport_list'%}">Material Daily Report List</a>
         </li>
     </ol>
-</nav> 
+</nav>
 <div class="col-md-12 mx-auto">
     {% for message in messages %}
         <div class="alert alert-{{message.level_tag}} alert-dismissible fade show" role="alert">
@@ -34,17 +31,17 @@
         <div class="col col-md-10">
             <div class="card">
                 <div class="card-header" id="quotation_view">
-                    <h2 class="mb-0">External Order</h2>
+                    <h2 class="mb-0">Daily Report</h2>
                 </div>
                 <div class="card-body">
                     <div class="row"> 
                         <div class = "col-md-8">
                             <h6 class="sub">Project Site: <span class="txt">{{data.projectsite}}</span></h6>
                         </div>
-                        <div class="col-md-4 ml-auto">
+                        <div class="col-md-4 ">
                             <h6 class="sub">Date Created: <span class="txt">{{data.date}}</span></h6>
                         </div>
-                        <div class = "col-md-8">
+                        <div class="col-md-4">
                             <h6 class="sub">Prepared by: <span class="txt">{{data.whm}}</span></h6>
                         </div>
                     </div>
@@ -53,38 +50,21 @@
                             <thead class="thead" id="head_tbl">
                                 <tr>
                                     <th class="text-center">Articles</th>
-                                    <th class="text-center">Unit</th>
                                     <th class="text-center">Quantity</th>
-                                    <th class="text-center">Unit Price</th>
-                                    <th class="text-center">Total Price</th>
+                                    <th class="text-center">Remarks</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for i in data2 %}
                                 <tr>
-                                    <td class="text-center">{{i.articles}}</td>
-                                    <td class="text-center">{{i.unit}}</td>
+                                    <td>{{i.articles}}</td>
                                     <td class="text-center">{{i.quantity}}</td>
-                                    <td class="text-center">{{i.unitprice|intcomma}}</td>
-                                    <td class="text-right">{{i.get_total|intcomma}}</td>
+                                    <td class="text-center">{{i.remarks}}</td>
                                 </tr>
                                 {% endfor %}
-                                <tr>
-                                    <td colspan="3"></td>
-                                    <td class="text-center"><strong>Total Amount: </strong></td>
-                                    <td class="text-right">{{data.amount|intcomma}}</td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
-                </div>
-                <div class="btn-grp mb-5">
-                    <form action="{% url 'externalorder_delete' data.id%}">
-                        <button type="submit" class="btn btn-outline-danger edit-delete-btn">Delete</button>
-                    </form>
-                    <form action="{% url 'externalorder_update' data.id%}">
-                        <button type="submit" class="btn btn-outline-primary edit-delete-btn">Edit</button>
-                    </form>
                 </div>
             </div>
         </div>

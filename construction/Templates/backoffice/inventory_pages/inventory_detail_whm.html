@@ -19,120 +19,123 @@
         </div>
     {% endfor %}
 </div>
-<div class="accordion col col-md-12" id="accordionExample">
-    <div class="card">
-        <div class="card-header" id="headingTwo">
-            <h2 class="mb-3 mt-3 text-center">
-            <button class="btn btn-link btn-cardheader report" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-            Project Daily Report</button>
-            </h2>
-        </div>
-        <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionExample">
-            <div class="card-body mb-5">
-                <form action="" method="post">
-                    {% csrf_token%}
-                    <div class="col-lg-12">
-                        <div class="row">
-                            <div class="form-group col-md-12">
-                                {{form.projectsite|as_crispy_field}} 
+<div class="accordion col col-md-12 " id="accordionExample">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header" id="headingTwo">
+                <h2 class="mb-3 mt-3 text-center">
+                <button class="btn btn-link btn-cardheader report" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                Project Daily Report</button>
+                </h2>
+            </div>
+            <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                <div class="card-body mb-5">
+                    <form action="" method="post">
+                        {% csrf_token%}
+                        <div class="col-lg-12">
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    {{form.projectsite|as_crispy_field}} 
+                                </div>
+                                <div class="form-group col-md-6">
+                                    {{form.date|as_crispy_field}}
+                                </div>
+                                <div class="form-group col-md-6" style="float:right">
+                                    {{form.whm|as_crispy_field}}
+                                </div>
                             </div>
-                            <div class="form-group col-md-6">
-                                {{form.date|as_crispy_field}}
-                            </div>
-                            <div class="form-group col-md-6" style="float:right">
-                                {{form.whm|as_crispy_field}}
-                            </div>
+                            <table id="tbl_quotation" class="table table-responsive-sm">
+                                <thead>
+                                    <th style="min-width: 250px;">Articles<span class="asteriskField">*</span></th>
+                                    <th style="min-width: 100px;">Quantity<span class="asteriskField">*</span></th>
+                                    <th style="min-width: 100px;">Remarks</th>
+                                    <th>Delete</th>
+                                </thead>
+                                {{ formset.management_form }}
+                                {% for i in formset.forms %}
+                                <tr class="formset_row">
+                                    <td>{{i.articles}}</td>
+                                    <td>{{i.quantity}}</td>
+                                    <td>{{i.remarks}}</td>
+                                    <td>{{i.DELETE}}</td>
+                                </tr>
+                                {% endfor %}
+                            </table>
                         </div>
-                        <table id="tbl_quotation" class="table table-responsive-sm">
-                            <thead>
-                                <th style="min-width: 250px;">Articles<span class="asteriskField">*</span></th>
-                                <th style="min-width: 100px;">Quantity<span class="asteriskField">*</span></th>
-                                <th style="min-width: 100px;">Remarks</th>
-                                <th>Delete</th>
-                            </thead>
-                            {{ formset.management_form }}
-                            {% for i in formset.forms %}
-                            <tr class="formset_row">
-                                <td>{{i.articles}}</td>
-                                <td>{{i.quantity}}</td>
-                                <td>{{i.remarks}}</td>
-                                <td>{{i.DELETE}}</td>
-                            </tr>
-                            {% endfor %}
-                        </table>
-                    </div>
-                    <button type="submit" class="btn btn-outline-primary" style="float:right">Submit</button>
-                </form>
+                        <button type="submit" class="btn btn-outline-primary" style="float:right">Submit</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-<div class="col-md-12">
-    <div class="card ">
-        <div class="card-header" id="headingTwo">
-            <h1 class="mb-0 text-center">
-            <button class="btn btn-link btn-cardheader report" type="button" data-toggle="collapse" data-target="#table" aria-expanded="false" aria-controls="collapseTwo">
-            Inventory</button>
-            </h1>
-        </div>
-        <div id="table" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionExample">
-            <div class="card-body row">
-                <div class="col-md-6">
-                    <h5 class="card-title">{{data.projectsite}}</h5>
-                </div>
-                <div class="col-md-6">
-                    <h6 class="sub float-right">Last Update: <span class="txt">{{data.last_update}}</span></h6>
-                </div>
-                <div class="table-responsive">
-                    <div class="col-12">
-                        <div id="order-listing_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <table id="order-listing" class="table dataTable no-footer" role="grid" aria-describedby="order-listing_info">
-                                        <thead>
-                                            <tr role="row">
-                                                <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                                    aria-label="Project: activate to sort column ascending" style="width: 75px;">
-                                                    Articles
-                                                </th>
-                                                <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                                    aria-label="Client: activate to sort column ascending" style="width: 50px;">
-                                                    Unit
-                                                </th>
-                                                <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                                    aria-label="Person In-Charge: activate to sort column ascending" style="width: 50px;">
-                                                    Quantity
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for i in data2 %}
-                                            <tr>
-                                                <td>{{i.articles}}</td>
-                                                <td >{{i.articles.unit}}</td>
-                                                <td >{{i.quantity}}</td>
-                                            </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
+    <div class="col-md-12">
+        <div class="card ">
+            <div class="card-header" id="headingTwo">
+                <h1 class="mb-0 text-center">
+                <button class="btn btn-link btn-cardheader report" type="button" data-toggle="collapse" data-target="#table" aria-expanded="false" aria-controls="collapseTwo">
+                Inventory</button>
+                </h1>
+            </div>
+            <div id="table" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                <div class="card-body row">
+                    <div class="col-md-6">
+                        <h5 class="card-title">{{data.projectsite}}</h5>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="sub float-right">Last Update: <span class="txt">{{data.last_update}}</span></h6>
+                    </div>
+                    <div class="table-responsive">
+                        <div class="col-12">
+                            <div id="order-listing_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table id="order-listing" class="table dataTable no-footer" role="grid" aria-describedby="order-listing_info">
+                                            <thead>
+                                                <tr role="row">
+                                                    <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                                        aria-label="Project: activate to sort column ascending" style="width: 75px;">
+                                                        Articles
+                                                    </th>
+                                                    <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                                        aria-label="Client: activate to sort column ascending" style="width: 50px;">
+                                                        Unit
+                                                    </th>
+                                                    <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                                        aria-label="Person In-Charge: activate to sort column ascending" style="width: 50px;">
+                                                        Quantity
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for i in data2 %}
+                                                <tr>
+                                                    <td>{{i.articles}}</td>
+                                                    <td >{{i.articles.unit}}</td>
+                                                    <td >{{i.quantity}}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                        
+                                    </div>
                                     
                                 </div>
                                 
                             </div>
-                            
                         </div>
                     </div>
+                    <!-- <form action="" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-primary float-right">Delete</button>
+                    </form> -->
                 </div>
-                <!-- <form action="" method="post">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-outline-primary float-right">Delete</button>
-                </form> -->
             </div>
+            
         </div>
-        
     </div>
 </div>
+
+
 
 {% endblock %}
 {% block javascript %}
@@ -143,6 +146,7 @@
         prefix: '{{ formset.prefix }}'
     })
     $('.art').select2()
+    $('#id_whm').select2()
     $('.add-row').click(function(){
         $('.art').select2()
     })

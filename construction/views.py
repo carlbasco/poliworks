@@ -598,6 +598,8 @@ def RequisitionDeleteView(request, pk):
     context= {'data':data, 'data2':data2,}
     return render(request, 'backoffice/requisition_pages/requisition_delete.html', context)
 
+@login_required(login_url='signin')
+@admin_only
 def RequisitionActionView(request,pk):
     data = Requisition.objects.get(id=pk)
     data2 = RequisitionDetails.objects.filter(requisition=data.id)
@@ -630,15 +632,15 @@ def RequisitionActionView(request,pk):
                             data.status = "To be Delivered"
                 messages.success(request, "Requistion has been complied")
                 return redirect('requisition_detail',pk=data.id)
-        else:
-            print(formset.errors)
-            return redirect('requisition_detail',pk=data.id)
+            else:
+                print(formset.errors)
+                return redirect('requisition_detail',pk=data.id)
+        context={'formset':formset, 'data':data, 'data2':data2}
+        return render(request, 'backoffice/requisition_pages/requisition_action.html', context)
     else:
         messages.warning(request, "Cannot update this requisition because it is closed")
         return redirect('requisition_detail',pk=data.id)
-    context={'formset':formset, 'data':data, 'data2':data2}
-    return render(request, 'backoffice/requisition_pages/requisition_action.html', context)
-
+    
 def RequisitionActionView_WHM(request,pk):
     data = Requisition.objects.get(id=pk)
     data2 = RequisitionDetails.objects.filter(requisition=data.id)
@@ -749,22 +751,49 @@ def ProjectInventoryList_WHM(request):
 
 def ProjectInventoryReport_WHM(request,pk):
     data = ProjectInventory.objects.get(id=pk)
-    data2 = ProjectInventoryDetails.objects.filter(inventory=data)
+    data2 = ProjectInventoryDetails.objects.filter(inventory=data).order_by('-articles')
     if request.method == 'POST':
         form = DailyReportForm(request.POST)
         formset = DailyReportFormSet(request.POST)
         if form.is_valid() and formset.is_valid():
-            form = form.save()
+            form = form.save(False)
             formset = formset.save(False)
-            formset.dailyreport = form
-            formset.save()
-            messages.success(request, "Daily Report has been created")
+            count=0
+            count2=0
+            for i in formset:
+                count+=1
+            for j in formset:
+                for k in data2:
+                    if j.articles == k.articles:
+                        count2+=1
+                        if k.quantity > j.quantity:
+                            print("Inventory - HIGHER")
+                        else:
+                            messages.error(request, "Invalid Input. Quantity cannot be higher than the current stock of the item in Inventory")
+                            return redirect('inventory_whm_detail', pk=data.id)
+            if count == count2:
+                for x in formset:
+                    for y in data2:
+                        if x.articles == y.articles:
+                            if y.quantity > x.quantity:
+                                y.quantity -= x.quantity
+                                y.save()
+                form.save()
+                for a in formset:
+                    a.report = form
+                    a.save()
+                data.date=datetime.date.today
+                data.save()
+                messages.success(request, "Daily Report has been created")
+                return redirect('inventory_whm_detail', pk=data.id)
+            else:
+                messages.error(request, "Invalid Input. Articles on Form doesnt exist on Inventory")
+                return redirect('inventory_whm_detail', pk=data.id)
     else:
         form = DailyReportForm()
         formset = DailyReportFormSet()
     context = {'data':data, 'data2':data2, 'form':form, 'formset':formset}
     return render(request, 'backoffice/inventory_pages/inventory_detail_whm.html', context)
-
 
 #################################################################################################################################
 #################################################################################################################################
@@ -1261,6 +1290,49 @@ def dailysitephotos(request):
     context={'form':form}
     return render(request, 'backoffice/report_pages/dailysitephotos.html', context)
 
+@login_required(login_url = 'signin')
+@staff_only
+def dailysitephotosListView(request):
+    data = DailySitePhotos.objects.all()
+    context={'data':data}
+    return render(request, 'backoffice/report_pages/dailysitephotos_list.html', context)
+
+@login_required(login_url = 'signin')
+@staff_only
+def dailysitephotosDetailView(request,pk):
+    data = DailySitePhotos.objects.get(id=pk)
+    context={'data':data}
+    return render(request, 'backoffice/report_pages/dailysitephotos_detail.html', context)
+
+@login_required(login_url = 'signin')
+@allowed_users(allowed_roles = ['Admin','Project Manager', 'Person In-Charge'])
+def dailysitephotosUpdateView(request,pk):
+    data = DailySitePhotos.objects.get(id=pk)
+    if request.method=="POST":
+        form = DailySitePhotostForm(request.POST, request.FILES, instance=data)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Site Photos has been updated")
+    else:
+        form = DailySitePhotostForm(request.FILES, instance=data)        
+    context={'data':data, 'form':form}
+    return render(request, 'backoffice/report_pages/dailysitephotos_detail.html', context)
+
+
+@login_required(login_url = 'signin')
+@staff_only
+def ProjectDailyReportListView(request):
+    data = ProjectDailyReport.objects.all()
+    context = {'data':data}
+    return render(request, 'backoffice/report_pages/dailyreport_list.html', context)
+
+@login_required(login_url = 'signin')
+@staff_only
+def ProjectDailyReportDetailView(request, pk):
+    data = ProjectDailyReport.objects.get(id=pk)
+    data2 = ProjectDailyReportDetails.objects.filter(report=data.id)
+    context={'data':data, 'data2':data2}
+    return render(request, 'backoffice/report_pages/dailyreport_detail.html', context)
 
 #################################################################################################################################
 #################################################################################################################################

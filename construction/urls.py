@@ -82,10 +82,12 @@ urlpatterns = [
     path('backoffice/materials/inventory/<int:pk>', views.ProjectInventoryDetailView, name="inventory_detail"),
 
     #Reports
-    path('backoffice/reports/daily', views.dailysitephotos, name="dailyreport"),
+    path('backoffice/reports/sitephotos', views.dailysitephotos, name="sitephotos"),
     path('backoffice/reports/issues', views.projectissues, name="issues"),
-    path('backoffice/reports/issues/list', views.ProjectIssuesList, name="issues_list"),
+    path('backoffice/reports/issues_list', views.ProjectIssuesList, name="issues_list"),
     path('backoffice/reports/issues/<int:pk>', views.ProjectIssuesDetailView, name="issues_detail"),
+    path('backoffice/reports/dailyreport_list', views. ProjectDailyReportListView, name="dailyreport_list"),
+    path('backoffice/reports/dailyreport/<int:pk>', views. ProjectDailyReportDetailView, name="dailyreport_detail"),
 
     #client
     path('myproject/', views.Client_home, name="client_home"),
@@ -124,7 +126,7 @@ urlpatterns = [
     path('backoffice/whm/requisition/<int:pk>/action', views.RequisitionActionView_WHM, name="requisition_action_whm"),
     path('backoffice/whm/inventory', views.ProjectInventoryList_WHM, name="inventory_whm"),
     path('backoffice/whm/inventory/<int:pk>', views.ProjectInventoryReport_WHM, name="inventory_whm_detail"),
-    path('backoffice/whm/reports/issues/list', views.ProjectIssuesList_WHM, name="issues_list_whm"),
+    path('backoffice/whm/reports/issues_list', views.ProjectIssuesList_WHM, name="issues_list_whm"),
     path('backoffice/whm/reports/issues/<int:pk>/edit', views.ProjectIssuesUpdateView, name="issues_update"),
     path('backoffice/whm/reports/issues/<int:pk>/delete', views.ProjectIssuesDeleteView, name="issues_delete"),
     # path('backoffice/whm/dailyreport', views.DailyReportCreateView, name="daily_report"),

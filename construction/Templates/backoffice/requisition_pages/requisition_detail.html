@@ -83,7 +83,7 @@
                         {% if data.status == "To be Delivered" %}
                             <a href="{% url 'requisition_action' data.id%}" class="btn btn-outline-primary float-right mr-3">Update Request</a>
                         {% elif data.status == "Pending" %}
-                            <a href="{% url 'requisition_action' data.id%}" class="btn btn-outline-success float-right mr-3">Comply Request</a>
+                            <a href="{% url 'requisition_action' data.id%}" class="btn btn-outline-primary float-right mr-3">Comply Request</a>
                         {% endif%}
                     {% else %}
                         {% if data.status == "Pending" %}

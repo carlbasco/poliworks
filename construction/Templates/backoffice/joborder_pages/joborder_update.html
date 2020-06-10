@@ -49,6 +49,7 @@
                         </thead>
                         {{ formset.management_form }}
                         {% for form in formset.forms %}
+                        {{form.id}}
                         <tr class="formset_row">
                             <td>{{form.personnel}}</td>
                             <td>{{form.activity}}</td>

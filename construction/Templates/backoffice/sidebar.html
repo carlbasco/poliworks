@@ -170,7 +170,10 @@
                     {% endif %}
 
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'dailyreport'%}">Daily Site Photos</a>
+                        <a class="nav-link" href="{% url 'sitephotos'%}">Daily Site Photos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'dailyreport_list'%}"> Material Daily Report</a>
                     </li>
                     {% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Person In-Charge"%}
                         <li class="nav-item">

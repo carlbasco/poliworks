@@ -380,6 +380,8 @@ class DailySitePhotos(models.Model):
     projectsite=models.ForeignKey(ProjectSite, on_delete=models.CASCADE, null=True)
     image=models.FileField(upload_to=project_upload_path, verbose_name='Photos')
     date=models.DateField(default=datetime.date.today)
+    BOOL_CHOICES = ((True, 'Yes'), (False, 'No'))
+    reveal=models.BooleanField(("Let the client view this?"), choices=BOOL_CHOICES, default=False, null=True)
     class Meta:
         verbose_name_plural='Site Photos'
         verbose_name='Site Photos'
@@ -396,6 +398,8 @@ class ProjectInventoryDetails(models.Model):
     articles = models.ForeignKey(Inventory, on_delete=models.CASCADE, verbose_name="Articles")
     quantity = models.IntegerField(('Quantity'), null=True, blank=True)
 
+    def __str__(self):
+        return self.articles
 
 class ProjectDailyReport(models.Model):
     projectsite = models.ForeignKey(ProjectSite, on_delete=models.CASCADE, null=True)
@@ -404,7 +408,8 @@ class ProjectDailyReport(models.Model):
     date = models.DateField(default=datetime.date.today)
 
 class ProjectDailyReportDetails(models.Model):
-    dailyreport = models.ForeignKey(ProjectDailyReport, on_delete=models.CASCADE, null=True)
+    report = models.ForeignKey(ProjectDailyReport, on_delete=models.CASCADE, null=True)
     articles = models.ForeignKey(Inventory, on_delete=models.SET_NULL, null=True)
     quantity = models.IntegerField(null=True)
-    remarks = models.CharField(max_length=255, null=True)
+    remarks = models.CharField(max_length=255, null=True, blank=True)
+

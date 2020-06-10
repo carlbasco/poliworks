@@ -456,6 +456,7 @@ class DailySitePhotostForm(forms.ModelForm):
     class Meta:
         model=DailySitePhotos
         fields='__all__'
+        exclude = ('reveal', )
         widgets={
             'image':forms.ClearableFileInput(attrs={'multiple': True})
         }
