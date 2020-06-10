@@ -447,10 +447,10 @@ class ReworkForm(forms.ModelForm):
 
 #################################################################################################################################
 #################################################################################################################################
-class WeeklyStatusReportForm(forms.ModelForm):
+class ProjectIssuesForm(forms.ModelForm):
     class Meta:
-        model=WeeklyStatusReport
-        fields='__all__'
+        model=ProjectIssues
+        fields = '__all__'
 
 class DailySitePhotostForm(forms.ModelForm):
     class Meta:
@@ -470,3 +470,20 @@ class SkillForm(forms.ModelForm):
     class Meta:
         model=PersonnelSkill
         fields='__all__'
+
+class DailyReportForm(forms.ModelForm):
+    class Meta:
+        model=ProjectDailyReport
+        fields = '__all__'
+
+DailyReportFormSet = inlineformset_factory(
+    ProjectDailyReport, ProjectDailyReportDetails,
+    form=DailyReportForm,
+    extra=1,
+    can_delete=True,
+    widgets={
+        'articles':forms.Select(attrs={'class':'form-control art'}),
+        'quantity':forms.NumberInput(attrs={'class':'form-control'}),
+        'remarks':forms.TextInput(attrs={'class':'form-control'}),
+    }  
+)

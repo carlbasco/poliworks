@@ -77,9 +77,15 @@ urlpatterns = [
     path('backoffice/materials/externalorder/<int:pk>/edit', views.ExternalOrderUpdateView.as_view(), name="externalorder_update"),
     path('backoffice/materials/externalorder/<int:pk>/delete', views.ExternalOrderDeleteView, name="externalorder_delete"),
 
+    #Inventory
+    path('backoffice/materials/inventory_list', views.ProjectInventoryListView, name="inventory_list"),
+    path('backoffice/materials/inventory/<int:pk>', views.ProjectInventoryDetailView, name="inventory_detail"),
+
     #Reports
     path('backoffice/reports/daily', views.dailysitephotos, name="dailyreport"),
     path('backoffice/reports/issues', views.projectissues, name="issues"),
+    path('backoffice/reports/issues/list', views.ProjectIssuesList, name="issues_list"),
+    path('backoffice/reports/issues/<int:pk>', views.ProjectIssuesDetailView, name="issues_detail"),
 
     #client
     path('myproject/', views.Client_home, name="client_home"),
@@ -105,15 +111,22 @@ urlpatterns = [
     #PM's page
     path('backoffice/pm/project_list', views.ProjectListView_PM, name="project_list_pm"),
     path('backoffice/pm/task/rework_list', views.ReworkListView_PM, name="rework_list_pm"),
+    path('backoffice/pm/reports/issues/list', views.ProjectIssuesList_PM, name="issues_list_pm"),
 
     #PIC's page
     path('backoffice/pic/project_list', views.ProjectListView_PIC, name="project_list_pic"),
     path('backoffice/pic/joborder_list', views.JobOrderListView_PIC, name="joborder_list_pic"),
+    path('backoffice/pic/reports/issues/list', views.ProjectIssuesList_PIC, name="issues_list_pic"),
 
     #whm page
+    path('backoffice/whm/project_list', views.ProjectListView_WHM, name="project_list_whm"),
     path('backoffice/whm/joborder_list', views.JobOrderListView_WHM, name="joborder_list_whm"),
     path('backoffice/whm/requisition/<int:pk>/action', views.RequisitionActionView_WHM, name="requisition_action_whm"),
     path('backoffice/whm/inventory', views.ProjectInventoryList_WHM, name="inventory_whm"),
-    path('backoffice/whm/inventory/<int:pk>', views.ProjectInventoryDetail_WHM, name="inventory_whm_detail"),
+    path('backoffice/whm/inventory/<int:pk>', views.ProjectInventoryReport_WHM, name="inventory_whm_detail"),
+    path('backoffice/whm/reports/issues/list', views.ProjectIssuesList_WHM, name="issues_list_whm"),
+    path('backoffice/whm/reports/issues/<int:pk>/edit', views.ProjectIssuesUpdateView, name="issues_update"),
+    path('backoffice/whm/reports/issues/<int:pk>/delete', views.ProjectIssuesDeleteView, name="issues_delete"),
+    # path('backoffice/whm/dailyreport', views.DailyReportCreateView, name="daily_report"),
 
 ]

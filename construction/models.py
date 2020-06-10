@@ -332,18 +332,6 @@ class RequisitionDetails(models.Model):
         verbose_name_plural='Requisition Form Details'
         verbose_name='Requisition Form Detail'
 
-class ProjectInventory(models.Model):
-    projectsite = models.OneToOneField(ProjectSite, on_delete=models.CASCADE, related_name='inventory_project',verbose_name='Project Site')
-    last_update = models.DateField(auto_now=True)
-    class Meta:
-        verbose_name_plural='ProjectSite Inventory'
-        verbose_name='ProjectSite Inventory'
-    
-class ProjectInventoryDetails(models.Model):
-    inventory = models.ForeignKey(ProjectInventory, on_delete=models.CASCADE, verbose_name='Project Site Inventory')
-    articles = models.ForeignKey(Inventory, on_delete=models.CASCADE, verbose_name="Articles")
-    quantity = models.IntegerField(('Quantity'), null=True, blank=True)
-    
 
 class ExternalOrder(models.Model):
     projectsite = models.ForeignKey(ProjectSite, on_delete=models.CASCADE, related_name='externalorder_project',verbose_name='Project Site')
@@ -368,15 +356,6 @@ class ExternalOrderDetails(models.Model):
         
     def get_total(self):
         return self.quantity * self.unitprice
-
-class WeeklyStatusReport(models.Model):
-    projectsite=models.ForeignKey(ProjectSite, on_delete=models.CASCADE)
-    dategiven=models.DateField(('Date Given'))
-    duration=models.DateField(('Duration'))
-    pic=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='wsr_pic', verbose_name='Project In-Charge', limit_choices_to={'groups__name': "Project In-Charge"})
-    class Meta:
-        verbose_name_plural='Weekly Status Report'
-        verbose_name='Weekly Status Report'
     
 class ProjectIssues(models.Model):
     projectsite=models.ForeignKey(ProjectSite, on_delete=models.CASCADE, related_name='projectissue')
@@ -396,16 +375,6 @@ class ProjectIssues(models.Model):
     def get_projectsite(self):
         return self.projectsite
     
-
-class RequestForTheWeek(models.Model):
-    reference=models.ForeignKey(WeeklyStatusReport, on_delete=models.CASCADE, related_name='requestfortheweek')
-    date=models.DateField(('Date'))
-    quantity=models.IntegerField(('Quantity'), blank=True)
-    unit=models.CharField(('Unit'), max_length=255, blank=True)
-    request=models.CharField(('Request'), max_length=255)
-    class Meta:
-        verbose_name_plural='Request for the Next Week'
-        verbose_name='Request for the Next Week'
         
 class DailySitePhotos(models.Model):
     projectsite=models.ForeignKey(ProjectSite, on_delete=models.CASCADE, null=True)
@@ -414,3 +383,28 @@ class DailySitePhotos(models.Model):
     class Meta:
         verbose_name_plural='Site Photos'
         verbose_name='Site Photos'
+
+class ProjectInventory(models.Model):
+    projectsite = models.OneToOneField(ProjectSite, on_delete=models.CASCADE, related_name='inventory_project',verbose_name='Project Site')
+    last_update = models.DateField(auto_now=True)
+    class Meta:
+        verbose_name_plural='ProjectSite Inventory'
+        verbose_name='ProjectSite Inventory'
+    
+class ProjectInventoryDetails(models.Model):
+    inventory = models.ForeignKey(ProjectInventory, on_delete=models.CASCADE, verbose_name='Project Site Inventory')
+    articles = models.ForeignKey(Inventory, on_delete=models.CASCADE, verbose_name="Articles")
+    quantity = models.IntegerField(('Quantity'), null=True, blank=True)
+
+
+class ProjectDailyReport(models.Model):
+    projectsite = models.ForeignKey(ProjectSite, on_delete=models.CASCADE, null=True)
+    whm = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True,blank=True,
+        related_name='dailyreport_whm', verbose_name='Warehouseman',limit_choices_to={'groups__name': "Warehouseman"})
+    date = models.DateField(default=datetime.date.today)
+
+class ProjectDailyReportDetails(models.Model):
+    dailyreport = models.ForeignKey(ProjectDailyReport, on_delete=models.CASCADE, null=True)
+    articles = models.ForeignKey(Inventory, on_delete=models.SET_NULL, null=True)
+    quantity = models.IntegerField(null=True)
+    remarks = models.CharField(max_length=255, null=True)

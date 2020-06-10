@@ -256,18 +256,48 @@ def ProjectListView_PIC(request):
     return render(request,'backoffice/project_pages/project_list.html', context)
 
 @login_required(login_url='signin')
+@whm_only
+def ProjectListView_WHM(request):
+    data = ProjectSite.objects.filter(whm=request.user)
+    data2 = ProjectSite.objects.filter(status="Completed")
+    data3 = ProjectSite.objects.filter(status="On-going")
+    data4 = ProjectSite.objects.filter(status="Pending")
+    completed = data2.count()
+    ongoing = data3.count()
+    pending = data4.count()
+    context={'data':data, 'completed':completed, 'ongoing':ongoing, 'pending':pending}
+    return render(request,'backoffice/project_pages/project_list.html', context)
+
+@login_required(login_url='signin')
 @staff_only
 def ProjectDetailView(request, pk):
     data = ProjectSite.objects.get(id=pk)
-    data2 = Quotation.objects.filter(projectsite_id=data.id)
-    data5 = Personnel.objects.filter(projectsite_id=data.id)
+    quotation = Quotation.objects.filter(projectsite_id=data.id)
+    personnel = Personnel.objects.filter(projectsite_id=data.id)
+    inventory = ProjectInventory.objects.filter(projectsite_id=data.id)
+    requisition = Requisition.objects.filter(projectsite_id=data.id)
+    external_order = ExternalOrder.objects.filter(projectsite_id=data.id)
+    joborder = JobOrder.objects.filter(projectsite_id=data.id)
+    rework = Rework.objects.filter(projectsite_id=data.id)
+    dailysitephotos = DailySitePhotos.objects.filter(projectsite_id=data.id)
     try:
-        data3 = ProjectProgress.objects.get(projectsite_id=data.id)
-        data4 = ProjectProgressDetails.objects.filter(projectprogress=data3.id)
+        data2 = ProjectProgress.objects.get(projectsite_id=data.id)
+        data3 = ProjectProgressDetails.objects.filter(projectprogress=data2.id)
     except ObjectDoesNotExist:
-        context={'data':data, 'data2':data2}
+        context={
+            'data':data, 
+            'quotation':quotation, 'personnel':personnel, 'inventory':inventory,
+            'requisition':requisition, 'external_order':external_order, 'rework':rework,
+            'dailysitephotos':dailysitephotos,
+        }
         return render(request, 'backoffice/project_pages/project_detail.html', context)
-    context={'data':data, 'data2':data2,'data3':data3,'data4':data4, 'data5':data5, }
+
+    context={
+        'data':data, 'data2':data2, 'data3':data3,
+        'quotation':quotation, 'personnel':personnel, 'inventory':inventory,
+        'requisition':requisition, 'external_order':external_order, 'rework':rework,
+        'dailysitephotos':dailysitephotos, 'joborder':joborder, 
+    }
     return render(request, 'backoffice/project_pages/project_detail.html', context)
 
 
@@ -696,25 +726,44 @@ def RequisitionActionView_WHM(request,pk):
     context={'formset':formset, 'data':data, 'data2':data2}
     return render(request, 'backoffice/requisition_pages/requisition_action_whm.html', context)
 
+
+#################################################################################################################################
+#################################################################################################################################
+def ProjectInventoryListView(request):
+    data2 = ProjectInventory.objects.all()
+    context = {'data2':data2}
+    return render(request, 'backoffice/inventory_pages/inventory_list.html', context)
+
+def ProjectInventoryDetailView(request,pk):
+    data = ProjectInventory.objects.get(id=pk)
+    data2 = ProjectInventoryDetails.objects.filter(inventory=data)
+    context = {'data':data, 'data2':data2}
+    return render(request, 'backoffice/inventory_pages/inventory_detail.html', context)
+
 def ProjectInventoryList_WHM(request):
     user = request.user
     data = ProjectSite.objects.filter(whm=user)
-    data2 = ProjectInventory.objects.all()
+    data2 = ProjectInventory.objects.filter(projectsite__in=data)
     context = {'data2':data2}
-    return render(request, 'backoffice/inventory_pages/inventory_list_whm.html', context)
+    return render(request, 'backoffice/inventory_pages/inventory_list.html', context)
 
-def ProjectInventoryDetail_WHM(request,pk):
+def ProjectInventoryReport_WHM(request,pk):
     data = ProjectInventory.objects.get(id=pk)
     data2 = ProjectInventoryDetails.objects.filter(inventory=data)
-    if request.method == "POST":
-        data2.delete()
-        data.delete()
-        messages.success(request, "Inventory has been deleted")
-        return redirect('inventory_whm')
-    context = {'data':data, 'data2':data2}
+    if request.method == 'POST':
+        form = DailyReportForm(request.POST)
+        formset = DailyReportFormSet(request.POST)
+        if form.is_valid() and formset.is_valid():
+            form = form.save()
+            formset = formset.save(False)
+            formset.dailyreport = form
+            formset.save()
+            messages.success(request, "Daily Report has been created")
+    else:
+        form = DailyReportForm()
+        formset = DailyReportFormSet()
+    context = {'data':data, 'data2':data2, 'form':form, 'formset':formset}
     return render(request, 'backoffice/inventory_pages/inventory_detail_whm.html', context)
-
-
 
 
 #################################################################################################################################
@@ -1113,19 +1162,87 @@ def ReworkDeleteView(request, pk):
 #################################################################################################################################
 #################################################################################################################################
 @login_required(login_url='signin')
-@allowed_users(allowed_roles = ['Admin','Warehouseman'])
+@whm_only
 def projectissues(request):
-    form = ProblemForm
+    form = ProjectIssuesForm
     if request.method == 'POST':
-        form = ProblemForm(request.POST)
+        form = ProjectIssuesForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, 'form submitted!')
-            return redirect('issues')
+            messages.success(request, 'Project Issues has been submitted!')
+            return redirect('issues_list_whm')
         else:
             messages.warning(request, 'Error!')
     context = {'form':form}
     return render(request, 'backoffice/report_pages/projectissues.html', context)
+
+@login_required(login_url='signin')
+@whm_only
+def ProjectIssuesUpdateView(request,pk):
+    data = ProjectIssues.objects.get(id=pk)
+    form = ProjectIssuesForm(instance=data)
+    if request.method == 'POST':
+        form = ProjectIssuesForm(request.POST, instance=data)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Project Issues has been updated!')
+            return redirect('issues_list_whm')
+        else:
+            messages.warning(request, 'Error!')
+    context = {'form':form}
+    return render(request, 'backoffice/report_pages/projectissues.html', context)
+    
+@login_required(login_url='signin')
+@whm_only
+def ProjectIssuesDeleteView(request,pk):
+    data = ProjectIssues.objects.get(id=pk)
+    if request.method == 'POST':
+        data.delete()
+        messages.success(request, 'Project Issues has been deleted!')
+        return redirect('issues_list_whm')
+    return render(request, 'backoffice/report_pages/projectissues_delete.html', context)
+    
+
+@login_required(login_url='signin')
+@admin_only
+def ProjectIssuesList(request):
+    data = ProjectIssues.objects.all()
+    context = {'data':data}
+    return render(request, 'backoffice/report_pages/projectissues_list.html', context)
+
+@login_required(login_url='signin')
+@pm_only
+def ProjectIssuesList_PM(request):
+    user =request.user
+    project = ProjectSite.objects.filter(pm=user)
+    data = ProjectIssues.objects.filter(projectsite__in=project)
+    context = {'data':data}
+    return render(request, 'backoffice/report_pages/projectissues_list.html', context)
+
+@login_required(login_url='signin')
+@pic_only
+def ProjectIssuesList_PIC(request):
+    user =request.user
+    project = ProjectSite.objects.filter(pic=user)
+    data = ProjectIssues.objects.filter(projectsite__in=project)
+    context = {'data':data}
+    return render(request, 'backoffice/report_pages/projectissues_list.html', context)
+
+@login_required(login_url='signin')
+@whm_only
+def ProjectIssuesList_WHM(request):
+    user =request.user
+    project = ProjectSite.objects.filter(whm=user)
+    data = ProjectIssues.objects.filter(projectsite__in=project)
+    context = {'data':data}
+    return render(request, 'backoffice/report_pages/projectissues_list.html', context)
+
+@login_required(login_url='signin')
+@staff_only
+def ProjectIssuesDetailView(request,pk):
+    data = ProjectIssues.objects.get(id=pk)
+    context = {'data':data}
+    return render(request, 'backoffice/report_pages/projectissues_detail.html', context)
 
 @login_required(login_url = 'signin')
 @allowed_users(allowed_roles = ['Admin','Warehouseman'])
@@ -1142,7 +1259,8 @@ def dailysitephotos(request):
                 report.save()
             return redirect('dailysitephotos')
     context={'form':form}
-    return render(request, 'backoffice/report_pages/dailyreport.html', context)
+    return render(request, 'backoffice/report_pages/dailysitephotos.html', context)
+
 
 #################################################################################################################################
 #################################################################################################################################

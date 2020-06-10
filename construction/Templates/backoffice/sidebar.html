@@ -21,7 +21,6 @@
             </div>
         </li>
 
-        {% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Project Manager" or request.user.groups.all.0.name == "Person In-Charge"%}
         <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#project-dropdown" aria-expanded="false" aria-controls="project-dropdown">
                 <i class="menu-icon mdi mdi-television"></i>
@@ -46,6 +45,8 @@
                             <a class="nav-link" href="{% url 'project_list_pm'%}">List of Projects</a>
                         {% elif request.user.groups.all.0.name == "Person In-Charge"%}
                             <a class="nav-link" href="{% url 'project_list_pic'%}">List of Projects</a>
+                        {% elif request.user.groups.all.0.name == "Warehouseman"%}
+                            <a class="nav-link" href="{% url 'project_list_whm'%}">List of Projects</a>
                         {% endif %}
                     </li>
                     {% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Project Manager"%}
@@ -56,7 +57,6 @@
                 </ul>
             </div>
         </li>
-        {% endif %}
 
         {% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Warehouseman"%}
         <li class="nav-item">
@@ -68,6 +68,10 @@
             <div class="collapse" id="material-dropdown">
                 <ul class="nav flex-column sub-menu">
                     {% if request.user.groups.all.0.name == "Warehouseman" %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'inventory_whm' %}">ProjectSite Inventory</a>
+                    </li>
+                    {% else %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'inventory_whm' %}">ProjectSite Inventory</a>
                     </li>
@@ -142,19 +146,32 @@
             </a>
             <div class="collapse" id="report-dropdown">
                 <ul class="nav flex-column sub-menu">
-                    {% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Warehouseman"%}
+                    {% if request.user.groups.all.0.name == "Warehouseman"%}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'issues' %}">Project Issues</a>
+                            <a class="nav-link" href="{% url 'joborder_list_whm' %}">Job Order</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'dailyreport'%}">Daily Site Photos</a>
-                        </li>
-                            {% if request.user.groups.all.0.name == "Warehouseman"%}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'joborder_list_whm' %}">Job Order</a>
-                            </li>
-                            {% endif %}
                     {% endif %}
+                    {% if request.user.groups.all.0.name == "Admin"%}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'issues_list' %}">Project Issues</a>
+                    </li>
+                    {% elif request.user.groups.all.0.name == "Project Manager"%}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'issues_list_pm' %}">Project Issues</a>
+                    </li>
+                    {% elif request.user.groups.all.0.name == "Person In-Charge"%}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'issues_list_pic' %}">Project Issues</a>
+                    </li>
+                    {% elif request.user.groups.all.0.name == "Warehouseman"%}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'issues_list_whm' %}">Project Issues</a>
+                    </li>
+                    {% endif %}
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'dailyreport'%}">Daily Site Photos</a>
+                    </li>
                     {% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Person In-Charge"%}
                         <li class="nav-item">
                             <a class="nav-link" href="#">Weekly Reports</a>

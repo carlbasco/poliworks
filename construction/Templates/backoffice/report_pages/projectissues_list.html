@@ -2,7 +2,19 @@
 {% load static %}
 {% load crispy_forms_tags%}
 {% block content %}
-<span class="text-uppercase page-subtitle">ProjectSite Inventory</span>
+<span class="text-uppercase page-subtitle">Report</span>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-inverse-primary">
+        <li class="breadcrumb-item active" aria-current="page">
+        Project Issues List
+        </li>
+        {% if request.user.groups.all.0.name == "Warehouseman" %}
+        <li class="breadcrumb-item">
+            <a href="{% url 'issues'%}">Project Issues Form</a>
+        </li>
+        {% endif %}
+    </ol>
+</nav>
 
 <div class="col-md-12 mx-auto">
     {% for message in messages %}
@@ -36,21 +48,31 @@
                                             Project Site
                                         </th>
                                         <th class="sorting font-weight-bold"" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                            aria-label="Client: activate to sort column ascending" style="width: 71px;">
-                                            Last Update
+                                            aria-label="Client: activate to sort column ascending" style="width: 50px;">
+                                            Date
                                         </th>
                                         <th class="sorting font-weight-bold"" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                        aria-label="Actions: activate to sort column ascending" style="width: 53px;">
+                                            aria-label="Client: activate to sort column ascending" style="width: 50px;">
+                                            Prepared By
+                                        </th>
+                                        <th class="sorting font-weight-bold"" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                            aria-label="Client: activate to sort column ascending" style="width: 50px;">
+                                            Send To
+                                        </th>
+                                        <th class="sorting font-weight-bold"" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                        aria-label="Actions: activate to sort column ascending" style="width: 50px;">
                                             Actions
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for i in data2%}
+                                    {% for i in data%}
                                     <tr role="row" class="odd">
                                         <td>{{i.projectsite}}</td>
-                                        <td>{{i.last_update}}</td>
-                                        <td><a href="{% url 'inventory_whm_detail' i.id %}" class="btn btn-outline-primary">View</a></td>
+                                        <td>{{i.projectsite}}</td>
+                                        <td>{{i.whm}}</td>
+                                        <td>{{i.pic}}</td>
+                                        <td><a href="{% url 'issues_detail' i.id%}" class="btn btn-primary">view</a></td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
