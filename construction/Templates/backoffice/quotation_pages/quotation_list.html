@@ -33,7 +33,7 @@
     <div class="col-md-4 grid-margin stretch-card">
         <div class="card aligner-wrapper" id="card_completed">
             <div class="card-body" >
-                <div class="absolute left top bottom h-100 v-strock-2 bg-success"></div>
+                <div class="absolute left top bottom h-100 v-strock-2 bg-primary"></div>
                 <p class="text-muted mb-2">Accepted Quotations</p>
                 <div class="d-flex align-items-center">
                     <h1 class="font-weight-medium mb-2">{{accepted}}</h1>
@@ -44,7 +44,7 @@
     <div class="col-md-4 grid-margin stretch-card" >
         <div class="card aligner-wrapper" id="card_ongoing">
             <div class="card-body">
-                <div class="absolute left top bottom h-100 v-strock-2 bg-primary"></div>
+                <div class="absolute left top bottom h-100 v-strock-2 bg-warning"></div>
                 <p class="text-muted mb-2">Pending Quotations</p>
                 <div class="d-flex align-items-center">
                     <h1 class="font-weight-medium mb-2">{{pending}}</h1>
@@ -55,7 +55,7 @@
     <div class="col-md-4 grid-margin stretch-card">
         <div class="card aligner-wrapper"id="card_pending">
             <div class="card-body">
-                <div class="absolute left top bottom h-100 v-strock-2 bg-warning"></div>
+                <div class="absolute left top bottom h-100 v-strock-2 bg-danger"></div>
                 <p class="text-muted mb-2">Decline Quotations</p>
                 <div class="d-flex align-items-center">
                     <h1 class="font-weight-medium mb-2">{{decline}}</h1>
@@ -118,7 +118,7 @@
                                             <td><label class="badge badge-warning">{{i.status}}</label></td>
                                         {% elif i.status == "Accepted"%}
                                             <td><label class="badge badge-primary">{{i.status}}</label></td>
-                                        {% elif i.status == "Denied" %}
+                                        {% elif i.status == "Declined" %}
                                             <td><label class="badge badge-danger">{{i.status}}</label></td>
                                         {% endif %}
                                         <td><a class="btn btn-outline-primary" href="{% url 'quotation_detail' i.id%}">View</a></td>
