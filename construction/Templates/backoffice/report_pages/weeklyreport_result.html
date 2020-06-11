@@ -1,20 +1,27 @@
-{%extends 'backoffice/index.html'%}
-{%load static%}
-{%load crispy% }
-{%load crispy_forms_tags%}
-{% load humanize %}
-{% block content %}
 
-<div class="card">
-    <div class="card-body">
-        
-        <div class="col-md-12 mx-auto mb-5">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+</head>
+<body>
+    <a href="{% url 'weeklyreport'%}" class="btn btn-outline-secondary mt-3 ml-3" >Go Back</a>
+    <button class="btn btn-outline-primary mt-3 ml-3" id="pdf">Generate a PDF</button>
+    <div id="content" style="background-color: white;">
+    
+        <div class="col-md-10 mx-auto mb-5">
             <h3 class="text-center font-weight-bold table-title">STATUS REPORT</h3>
             <table class="table table-bordered ">
                 <thead>
                     <tr>
                         <th class="w-50">PERIOD</th>
-                        <th class="w-50"><strong>From: </strong>{{datefrom|naturalday}}<strong>  To: </strong> {{dateto|naturalday}}</th>
+                        <th class="w-50">
+                            <li style="list-style: none"><strong>From: </strong>{{datefrom}}</li>
+                            <li style="list-style: none"><strong>  To: </strong> {{dateto}}</li>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -27,9 +34,9 @@
             </table>
         </div>
 
-        <div class="col-md-12 mx-auto mb-5">
+        <div class="col-md-10 mx-auto mb-5">
             <h3 class="text-center font-weight-bold table-title">SITE PHOTOS</h3>
-            <table class="table">
+            <table class="table table-borderless">
                 <thead>
                 </thead>
                 <tbody>
@@ -50,7 +57,7 @@
             </table>
         </div>
 
-        <div class="col-md-12 mx-auto table-responsive mb-5">
+        <div class="col-md-10 mx-auto table-responsive mb-5">
             <h3 class="text-center font-weight-bold table-title">ISSUES ON SITE</h3>
             <table class="table table-bordered">
                 <thead class="thead" id="head_tbl">
@@ -72,7 +79,7 @@
             </table>
         </div>
 
-        <div class="col-md-12 mx-auto table-responsive mb-5">
+        <div class="col-md-10 mx-auto table-responsive mb-5">
             <h3 class="text-center font-weight-bold table-title">JOBORDER</h3>
             <table class="table table-bordered">
                 <thead class="thead" id="head_tbl">
@@ -106,7 +113,7 @@
             </table>
         </div>
 
-        <div class="col-md-12 mx-auto mb-5">
+        <div class="col-md-10 mx-auto mb-5">
             <h3 class="text-center font-weight-bold table-title">REQUEST FOR THE WEEK</h3>
             <table class="table table-bordered">
                 <thead class="thead" id="head_tbl">
@@ -135,10 +142,24 @@
                 </tbody>
             </table>
         </div>
-
-        
-    </div>
+       
+    
+    
 </div>
-{%endblock%}
-{% block javascript %}
-{% endblock %}
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.debug.js"></script>
+<script>
+    $('#pdf').click(function() {
+        var options = {
+        };
+        var pdf = new jsPDF('p', 'pt', 'a4');
+        pdf.addHTML($("#content"), 15, 15, options, function() {
+            pdf.save('report.pdf');
+        });
+    });
+</script>
+</body>
+</html>
