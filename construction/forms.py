@@ -504,3 +504,6 @@ DailyReportFormSet = inlineformset_factory(
         'remarks':forms.TextInput(attrs={'class':'form-control'}),
     }  
 )
+
+class WeeklyReportForm(forms.Form):
+    projectsite = forms.ModelChoiceField(queryset=ProjectSite.objects.all(), label="Project Site")

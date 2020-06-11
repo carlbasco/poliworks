@@ -1,0 +1,144 @@
+{%extends 'backoffice/index.html'%}
+{%load static%}
+{%load crispy% }
+{%load crispy_forms_tags%}
+{% load humanize %}
+{% block content %}
+
+<div class="card">
+    <div class="card-body">
+        
+        <div class="col-md-12 mx-auto mb-5">
+            <h3 class="text-center font-weight-bold table-title">STATUS REPORT</h3>
+            <table class="table table-bordered ">
+                <thead>
+                    <tr>
+                        <th class="w-50">PERIOD</th>
+                        <th class="w-50"><strong>From: </strong>{{datefrom|naturalday}}<strong>  To: </strong> {{dateto|naturalday}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>PROJECT SITE</td>
+                        <td>{{data.projectsite}}</td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-md-12 mx-auto mb-5">
+            <h3 class="text-center font-weight-bold table-title">SITE PHOTOS</h3>
+            <table class="table">
+                <thead>
+                </thead>
+                <tbody>
+                    {% if sitephotosdetails%}
+                        {% for i in sitephotosdetails%}
+                        <tr>
+                            <td class="text-center">
+                                <img id="sitephotosdetails" src="{{i.image.url}}" alt="" style="width: auto; height: auto; border-radius: 0;">
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                    <tr>
+                        <td class="text-center">No Data Available on this date</td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-md-12 mx-auto table-responsive mb-5">
+            <h3 class="text-center font-weight-bold table-title">ISSUES ON SITE</h3>
+            <table class="table table-bordered">
+                <thead class="thead" id="head_tbl">
+                    
+                </thead>
+                <tbody>
+                    {% if projectissues %}
+                    {% for i in projectissues %}
+                        <tr>
+                            <td class="text-center">{{i.description}}</td>
+                        </tr>
+                    {% endfor %}
+                    {% else %}
+                    <tr>
+                        <td class="text-center">No Data Available on this date</td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-md-12 mx-auto table-responsive mb-5">
+            <h3 class="text-center font-weight-bold table-title">JOBORDER</h3>
+            <table class="table table-bordered">
+                <thead class="thead" id="head_tbl">
+                    <th class="font-weight-bold" style="width: 250px;">Personnel</th>
+                    <th class="font-weight-bold">Activity</th>
+                    <th class="font-weight-bold">From</th>
+                    <th class="font-weight-bold">To</th>
+                    <th class="font-weight-bold">Status</th>
+                    <th class="font-weight-bold" style="width: 150px;">Remarks</th>
+                    <th class="font-weight-bold" style="width: 150px;">Completion Date</th>
+                </thead>
+                <tbody>
+                    {% if jobordertask%}
+                        {% for i in jobordertask %}
+                            <tr>
+                                <td>{{i.personnel}}</td>
+                                <td>{{i.activity}}</td>
+                                <td>{{i.date}}</td>
+                                <td>{{i.date2}}</td>
+                                <td>{{i.status}}</td>
+                                <td>{{i.remarks}}</td>
+                                <td>{{i.completion_date}}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center">No Data Available on this date</td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-md-12 mx-auto mb-5">
+            <h3 class="text-center font-weight-bold table-title">REQUEST FOR THE WEEK</h3>
+            <table class="table table-bordered">
+                <thead class="thead" id="head_tbl">
+                    <tr>
+                        <th class="text-center">Quantity</th>
+                        <th class="text-center">Unit</th>
+                        <th class="text-center">Articles</th>
+                        <th class="text-center">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if requisitiondetails%}
+                        {% for i in requisitiondetails %}
+                        <tr>
+                            <td class="text-center">{{i.quantity}}</td>
+                            <td class="text-center">{{i.articles.unit}}</td>
+                            <td>{{i.articles}}</td>
+                            <td class="text-center">{{i.status}}</td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center">No Data Available on this date</td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        
+    </div>
+</div>
+{%endblock%}
+{% block javascript %}
+{% endblock %}

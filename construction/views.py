@@ -1057,9 +1057,7 @@ def JobOrderDeleteView(request,pk):
         data2 = JobOrderTask.objects.filter(joborder=data.id)
         for i in data2:
             data3 = Personnel.objects.get(id=i.personnel.id)
-            print(data2)
             data3.status = "Available"
-            print(data3)
             data3.save()
         data.delete()
         messages.success(request, 'Job Order has been deleted!', extra_tags='success')
@@ -1340,6 +1338,40 @@ def ProjectDailyReportDetailView(request, pk):
     context={'data':data, 'data2':data2}
     return render(request, 'backoffice/report_pages/dailyreport_detail.html', context)
 
+def WeeklyReport(request):
+    form = WeeklyReportForm
+    if request.method == 'POST':
+        projectsite = request.POST.get('projectsite')
+        datefrom = request.POST.get('datefrom')
+        dateto = request.POST.get('dateto')
+        data = ProjectSite.objects.get(id=projectsite)
+        try:
+            requisition = Requisition.objects.filter(projectsite_id=data.id, date__range=[datefrom, dateto])
+            requisitiondetails = RequisitionDetails.objects.filter(requisition__in=requisition)
+            externalorder = ExternalOrder.objects.filter(projectsite_id=data.id, date__range=[datefrom, dateto])
+            externalorder_details = ExternalOrderDetails.objects.filter(externalorder__in=externalorder)
+            joborder = JobOrder.objects.filter(projectsite_id=data.id, date__range=[datefrom, dateto])
+            jobordertask = JobOrderTask.objects.filter(joborder__in=joborder)
+            rework = Rework.objects.filter(projectsite_id=data.id, date__range=[datefrom, dateto])
+            sitephotos = SitePhotos.objects.filter(projectsite_id=data.id, date__range=[datefrom, dateto])
+            sitephotosdetails = SitePhotosDetails.objects.filter(sitephotos__in=sitephotos)
+            projectissues = ProjectIssues.objects.filter(projectsite_id=data.id, date__range=[datefrom, dateto])
+            context={
+            'data':data, 'datefrom':datefrom, 'dateto':dateto,
+            'requisition':requisition, 'requisitiondetails':requisitiondetails, 
+            'externalorder':externalorder, 'externalorder_details':externalorder_details,
+            'joborder':joborder, 'jobordertask':jobordertask,
+            'rework':rework, 'projectissues':projectissues,
+            'sitephotos':sitephotos, 'sitephotosdetails':sitephotosdetails,
+            }
+            return render(request, 'backoffice/report_pages/weeklyreport_result.html', context)
+        except ObjectDoesNotExist:
+            messages.error(request, "Dates Does not exist on data")
+            return redirect('weeklyreport')
+    context={'form':form}
+    return render(request, 'backoffice/report_pages/weeklyreport_search.html', context)
+
+
 #################################################################################################################################
 #################################################################################################################################
 @login_required(login_url = 'signin')
@@ -1370,7 +1402,7 @@ def ClientProjectView(request,pk):
 @allowed_users(allowed_roles = ['Client'])
 def ClientSitePhotosView(request, pk):
     data = SitePhotos.objects.get(id=pk)
-    data2 = SitePhotosDetails.objects.filter(sitephotos=data)
+    data2 = SitePhotosDetails.objects.filter(sitephotos=data, reveal="True")
     context={'data':data, 'data2':data2}
     return render(request, 'client/client-sitephotos.html', context)
 

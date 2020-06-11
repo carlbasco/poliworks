@@ -86,7 +86,7 @@ urlpatterns = [
     path('backoffice/reports/sitephotos_list', views.dailysitephotosListView, name="sitephotos_list"),
     path('backoffice/reports/sitephotos/<int:pk>', views.dailysitephotosDetailView, name="sitephotos_detail"),
     path('backoffice/reports/sitephotos/<int:pk>/update', views.dailysitephotosUpdateView, name="sitephotos_update"),
-
+    path('backoffice/reports/weeklyreport/search', views.WeeklyReport, name="weeklyreport"),
 
     path('backoffice/reports/issues', views.projectissues, name="issues"),
     path('backoffice/reports/issues_list', views.ProjectIssuesList, name="issues_list"),

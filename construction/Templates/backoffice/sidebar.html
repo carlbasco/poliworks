@@ -175,9 +175,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'dailyreport_list'%}"> Materials Report</a>
                     </li>
-                    {% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Person In-Charge"%}
+                    {% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Person In-Charge" or request.user.groups.all.0.name == "Project Manager"%}
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Weekly Reports</a>
+                            <a class="nav-link" href="{% url 'weeklyreport'%}">Genrate Report</a>
                         </li>
                     {% endif %}
                 </ul>

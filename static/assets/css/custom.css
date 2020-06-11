@@ -337,3 +337,7 @@ img.rounded.table-img {
 .div-tbl-img {
     box-shadow: 0px 2px 15px 0px rgba(0,0,0,0.75);
 }
+h3.text-center.font-weight-bold.table-title {
+    margin-bottom: 30px;
+    border: solid 1px lightgray;
+}
