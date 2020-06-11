@@ -279,7 +279,8 @@ def ProjectDetailView(request, pk):
     external_order = ExternalOrder.objects.filter(projectsite_id=data.id)
     joborder = JobOrder.objects.filter(projectsite_id=data.id)
     rework = Rework.objects.filter(projectsite_id=data.id)
-    dailysitephotos = DailySitePhotos.objects.filter(projectsite_id=data.id)
+    sitephotos = SitePhotos.objects.filter(projectsite_id=data.id)
+
     try:
         data2 = ProjectProgress.objects.get(projectsite_id=data.id)
         data3 = ProjectProgressDetails.objects.filter(projectprogress=data2.id)
@@ -288,7 +289,7 @@ def ProjectDetailView(request, pk):
             'data':data, 
             'quotation':quotation, 'personnel':personnel, 'inventory':inventory,
             'requisition':requisition, 'external_order':external_order, 'rework':rework,
-            'dailysitephotos':dailysitephotos,
+            'sitephotos':sitephotos,
         }
         return render(request, 'backoffice/project_pages/project_detail.html', context)
 
@@ -296,7 +297,7 @@ def ProjectDetailView(request, pk):
         'data':data, 'data2':data2, 'data3':data3,
         'quotation':quotation, 'personnel':personnel, 'inventory':inventory,
         'requisition':requisition, 'external_order':external_order, 'rework':rework,
-        'dailysitephotos':dailysitephotos, 'joborder':joborder, 
+        'dailysitephotos':dailysitephotos, 'joborder':joborder,  'sitephotos':sitephotos,
     }
     return render(request, 'backoffice/project_pages/project_detail.html', context)
 
@@ -1276,47 +1277,52 @@ def ProjectIssuesDetailView(request,pk):
 @login_required(login_url = 'signin')
 @allowed_users(allowed_roles = ['Admin','Warehouseman'])
 def dailysitephotos(request):
-    form = DailySitePhotostForm()
+    form = SitePhotostForm()
+    form2 = SitePhotostDetailsForm()
     if request.method == 'POST':
-        form = DailySitePhotostForm(request.POST, request.FILES)
+        form = SitePhotostForm(request.POST)
+        form2 = SitePhotostDetailsForm(request.POST, request.FILES)
         files = request.FILES.getlist('image')
-        if form.is_valid():
-            post = form.save(commit=False)
-            projectsite = post.projectsite
+        if form.is_valid() and form2.is_valid():
+            form = form.save()
+            form2 = form2.save(commit=False)
             for f in files:
-                report = DailyReport(projectsite=projectsite, image=f)
-                report.save()
-            return redirect('dailysitephotos')
-    context={'form':form}
+                image = SitePhotosDetails(sitephotos=form, image=f)
+                image.save()
+            messages.success(request, "Daily Site Photos has been submitted")
+            return redirect('sitephotos')
+    context={'form':form, 'form2':form2}
     return render(request, 'backoffice/report_pages/dailysitephotos.html', context)
 
 @login_required(login_url = 'signin')
 @staff_only
 def dailysitephotosListView(request):
-    data = DailySitePhotos.objects.all()
+    data = SitePhotos.objects.all()
     context={'data':data}
     return render(request, 'backoffice/report_pages/dailysitephotos_list.html', context)
+
 
 @login_required(login_url = 'signin')
 @staff_only
 def dailysitephotosDetailView(request,pk):
-    data = DailySitePhotos.objects.get(id=pk)
-    context={'data':data}
-    return render(request, 'backoffice/report_pages/dailysitephotos_detail.html', context)
+    data = SitePhotos.objects.get(id=pk)
+    data2 = SitePhotosDetails.objects.filter(sitephotos=data)
+    context={'data':data, 'data2':data2}
+    return render(request, 'backoffice/report_pages/dailysitephotos.detail.html', context)
 
 @login_required(login_url = 'signin')
-@allowed_users(allowed_roles = ['Admin','Project Manager', 'Person In-Charge'])
+# @allowed_users(allowed_roles = ['Admin','Project Manager', 'Person In-Charge'])
 def dailysitephotosUpdateView(request,pk):
-    data = DailySitePhotos.objects.get(id=pk)
-    if request.method=="POST":
-        form = DailySitePhotostForm(request.POST, request.FILES, instance=data)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Site Photos has been updated")
-    else:
-        form = DailySitePhotostForm(request.FILES, instance=data)        
-    context={'data':data, 'form':form}
-    return render(request, 'backoffice/report_pages/dailysitephotos_detail.html', context)
+    data = SitePhotos.objects.get(id=pk)
+    formset = SitePhotostFormset(instance=data)
+    if request.method == 'POST':
+        formset = SitePhotostFormset(request.POST, instance=data)
+        if formset.is_valid():
+            formset.save()
+            messages.success(request, "Daily Site Photos has been updated")
+            return redirect('sitephotos_list')
+    context={'formset':formset, 'data':data}
+    return render(request, 'backoffice/report_pages/dailysitephotos_update.html', context)
 
 
 @login_required(login_url = 'signin')
@@ -1349,15 +1355,25 @@ def Client_home(request):
 def ClientProjectView(request,pk):
     data = ProjectSite.objects.get(id=pk)
     data2 = Quotation.objects.filter(projectsite_id=data.id)
+    data5 = SitePhotos.objects.filter(projectsite_id=data.id)
     try:
         data3 = ProjectProgress.objects.get(projectsite_id=data.id)
         data4 = ProjectProgressDetails.objects.filter(projectprogress=data3.id)
     except ObjectDoesNotExist:
-        context = {'data':data, 'data2':data2}
+        context = {'data':data, 'data2':data2, 'data5':data5}
         return render(request, 'client/client-view_project.html', context)
-    context={'data':data, 'data2':data2, 'data3':data3, 'data4':data4,}
+
+    context={'data':data, 'data2':data2, 'data3':data3, 'data4':data4, 'data5':data5}
     return render(request, 'client/client-view_project.html', context)
     
+@login_required(login_url = 'signin')
+@allowed_users(allowed_roles = ['Client'])
+def ClientSitePhotosView(request, pk):
+    data = SitePhotos.objects.get(id=pk)
+    data2 = SitePhotosDetails.objects.filter(sitephotos=data)
+    context={'data':data, 'data2':data2}
+    return render(request, 'client/client-sitephotos.html', context)
+
 @login_required(login_url = 'signin')
 @allowed_users(allowed_roles = ['Client'])
 def ClientQuotationView(request,pk):

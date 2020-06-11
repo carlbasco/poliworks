@@ -18,6 +18,9 @@ def profile_upload_path(instance, filename):
 def project_upload_path(instance, filename):
     return 'Projects/{0}/{1}'.format(instance.projectsite, filename)
 
+def project_sitephotos_path(instance, filename):
+    return 'Projects/sitephotos/{0}/{1}'.format(instance.sitephotos.projectsite, filename)
+
 class Province(models.Model):
     name = models.CharField(max_length=255, null=True, blank=True)
     def __str__(self):
@@ -375,11 +378,13 @@ class ProjectIssues(models.Model):
     def get_projectsite(self):
         return self.projectsite
     
-        
-class DailySitePhotos(models.Model):
+class SitePhotos(models.Model):
     projectsite=models.ForeignKey(ProjectSite, on_delete=models.CASCADE, null=True)
-    image=models.FileField(upload_to=project_upload_path, verbose_name='Photos')
     date=models.DateField(default=datetime.date.today)
+
+class SitePhotosDetails(models.Model):
+    sitephotos = models.ForeignKey(SitePhotos, on_delete=models.CASCADE, null=True)
+    image=models.FileField(upload_to=project_sitephotos_path, verbose_name='Photos')
     BOOL_CHOICES = ((True, 'Yes'), (False, 'No'))
     reveal=models.BooleanField(("Let the client view this?"), choices=BOOL_CHOICES, default=False, null=True)
     class Meta:

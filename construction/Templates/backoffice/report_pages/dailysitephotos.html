@@ -2,8 +2,18 @@
 {%load static%}
 {%load crispy% }
 {%load crispy_forms_tags%}
-
 {% block content %}
+<span class="text-uppercase page-subtitle">Report</span>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-inverse-primary">
+        <li class="breadcrumb-item active" aria-current="page">
+            Site Photos Form
+        </li>
+        <li class="breadcrumb-item " >
+            <a href="{% url 'sitephotos_list'%}">Site Photos List</a>
+        </li>
+    </ol>
+</nav>
 <div class="col-md-5 m-auto">
     <form action="" method="POST" id="" enctype="multipart/form-data">
         <div class="card card-form">
@@ -14,10 +24,15 @@
                 {% csrf_token%}
                 <div class="form-group mb-3">
                     {{form.projectsite|as_crispy_field}} 
-                </div>   
+                </div>
                 <div class="form-group mt-4">
-                    {{form.image|as_crispy_field}} 
-                </div>   
+                    <label for="">Design </label>
+                    <div class="custom-file">
+                        {{form2.image}}
+                        <label class="custom-file-label" for="customFile">Choose file</label>
+                    </div>
+                    <div id="preview"></div>
+                </div>
                 <div class="form-group  mt-4">
                     {{form.date|as_crispy_field}} 
                 </div>   
@@ -27,3 +42,26 @@
     </form>
 </div>
 {%endblock%}
+{% block javascript %}
+<script>
+    function previewImages() {  
+        var $preview = $('#preview').empty();
+        if (this.files) $.each(this.files, readAndPreview);
+
+        function readAndPreview(i, file) {
+            if (!/\.(jpe?g|png|gif)$/i.test(file.name)){
+                return alert(file.name +" is not an image");
+            } // else...
+            var reader = new FileReader();
+
+            $(reader).on("load", function() {
+                $preview.append($("<img/>", {src:this.result, height:100}));
+            });
+            reader.readAsDataURL(file);
+        }
+    }
+$('#id_image').on("change", previewImages);
+$('#id_projectsite').select2()
+</script>
+<style>span.select2-selection.select2-selection--single {height: 30px;}</style>
+{% endblock %}

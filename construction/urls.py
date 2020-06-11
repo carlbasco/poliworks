@@ -83,6 +83,11 @@ urlpatterns = [
 
     #Reports
     path('backoffice/reports/sitephotos', views.dailysitephotos, name="sitephotos"),
+    path('backoffice/reports/sitephotos_list', views.dailysitephotosListView, name="sitephotos_list"),
+    path('backoffice/reports/sitephotos/<int:pk>', views.dailysitephotosDetailView, name="sitephotos_detail"),
+    path('backoffice/reports/sitephotos/<int:pk>/update', views.dailysitephotosUpdateView, name="sitephotos_update"),
+
+
     path('backoffice/reports/issues', views.projectissues, name="issues"),
     path('backoffice/reports/issues_list', views.ProjectIssuesList, name="issues_list"),
     path('backoffice/reports/issues/<int:pk>', views.ProjectIssuesDetailView, name="issues_detail"),
@@ -92,6 +97,7 @@ urlpatterns = [
     #client
     path('myproject/', views.Client_home, name="client_home"),
     path('myproject/view/<int:pk>', views.ClientProjectView, name="client_view_project"),
+    path('myproject/sitephotos/view/<int:pk>', views.ClientSitePhotosView, name="client_sitephotos"),
     path('myproject/view/quotation/<int:pk>', views.ClientQuotationView, name="client_quotation"),
     path('profile', views.ClientProfileView, name="client_profile"),
     path('profile/edit', views.ClientProfileUpdateView, name="client_profile_update"),

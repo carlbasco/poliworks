@@ -3,166 +3,178 @@
 {% block content %}
 
 <div class="container-fluid" id="view_project">
-  <section>
-    <div class="row">
-      <div class="col col-md-8">
-        <div class="card">
-          <div class="card-header">
-            <h2 class="mb-0">Overview</h2>
-        </div>
-        <div class="card-body">
-          <div class="row">
-            <div class="col-md-3 text-center">
-              <strong >Project Start Date:</strong>
-              <p>{{data.startdate}}</p>
-            </div>
-            <div class="col-md-3 text-center">
-              <strong>Project End Date:</strong>
-              <p>{{data.comdate}}</p>
-            </div>
-            <div class="col-md-3 text-center">
-              <strong>Maintenance Period End Date:</strong>
-              <p>{{data.mpd}}</p>
-            </div>
-            <div class="col-md-3 text-center">
-              <strong>Project Status</strong>
-              {% if data.status == "Pending"%}
-              <p><span class="badge badge-warning">{{data.status}}</span></p>
-              
-              {% elif data.status == "On-going"%}
-              <p><span class="badge badge-primary">{{data.status}}</span></p>
-              
-              {% else %}
-              <p><span class="badge badge-success">{{data.status}}</span></p>
-              
-              {% endif %}
-            </div>
-          </div>
-          <div class="row">
-            <div class="mx-auto d-flex align-items-center ">
-              <div class="forth circle "{% if data3 %} data-value="{{data3.total_progress}}" {% endif %}>
-                <strong></strong>
-              </div>
-              <h3>Project Progress</h3>
-            </div>
-            <div class="col-md-10 table-responsive-l mx-auto ">
-              <table class="table table-bordered table-responsive-l">
-                <thead>
-                    <tr>
-                        <th>Scope of Work</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for i in data4 %}
-                    <tr>
-                        <td>{{i.scope_of_work}}</td>
-                        {% if i.status == "Pending"%}
-                        <td><span class="badge badge-warning">{{i.status}}</span></td>
-                        {% elif i.status == "On-going"%}
-                        <td><span class="badge badge-primary">{{i.status}}</span></td>
-                        {% else %}
-                        <td><span class="badge badge-success">{{i.status}}</span></td>
-                        {% endif %}
-                    </tr>
-                    {% endfor %}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-        </div>
-        
-      </div>
-      <div class="accordion col col-md-4" id="accordionExample">
-          <div class="card">
-            <div class="card-header" id="headingOne">
-              <h2 class="mb-0">
-                  <button class="btn btn-link collapsed btn-cardheader" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                  QUOTATION
-                  </button>
-              </h2>
-            </div>
-            <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
-              <div class="card-body row">
-                <div class="table-responsive">
-                  <table class="table table-borderless">
-                    <thead>
-                        <tr>
-                            <th>Subject</th>
-                            <th>Date</th>
-                            <th>Total Amount</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for i in data2 %}
-                        
-                        <tr>
-                            <td>{{i.subject}}</td>
-                            <td>{{i.date}}</td>
-                            <td>{{i.amount}}</td>
-                            {% if i.status == "Rejected"%}
-                            <td><span class="badge badge-danger">{{i.status}}</span></td>
-                            {% elif i.status == "Pending"%}
-                            <td><span class="badge badge-primary">{{i.status}}</span></td>
-                            {% else %}
-                            <td><span class="badge badge-success">{{i.status}}</span></td>
-                            {% endif %}
-                            <td>
-                              <form action="{% url 'client_quotation' i.id%}">
-                                <button class="btn btn-outline-primary view-btn">View</button>
-                              </form>
-                            </td>
-                        </tr>
-                        
-                        {% endfor %}
-                    </tbody>
-                  </table>
+    <section>
+        <div class="row">
+            <div class="col col-md-7">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="mb-0">Overview</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3 text-center"><strong >Project Start Date:</strong><p>{{data.startdate}}</p></div>
+                            <div class="col-md-3 text-center"><strong>Project End Date:</strong><p>{{data.comdate}}</p></div>
+                            <div class="col-md-3 text-center"><strong>Maintenance Period End Date:</strong><p>{{data.mpd}}</p></div>
+                            <div class="col-md-3 text-center">
+                                <strong>Project Status</strong>
+                                {% if data.status == "Pending"%}
+                                    <p><span class="badge badge-warning">{{data.status}}</span></p>
+                                {% elif data.status == "On-going"%}
+                                    <p><span class="badge badge-primary">{{data.status}}</span></p>
+                                {% else %}
+                                    <p><span class="badge badge-success">{{data.status}}</span></p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="mx-auto d-flex align-items-center ">
+                                <div class="forth circle "{% if data3 %} data-value="{{data3.total_progress}}" {% endif %}>
+                                <strong></strong>
+                                </div>
+                            <h3>Project Progress</h3>
+                            </div>
+                            <div class="col-md-10 table-responsive-l mx-auto ">
+                                <table class="table table-bordered table-responsive-l">
+                                    <thead>
+                                            <tr>
+                                                <th>Scope of Work</th>
+                                                <th>Status</th>
+                                            </tr>
+                                    </thead>
+                                    <tbody>
+                                            {% for i in data4 %}
+                                            <tr>
+                                                <td>{{i.scope_of_work}}</td>
+                                                {% if i.status == "Pending"%}
+                                                <td><span class="badge badge-warning">{{i.status}}</span></td>
+                                                {% elif i.status == "On-going"%}
+                                                <td><span class="badge badge-primary">{{i.status}}</span></td>
+                                                {% else %}
+                                                <td><span class="badge badge-success">{{i.status}}</span></td>
+                                                {% endif %}
+                                            </tr>
+                                            {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
+            <div class="accordion col col-md-5" id="accordionExample">
+                <div class="card">
+                    <div class="card-header" id="headingOne">
+                    <h2 class="mb-0">
+                            <button class="btn btn-link collapsed btn-cardheader" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            QUOTATION
+                            </button>
+                    </h2>
+                    </div>
+                    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                        <div class="card-body row">
+                            <div class="table-responsive">
+                                <table class="table table-borderless">
+                                <thead>
+                                    <tr>
+                                        <th>Subject</th>
+                                        <th>Date</th>
+                                        <th>Total Amount</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for i in data2 %}
+                                    <tr>
+                                        <td>{{i.subject}}</td>
+                                        <td>{{i.date}}</td>
+                                        <td>{{i.amount}}</td>
+                                        {% if i.status == "Rejected"%}
+                                        <td><span class="badge badge-danger">{{i.status}}</span></td>
+                                        {% elif i.status == "Pending"%}
+                                        <td><span class="badge badge-primary">{{i.status}}</span></td>
+                                        {% else %}
+                                        <td><span class="badge badge-success">{{i.status}}</span></td>
+                                        {% endif %}
+                                        <td>
+                                        <form action="{% url 'client_quotation' i.id%}">
+                                            <button class="btn btn-outline-primary view-btn">View</button>
+                                        </form>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-          <div class="card">
-            <div class="card-header" id="headingTwo">
-              <h2 class="mb-0">
-                <button class="btn btn-link btn-cardheader" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                  PROJECT DETAILS
-                </button>
-              </h2>
+                <div class="card">
+                    <div class="card-header" id="headingTwo">
+                        <h2 class="mb-0">
+                            <button class="btn btn-link btn-cardheader" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    PROJECT DETAILS
+                            </button>
+                        </h2>
+                    </div>
+                    <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                        <div class="card-body">
+                            <ul class="ul-projectdetails">
+                                    <li class="projectdetails"><strong>Project Site: </strong> {{data.projectsite}}</li>
+                                    <li class="projectdetails"><strong>Project Manager: </strong> {{data.pm}}</li>
+                                    <li class="projectdetails"><strong>Person In-Charge: </strong> {{data.pic}}</li>
+                                    <li class="projectdetails"><strong>Project Type: </strong> {{data.typeofproject}}</li>
+                                    <li class="projectdetails"><strong>Lot Area: </strong> {{data.lotarea}}</li>
+                                    <li class="projectdetails"><strong>Address: </strong>{{data.address}}</li>
+                                    <li class="projectdetails"><strong>City: </strong>{{data.city}}</li>
+                                    <li class="projectdetails"><strong>Province: </strong>{{data.province}}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header" id="headingThree">
+                        <h2 class="mb-0">
+                            <button class="btn btn-link collapsed  btn-cardheader" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                    Site Photos Update
+                            </button>
+                        </h2>
+                    </div>
+                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                        <div class="card-body">
+                            <table class="table table-borderless">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Date</th>
+                                        <th class="text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        {% if data5%}
+                                        {% for i in data5%}
+                                        <tr role="row" class="odd">
+                                            <td class="text-center">{{i.date}}</td>
+                                            <td class="text-center"><a href="{% url 'client_sitephotos' i.id%}" class="btn btn-outline-primary">View</a></td>
+                                        </tr>
+                                        {% endfor %}
+                                        {% else %}
+                                        <tr>
+                                            <td colspan="2">
+                                            <p class="text-center">No Data Available</p><br>
+                                            </td>
+                                        </tr>
+                                        {% endif %}
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionExample">
-              <div class="card-body">
-                <ul class="ul-projectdetails">
-                  <li class="projectdetails">Project Site: {{data.projectsite}}</li>
-                  <li class="projectdetails">Project Manager: {{data.pm}}</li>
-                  <li class="projectdetails">Person In-Charge: {{data.pic}}</li>
-                  <li class="projectdetails">Project Type: {{data.typeofproject}}</li>
-                  <li class="projectdetails">Lot Area: {{data.lotarea}}</li>
-                  <li class="projectdetails">Address: {{data.zipcode}}</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-header" id="headingThree">
-              <h2 class="mb-0">
-                <button class="btn btn-link collapsed  btn-cardheader" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                  Reports
-                </button>
-              </h2>
-            </div>
-            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
-              <div class="card-body">
-                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-              </div>
-            </div>
-          </div>
-      </div>
-    </div>
-  </section>
+        </div>
+    </section>
 
 </div>
 {% endblock %}

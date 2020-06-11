@@ -18,3 +18,5 @@ delete from `construction_projectinventorydetails`;
 delete from sqlite_sequence where name='`construction_projectinventorydetails`';
 delete from `construction_projectdailyreport`;    
 delete from sqlite_sequence where name='`construction_projectdailyreport`';
+delete from `construction_projectdailyreport`;    
+delete from sqlite_sequence where name='`construction_projectdailyreport`';

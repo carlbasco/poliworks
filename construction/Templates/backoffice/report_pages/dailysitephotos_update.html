@@ -1,0 +1,91 @@
+{% extends 'backoffice/index.html' %}
+{% load static %}
+{% load crispy_forms_tags%}
+{% block content %}
+{% load humanize %}
+<span class="text-uppercase page-subtitle">Reports</span>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-inverse-primary">
+        <li class="breadcrumb-item">
+            <a href="{% url 'sitephotos'%}">Site Photos</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="{% url 'sitephotos_list'%}">Site Photos List</a>
+        </li>
+    </ol>
+</nav>
+<div class="col-md-12 mx-auto">
+    {% for message in messages %}
+        <div class="alert alert-{{message.level_tag}} alert-dismissible fade show" role="alert">
+            {% if message.level_tag  == "success" %}
+                <strong>Success! </strong>
+            {% else %}
+                <strong>Error! </strong>
+            {% endif %}
+            {{message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endfor %}
+</div>
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col col-md-12">
+            <div class="card">
+                <div class="card-header" id="quotation_view">
+                    <h2 class="mb-0">Site Photos</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row"> 
+                        <div class = "col-md-7">
+                            <h6 class="sub">Project Site: <span class="txt">{{data.projectsite}}</span></h6>
+                        </div>
+                        <div class="col-md-5">
+                            <h6 class="sub float-right">Date Created: <span class="txt">{{data.date}}</span></h6>
+                        </div>
+                    </div>
+                    <div class="col-md-12 table-responsive">
+                        <form action="" method="post">
+                            {% csrf_token%}
+                            <table class="table mt-4 ">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center font-weight-bold">Image</th>
+                                        <th class="text-center font-weight-bold">Reveal this to Client?</th>
+                                        <th class="text-center font-weight-bold">Delete this Image?</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{ formset.management_form }}
+                                        {% for i in formset.forms %}
+                                        {{i.id}}
+                                        <tr>
+                                            <td class="text-center">
+                                                <div class="div-tbl-img">
+                                                    {% if i.image %}
+                                                    <img src="{{i.image.value.url}}" class="rounded table-img" width="100%">
+                                                    {% endif %}
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                {{i.reveal}}
+                                            </td>
+                                            <td class="text-center">{{i.DELETE}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                </tbody>
+                            </table>
+                            <button type="submit" class="btn btn-outline-primary float-right">Submit</button>
+                        </form>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript%}
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'client/client-base.html'%}
+{% load static %}
+{% block content %}
+
+<div class="container-fluid" id="my_project">
+    <div class="col-md-10 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="mb-0">Site Photos</h2>
+            </div>
+            <div class="card-body">
+                <div class="row"> 
+                    <div class = "col-md-7">
+                        <h6 class="sub">Project Site: <span class="txt">{{data.projectsite}}</span></h6>
+                    </div>
+                    <div class="col-md-5">
+                        <h6 class="sub float-right">Date Created: <span class="txt">{{data.date}}</span></h6>
+                    </div>
+                </div>
+                <div class="col-md-10 mx-auto mb-5 mt-5" id="divcar">
+                    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            {% for i in data2 %}
+                                <div {% if forloop.first %} class="carousel-item active"{% else %}class="carousel-item" data-interval="20000"{% endif %}>
+                                    <img src="{{i.image.url}}" class="center-block w-100 " alt="..." style="height: 500px;">
+                                </div>
+                            {% endfor%}
+                        </div>
+                        <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+</div>
+{% endblock %}
+
+{% block javascript %}
+{% endblock%}

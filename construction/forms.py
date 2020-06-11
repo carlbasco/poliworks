@@ -452,14 +452,30 @@ class ProjectIssuesForm(forms.ModelForm):
         model=ProjectIssues
         fields = '__all__'
 
-class DailySitePhotostForm(forms.ModelForm):
+class SitePhotostForm(forms.ModelForm):
     class Meta:
-        model=DailySitePhotos
+        model=SitePhotos
         fields='__all__'
-        exclude = ('reveal', )
+
+class SitePhotostDetailsForm(forms.ModelForm):
+    class Meta:
+        model=SitePhotosDetails
+        fields='__all__'
+        exclude = ('reveal', 'sitephotos' )
         widgets={
-            'image':forms.ClearableFileInput(attrs={'multiple': True})
+            'image':forms.FileInput(attrs={'class':'custom-file-input','multiple': True, })
         }
+
+SitePhotostFormset = inlineformset_factory(
+    SitePhotos, SitePhotosDetails,
+    form=SitePhotostForm,
+    exclude=('projectsite','date',),
+    extra=0,
+    can_delete=True,
+    widgets={
+        'reveal':forms.RadioSelect(),
+    }  
+)        
 
 class PersonnelForm(forms.ModelForm):
     class Meta:
