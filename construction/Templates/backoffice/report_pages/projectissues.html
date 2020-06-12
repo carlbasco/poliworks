@@ -7,7 +7,15 @@
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb bg-inverse-primary">
         <li class="breadcrumb-item">
-            <a href="{% url 'issues_list_whm'%}">Project Issues List</a>
+            {% if request.user.groups.all.0.name == "Project Manager"%}
+                <a href="{% url 'issues_list_pm'%}">Project Issues List</a>
+            {% elif request.user.groups.all.0.name == "Person In-Charge"%}
+                <a href="{% url 'issues_list_pic'%}">Project Issues List</a>
+            {% elif request.user.groups.all.0.name == "Warehouseman"%}
+                <a href="{% url 'issues_list_whm'%}">Project Issues List</a>
+            {% else %}
+                <a href="{% url 'issues_list'%}">Project Issues List</a>
+            {% endif %}
         </li>
         <li class="breadcrumb-item active" aria-current="page">
             Project Issues Form

@@ -9,7 +9,15 @@
             <a href="{% url 'externalorder_create'%}">External Order Form</a>
         </li>
         <li class="breadcrumb-item">
-            <a href="{% url 'externalorder_list'%}">External Order List</a>
+            {% if request.user.groups.all.0.name == "Project Manager"%}
+                <a href="{% url 'externalorder_list_pm'%}">External Order List</a>
+            {% elif request.user.groups.all.0.name == "Person In-Charge"%}
+                <a href="{% url 'externalorder_list_pic'%}">External Order List</a>
+            {% elif request.user.groups.all.0.name == "Warehouseman"%}
+                <a href="{% url 'externalorder_list_whm'%}">External Order List</a>
+            {% else %}
+                <a href="{% url 'externalorder_list'%}">External Order List</a>
+            {% endif %}
         </li>
     </ol>
 </nav>   

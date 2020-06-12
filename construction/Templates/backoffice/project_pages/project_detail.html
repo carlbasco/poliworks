@@ -40,6 +40,7 @@
                             <li class="projectdetails">Client:<h5>{{data.client}}</h5></li>
                             <li class="projectdetails">Project Manager:<h5>{{data.pm}}</h5></li>
                             <li class="projectdetails">Person In-Charge: <h5>{{data.pic}}</h5></li>
+                            <li class="projectdetails">Warehouseman: <h5>{{data.whm}}</h5></li>
                             <li class="projectdetails">Project Type: <h5>{{data.typeofproject}}</h5></li>
                             <li class="projectdetails">Lot Area: <h5>{{data.lotarea}}</h5></li>
                             <li class="projectdetails">Address: <h5>{{data.address}}</h5> </li>
@@ -59,12 +60,16 @@
                 <div class="card-header" id="headingTwo">
                     <h2 class="mb-0">
                         <button class="btn btn-link collapsed  btn-cardheader" type="button" data-toggle="collapse" data-target="#blueprint" aria-expanded="false" aria-controls="collapseThree">
-                        Blueprint</button>
+                        Blueprint/Design</button>
                     </h2>
                 </div>
                 <div id="blueprint" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
                     <div class="card-body">
+                        {% if data.design %}
                         <img src="{{data.design.url}}" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="">
+                        {% else %}
+                        <p>No Data Available</p>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -102,7 +107,7 @@
                                 {% if i.status == "Rejected"%}
                                     <td><span class="badge badge-danger">{{i.status}}</span></td>
                                 {% elif i.status == "Pending"%}
-                                    <td><span class="badge badge-primary">{{i.status}}</span></td>
+                                    <td><span class="badge badge-warning">{{i.status}}</span></td>
                                 {% else %}
                                     <td><span class="badge badge-success">{{i.status}}</span></td>
                                 {% endif %}

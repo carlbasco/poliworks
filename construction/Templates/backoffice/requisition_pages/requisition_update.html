@@ -10,7 +10,15 @@
             <a href="{% url 'requisition_create'%}">Requisition Form</a>
         </li>
         <li class="breadcrumb-item">
-            <a href="{% url 'requisition_list'%}">Requisition List</a>
+            {% if request.user.groups.all.0.name == "Project Manager"%}
+                <a href="{% url 'requisition_list_pm'%}">Requisition List</a>
+            {% elif request.user.groups.all.0.name == "Person In-Charge"%}
+                <a href="{% url 'requisition_list_pic'%}">Requisition List</a>
+            {% elif request.user.groups.all.0.name == "Warehouseman"%}
+                <a href="{% url 'requisition_list_whm'%}">Requisition List</a>
+            {% else %}
+                <a href="{% url 'requisition_list'%}">Requisition List</a>
+            {% endif %}
         </li>
     </ol>
 </nav> 

@@ -79,14 +79,18 @@
                                                 aria-label="Client: activate to sort column ascending" style="width: 71px;">
                                                 Client
                                             </th>
-                                            <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                                aria-label="Project Manager: activate to sort column ascending" style="width: 51px;">
-                                                Project Manager
-                                            </th>
-                                            <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                                aria-label="Person In-Charge: activate to sort column ascending" style="width: 73px;">
-                                                Person In-Charge
-                                            </th>
+                                            {% if request.user.groups.all.name.0 == "Project Manager"%}
+                                                <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                                    aria-label="Project Manager: activate to sort column ascending" style="width: 51px;">
+                                                    Project Manager
+                                                </th>
+                                            {% endif %}
+                                            {% if request.user.groups.all.name.0 == "Person In-Charge"%}
+                                                <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                                    aria-label="Person In-Charge: activate to sort column ascending" style="width: 73px;">
+                                                    Person In-Charge
+                                                </th>
+                                            {% endif %}
                                             <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
                                                 aria-label="Date Started: activate to sort column ascending" style="width: 52px;">
                                                 Date Started
@@ -106,8 +110,12 @@
                                         <tr role="row" class="odd">
                                             <td>{{i.projectsite}}</td>
                                             <td>{{i.client}}</td>
-                                            <td>{{i.pm}}</td>
-                                            <td>{{i.pic}}</td>
+                                            {% if request.user.groups.all.name.0 == "Project Manager"%}
+                                                <td>{{i.pm}}</td>
+                                            {% endif %}
+                                            {% if request.user.groups.all.name.0 == "Person In-Charge"%}
+                                                <td>{{i.pic}}</td>
+                                            {% endif %}
                                             <td>{{i.startdate}}</td>
                                             {% if i.status == "Pending" %}
                                                 <td><label class="badge badge-warning">{{i.status}}</label></td>

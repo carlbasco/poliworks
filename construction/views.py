@@ -233,9 +233,9 @@ def ProjectListView(request):
 @pm_only
 def ProjectListView_PM(request):
     data = ProjectSite.objects.filter(pm=request.user)
-    data2 = ProjectSite.objects.filter(status="Completed")
-    data3 = ProjectSite.objects.filter(status="On-going")
-    data4 = ProjectSite.objects.filter(status="Pending")
+    data2 = ProjectSite.objects.filter(pm=request.user, status="Completed")
+    data3 = ProjectSite.objects.filter(pm=request.user, status="On-going")
+    data4 = ProjectSite.objects.filter(pm=request.user, status="Pending")
     completed = data2.count()
     ongoing = data3.count()
     pending = data4.count()
@@ -246,9 +246,9 @@ def ProjectListView_PM(request):
 @pic_only
 def ProjectListView_PIC(request):
     data = ProjectSite.objects.filter(pic=request.user)
-    data2 = ProjectSite.objects.filter(status="Completed")
-    data3 = ProjectSite.objects.filter(status="On-going")
-    data4 = ProjectSite.objects.filter(status="Pending")
+    data2 = ProjectSite.objects.filter(pic=request.user, status="Completed")
+    data3 = ProjectSite.objects.filter(pic=request.user, status="On-going")
+    data4 = ProjectSite.objects.filter(pic=request.user, status="Pending")
     completed = data2.count()
     ongoing = data3.count()
     pending = data4.count()
@@ -259,9 +259,9 @@ def ProjectListView_PIC(request):
 @whm_only
 def ProjectListView_WHM(request):
     data = ProjectSite.objects.filter(whm=request.user)
-    data2 = ProjectSite.objects.filter(status="Completed")
-    data3 = ProjectSite.objects.filter(status="On-going")
-    data4 = ProjectSite.objects.filter(status="Pending")
+    data2 = ProjectSite.objects.filter(whm=request.user, status="Completed")
+    data3 = ProjectSite.objects.filter(whm=request.user, status="On-going")
+    data4 = ProjectSite.objects.filter(whm=request.user, status="Pending")
     completed = data2.count()
     ongoing = data3.count()
     pending = data4.count()
@@ -564,7 +564,7 @@ class RequisitionUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView)
         return reverse_lazy("requisition_detail", kwargs={'pk': data})
 
 @login_required(login_url='signin')
-@allowed_users(allowed_roles=['Admin','Warehouseman'])
+@allowed_users(allowed_roles=['Admin'])
 def RequisitionListView(request):
     data = Requisition.objects.all().order_by('date')
     data2 = RequisitionDetails.objects.all()
@@ -578,7 +578,52 @@ def RequisitionListView(request):
     return render(request, 'backoffice/requisition_pages/requisition_list.html',context)
 
 @login_required(login_url='signin')
-@allowed_users(allowed_roles=['Admin','Warehouseman'])
+@allowed_users(allowed_roles=['Project Manager'])
+def RequisitionListView_PM(request):
+    project = ProjectSite.objects.filter(pm=request.user)
+    data = Requisition.objects.filter(projectsite__in=project).order_by('date')
+    data2 = RequisitionDetails.objects.all()
+    data3 = Requisition.objects.filter(status="Pending")
+    data4 = Requisition.objects.filter(status="To be Delivered")
+    data5 = Requisition.objects.filter(status="Closed")
+    pending = data3.count()
+    delivered = data4.count()
+    closed = data5.count()
+    context = {'data':data, 'data2':data2, 'pending':pending, 'delivered':delivered, 'closed':closed}
+    return render(request, 'backoffice/requisition_pages/requisition_list.html',context)
+
+@login_required(login_url='signin')
+@allowed_users(allowed_roles=['Person In-Charge'])
+def RequisitionListView_PIC(request):
+    project = ProjectSite.objects.filter(pic=request.user)
+    data = Requisition.objects.filter(projectsite__in=project).order_by('date')
+    data2 = RequisitionDetails.objects.all()
+    data3 = Requisition.objects.filter(status="Pending")
+    data4 = Requisition.objects.filter(status="To be Delivered")
+    data5 = Requisition.objects.filter(status="Closed")
+    pending = data3.count()
+    delivered = data4.count()
+    closed = data5.count()
+    context = {'data':data, 'data2':data2, 'pending':pending, 'delivered':delivered, 'closed':closed}
+    return render(request, 'backoffice/requisition_pages/requisition_list.html',context)
+
+@login_required(login_url='signin')
+@allowed_users(allowed_roles=['Warehouseman'])
+def RequisitionListView_WHM(request):
+    project = ProjectSite.objects.filter(whm=request.user)
+    data = Requisition.objects.filter(projectsite__in=project).order_by('date')
+    data2 = RequisitionDetails.objects.all()
+    data3 = Requisition.objects.filter(status="Pending")
+    data4 = Requisition.objects.filter(status="To be Delivered")
+    data5 = Requisition.objects.filter(status="Closed")
+    pending = data3.count()
+    delivered = data4.count()
+    closed = data5.count()
+    context = {'data':data, 'data2':data2, 'pending':pending, 'delivered':delivered, 'closed':closed}
+    return render(request, 'backoffice/requisition_pages/requisition_list.html',context)
+
+@login_required(login_url='signin')
+@staff_only
 def RequisitionDetailView(request, pk):
     data = Requisition.objects.get(id=pk)
     data2 = RequisitionDetails.objects.filter(requisition=data.id)
@@ -641,7 +686,9 @@ def RequisitionActionView(request,pk):
     else:
         messages.warning(request, "Cannot update this requisition because it is closed")
         return redirect('requisition_detail',pk=data.id)
-    
+
+@login_required(login_url='signin')
+@whm_only    
 def RequisitionActionView_WHM(request,pk):
     data = Requisition.objects.get(id=pk)
     data2 = RequisitionDetails.objects.filter(requisition=data.id)
@@ -732,17 +779,23 @@ def RequisitionActionView_WHM(request,pk):
 
 #################################################################################################################################
 #################################################################################################################################
+@login_required(login_url='signin')
+@admin_only
 def ProjectInventoryListView(request):
     data2 = ProjectInventory.objects.all()
     context = {'data2':data2}
     return render(request, 'backoffice/inventory_pages/inventory_list.html', context)
 
+@login_required(login_url='signin')
+@staff_only
 def ProjectInventoryDetailView(request,pk):
     data = ProjectInventory.objects.get(id=pk)
     data2 = ProjectInventoryDetails.objects.filter(inventory=data)
     context = {'data':data, 'data2':data2}
     return render(request, 'backoffice/inventory_pages/inventory_detail.html', context)
 
+@login_required(login_url='signin')
+@whm_only
 def ProjectInventoryList_WHM(request):
     user = request.user
     data = ProjectSite.objects.filter(whm=user)
@@ -750,9 +803,29 @@ def ProjectInventoryList_WHM(request):
     context = {'data2':data2}
     return render(request, 'backoffice/inventory_pages/inventory_list.html', context)
 
+@login_required(login_url='signin')
+@pm_only
+def ProjectInventoryList_PM(request):
+    user = request.user
+    data = ProjectSite.objects.filter(pm=user)
+    data2 = ProjectInventory.objects.filter(projectsite__in=data)
+    context = {'data2':data2}
+    return render(request, 'backoffice/inventory_pages/inventory_list.html', context)
+
+@login_required(login_url='signin')
+@pic_only
+def ProjectInventoryList_PIC(request):
+    user = request.user
+    data = ProjectSite.objects.filter(pic=user)
+    data2 = ProjectInventory.objects.filter(projectsite__in=data)
+    context = {'data2':data2}
+    return render(request, 'backoffice/inventory_pages/inventory_list.html', context)
+
+@login_required(login_url='signin')
+@whm_only
 def ProjectInventoryReport_WHM(request,pk):
     data = ProjectInventory.objects.get(id=pk)
-    data2 = ProjectInventoryDetails.objects.filter(inventory=data).order_by('-articles')
+    data2 = ProjectInventoryDetails.objects.filter(inventory=data).order_by('articles')
     if request.method == 'POST':
         form = DailyReportForm(request.POST)
         formset = DailyReportFormSet(request.POST)
@@ -767,7 +840,7 @@ def ProjectInventoryReport_WHM(request,pk):
                 for k in data2:
                     if j.articles == k.articles:
                         count2+=1
-                        if k.quantity > j.quantity:
+                        if k.quantity >= j.quantity:
                             print("Inventory - HIGHER")
                         else:
                             messages.error(request, "Invalid Input. Quantity cannot be higher than the current stock of the item in Inventory")
@@ -776,7 +849,7 @@ def ProjectInventoryReport_WHM(request,pk):
                 for x in formset:
                     for y in data2:
                         if x.articles == y.articles:
-                            if y.quantity > x.quantity:
+                            if y.quantity >= x.quantity:
                                 y.quantity -= x.quantity
                                 y.save()
                 form.save()
@@ -791,7 +864,7 @@ def ProjectInventoryReport_WHM(request,pk):
                 messages.error(request, "Invalid Input. Articles on Form doesnt exist on Inventory")
                 return redirect('inventory_whm_detail', pk=data.id)
     else:
-        form = DailyReportForm()
+        form = DailyReportForm(initial={'projectsite':data.projectsite, 'whm':request.user})
         formset = DailyReportFormSet()
     context = {'data':data, 'data2':data2, 'form':form, 'formset':formset}
     return render(request, 'backoffice/inventory_pages/inventory_detail_whm.html', context)
@@ -804,7 +877,7 @@ class ExternalOrderCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateVie
     model = ExternalOrder
     fields = ('projectsite','supplier','date','whm')
     template_name ='backoffice/externalorder_pages/externalorder_create.html'
-    success_message = "External Order has been updated!"
+    success_message = "External Order has been created!"
 
     @method_decorator(staff_only, name='dispatch')
     def dispatch(self, *args, **kwargs):
@@ -879,7 +952,7 @@ class ExternalOrderUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateVie
         return reverse_lazy("externalorder_detail", kwargs={'pk': data})
 
 @login_required(login_url = 'signin')
-@allowed_users(allowed_roles = ['Admin','Warehouseman'])
+@admin_only
 def ExternalOrderListView(request):
     data = ExternalOrder.objects.all().order_by('date')
     data2 = ExternalOrderDetails.objects.all()
@@ -887,7 +960,31 @@ def ExternalOrderListView(request):
     return render(request, 'backoffice/externalorder_pages/externalorder_list.html', context)
 
 @login_required(login_url = 'signin')
-@allowed_users(allowed_roles = ['Admin','Warehouseman'])
+@pm_only
+def ExternalOrderListView_PM(request):
+    project = ProjectSite.objects.filter(pm=request.user)
+    data = ExternalOrder.objects.filter(projectsite__in=project).order_by('date')
+    context = {'data':data}
+    return render(request, 'backoffice/externalorder_pages/externalorder_list.html', context)
+
+@login_required(login_url = 'signin')
+@pic_only
+def ExternalOrderListView_PIC(request):
+    project = ProjectSite.objects.filter(pic=request.user)
+    data = ExternalOrder.objects.filter(projectsite__in=project).order_by('date')
+    context = {'data':data}
+    return render(request, 'backoffice/externalorder_pages/externalorder_list.html', context)
+
+@login_required(login_url = 'signin')
+@whm_only
+def ExternalOrderListView_WHM(request):
+    project = ProjectSite.objects.filter(whm=request.user)
+    data = ExternalOrder.objects.filter(projectsite__in=project).order_by('date')
+    context = {'data':data}
+    return render(request, 'backoffice/externalorder_pages/externalorder_list.html', context)
+
+@login_required(login_url = 'signin')
+@staff_only
 def ExternalOrderDetailView(request,pk):
     data = ExternalOrder.objects.get(id=pk)
     data2 = ExternalOrderDetails.objects.filter(externalorder=data.id)
@@ -1026,6 +1123,7 @@ def JobOrderReportView(request,pk):
                     i.save()
                     data3 = Personnel.objects.get(id=i.personnel.id)
                     data3.status = "Available"
+                    data3.save()
                 else:
                     i.completion_date = None
                     i.save()
@@ -1041,7 +1139,7 @@ def JobOrderReportView(request,pk):
     return render(request, 'backoffice/joborder_pages/joborder_report.html', context)
 
 @login_required(login_url = 'signin')
-@allowed_users(allowed_roles = ['Admin','Warehouseman','Person In-Charge'])
+@staff_only
 def JobOrderDetailView(request,pk):
     data = JobOrder.objects.get(id=pk)
     data2 = JobOrderTask.objects.filter(joborder=data.id)
@@ -1190,7 +1288,7 @@ def ReworkDeleteView(request, pk):
 #################################################################################################################################
 #################################################################################################################################
 @login_required(login_url='signin')
-@whm_only
+@staff_only
 def projectissues(request):
     form = ProjectIssuesForm
     if request.method == 'POST':
@@ -1221,16 +1319,16 @@ def ProjectIssuesUpdateView(request,pk):
     return render(request, 'backoffice/report_pages/projectissues.html', context)
     
 @login_required(login_url='signin')
-@whm_only
+@allowed_users(allowed_roles = ['Admin','Warehouseman'])
 def ProjectIssuesDeleteView(request,pk):
     data = ProjectIssues.objects.get(id=pk)
     if request.method == 'POST':
         data.delete()
         messages.success(request, 'Project Issues has been deleted!')
         return redirect('issues_list_whm')
+    context ={'data':data}
     return render(request, 'backoffice/report_pages/projectissues_delete.html', context)
     
-
 @login_required(login_url='signin')
 @admin_only
 def ProjectIssuesList(request):
@@ -1273,7 +1371,7 @@ def ProjectIssuesDetailView(request,pk):
     return render(request, 'backoffice/report_pages/projectissues_detail.html', context)
 
 @login_required(login_url = 'signin')
-@allowed_users(allowed_roles = ['Admin','Warehouseman'])
+@staff_only
 def dailysitephotos(request):
     form = SitePhotostForm()
     form2 = SitePhotostDetailsForm()
@@ -1324,9 +1422,33 @@ def dailysitephotosUpdateView(request,pk):
 
 
 @login_required(login_url = 'signin')
-@staff_only
+@admin_only
 def ProjectDailyReportListView(request):
     data = ProjectDailyReport.objects.all()
+    context = {'data':data}
+    return render(request, 'backoffice/report_pages/dailyreport_list.html', context)
+
+@login_required(login_url = 'signin')
+@pm_only
+def ProjectDailyReportListView_PM(request):
+    project = ProjectSite.objects.filter(pm=request.user)
+    data = ProjectDailyReport.objects.filter(projectsite__in=project)
+    context = {'data':data}
+    return render(request, 'backoffice/report_pages/dailyreport_list.html', context)
+
+@login_required(login_url = 'signin')
+@pic_only
+def ProjectDailyReportListView_PIC(request):
+    project = ProjectSite.objects.filter(pic=request.user)
+    data = ProjectDailyReport.objects.filter(projectsite__in=project)
+    context = {'data':data}
+    return render(request, 'backoffice/report_pages/dailyreport_list.html', context)
+
+@login_required(login_url = 'signin')
+@whm_only
+def ProjectDailyReportListView_WHM(request):
+    project = ProjectSite.objects.filter(whm=request.user)
+    data = ProjectDailyReport.objects.filter(projectsite__in=project)
     context = {'data':data}
     return render(request, 'backoffice/report_pages/dailyreport_list.html', context)
 
