@@ -10,14 +10,33 @@
         Rework Form
         </li>
         <li class="breadcrumb-item">
-            {% if request.user.groups.all.0.name == "Admin"%}
-                <a href="{% url 'rework_list'%}">Rework List</a>
-            {% elif request.user.groups.all.0.name == "Project Manager"%}
+            {% if request.user.groups.all.0.name == "Project Manager"%}
                 <a href="{% url 'rework_list_pm'%}">Rework List</a>
+            {% elif request.user.groups.all.0.name == "Person In-Charge"%}
+                <a href="{% url 'rework_list_pic'%}">Rework List</a>
+            {% elif request.user.groups.all.0.name == "Warehouseman"%}
+                <a href="{% url 'rework_list_whm'%}">Rework List</a>
+            {% else %}
+                <a href="{% url 'rework_list'%}">Rework List</a>
             {% endif %}
         </li>
     </ol>
-</nav>  
+</nav>
+<div class="col-md-12 mx-auto">
+    {% for message in messages %}
+        <div class="alert alert-{{message.level_tag}} alert-dismissible fade show" role="alert">
+            {% if message.level_tag  == "success" %}
+                <strong>Success! </strong>
+            {% else %}
+                <strong>Error! </strong>
+            {% endif %}
+            {{message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endfor %}
+</div>  
 <form action="" method="POST" id="">
     {% csrf_token%}
     <div class="card card-form">

@@ -10,10 +10,33 @@
             Site Photos Form
         </li>
         <li class="breadcrumb-item " >
-            <a href="{% url 'sitephotos_list'%}">Site Photos List</a>
+            {% if request.user.groups.all.0.name == "Project Manager"%}
+                <a href="{% url 'sitephotos_list_pm' %}">Site Photos</a>
+            {% elif request.user.groups.all.0.name == "Person In-Charge"%}
+                <a href="{% url 'sitephotos_list_pic'%}">Site Photos</a>
+            {% elif request.user.groups.all.0.name == "Warehouseman"%}
+                <a href="{% url 'sitephotos_list_whm'%}">Site Photos</a>
+            {% else %}
+                <a href="{% url 'sitephotos_list'%}">Site Photos</a>
+            {% endif %}
         </li>
     </ol>
 </nav>
+<div class="col-md-12 mx-auto">
+    {% for message in messages %}
+        <div class="alert alert-{{message.level_tag}} alert-dismissible fade show" role="alert">
+            {% if message.level_tag  == "success" %}
+                <strong>Success! </strong>
+            {% else %}
+                <strong>Error! </strong>
+            {% endif %}
+            {{message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endfor %}
+</div>
 <div class="col-md-5 m-auto">
     <form action="" method="POST" id="" enctype="multipart/form-data">
         <div class="card card-form">

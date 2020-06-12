@@ -4,22 +4,26 @@
 {% block content %}
 {% load humanize %}
 <span class="text-uppercase page-subtitle">Project</span>
-{% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Person In-Charge" %}
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb bg-inverse-primary">
-        <li class="breadcrumb-item">
-            <a href="{% url 'joborder_create'%}">Job Order Form</a>
-        </li>
+        {% if request.user.groups.all.0.name == "Person In-Charge" %}
+            <li class="breadcrumb-item">
+                <a href="{% url 'joborder_create'%}">Job Order Form</a>
+            </li>
+        {% endif %}
         <li class="breadcrumb-item">
             {% if request.user.groups.all.0.name == "Person In-Charge"%}
                 <a href="{% url 'joborder_list_pic'%}">Job Order List</a>
+            {% elif request.user.groups.all.0.name == "Project Manager"%}
+                <a href="{% url 'joborder_list_pm'%}">Job Order List</a>
+            {% elif request.user.groups.all.0.name == "Warehouseman"%}
+                <a href="{% url 'joborder_list_whm'%}">Job Order List</a>
             {% else %}
                 <a href="{% url 'joborder_list'%}">Job Order List</a>
             {% endif %}
         </li>
     </ol>
 </nav> 
-{% endif %}
 <div class="col-md-12 mx-auto">
     {% for message in messages %}
         <div class="alert alert-{{message.level_tag}} alert-dismissible fade show" role="alert">

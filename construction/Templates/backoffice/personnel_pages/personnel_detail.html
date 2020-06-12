@@ -75,10 +75,12 @@
                                 <input type="text" class="form-control" value="{{data.province}}" readonly>
                             </div>
                         </div>
+                        {% if request.user.groups.all.0.name == "Admin"%}
                         <div class="form-row float-right mt-3">
                             <a class="btn btn-outline-primary mr-3" href="{% url 'personnel_update' data.id %}">Edit</a>
                             <a class="btn btn-outline-danger" href="{% url 'personnel_delete' data.id %}">Delete</a>
                         </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>

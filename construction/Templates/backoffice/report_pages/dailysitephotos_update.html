@@ -6,11 +6,21 @@
 <span class="text-uppercase page-subtitle">Reports</span>
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb bg-inverse-primary">
+        {% if request.user.groups.all.0.name == "Warehouseman"%}
+            <li class="breadcrumb-item" aria-current="page">
+                <a href="{% url 'sitephotos'%}">Site Photos</a>
+            </li>
+        {% endif %}
         <li class="breadcrumb-item">
-            <a href="{% url 'sitephotos'%}">Site Photos</a>
-        </li>
-        <li class="breadcrumb-item">
-            <a href="{% url 'sitephotos_list'%}">Site Photos List</a>
+            {% if request.user.groups.all.0.name == "Project Manager"%}
+                <a href="{% url 'sitephotos_list_pm' %}">Site Photos</a>
+            {% elif request.user.groups.all.0.name == "Person In-Charge"%}
+                <a href="{% url 'sitephotos_list_pic'%}">Site Photos</a>
+            {% elif request.user.groups.all.0.name == "Warehouseman"%}
+                <a href="{% url 'sitephotos_list_whm'%}">Site Photos</a>
+            {% else %}
+                <a href="{% url 'sitephotos_list'%}">Site Photos</a>
+            {% endif %}
         </li>
     </ol>
 </nav>

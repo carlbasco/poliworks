@@ -6,9 +6,11 @@
 <span class="text-uppercase page-subtitle">Materials</span>
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb bg-inverse-primary">
-        <li class="breadcrumb-item">
-            <a href="{% url 'externalorder_create'%}">External Order Form</a>
-        </li>
+        {% if request.user.groups.all.0.name == "Warehouseman"%}
+            <li class="breadcrumb-item">
+                <a href="{% url 'externalorder_create'%}">External Order Form</a>
+            </li>
+        {% endif %}
         <li class="breadcrumb-item">
             {% if request.user.groups.all.0.name == "Project Manager"%}
                 <a href="{% url 'externalorder_list_pm'%}">External Order List</a>

@@ -86,6 +86,7 @@ urlpatterns = [
     path('backoffice/reports/sitephotos_list', views.dailysitephotosListView, name="sitephotos_list"),
     path('backoffice/reports/sitephotos/<int:pk>', views.dailysitephotosDetailView, name="sitephotos_detail"),
     path('backoffice/reports/sitephotos/<int:pk>/update', views.dailysitephotosUpdateView, name="sitephotos_update"),
+    path('backoffice/reports/sitephotos/<int:pk>/delete', views.dailysitephotosDeleteView, name="sitephotos_delete"),
     path('backoffice/reports/weeklyreport/search', views.WeeklyReport, name="weeklyreport"),
 
     path('backoffice/reports/issues', views.projectissues, name="issues"),
@@ -118,21 +119,26 @@ urlpatterns = [
     
     #PM's page
     path('backoffice/pm/project_list', views.ProjectListView_PM, name="project_list_pm"),
-    path('backoffice/pm/task/rework_list', views.ReworkListView_PM, name="rework_list_pm"),
-    path('backoffice/pm/reports/issues/list', views.ProjectIssuesList_PM, name="issues_list_pm"),
+    path('backoffice/pm/project/quotation_list', views.QuotationListView_PM, name="quotation_list_pm"),
     path('backoffice/pm/inventory', views.ProjectInventoryList_PM, name="inventory_pm"),
     path('backoffice/pm/materials/requisition_list', views.RequisitionListView_PM, name="requisition_list_pm"),
     path('backoffice/pm/materials/externalorder_list', views.ExternalOrderListView_PM, name="externalorder_list_pm"),
+    path('backoffice/pm/joborder_list', views.JobOrderListView_PM, name="joborder_list_pm"),
+    path('backoffice/pm/task/rework_list', views.ReworkListView_PM, name="rework_list_pm"),
+    path('backoffice/pm/reports/issues_list', views.ProjectIssuesList_PM, name="issues_list_pm"),
     path('backoffice/pm/reports/dailyreport_list', views. ProjectDailyReportListView_PM, name="dailyreport_list_pm"),
+    path('backoffice/pm/reports/sitephotos_list', views.dailysitephotosListView_PM, name="sitephotos_list_pm"),
 
     #PIC's page
     path('backoffice/pic/project_list', views.ProjectListView_PIC, name="project_list_pic"),
     path('backoffice/pic/joborder_list', views.JobOrderListView_PIC, name="joborder_list_pic"),
-    path('backoffice/pic/reports/issues/list', views.ProjectIssuesList_PIC, name="issues_list_pic"),
+    path('backoffice/pic/task/rework_list', views.ReworkListView_PIC, name="rework_list_pic"),
+    path('backoffice/pic/reports/issues_list', views.ProjectIssuesList_PIC, name="issues_list_pic"),
     path('backoffice/pic/inventory', views.ProjectInventoryList_PIC, name="inventory_pic"),
     path('backoffice/pic/materials/requisition_list', views.RequisitionListView_PIC, name="requisition_list_pic"),
     path('backoffice/pic/materials/externalorder_list', views.ExternalOrderListView_PIC, name="externalorder_list_pic"),
     path('backoffice/pic/reports/dailyreport_list', views. ProjectDailyReportListView_PIC, name="dailyreport_list_pic"),
+    path('backoffice/pic/reports/sitephotos_list', views.dailysitephotosListView_PIC, name="sitephotos_list_pic"),
 
     #whm page
     path('backoffice/whm/project_list', views.ProjectListView_WHM, name="project_list_whm"),
@@ -146,6 +152,7 @@ urlpatterns = [
     path('backoffice/whm/materials/requisition_list', views.RequisitionListView_WHM, name="requisition_list_whm"),
     path('backoffice/whm/materials/externalorder_list', views.ExternalOrderListView_WHM, name="externalorder_list_whm"),
     path('backoffice/whm/reports/dailyreport_list', views. ProjectDailyReportListView_WHM, name="dailyreport_list_whm"),
+    path('backoffice/whm/reports/sitephotos_list', views.dailysitephotosListView_WHM, name="sitephotos_list_whm"),
     # path('backoffice/whm/dailyreport', views.DailyReportCreateView, name="daily_report"),
 
 ]

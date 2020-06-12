@@ -5,9 +5,11 @@
 <span class="text-uppercase page-subtitle">Report</span>
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb bg-inverse-primary">
-        <li class="breadcrumb-item" aria-current="page">
-            <a href="{% url 'sitephotos'%}">Site Photos Form</a>
-        </li>
+        {% if request.user.groups.all.0.name == "Warehouseman"%}
+            <li class="breadcrumb-item" aria-current="page">
+                <a href="{% url 'sitephotos'%}">Site Photos</a>
+            </li>
+        {% endif %}
         <li class="breadcrumb-item active" >
             Site Photos List
         </li>

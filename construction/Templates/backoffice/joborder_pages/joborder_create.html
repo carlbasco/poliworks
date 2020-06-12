@@ -10,15 +10,33 @@
         Job Order Form
         </li>
         <li class="breadcrumb-item">
-            {% if request.user.groups.all.0.name == "Person In-Charge"%}
+            {% if request.user.groups.all.0.name == "Person In-Charge" %}
                 <a href="{% url 'joborder_list_pic'%}">Job Order List</a>
+            {% elif request.user.groups.all.0.name == "Project Manager" %}
+                <a href="{% url 'joborder_list_pm'%}">Job Order List</a>
+            {% elif request.user.groups.all.0.name == "Warehouseman" %}
+                <a href="{% url 'joborder_list_whm'%}">Job Order List</a>
             {% else %}
                 <a href="{% url 'joborder_list'%}">Job Order List</a>
             {% endif %}
         </li>
     </ol>
 </nav>   
-
+<div class="col-md-12 mx-auto">
+    {% for message in messages %}
+        <div class="alert alert-{{message.level_tag}} alert-dismissible fade show" role="alert">
+            {% if message.level_tag  == "success" %}
+                <strong>Success! </strong>
+            {% else %}
+                <strong>Error! </strong>
+            {% endif %}
+            {{message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endfor %}
+</div>
 <div class="col-md-12 mb-5">
     <div class="card card-form">
         <div class="card-header" id="card_header_content">

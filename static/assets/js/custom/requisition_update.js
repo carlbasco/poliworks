@@ -13,11 +13,13 @@ jQuery(function ($) {
 
 $('.add-row').click(function(){
     disable_field_article();
-    select_2();
     x++;
-    $('#id_requisitiondetail-'+x+'-articles').val('').trigger('change');
-    hide_add_btn();
+    select_2();
     change_article();
+    $('#id_requisitiondetail-'+x+'-articles').val('').trigger('change');
+    
+    hide_add_btn();
+    
     reset();
 })
 

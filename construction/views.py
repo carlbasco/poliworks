@@ -384,7 +384,7 @@ class QuotationUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         return reverse_lazy("quotation_detail", kwargs={'pk': data})
 
 @login_required(login_url='signin')
-@allowed_users(allowed_roles=['Admin'])
+@admin_only
 def QuotationListView(request):
     data = Quotation.objects.all().order_by('date')
     data2 = QuotationDetails.objects.all()
@@ -396,6 +396,22 @@ def QuotationListView(request):
     decline = data5.count()
     context={
         'data':data ,'data2':data2, 'accepted':accepted, 
+        'pending':pending, 'decline':decline,}
+    return render(request, 'backoffice/quotation_pages/quotation_list.html', context)
+
+@login_required(login_url='signin')
+@pm_only
+def QuotationListView_PM(request):
+    project = ProjectSite.objects.filter(pm=request.user)
+    data = Quotation.objects.filter(projectsite__in=project).order_by('date')
+    data3 = Quotation.objects.filter(projectsite__in=project, status="Accepted")
+    data4 = Quotation.objects.filter(projectsite__in=project, status="Pending")
+    data5 = Quotation.objects.filter(projectsite__in=project, status="Decline")
+    accepted = data3.count()
+    pending = data4.count()
+    decline = data5.count()
+    context={
+        'data':data ,'accepted':accepted, 
         'pending':pending, 'decline':decline,}
     return render(request, 'backoffice/quotation_pages/quotation_list.html', context)
 
@@ -528,7 +544,7 @@ class RequisitionCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView)
             return super(RequisitionCreateView, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy("requisition_list")
+        return reverse_lazy("requisition_create")
 
 class RequisitionUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     login_url ="signin"
@@ -564,7 +580,7 @@ class RequisitionUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView)
         return reverse_lazy("requisition_detail", kwargs={'pk': data})
 
 @login_required(login_url='signin')
-@allowed_users(allowed_roles=['Admin'])
+@admin_only
 def RequisitionListView(request):
     data = Requisition.objects.all().order_by('date')
     data2 = RequisitionDetails.objects.all()
@@ -578,14 +594,14 @@ def RequisitionListView(request):
     return render(request, 'backoffice/requisition_pages/requisition_list.html',context)
 
 @login_required(login_url='signin')
-@allowed_users(allowed_roles=['Project Manager'])
+@pm_only
 def RequisitionListView_PM(request):
     project = ProjectSite.objects.filter(pm=request.user)
     data = Requisition.objects.filter(projectsite__in=project).order_by('date')
     data2 = RequisitionDetails.objects.all()
-    data3 = Requisition.objects.filter(status="Pending")
-    data4 = Requisition.objects.filter(status="To be Delivered")
-    data5 = Requisition.objects.filter(status="Closed")
+    data3 = Requisition.objects.filter(projectsite__in=project, status="Pending")
+    data4 = Requisition.objects.filter(projectsite__in=project, status="To be Delivered")
+    data5 = Requisition.objects.filter(projectsite__in=project, status="Closed")
     pending = data3.count()
     delivered = data4.count()
     closed = data5.count()
@@ -598,9 +614,9 @@ def RequisitionListView_PIC(request):
     project = ProjectSite.objects.filter(pic=request.user)
     data = Requisition.objects.filter(projectsite__in=project).order_by('date')
     data2 = RequisitionDetails.objects.all()
-    data3 = Requisition.objects.filter(status="Pending")
-    data4 = Requisition.objects.filter(status="To be Delivered")
-    data5 = Requisition.objects.filter(status="Closed")
+    data3 = Requisition.objects.filter(projectsite__in=project, status="Pending")
+    data4 = Requisition.objects.filter(projectsite__in=project, status="To be Delivered")
+    data5 = Requisition.objects.filter(projectsite__in=project, status="Closed")
     pending = data3.count()
     delivered = data4.count()
     closed = data5.count()
@@ -608,14 +624,14 @@ def RequisitionListView_PIC(request):
     return render(request, 'backoffice/requisition_pages/requisition_list.html',context)
 
 @login_required(login_url='signin')
-@allowed_users(allowed_roles=['Warehouseman'])
+@whm_only
 def RequisitionListView_WHM(request):
     project = ProjectSite.objects.filter(whm=request.user)
     data = Requisition.objects.filter(projectsite__in=project).order_by('date')
     data2 = RequisitionDetails.objects.all()
-    data3 = Requisition.objects.filter(status="Pending")
-    data4 = Requisition.objects.filter(status="To be Delivered")
-    data5 = Requisition.objects.filter(status="Closed")
+    data3 = Requisition.objects.filter(projectsite__in=project, status="Pending")
+    data4 = Requisition.objects.filter(projectsite__in=project, status="To be Delivered")
+    data5 = Requisition.objects.filter(projectsite__in=project, status="Closed")
     pending = data3.count()
     delivered = data4.count()
     closed = data5.count()
@@ -627,7 +643,6 @@ def RequisitionListView_WHM(request):
 def RequisitionDetailView(request, pk):
     data = Requisition.objects.get(id=pk)
     data2 = RequisitionDetails.objects.filter(requisition=data.id)
-
     context= {'data':data, 'data2':data2,}
     return render(request, 'backoffice/requisition_pages/requisition_detail.html', context)
 
@@ -639,7 +654,7 @@ def RequisitionDeleteView(request, pk):
     if request.method == 'POST':
         data.delete()
         messages.success(request, 'Requisition has been deleted!', extra_tags='success')
-        return redirect("requisition_list")
+        return redirect("requisition_create")
 
     context= {'data':data, 'data2':data2,}
     return render(request, 'backoffice/requisition_pages/requisition_delete.html', context)
@@ -909,7 +924,7 @@ class ExternalOrderCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateVie
             print(form.errors)
 
     def get_success_url(self):
-        return reverse_lazy("externalorder_list")
+        return reverse_lazy("externalorder_create")
 
 class ExternalOrderUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     login_url ="signin"
@@ -999,7 +1014,7 @@ def ExternalOrderDeleteView(request,pk):
     if request.method == 'POST':
         data.delete()
         messages.success(request, 'External Order has been deleted!', extra_tags='success')
-        return redirect("externalorder_list")
+        return redirect("externalorder_create")
     context = {'data':data,'data2':data2,}
     return render(request, 'backoffice/externalorder_pages/externalorder_delete.html', context)
 
@@ -1045,7 +1060,7 @@ class JobOrderCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
             return super(JobOrderCreateView, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy("joborder_list")
+        return reverse_lazy("joborder_create")
 
 class JobOrderUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     login_url ="signin"
@@ -1088,9 +1103,17 @@ class JobOrderUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         return reverse_lazy("joborder_detail", kwargs={'pk': data})
 
 @login_required(login_url = 'signin')
-@allowed_users(allowed_roles = ['Admin','Project Manager','Person In-Charge'])
+@admin_only
 def JobOrderListView(request):
     data = JobOrder.objects.all().order_by('date')
+    context = {'data':data,}
+    return render(request, 'backoffice/joborder_pages/joborder_list.html', context)
+
+@login_required(login_url = 'signin')
+@pm_only
+def JobOrderListView_PM(request):
+    project = ProjectSite.objects.filter(pm=request.user)
+    data = JobOrder.objects.filter(projectsite__in=project).order_by('date')
     context = {'data':data,}
     return render(request, 'backoffice/joborder_pages/joborder_list.html', context)
 
@@ -1159,7 +1182,7 @@ def JobOrderDeleteView(request,pk):
             data3.save()
         data.delete()
         messages.success(request, 'Job Order has been deleted!', extra_tags='success')
-        return redirect("joborder_list")
+        return redirect("joborder_create")
     context = {'data':data,'data2':data2}
     return render(request, 'backoffice/joborder_pages/joborder_delete.html', context)
 
@@ -1231,7 +1254,7 @@ def ReworkCreateView(request):
         if form.is_valid :
             form.save()
             messages.success(request, 'Rework Form has been created!')
-            return redirect('rework_list')
+            return redirect('rework_create')
     else:
         form = ReworkForm
     context = {'form':form}
@@ -1246,7 +1269,7 @@ def ReworkUpdateView(request,pk):
         if form.is_valid :
             form.save()
             messages.success(request, 'Rework Form has been updated!')
-            return redirect('rework_list')
+            return redirect('rework_create')
     else:
         form = ReworkForm(instance=rework)
     context = {'form':form}
@@ -1261,9 +1284,16 @@ def ReworkListView(request):
     return render(request, 'backoffice/rework_pages/rework_list.html', context) 
 
 @login_required(login_url = 'signin')
-@allowed_users(allowed_roles = ['Admin','Project Manager', 'Person In-Charge'])
+@pm_only
 def ReworkListView_PM(request):
     data = Rework.objects.filter(pm=request.user)
+    context={'data':data}
+    return render(request, 'backoffice/rework_pages/rework_list.html', context) 
+
+@login_required(login_url = 'signin')
+@pic_only
+def ReworkListView_PIC(request):
+    data = Rework.objects.filter(pic=request.user)
     context={'data':data}
     return render(request, 'backoffice/rework_pages/rework_list.html', context) 
 
@@ -1281,7 +1311,7 @@ def ReworkDeleteView(request, pk):
     if request.method == 'POST':
         data.delete()
         messages.success(request, 'Rework has been deleted!', extra_tags='success')
-        return redirect('rework_list')
+        return redirect('rework_create')
     context={'data':data}
     return render(request, 'backoffice/rework_pages/rework_delete.html', context) 
 
@@ -1391,9 +1421,33 @@ def dailysitephotos(request):
     return render(request, 'backoffice/report_pages/dailysitephotos.html', context)
 
 @login_required(login_url = 'signin')
-@staff_only
+@admin_only
 def dailysitephotosListView(request):
     data = SitePhotos.objects.all()
+    context={'data':data}
+    return render(request, 'backoffice/report_pages/dailysitephotos_list.html', context)
+
+@login_required(login_url = 'signin')
+@pm_only
+def dailysitephotosListView_PM(request):
+    project = ProjectSite.objects.filter(pm=request.user)
+    data = SitePhotos.objects.filter(projectsite__in=project)
+    context={'data':data}
+    return render(request, 'backoffice/report_pages/dailysitephotos_list.html', context)
+
+@login_required(login_url = 'signin')
+@pic_only
+def dailysitephotosListView_PIC(request):
+    project = ProjectSite.objects.filter(pic=request.user)
+    data = SitePhotos.objects.filter(projectsite__in=project)
+    context={'data':data}
+    return render(request, 'backoffice/report_pages/dailysitephotos_list.html', context)
+
+@login_required(login_url = 'signin')
+@whm_only
+def dailysitephotosListView_WHM(request):
+    project = ProjectSite.objects.filter(whm=request.user)
+    data = SitePhotos.objects.filter(projectsite__in=project)
     context={'data':data}
     return render(request, 'backoffice/report_pages/dailysitephotos_list.html', context)
 
@@ -1407,7 +1461,7 @@ def dailysitephotosDetailView(request,pk):
     return render(request, 'backoffice/report_pages/dailysitephotos.detail.html', context)
 
 @login_required(login_url = 'signin')
-# @allowed_users(allowed_roles = ['Admin','Project Manager', 'Person In-Charge'])
+@allowed_users(allowed_roles = ['Admin','Project Manager', 'Person In-Charge'])
 def dailysitephotosUpdateView(request,pk):
     data = SitePhotos.objects.get(id=pk)
     formset = SitePhotostFormset(instance=data)
@@ -1416,9 +1470,30 @@ def dailysitephotosUpdateView(request,pk):
         if formset.is_valid():
             formset.save()
             messages.success(request, "Daily Site Photos has been updated")
-            return redirect('sitephotos_list')
+            return redirect('sitephotos_detail', pk=data.id)
     context={'formset':formset, 'data':data}
     return render(request, 'backoffice/report_pages/dailysitephotos_update.html', context)
+
+@login_required(login_url = 'signin')
+@staff_only
+def dailysitephotosDeleteView(request,pk):
+    data = SitePhotos.objects.get(id=pk)
+    data2 = SitePhotosDetails.objects.filter(sitephotos=data)
+    if request.method == 'POST':
+        data2.delete()
+        data.delete()
+        messages.success(request, "Daily Site Photos has been deleted")
+        group = request.user.groups.all()[0].name
+        if group == "Warehouseman":
+            return redirect('sitephotos')
+        elif group == "Project Manager":
+            return redirect('sitephotos_list_pm')
+        elif group == "Person In-Charge":
+            return redirect('sitephotos_list_pic')
+        else:
+            return redirect('sitephotos_list')
+    context={'data':data, 'data2':data2}
+    return render(request, 'backoffice/report_pages/dailysitephotos_delete.html', context)
 
 
 @login_required(login_url = 'signin')

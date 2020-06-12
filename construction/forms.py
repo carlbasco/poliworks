@@ -338,7 +338,7 @@ RequisitionActionFormSet_whm = inlineformset_factory(
     extra=0,
     widgets={
         'status2':forms.Select(attrs={'class':'form-control', 'required':True}),
-        'quantity2':forms.NumberInput(attrs={'class':'form-control', }),
+        'quantity2':forms.NumberInput(attrs={'class':'form-control', 'required':True }),
     }
 )
 #################################################################################################################################

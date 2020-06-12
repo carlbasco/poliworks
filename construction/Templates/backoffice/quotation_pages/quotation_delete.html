@@ -9,9 +9,12 @@
         <li class="breadcrumb-item" aria-current="page">
             <a href="{% url 'quotation_create'%}">Quotation Form</a>
         </li>
-        </li>
         <li class="breadcrumb-item">
-            <a href="{% url 'quotation_list'%}">Quotation List</a>
+            {% if request.user.groups.all.0.name == "Admin"%}    
+                <a href="{% url 'quotation_list'%}">Quotation List</a>
+            {% else %}
+                <a href="{% url 'quotation_list_pm'%}">Quotation List</a>
+            {% endif %}
         </li>
     </ol>
 </nav>

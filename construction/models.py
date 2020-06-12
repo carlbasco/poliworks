@@ -330,7 +330,7 @@ class RequisitionDetails(models.Model):
     status = models.CharField(('Status'),max_length=255, choices=status, null=True,)
     status2 ={('Incomplete', 'Incomplete'), ('Not Recieved','Not Recieved'), ('Complete','Complete')}
     status2 = models.CharField(('Action'), max_length=255, choices=status2, null=True, blank=True)
-    quantity2 = models.IntegerField(('Quantity Recieve'), null=True, blank=True)
+    quantity2 = models.IntegerField(('Quantity Recieve'), null=True, blank=True, default=0)
     class Meta:
         verbose_name_plural='Requisition Form Details'
         verbose_name='Requisition Form Detail'

@@ -77,10 +77,26 @@
                             <a class="nav-link" href="{% url 'inventory_list' %}">ProjectSite Inventory</a>
                         {% endif %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{%url 'requisition_create'%}">Requisition</a>
+                        {% if request.user.groups.all.0.name == "Project Manager" %}
+                            <a class="nav-link" href="{%url 'requisition_list_pm'%}">Requisition</a>
+                        {% elif request.user.groups.all.0.name == "Person In-Charge" %}
+                            <a class="nav-link" href="{%url 'requisition_list_pic'%}">Requisition</a>
+                        {% elif request.user.groups.all.0.name == "Warehouseman" %}
+                            <a class="nav-link" href="{%url 'requisition_list_whm'%}">Requisition</a>
+                        {% else %}
+                            <a class="nav-link" href="{%url 'requisition_list'%}">Requisition</a>
+                        {% endif %}
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'externalorder_create' %}">External Order</a>
+                        {% if request.user.groups.all.0.name == "Project Manager" %}
+                            <a class="nav-link" href="{% url 'externalorder_list_pm' %}">External Order</a>
+                        {% elif request.user.groups.all.0.name == "Person In-Charge" %}
+                            <a class="nav-link" href="{% url 'externalorder_list_pic' %}">External Order</a>
+                        {% elif request.user.groups.all.0.name == "Warehouseman" %}
+                            <a class="nav-link" href="{% url 'externalorder_list_whm' %}">External Order</a>
+                        {% else %}
+                            <a class="nav-link" href="{% url 'externalorder_list' %}">External Order</a>
+                        {% endif %}
                     </li>
                 </ul>
             </div>
@@ -100,16 +116,27 @@
                             <a class="nav-link" href="{% url 'personnel_create'%}">Personnel</a>
                         {% endif %}
                     </li>
-                    {% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Person In-Charge"%}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'joborder_create'%}">Job Order</a>
+                        {% if request.user.groups.all.0.name == "Project Manager" %}
+                            <a class="nav-link" href="{% url 'joborder_list_pm'%}">Job Order</a>
+                        {% elif request.user.groups.all.0.name == "Person In-Charge" %}
+                            <a class="nav-link" href="{% url 'joborder_list_pic'%}">Job Order</a>
+                        {% elif request.user.groups.all.0.name == "Warehouseman" %}
+                            <a class="nav-link" href="{% url 'joborder_list_whm'%}">Job Order</a>
+                        {% else %}
+                            <a class="nav-link" href="{% url 'joborder_list'%}">Job Order</a>
+                        {% endif %}
                     </li>
-                    {% endif %}
-                    {% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Project Manager"%}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'rework_create'%}">Rework</a>
+                        {% if request.user.groups.all.0.name == "Admin" %}
+                            <a class="nav-link" href="{% url 'rework_list'%}">Rework</a>
+                        {% elif request.user.groups.all.0.name == "Project Manager" %}
+                            <a class="nav-link" href="{% url 'rework_list_pm'%}">Rework</a>
+                        {% elif request.user.groups.all.0.name == "Person In-Charge" %}
+                            <a class="nav-link" href="{% url 'rework_list_pic'%}">Rework</a>
+                        {% endif %}
                     </li>
-                    {% endif %}
+                    
                 </ul>
             </div>
         </li>
@@ -169,7 +196,15 @@
                     {% endif %}
 
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'sitephotos'%}">Site Photos</a>
+                        {% if request.user.groups.all.0.name == "Project Manager"%}
+                            <a class="nav-link" href="{% url 'sitephotos_list_pm' %}">Site Photos</a>
+                        {% elif request.user.groups.all.0.name == "Person In-Charge"%}
+                            <a class="nav-link" href="{% url 'sitephotos_list_pic'%}">Site Photos</a>
+                        {% elif request.user.groups.all.0.name == "Warehouseman"%}
+                            <a class="nav-link" href="{% url 'sitephotos_list_whm'%}">Site Photos</a>
+                        {% else %}
+                            <a class="nav-link" href="{% url 'sitephotos_list'%}">Site Photos</a>
+                        {% endif %}
                     </li>
                     <li class="nav-item">
                         {% if request.user.groups.all.0.name == "Project Manager"%}
@@ -182,7 +217,7 @@
                             <a class="nav-link" href="{% url 'dailyreport_list'%}"> Materials Report</a>
                         {% endif %}
                     </li>
-                    {% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Person In-Charge" or request.user.groups.all.0.name == "Project Manager"%}
+                    {% if request.user.groups.all.0.name != "Warehouseman"%}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'weeklyreport'%}">Generate Report</a>
                         </li>
