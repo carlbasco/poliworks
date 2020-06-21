@@ -222,6 +222,17 @@ class ProjectViewForm(forms.ModelForm):
 #################################################################################################################################
 #################################################################################################################################
 class QuotationForm(forms.ModelForm):
+    class Meta:
+        model=Quotation
+        fields='__all__'
+        exclude = ('status','amount')
+    
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        self.fields['projectsite'].queryset = ProjectSite.objects.filter(pm=user)
+
+class QuotationNewForm(forms.ModelForm):
     tcost = forms.FloatField(widget=forms.NumberInput(attrs={'class':'form-control tcost','readonly':'true'}))
     class Meta:
         model=Quotation
@@ -233,7 +244,7 @@ class QuotationFormAdmin(forms.ModelForm):
         fields='__all__'
         
 QuotationFormSet = inlineformset_factory(Quotation, QuotationDetails,
-    form=QuotationForm,
+    form=QuotationNewForm,
     extra=1,
     can_delete=True,
     widgets={
@@ -286,7 +297,6 @@ class ClientQuotationForm(forms.ModelForm):
 #################################################################################################################################
 #################################################################################################################################        
 class RequisitionForm(forms.ModelForm):
-    projectsite = forms.ModelChoiceField(queryset=ProjectSite.objects.none())
     class Meta:
         model=Requisition
         fields = '__all__'
@@ -350,6 +360,17 @@ RequisitionActionFormSet_whm = inlineformset_factory(Requisition, RequisitionDet
 #################################################################################################################################
 #################################################################################################################################
 class ExternalOrderForm(forms.ModelForm):
+    class Meta:
+        model = ExternalOrder
+        fields = '__all__'
+        exclude = ('amount',)
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        self.fields['projectsite'].queryset = ProjectSite.objects.filter(whm=user)
+
+class ExternalOrderNewForm(forms.ModelForm):
     totalprice = forms.FloatField(widget=forms.NumberInput(attrs={'class':'form-control total_price','readonly':'true'}), required=False)
     class Meta:
         model = ExternalOrder
@@ -361,7 +382,7 @@ class ExternalOrderUpdateForm(forms.ModelForm):
         fields='__all__'
 
 ExternalOrderFormSet = inlineformset_factory(ExternalOrder, ExternalOrderDetails,
-    form=ExternalOrderForm,
+    form=ExternalOrderNewForm,
     extra=1,
     can_delete=True,
     widgets={
@@ -387,23 +408,23 @@ ExternalOrderUpdateFormSet = inlineformset_factory(ExternalOrder, ExternalOrderD
 #################################################################################################################################
 #################################################################################################################################
 class JobOrderForm(forms.ModelForm):
+    class Meta:
+        model=JobOrder
+        fields='__all__'
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        self.fields['projectsite'].queryset = ProjectSite.objects.filter(pic=user)
+
+class JobOrderNewForm(forms.ModelForm):
     personnel = forms.ModelChoiceField(queryset=Personnel.objects.filter(status="Available"), widget=forms.Select(attrs={'class':'form-control personnel', 'required': 'true'}))
     class Meta:
         model=JobOrder
         fields='__all__'
 
-class JobOrderUpdateForm(forms.ModelForm):
-    class Meta:
-        model=JobOrder
-        fields='__all__'
-
-class JobOrderTasksForm(forms.ModelForm):
-    class Meta:
-        model=JobOrderTask
-        fields='__all__'
-
 JobOrderFormSet = inlineformset_factory(JobOrder, JobOrderTask,
-    form=JobOrderForm,
+    form=JobOrderNewForm,
     exclude=('completion_date', 'status',),
     extra=1,
     can_delete=True,
@@ -414,6 +435,11 @@ JobOrderFormSet = inlineformset_factory(JobOrder, JobOrderTask,
         'remarks':forms.TextInput( attrs={'class':'form-control'}),
     }  
 )
+
+class JobOrderUpdateForm(forms.ModelForm):
+    class Meta:
+        model=JobOrder
+        fields='__all__'
 
 JobOrderUpdateFormSet = inlineformset_factory(JobOrder, JobOrderTask,
     form=JobOrderUpdateForm,
@@ -428,6 +454,11 @@ JobOrderUpdateFormSet = inlineformset_factory(JobOrder, JobOrderTask,
         'remarks':forms.TextInput( attrs={'class':'form-control'}),
     }  
 )
+
+class JobOrderTasksForm(forms.ModelForm):
+    class Meta:
+        model=JobOrderTask
+        fields='__all__'
 
 JobOrderReportFormSet = inlineformset_factory(JobOrder, JobOrderTask,
     form=JobOrderUpdateForm,

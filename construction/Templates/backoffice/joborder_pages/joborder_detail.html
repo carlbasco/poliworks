@@ -67,12 +67,12 @@
                     <div class="table-responsive-lg mt-4">
                         <table class="table">
                             <thead class="thead" id="head_tbl">
-                                <th class="font-weight-bold" style="width: 250px;">Personnel</th>
-                                <th class="font-weight-bold">Activity</th>
+                                <th class="font-weight-bold" style="min-width: 100px;">Personnel</th>
+                                <th class="font-weight-bold" style="min-width: 150px;">Activity</th>
+                                <th class="font-weight-bold" style="min-width: 150px;">Remarks</th>
                                 <th class="font-weight-bold">From</th>
                                 <th class="font-weight-bold">To</th>
                                 <th class="font-weight-bold">Status</th>
-                                <th class="font-weight-bold" style="width: 150px;">Remarks</th>
                                 <th class="font-weight-bold" style="width: 150px;">Completion Date</th>
                             </thead>
                             <tbody>
@@ -80,6 +80,7 @@
                                 <tr>
                                     <td>{{i.personnel}}</td>
                                     <td>{{i.activity}}</td>
+                                    <td>{{i.remarks}}</td>
                                     <td style="min-width: 100px;">
                                         {{i.date}}
                                     </td>
@@ -93,8 +94,7 @@
                                     {% else %}
                                         <td><span class="badge badge-success">{{i.status}}</span></td>
                                     {% endif %}
-                                    <td>{{i.remarks}}</td>
-                                    
+                                   
                                     <td>{{i.completion_date}}</td>
                                    
                                 </tr>

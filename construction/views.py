@@ -307,14 +307,20 @@ def ProjectDetailView(request, pk):
 class QuotationCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     login_url ="signin"
     redirect_field_name="redirect_to"
-    model=Quotation
-    fields=('projectsite','subject','date',)
+    form_class = QuotationForm
+    # model=Quotation
+    # fields=('projectsite','subject','date',)
     template_name ='backoffice/quotation_pages/quotation_create.html'
     success_message = "Quotation has been created"
     
     @method_decorator(staff_only, name='dispatch')
     def dispatch(self, *args, **kwargs):
         return super(QuotationCreateView, self).dispatch(*args, **kwargs)
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'user': self.request.user})
+        return kwargs
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -526,9 +532,9 @@ class RequisitionCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView)
         return super(RequisitionCreateView, self).dispatch(*args, **kwargs)
 
     def get_form_kwargs(self):
-        whm = super(RequisitionCreateView, self).get_form_kwargs()
-        whm.update({'user': self.request.user})
-        return whm
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'user': self.request.user})
+        return kwargs
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -537,6 +543,9 @@ class RequisitionCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView)
         else:
             data["formset"] = RequisitionFormSet()
         return data
+    
+    def get_initial(self):
+        return { 'whm':self.request.user }
 
     def form_valid(self, form):
         context = self.get_context_data()
@@ -893,15 +902,22 @@ def ProjectInventoryReport_WHM(request,pk):
 class ExternalOrderCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     login_url ="signin"
     redirect_field_name = "redirect_to"
-    model = ExternalOrder
-    fields = ('projectsite','supplier','date','whm')
+    form_class = ExternalOrderForm
     template_name ='backoffice/externalorder_pages/externalorder_create.html'
     success_message = "External Order has been created!"
 
     @method_decorator(staff_only, name='dispatch')
     def dispatch(self, *args, **kwargs):
         return super(ExternalOrderCreateView, self).dispatch(*args, **kwargs)
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'user': self.request.user})
+        return kwargs
 
+    def get_initial(self):
+        return { 'whm':self.request.user }
+        
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         if self.request.POST:
@@ -1027,14 +1043,20 @@ def ExternalOrderDeleteView(request,pk):
 class JobOrderCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     login_url ="signin"
     redirect_field_name = "redirect_to"
-    model = JobOrder
-    fields = ('projectsite', 'date', 'duration', 'pic', 'whm')
+    form_class = JobOrderForm
+    # model = JobOrder
+    # fields = ('projectsite', 'date', 'duration', 'pic', 'whm')
     template_name ='backoffice/joborder_pages/joborder_create.html'
     success_message = "Job Order has been created"
     
     @method_decorator(staff_only, name='dispatch')
     def dispatch(self, *args, **kwargs):
         return super(JobOrderCreateView, self).dispatch(*args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'user': self.request.user})
+        return kwargs
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)

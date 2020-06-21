@@ -30,7 +30,7 @@
             </div>
             <table id="tbl_quotation" class="table table-responsive-sm">
                 <thead>
-                    <th style="width:150px;">Scope of Work</th>
+                    <th style="min-width:250px;">Scope of Work</th>
                     <th style="min-width: 100px;">Unit</th>
                     <th style="min-width: 100px;">Quantity</th>
                     <th>Delete</th>
@@ -39,7 +39,7 @@
                 {% for i in formset.forms %}
                 {{i.id}}
                 <tr class="formset_row">
-                    <td style="width:150px;">{{i.scope_of_work}}</td>
+                    <td style="min-width:250px;">{{i.scope_of_work}}</td>
                     <td>{{i.unit}}</td>
                     <td>{{i.quantity}}</td>
                     <td>
@@ -47,7 +47,6 @@
                             {{ i.DELETE }}
                         {% endif %}
                     </td>
-                    
                 </tr>
                 {% endfor %}
             </table>
@@ -58,12 +57,12 @@
                     <div class="form-group">
                       <label for="total_amount">Total Amount</label>
                       <input type="text"class="form-control" aria-describedby="helpId" placeholder="" value="{{form.instance.amount|intcomma}}" readonly>
-                      <small class="form-text text-muted float-right"><i>The total amount will be updated once you submit this form</i> </small>
+                      <small class="form-text text-muted float-right"><i>Total amount will be updated once you submit this form</i> </small>
                     </div>
                 </div>
             </div>
             <div class="btn-grp">
-                <button type="button" id="sbmt-modal" class="btn btn-outline-primary edit-delete-btn" data-toggle="modal" data-target="#calculate">Submit</button>
+                <button type="button" id="sbmt-modal" class="btn btn-outline-primary edit-delete-btn" data-toggle="modal" data-target="#calculate">Update</button>
                 <div class="modal fade" id="calculate" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">

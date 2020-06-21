@@ -255,7 +255,7 @@ class JobOrder(models.Model):
     projectsite = models.ForeignKey(ProjectSite, on_delete=models.CASCADE, related_name='joborder', verbose_name='Project Site')
     date = models.DateField(('Date Given'), help_text="Format: yyyy-mm-dd")
     duration = models.DateField(('Duration'), help_text="Format: yyyy-mm-dd")
-    pic = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='joborder_pic', verbose_name='Project In-Charge', 
+    pic = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='joborder_pic', verbose_name='Prepared by', 
         limit_choices_to={'groups__name': "Person In-Charge"})
     whm = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='joborder_whm', verbose_name='Send to', 
         limit_choices_to={'groups__name': "Warehouseman"})
@@ -359,9 +359,9 @@ class ExternalOrderDetails(models.Model):
         return self.quantity * self.unitprice
     
 class ProjectIssues(models.Model):
-    projectsite=models.ForeignKey(ProjectSite, on_delete=models.CASCADE, related_name='projectissue')
-    date=models.DateField(default=datetime.date.today)
-    description=models.TextField()
+    projectsite = models.ForeignKey(ProjectSite, on_delete=models.CASCADE, related_name='projectissue')
+    date = models.DateField(default=datetime.date.today)
+    description = models.TextField()
     whm=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='projectissue_whm', verbose_name='Prepared by:', 
         help_text='Warehouseman',limit_choices_to={'groups__name': "Warehouseman",})
     pic=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='projectissue_pic', verbose_name='Send to: ', 
