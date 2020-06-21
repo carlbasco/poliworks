@@ -316,8 +316,6 @@ class Requisition(models.Model):
         help_text="Warehouseman" ,limit_choices_to={'groups__name': "Warehouseman"})
     status = {('Pending', 'Pending'), ('To be Delivered', 'To be Delivered'),('Closed', 'Closed')}
     status = models.CharField( max_length=255, choices=status, default="Pending")
-    # admin = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='requisition_admin', verbose_name='Send To?', 
-    #     help_text="Admin" ,limit_choices_to={'groups__name': "Admin"})
     class Meta:
         verbose_name_plural = 'Requisition Form'
         verbose_name = 'Requisition Form'

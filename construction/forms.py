@@ -248,8 +248,7 @@ class QuotationUpdateForm(forms.ModelForm):
         model=Quotation
         fields='__all__'
 
-QuotationUpdateFormSet = inlineformset_factory(
-    Quotation, QuotationDetails,
+QuotationUpdateFormSet = inlineformset_factory(Quotation, QuotationDetails,
     form=QuotationUpdateForm,
     extra=0,
     can_delete=True,
@@ -287,21 +286,26 @@ class ClientQuotationForm(forms.ModelForm):
 #################################################################################################################################
 #################################################################################################################################        
 class RequisitionForm(forms.ModelForm):
-    unit = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control unit','readonly':'true'}))
+    projectsite = forms.ModelChoiceField(queryset=ProjectSite.objects.none())
     class Meta:
         model=Requisition
-        fields='__all__'
+        fields = '__all__'
+        exclude = ('status',)
 
-class RequisitionActionForm(forms.ModelForm):
-    
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super(RequisitionForm, self).__init__(*args, **kwargs)
+        if user:
+            self.fields['projectsite'].queryset = ProjectSite.objects.filter(whm=user)
+
+class RequisitionNewForm(forms.ModelForm):
+    unit = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control unit','readonly':'true', 'required':'false'}))
     class Meta:
-        model=Requisition
-        fields='__all__'
-        
+        model = Requisition
+        fields ='__all__'
 
-RequisitionFormSet = inlineformset_factory(
-    Requisition, RequisitionDetails, 
-    form = RequisitionForm, 
+RequisitionFormSet = inlineformset_factory(Requisition, RequisitionDetails, 
+    form = RequisitionNewForm, 
     extra = 1,
     can_delete = True,
     exclude = ('status', 'status2', 'quantity2'),
@@ -311,9 +315,8 @@ RequisitionFormSet = inlineformset_factory(
     }
 )
 
-RequisitionUpdateFormSet = inlineformset_factory(
-    Requisition, RequisitionDetails, 
-    form=RequisitionForm, 
+RequisitionUpdateFormSet = inlineformset_factory(Requisition, RequisitionDetails, 
+    form=RequisitionNewForm, 
     extra=0,
     can_delete=True,
     exclude = ('status', 'status2', 'quantity2'),
@@ -323,16 +326,19 @@ RequisitionUpdateFormSet = inlineformset_factory(
     }
 )
 
-RequisitionActionFormSet = inlineformset_factory(
-    Requisition, RequisitionDetails, 
+class RequisitionActionForm(forms.ModelForm):
+    class Meta:
+        model=Requisition
+        fields='__all__'
+        
+RequisitionActionFormSet = inlineformset_factory(Requisition, RequisitionDetails, 
     form=RequisitionActionForm, 
     exclude=('requisition','quantity','articles','quantity2'),
     extra=0,
     widgets={'status':forms.Select(attrs={'class':'form-control', 'required':True})}
 )
 
-RequisitionActionFormSet_whm = inlineformset_factory(
-    Requisition, RequisitionDetails, 
+RequisitionActionFormSet_whm = inlineformset_factory(Requisition, RequisitionDetails, 
     form=RequisitionActionForm, 
     exclude=('requisition','quantity','articles','status'),
     extra=0,
@@ -354,8 +360,7 @@ class ExternalOrderUpdateForm(forms.ModelForm):
         model = ExternalOrder
         fields='__all__'
 
-ExternalOrderFormSet = inlineformset_factory(
-    ExternalOrder, ExternalOrderDetails,
+ExternalOrderFormSet = inlineformset_factory(ExternalOrder, ExternalOrderDetails,
     form=ExternalOrderForm,
     extra=1,
     can_delete=True,
@@ -397,8 +402,7 @@ class JobOrderTasksForm(forms.ModelForm):
         model=JobOrderTask
         fields='__all__'
 
-JobOrderFormSet = inlineformset_factory(
-    JobOrder, JobOrderTask,
+JobOrderFormSet = inlineformset_factory(JobOrder, JobOrderTask,
     form=JobOrderForm,
     exclude=('completion_date', 'status',),
     extra=1,
@@ -411,8 +415,7 @@ JobOrderFormSet = inlineformset_factory(
     }  
 )
 
-JobOrderUpdateFormSet = inlineformset_factory(
-    JobOrder, JobOrderTask,
+JobOrderUpdateFormSet = inlineformset_factory(JobOrder, JobOrderTask,
     form=JobOrderUpdateForm,
     exclude=('completion_date', 'status',),
     extra=0,
@@ -426,8 +429,7 @@ JobOrderUpdateFormSet = inlineformset_factory(
     }  
 )
 
-JobOrderReportFormSet = inlineformset_factory(
-    JobOrder, JobOrderTask,
+JobOrderReportFormSet = inlineformset_factory(JobOrder, JobOrderTask,
     form=JobOrderUpdateForm,
     exclude=('activity', 'date','date2','personnel','completion_date', 'remarks'),
     extra=0,
@@ -466,8 +468,7 @@ class SitePhotostDetailsForm(forms.ModelForm):
             'image':forms.FileInput(attrs={'class':'custom-file-input','multiple': True, })
         }
 
-SitePhotostFormset = inlineformset_factory(
-    SitePhotos, SitePhotosDetails,
+SitePhotostFormset = inlineformset_factory(SitePhotos, SitePhotosDetails,
     form=SitePhotostForm,
     exclude=('projectsite','date',),
     extra=0,
@@ -493,8 +494,7 @@ class DailyReportForm(forms.ModelForm):
         model=ProjectDailyReport
         fields = '__all__'
 
-DailyReportFormSet = inlineformset_factory(
-    ProjectDailyReport, ProjectDailyReportDetails,
+DailyReportFormSet = inlineformset_factory(ProjectDailyReport, ProjectDailyReportDetails,
     form=DailyReportForm,
     extra=1,
     can_delete=True,

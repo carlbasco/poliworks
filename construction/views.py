@@ -315,7 +315,7 @@ class QuotationCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     @method_decorator(staff_only, name='dispatch')
     def dispatch(self, *args, **kwargs):
         return super(QuotationCreateView, self).dispatch(*args, **kwargs)
-    
+
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         if self.request.POST:
@@ -390,13 +390,13 @@ def QuotationListView(request):
     data2 = QuotationDetails.objects.all()
     data3 = Quotation.objects.filter(status="Accepted")
     data4 = Quotation.objects.filter(status="Pending")
-    data5 = Quotation.objects.filter(status="Decline")
+    data5 = Quotation.objects.filter(status="Rejected")
     accepted = data3.count()
     pending = data4.count()
-    decline = data5.count()
+    rejected = data5.count()
     context={
         'data':data ,'data2':data2, 'accepted':accepted, 
-        'pending':pending, 'decline':decline,}
+        'pending':pending, 'rejected':rejected,}
     return render(request, 'backoffice/quotation_pages/quotation_list.html', context)
 
 @login_required(login_url='signin')
@@ -406,13 +406,13 @@ def QuotationListView_PM(request):
     data = Quotation.objects.filter(projectsite__in=project).order_by('date')
     data3 = Quotation.objects.filter(projectsite__in=project, status="Accepted")
     data4 = Quotation.objects.filter(projectsite__in=project, status="Pending")
-    data5 = Quotation.objects.filter(projectsite__in=project, status="Decline")
+    data5 = Quotation.objects.filter(projectsite__in=project, status="Rejected")
     accepted = data3.count()
     pending = data4.count()
-    decline = data5.count()
+    rejected = data5.count()
     context={
         'data':data ,'accepted':accepted, 
-        'pending':pending, 'decline':decline,}
+        'pending':pending, 'rejected':rejected,}
     return render(request, 'backoffice/quotation_pages/quotation_list.html', context)
 
 @login_required(login_url='signin')
@@ -517,15 +517,19 @@ def ProgressDeleteView(request,pk):
 class RequisitionCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     login_url ="signin"
     redirect_field_name = "redirect_to"
-    model = Requisition
-    fields = ('projectsite','date','whm')
+    form_class = RequisitionForm
     template_name = 'backoffice/requisition_pages/requisition_create.html'
     success_message = "Requisition has been created"
-
+    
     @method_decorator(staff_only, name='dispatch')
     def dispatch(self, *args, **kwargs):
         return super(RequisitionCreateView, self).dispatch(*args, **kwargs)
-    
+
+    def get_form_kwargs(self):
+        whm = super(RequisitionCreateView, self).get_form_kwargs()
+        whm.update({'user': self.request.user})
+        return whm
+
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         if self.request.POST:
@@ -1614,6 +1618,10 @@ def ClientQuotationView(request,pk):
     if request.method == "POST":
         data.status = request.POST.get("status")
         data.save()
+        if data.status == "Accepted":
+            messages.success(request, "Quotation has been accpeted")
+        else:
+            messages.success(request, "Quotation has been rejected")
         return redirect('client_home')
     context = {'data':data, 'data2':data2,}
     return render(request, 'client/client-quotation.html', context)

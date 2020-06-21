@@ -67,11 +67,12 @@
                         </div>
                     </div>
                 </div>
-                {% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Project Manager" or%}
+                {% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Project Manager"%}
                 <div class="btn-grp mb-5">
                     <a href="{% url 'rework_delete' data.id%}" class="btn btn-outline-danger float-right mr-5">Delete</a>
                     <a href="{% url 'rework_update' data.id%}" class="btn btn-outline-primary float-right mr-3">Edit</a>
                 </div>
+                {% endif %}
             </div>
             
         </div>

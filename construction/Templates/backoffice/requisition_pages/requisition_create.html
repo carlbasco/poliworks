@@ -66,7 +66,12 @@
                     {% for i in formset.forms %}
                     <tr class="formset_row">
                         <td>{{i.articles}}</td>
-                        <td>{{i.unit}}</td>
+                        <td>
+                            <div class="form-group">
+                                <label for=""></label>
+                                <input type="text" name="requisitiondetail-0-unit" id="id_requisitiondetail-0-unit" class="form-control unit" readonly>
+                            </div>
+                        </td>
                         <td>{{i.quantity}}</td>
                         <td>{{i.delete}}</td>
                     </tr>
