@@ -34,15 +34,11 @@ def home(request):
 def about(request):
     return render(request, 'frontend/about.html')
 
-def handler404(request, exception):
-    response = render_to_response('404.html', {},context_instance=RequestContext(request))
-    response.status_code = 404
-    return response
+def my_custom_page_not_found_view(request, exception):
+    return render(request, "404.html")
 
-def handler500(request):
-    response = render_to_response('500.html', {},context_instance=RequestContext(request))
-    response.status_code = 500
-    return response
+def my_custom_error_view(request):
+    return render(request, "500.html")
 
 @unauthenticated_user
 def signin(request):
