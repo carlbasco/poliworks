@@ -479,6 +479,16 @@ class ReworkForm(forms.ModelForm):
         model=Rework
         fields='__all__'
 
+class ReworkNewForm(forms.ModelForm):
+    class Meta:
+        model=Rework
+        fields='__all__'
+    
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        self.fields['projectsite'].queryset = ProjectSite.objects.filter(pm=user)
+
 #################################################################################################################################
 #################################################################################################################################
 class ProjectIssuesForm(forms.ModelForm):
@@ -500,6 +510,11 @@ class SitePhotostForm(forms.ModelForm):
     class Meta:
         model=SitePhotos
         fields='__all__'
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        self.fields['projectsite'].queryset = ProjectSite.objects.filter(whm=user)
 
 class SitePhotostDetailsForm(forms.ModelForm):
     class Meta:

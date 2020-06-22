@@ -303,7 +303,7 @@ def ProjectDetailView(request, pk):
         'data':data, 'data2':data2, 'data3':data3,
         'quotation':quotation, 'personnel':personnel, 'inventory':inventory,
         'requisition':requisition, 'external_order':external_order, 'rework':rework,
-        'dailysitephotos':dailysitephotos, 'joborder':joborder,  'sitephotos':sitephotos,
+        'joborder':joborder,  'sitephotos':sitephotos,
     }
     return render(request, 'backoffice/project_pages/project_detail.html', context)
 
@@ -533,7 +533,7 @@ class RequisitionCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView)
     template_name = 'backoffice/requisition_pages/requisition_create.html'
     success_message = "Requisition has been created"
     
-    @method_decorator(staff_only, name='dispatch')
+    @method_decorator(whm_only, name='dispatch')
     def dispatch(self, *args, **kwargs):
         return super(RequisitionCreateView, self).dispatch(*args, **kwargs)
 
@@ -569,11 +569,11 @@ class RequisitionUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView)
     login_url ="signin"
     redirect_field_name = "redirect_to"
     model = Requisition
-    fields = ('projectsite','date','whm')
+    fields = ('date',)
     template_name = 'backoffice/requisition_pages/requisition_update.html'
     success_message = "Requisition has been updated"
 
-    @method_decorator(staff_only, name='dispatch')
+    @method_decorator(whm_only, name='dispatch')
     def dispatch(self, *args, **kwargs):
         return super(RequisitionUpdateView, self).dispatch(*args, **kwargs)
     
@@ -1151,14 +1151,16 @@ def JobOrderListView_PM(request):
 @login_required(login_url = 'signin')
 @pic_only
 def JobOrderListView_PIC(request):
-    data = JobOrder.objects.filter(pic=request.user).order_by('date')
+    project = ProjectSite.objects.filter(pic=request.user)
+    data = JobOrder.objects.filter(projectsite__in=project).order_by('date')
     context = {'data':data,}
     return render(request, 'backoffice/joborder_pages/joborder_list.html', context)
 
 @login_required(login_url = 'signin')
 @whm_only
 def JobOrderListView_WHM(request):
-    data = JobOrder.objects.filter(whm=request.user).order_by('date')
+    project = ProjectSite.objects.filter(whm=request.user)
+    data = JobOrder.objects.filter(projectsite__in=project).order_by('date')
     context = {'data':data,}
     return render(request, 'backoffice/joborder_pages/joborder_list.html', context)
 
@@ -1175,6 +1177,9 @@ def JobOrderReportView(request,pk):
                 if i.status == "Done":
                     i.completion_date = datetime.date.today()
                     i.save()
+                    if i.date2 < i.completion_date:
+                        i.status = "Done (Overdue)"
+                        i.save()
                     data3 = Personnel.objects.get(id=i.personnel.id)
                     data3.status = "Available"
                     data3.save()
@@ -1277,35 +1282,52 @@ def PersonnelUpdateView(request, pk):
 
 #################################################################################################################################
 #################################################################################################################################
-@login_required(login_url = 'signin')
-@allowed_users(allowed_roles = ['Admin','Project Manager', 'Person In-Charge'])
-def ReworkCreateView(request):
-    if request.method == 'POST':
-        form = ReworkForm(request.POST)
-        if form.is_valid :
-            form.save()
-            messages.success(request, 'Rework Form has been created!')
-            return redirect('rework_create')
-    else:
-        form = ReworkForm
-    context = {'form':form}
-    return render(request, 'backoffice/rework_pages/rework_create.html', context) 
 
-@login_required(login_url = 'signin')
-@allowed_users(allowed_roles = ['Admin','Project Manager', 'Person In-Charge'])
-def ReworkUpdateView(request,pk):
-    rework = Rework.objects.get(id=pk)
-    if request.method == 'POST':
-        form = ReworkForm(request.POST, instance=rework)
-        if form.is_valid :
-            form.save()
-            messages.success(request, 'Rework Form has been updated!')
-            return redirect('rework_create')
-    else:
-        form = ReworkForm(instance=rework)
-    context = {'form':form}
-    return render(request, 'backoffice/rework_pages/rework_update.html', context) 
+class ReworkCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    login_url ="signin"
+    redirect_field_name = "redirect_to"
+    form_class = ReworkNewForm
+    template_name ='backoffice/rework_pages/rework_create.html'
+    success_message = "Rework Form has been created!"
+    
+    @method_decorator(pm_only, name='dispatch')
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'user': self.request.user})
+        return kwargs
+
+    def get_initial(self):
+        return { 'pm':self.request.user }
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy("rework_create")
+
+class ReworkUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    login_url ="signin"
+    redirect_field_name = "redirect_to"
+    model = Rework
+    fields =('instruction',)
+    template_name ='backoffice/rework_pages/rework_update.html'
+    success_message = "Rework Form has been updated!"
+    
+    @method_decorator(pm_only, name='dispatch')
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        data=self.kwargs['pk']
+        return reverse_lazy("rework_detail", kwargs={'pk':data})
 
 @login_required(login_url = 'signin')
 @allowed_users(allowed_roles = ['Admin','Project Manager', 'Person In-Charge'])
@@ -1317,14 +1339,16 @@ def ReworkListView(request):
 @login_required(login_url = 'signin')
 @pm_only
 def ReworkListView_PM(request):
-    data = Rework.objects.filter(pm=request.user)
+    project = ProjectSite.objects.filter(pm=request.user)
+    data = Rework.objects.filter(projectsite__in=project)
     context={'data':data}
     return render(request, 'backoffice/rework_pages/rework_list.html', context) 
 
 @login_required(login_url = 'signin')
 @pic_only
 def ReworkListView_PIC(request):
-    data = Rework.objects.filter(pic=request.user)
+    project = ProjectSite.objects.filter(pic=request.user)
+    data = Rework.objects.filter(projectsite__in=project)
     context={'data':data}
     return render(request, 'backoffice/rework_pages/rework_list.html', context) 
 
@@ -1446,25 +1470,48 @@ def ProjectIssuesDetailView(request,pk):
     context = {'data':data}
     return render(request, 'backoffice/report_pages/projectissues_detail.html', context)
 
-@login_required(login_url = 'signin')
-@staff_only
-def dailysitephotos(request):
-    form = SitePhotostForm()
-    form2 = SitePhotostDetailsForm()
-    if request.method == 'POST':
-        form = SitePhotostForm(request.POST)
-        form2 = SitePhotostDetailsForm(request.POST, request.FILES)
-        files = request.FILES.getlist('image')
-        if form.is_valid() and form2.is_valid():
-            form = form.save()
+class SitePhotosCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    login_url ="signin"
+    redirect_field_name = "redirect_to"
+    form_class = SitePhotostForm
+    template_name ='backoffice/report_pages/dailysitephotos.html'
+    success_message = "Daily Site Photos has been submitted!"
+    
+    @method_decorator(whm_only, name='dispatch')
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'user': self.request.user})
+        return kwargs
+
+    def get_initial(self):
+        return { 'whm':self.request.user }
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        if self.request.POST:
+            data["form2"] = SitePhotostDetailsForm(self.request.POST, self.request.FILES)
+            data['files'] = self.request.FILES.getlist('image')
+        else:
+            data["form2"] = SitePhotostDetailsForm()
+        return data
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        form2 = context["form2"]       
+        files = context['files']
+        self.object = form.save()
+        if form2.is_valid():
             form2 = form2.save(commit=False)
             for f in files:
-                image = SitePhotosDetails(sitephotos=form, image=f)
+                image = SitePhotosDetails(sitephotos=self.object, image=f)
                 image.save()
-            messages.success(request, "Daily Site Photos has been submitted")
-            return redirect('sitephotos')
-    context={'form':form, 'form2':form2}
-    return render(request, 'backoffice/report_pages/dailysitephotos.html', context)
+            return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy("sitephotos")
 
 @login_required(login_url = 'signin')
 @admin_only

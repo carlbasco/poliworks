@@ -286,9 +286,9 @@ class Rework(models.Model):
     date=models.DateField(('Date'), default=datetime.date.today)
     subject=models.CharField(('Subject'), max_length=255)
     instruction=models.TextField()
-    pic=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='rework_pic', verbose_name='Person In-Charge', 
-        limit_choices_to={'groups__name': "Person In-Charge"})
-    pm=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='rework_pm', verbose_name='Project Manager', 
+    # pic=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='rework_pic', verbose_name='Person In-Charge', 
+    #     limit_choices_to={'groups__name': "Person In-Charge"})
+    pm=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='rework_pm', verbose_name='Prepared by', 
         limit_choices_to={'groups__name': "Project Manager"})
     class Meta:
         verbose_name_plural='Rework Form'

@@ -110,8 +110,8 @@
                                                 {% for i in data2 %}
                                                 <tr>
                                                     <td>{{i.articles}}</td>
-                                                    <td >{{i.articles.unit}}</td>
-                                                    <td >{{i.quantity}}</td>
+                                                    <td>{{i.articles.unit}}</td>
+                                                    <td>{{i.quantity}}</td>
                                                 </tr>
                                                 {% endfor %}
                                             </tbody>
@@ -124,10 +124,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- <form action="" method="post">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-outline-primary float-right">Delete</button>
-                    </form> -->
                 </div>
             </div>
             
@@ -146,11 +142,15 @@
         prefix: '{{ formset.prefix }}'
     })
     $('.art').select2()
-    $('#id_whm').select2()
     $('.add-row').click(function(){
         $('.art').select2()
     })
+    $('#id_whm').prop('disabled', true);
+    $('#id_projectsite').prop('disabled', true);
+    $('form').bind('submit', function () {
+        $(this).find('#id_whm').prop('disabled', false);
+        $(this).find('##id_projectsite').prop('disabled', false);
+    });
 </script>
-<script>$('#id_projectsite').select2()</script>
 <style>span.select2-selection.select2-selection--single {height: 30px;}</style>
 {% endblock %}

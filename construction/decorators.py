@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import redirect
+from django.shortcuts import render
 
 def unauthenticated_user(view_func):
     def wrapper_func(request, *args, **kwargs):
@@ -14,7 +15,7 @@ def unauthenticated_user(view_func):
             elif group == "Person In-Charge":
                 return redirect('project_list_pic')
             elif group == "Warehouseman":
-                return redirect('requisition_list')
+                return redirect('requisition_list_whm')
             else:
                 return redirect('project_list')
         else:    
@@ -41,8 +42,7 @@ def pm_only(view_func):
         if group =='Project Manager':
             return view_func(request, *args, **kwargs)
         else:
-            return HttpResponse("You cannot view this page")
-            # return redirect('handler404')
+            return render(request, '403.html')
     return wrapper_func    
 
 def admin_only(view_func):
@@ -53,7 +53,7 @@ def admin_only(view_func):
         if group =='Admin':
             return view_func(request, *args, **kwargs)
         else:
-            return HttpResponse("You cannot view this page")
+            return render(request, "403.html")
     return wrapper_func    
 
 def pic_only(view_func):
@@ -64,7 +64,7 @@ def pic_only(view_func):
         if group =='Person In-Charge':
             return view_func(request, *args, **kwargs)
         else:
-            return HttpResponse("You cannot view this page")
+            return render(request, "403.html")
     return wrapper_func 
 
 def whm_only(view_func):
@@ -75,7 +75,7 @@ def whm_only(view_func):
         if group =='Warehouseman':
             return view_func(request, *args, **kwargs)
         else:
-            return HttpResponse("You cannot view this page")
+            return render(request, "403.html")
     return wrapper_func    
 
 def allowed_users(allowed_roles=[]):
@@ -90,17 +90,8 @@ def allowed_users(allowed_roles=[]):
             elif group == 'Client':
                 return redirect('client_home')
             else:
-                return HttpResponse("You cannot view this page")
+                return render(request, "403.html")
         return wrapper_func
     return decorator
 
-
-def level_4(view_func):
-    def wrapper_function(request, *args, **kwargs):
-        group = None
-        if group =='Client':
-            return redirect('client_home')
-        if group =='Admin':
-           return view_func(request, *args, **kwargs)
-    return wrapper_function
 

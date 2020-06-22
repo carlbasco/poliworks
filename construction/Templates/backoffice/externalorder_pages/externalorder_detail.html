@@ -88,12 +88,12 @@
                         </table>
                     </div>
                 </div>
-                {% if request.user.groups.all.0.name == "Admin"%}
+                
                     <div class="btn-grp mb-5">
                         <a href="{% url 'externalorder_delete' data.id%}" class="btn btn-outline-danger float-right mr-4">Delete</a>
                         <a href="{% url 'externalorder_update' data.id%}" class="btn btn-outline-primary float-right mr-4">Edit</a>
                     </div>
-                {% endif %}
+                
             </div>
         </div>
     </div>

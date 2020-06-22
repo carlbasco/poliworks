@@ -36,17 +36,12 @@ function show_add_btn(){
 }
 
 function disable_fields(){
-    $('#id_projectsite').prop('disabled', 'disabled');
     $('#id_date').prop('disabled', 'disabled');
-    $('#id_admin').prop('disabled', 'disabled');
-    $('#id_whm').prop('disabled', 'disabled');
 }
 
 function enable_fields(){
-    $('#id_projectsite').prop('disabled', false);
     $('#id_date').prop('disabled', false);
-    $('#id_admin').prop('disabled', false);
-    $('#id_whm').prop('disabled', false);
+    
 }
 
 function disable_field_article(){

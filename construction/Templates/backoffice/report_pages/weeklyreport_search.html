@@ -15,22 +15,24 @@
                         <div class="col-md-12">
                             {{form|crispy}}
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="datefrom">From</label>
                                 <input type="text" class="form-control dateinput" name="datefrom" id="datefrom" aria-describedby="helpId" placeholder="">
                                 <small id="helpId" class="form-text text-muted">Format: YYYY-MM-DD</small>
                             </div>
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="dateto">To</label>
                                 <input type="text" class="form-control dateinput" name="dateto" id="dateto" aria-describedby="helpId" placeholder="">
                                 <small id="helpId" class="form-text text-muted">Format: YYYY-MM-DD</small>
                             </div>
                         </div>
-                        <div class="col-md-2">
-                            <button type="submit" class="btn btn-outline-primary mt-4">Generate</button>
+                        <div class="col-md-12 ">
+                            <div class="form-group float-right">
+                                <button type="submit" class="btn btn-outline-primary mt-4">Generate</button>
+                            </div>
                         </div>
                     </div>
                 </form>

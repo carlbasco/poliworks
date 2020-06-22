@@ -88,8 +88,10 @@
                                             <td><span class="badge badge-warning">{{i.status}}</span></td>
                                         {% elif i.status == "On-going"%}
                                             <td><span class="badge badge-primary">{{i.status}}</span></td>
-                                        {% else %}
+                                        {% elif i.status == "Done" %}
                                             <td><span class="badge badge-success">{{i.status}}</span></td>
+                                        {% elif i.status == "Done (Overdue)" %}
+                                            <td><span class="badge badge-danger">{{i.status}}</span></td>
                                         {% endif %}
                                         <td>{{i.completion_date}}</td>
                                     </tr>

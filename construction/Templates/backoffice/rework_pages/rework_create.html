@@ -49,30 +49,36 @@
                     <div class="form-group col-md-12">
                         {{form.projectsite|as_crispy_field}} 
                     </div>
-                    <div class="form-group col-md-9">
+                    <div class="form-group col-md-8">
                         {{form.subject|as_crispy_field}}
                     </div>
-                    <div class="form-group col-md-3" style="float:right">
+                    <div class="form-group col-md-4" style="float:right">
                         {{form.date|as_crispy_field}}
                     </div>
                     <div class="form-group col-lg-12">
                         {{form.instruction|as_crispy_field}}
                     </div>
-                    <div class="form-group col-lg-6">
-                        {{form.pm|as_crispy_field}}
+                    <div class="form-group col-lg-8">
                     </div>
-                    <div class="form-group col-lg-6">
-                        {{form.pic|as_crispy_field}}
+                    <div class="form-group col-lg-4">
+                        {{form.pm|as_crispy_field}}
                     </div>
                 </div>
             </div>
-            <button type="submit" class="btn btn-outline-primary" style="float:right">Submit</button>
+            <button type="submit" class="btn btn-outline-primary mr-3" style="float:right">Submit</button>
         </div>
     </div>
 </form>
 {% endblock %}
 
 {% block javascript %}
-<script>$('#id_projectsite').select2()</script>
+<script>
+    $('#id_projectsite').select2()
+    $('#id_pm').prop('disabled', true);
+    
+    $('form').bind('submit', function () {
+        $(this).find('#id_pm').prop('disabled', false);
+    });
+</script>
 <style>span.select2-selection.select2-selection--single {height: 30px;}</style>
 {% endblock%}
