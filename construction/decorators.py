@@ -42,6 +42,7 @@ def pm_only(view_func):
             return view_func(request, *args, **kwargs)
         else:
             return HttpResponse("You cannot view this page")
+            # return redirect('handler404')
     return wrapper_func    
 
 def admin_only(view_func):

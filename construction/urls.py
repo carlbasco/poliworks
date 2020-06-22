@@ -4,6 +4,7 @@ from django.urls import path
 from . import views
 from .models import *
 
+
 urlpatterns = [
     path('', views.home, name="home"),
     path('about/', views.about, name="about"),
@@ -89,7 +90,8 @@ urlpatterns = [
     path('backoffice/reports/sitephotos/<int:pk>/delete', views.dailysitephotosDeleteView, name="sitephotos_delete"),
     path('backoffice/reports/weeklyreport/search', views.WeeklyReport, name="weeklyreport"),
 
-    path('backoffice/reports/issues', views.projectissues, name="issues"),
+    # path('backoffice/reports/issues', views.projectissues, name="issues"),
+    path('backoffice/reports/issues', views.ProjectIssuesCreateView.as_view(), name="issues"),
     path('backoffice/reports/issues_list', views.ProjectIssuesList, name="issues_list"),
     path('backoffice/reports/issues/<int:pk>', views.ProjectIssuesDetailView, name="issues_detail"),
     path('backoffice/reports/dailyreport_list', views. ProjectDailyReportListView, name="dailyreport_list"),
@@ -147,7 +149,7 @@ urlpatterns = [
     path('backoffice/whm/inventory', views.ProjectInventoryList_WHM, name="inventory_whm"),
     path('backoffice/whm/inventory/<int:pk>', views.ProjectInventoryReport_WHM, name="inventory_whm_detail"),
     path('backoffice/whm/reports/issues_list', views.ProjectIssuesList_WHM, name="issues_list_whm"),
-    path('backoffice/whm/reports/issues/<int:pk>/edit', views.ProjectIssuesUpdateView, name="issues_update"),
+    path('backoffice/whm/reports/issues/<int:pk>/edit', views.ProjectIssuesUpdateView.as_view(), name="issues_update"),
     path('backoffice/reports/issues/<int:pk>/delete', views.ProjectIssuesDeleteView, name="issues_delete"),
     path('backoffice/whm/materials/requisition_list', views.RequisitionListView_WHM, name="requisition_list_whm"),
     path('backoffice/whm/materials/externalorder_list', views.ExternalOrderListView_WHM, name="externalorder_list_whm"),

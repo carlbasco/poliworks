@@ -51,7 +51,7 @@
                     </li>
                     {% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Project Manager"%}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'quotation_create'%}">Quotation</a>
+                        <a class="nav-link" href="{% url 'quotation_list'%}">Quotation</a>
                     </li>
                     {% endif %}
                 </ul>
@@ -154,11 +154,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'signupclient' %}">Create Account</a>
                     </li>
-                    
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'admin:index'%}">File Maintenance</a>
                     </li>
-                    
                 </ul>
             </div>
         </li>
@@ -225,7 +223,6 @@
                 </ul>
             </div>
         </li> 
-
 
         <li class="nav-item" id="account">
             <div class="btn-group dropup" >

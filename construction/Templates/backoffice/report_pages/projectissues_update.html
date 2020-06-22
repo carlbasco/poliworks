@@ -17,8 +17,8 @@
                 <a href="{% url 'issues_list'%}">Project Issues List</a>
             {% endif %}
         </li>
-        <li class="breadcrumb-item active" aria-current="page">
-            Project Issues Form
+        <li class="breadcrumb-item ">
+            <a href="{% url 'issues'%}">Project Issues Form</a>
         </li>
     </ol>
 </nav>
@@ -33,18 +33,20 @@
                 <div class="col-lg-12">
                     <div class="row justify-content-center">
                         <div class="form-group col-md-8">
-                            {{form.projectsite|as_crispy_field}} 
+                            <label for="">Project Site:</label>
+                            <input type="text"  class="form-control" value="{{form.instance.projectsite}} " readonly>
                         </div>
                         <div class="form-group col-md-4">
-                            {{form.date|as_crispy_field}}
+                            <label for="">Date:</label>
+                            <input type="text"  class="form-control" value="{{form.instance.date}}" readonly>
                         </div>
-                        <div class="form-group col-md-12">
+                        <div class="form-group col-md-12 mt-2">
                             <td>{{form.description|as_crispy_field}}</td>
                         </div>
                         <div class="form-group col-md-8">
-                        </div>
                         <div class="form-group col-md-4">
-                            {{form.whm|as_crispy_field}}
+                            <label for="">Prepared By:</label>
+                            <input type="text"  class="form-control" value=" {{form.instance.whm}}" readonly>
                         </div>
                     </div>
                 </div>
@@ -52,20 +54,10 @@
                     <div class="form-group col-md-8">
                     </div>
                 </div>
-                <button type="submit" class="btn btn-outline-primary" style="float:right">Submit</button>
+                <button type="submit" class="btn btn-outline-primary" style="float:right">Update</button>
             </div>
         </div>
     </form>
 </div>
 
 {%endblock%}
-
-{% block javascript%}
-<script>
-    $('#id_projectsite').select2()
-    $('#id_whm').prop('disabled', true);
-    $('form').bind('submit', function () {
-        $(this).find('#id_whm').prop('disabled', false);
-    });
-</script>
-{% endblock %}

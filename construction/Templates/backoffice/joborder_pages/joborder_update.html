@@ -44,9 +44,6 @@
                         <div class="form-group col-md-6">
                             {{form.duration|as_crispy_field}}
                         </div>
-                        <div class="form-group col-md-4">
-                            
-                        </div>
                     </div>
                 </div>
                 <div class="table-responsive">
@@ -80,14 +77,13 @@
                 </div>
                 <br>
                 <div class="row mt-3">
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-8">
+                    </div>
+                    <div class="form-group col-md-4">
                         {{form.pic|as_crispy_field}}
                     </div>
-                    <div class="form-group col-md-6">
-                        {{form.whm|as_crispy_field}}
-                    </div>
                 </div>
-                <button type="submit" class="btn btn-outline-primary" style="float:right">Submit</button>
+                <button type="submit" class="btn btn-outline-primary" style="float:right">Update</button>
             </form>
         </div>
     </div>
@@ -104,9 +100,10 @@
 
     $('.personnel').select2()
     $('#id_projectsite').select2()
-    $('#id_pic').select2()
-    $('#id_whm').select2()
-
+    $('#id_pic').prop('disabled', true);
+    $('form').bind('submit', function () {
+        $(this).find('#id_pic').prop('disabled', false);
+    });
     $('.add-row').click(function(){
         $(".dateinput").datepicker({
             format:'yyyy-mm-dd',

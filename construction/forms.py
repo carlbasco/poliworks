@@ -301,6 +301,7 @@ class RequisitionForm(forms.ModelForm):
         model=Requisition
         fields = '__all__'
         exclude = ('status',)
+        
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
@@ -481,6 +482,16 @@ class ReworkForm(forms.ModelForm):
 #################################################################################################################################
 #################################################################################################################################
 class ProjectIssuesForm(forms.ModelForm):
+    class Meta:
+        model=ProjectIssues
+        fields = '__all__'
+    
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        self.fields['projectsite'].queryset = ProjectSite.objects.filter(whm=user)
+
+class ProjectIssuesNewForm(forms.ModelForm):
     class Meta:
         model=ProjectIssues
         fields = '__all__'

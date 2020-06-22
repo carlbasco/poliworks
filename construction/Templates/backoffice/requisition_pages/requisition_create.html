@@ -99,7 +99,11 @@
         prefix: '{{ formset.prefix }}'
     });
     $('#id_projectsite').select2();
-    $('#id_whm').select2()
+    $('#id_whm').prop('disabled', true);
+    
+    $('form').bind('submit', function () {
+        $(this).find('#id_whm').prop('disabled', false);
+    });
 </script>
 <script src="{% static 'assets/js/custom/requisition.js'%}"></script>
 <script>$('#id_projectsite').select2()</script>

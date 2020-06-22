@@ -257,8 +257,8 @@ class JobOrder(models.Model):
     duration = models.DateField(('Duration'), help_text="Format: yyyy-mm-dd")
     pic = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='joborder_pic', verbose_name='Prepared by', 
         limit_choices_to={'groups__name': "Person In-Charge"})
-    whm = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='joborder_whm', verbose_name='Send to', 
-        limit_choices_to={'groups__name': "Warehouseman"})
+    # whm = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='joborder_whm', verbose_name='Send to', 
+    #     limit_choices_to={'groups__name': "Warehouseman"})
     class Meta:
         verbose_name = 'Job Order'
         verbose_name_plural = 'Job Orders'
@@ -364,8 +364,8 @@ class ProjectIssues(models.Model):
     description = models.TextField()
     whm=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='projectissue_whm', verbose_name='Prepared by:', 
         help_text='Warehouseman',limit_choices_to={'groups__name': "Warehouseman",})
-    pic=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='projectissue_pic', verbose_name='Send to: ', 
-        help_text='Person In-Charge',limit_choices_to={'groups__name': "Person In-Charge"})
+    # pic=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='projectissue_pic', verbose_name='Send to: ', 
+    #     help_text='Person In-Charge',limit_choices_to={'groups__name': "Person In-Charge"})
     class Meta:
         verbose_name='Project Issue'
         verbose_name_plural='Project Issues'
@@ -379,6 +379,9 @@ class ProjectIssues(models.Model):
 class SitePhotos(models.Model):
     projectsite=models.ForeignKey(ProjectSite, on_delete=models.CASCADE, null=True)
     date=models.DateField(default=datetime.date.today)
+
+    def __str__(self):
+        return self.projectsite
 
 class SitePhotosDetails(models.Model):
     sitephotos = models.ForeignKey(SitePhotos, on_delete=models.CASCADE, null=True)

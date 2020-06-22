@@ -33,7 +33,17 @@ def home(request):
 
 def about(request):
     return render(request, 'frontend/about.html')
-    
+
+def handler404(request, exception):
+    response = render_to_response('404.html', {},context_instance=RequestContext(request))
+    response.status_code = 404
+    return response
+
+def handler500(request):
+    response = render_to_response('500.html', {},context_instance=RequestContext(request))
+    response.status_code = 500
+    return response
+
 @unauthenticated_user
 def signin(request):
     if request.method=='POST':
@@ -313,9 +323,9 @@ class QuotationCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     template_name ='backoffice/quotation_pages/quotation_create.html'
     success_message = "Quotation has been created"
     
-    @method_decorator(staff_only, name='dispatch')
+    @method_decorator(pm_only, name='dispatch')
     def dispatch(self, *args, **kwargs):
-        return super(QuotationCreateView, self).dispatch(*args, **kwargs)
+        return super().dispatch(*args, **kwargs)
     
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -940,8 +950,6 @@ class ExternalOrderCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateVie
                 externalorder.amount += i.get_total()
             externalorder.save()
             return super(ExternalOrderCreateView, self).form_valid(form)
-        else:
-            print(form.errors)
 
     def get_success_url(self):
         return reverse_lazy("externalorder_create")
@@ -1044,8 +1052,6 @@ class JobOrderCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     login_url ="signin"
     redirect_field_name = "redirect_to"
     form_class = JobOrderForm
-    # model = JobOrder
-    # fields = ('projectsite', 'date', 'duration', 'pic', 'whm')
     template_name ='backoffice/joborder_pages/joborder_create.html'
     success_message = "Job Order has been created"
     
@@ -1057,6 +1063,9 @@ class JobOrderCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         kwargs = super().get_form_kwargs()
         kwargs.update({'user': self.request.user})
         return kwargs
+
+    def get_initial(self):
+        return { 'pic':self.request.user }
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -1343,36 +1352,51 @@ def ReworkDeleteView(request, pk):
 
 #################################################################################################################################
 #################################################################################################################################
-@login_required(login_url='signin')
-@staff_only
-def projectissues(request):
-    form = ProjectIssuesForm
-    if request.method == 'POST':
-        form = ProjectIssuesForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Project Issues has been submitted!')
-            return redirect('issues_list_whm')
-        else:
-            messages.warning(request, 'Error!')
-    context = {'form':form}
-    return render(request, 'backoffice/report_pages/projectissues.html', context)
 
-@login_required(login_url='signin')
-@whm_only
-def ProjectIssuesUpdateView(request,pk):
-    data = ProjectIssues.objects.get(id=pk)
-    form = ProjectIssuesForm(instance=data)
-    if request.method == 'POST':
-        form = ProjectIssuesForm(request.POST, instance=data)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Project Issues has been updated!')
-            return redirect('issues_list_whm')
-        else:
-            messages.warning(request, 'Error!')
-    context = {'form':form}
-    return render(request, 'backoffice/report_pages/projectissues.html', context)
+class ProjectIssuesCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    login_url ="signin"
+    redirect_field_name = "redirect_to"
+    form_class = ProjectIssuesForm
+    template_name ='backoffice/report_pages/projectissues.html'
+    success_message = "Project Issues has been submitted!"
+    
+    @method_decorator(whm_only, name='dispatch')
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'user': self.request.user})
+        return kwargs
+
+    def get_initial(self):
+        return { 'whm':self.request.user }
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy("issues_list_whm")
+
+class ProjectIssuesUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    login_url ="signin"
+    redirect_field_name = "redirect_to"
+    model = ProjectIssues
+    fields =('description',)
+    template_name ='backoffice/report_pages/projectissues_update.html'
+    success_message = "Project Issues has been updated!"
+    
+    @method_decorator(whm_only, name='dispatch')
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy("issues_list_whm")
     
 @login_required(login_url='signin')
 @allowed_users(allowed_roles = ['Admin','Warehouseman'])

@@ -88,14 +88,12 @@
                         </table>
                     </div>
                 </div>
-                <div class="btn-grp mb-5">
-                    <form action="{% url 'externalorder_delete' data.id%}">
-                        <button type="submit" class="btn btn-outline-danger edit-delete-btn">Delete</button>
-                    </form>
-                    <form action="{% url 'externalorder_update' data.id%}">
-                        <button type="submit" class="btn btn-outline-primary edit-delete-btn">Edit</button>
-                    </form>
-                </div>
+                {% if request.user.groups.all.0.name == "Admin"%}
+                    <div class="btn-grp mb-5">
+                        <a href="{% url 'externalorder_delete' data.id%}" class="btn btn-outline-danger float-right mr-4">Delete</a>
+                        <a href="{% url 'externalorder_update' data.id%}" class="btn btn-outline-primary float-right mr-4">Edit</a>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>

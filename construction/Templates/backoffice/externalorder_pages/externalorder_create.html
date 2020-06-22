@@ -110,6 +110,13 @@
     });
 </script>
 <script src="{% static 'assets/js/custom/externalorder.js'%}"></script>
-<script>$('#id_projectsite').select2()</script>
+<script>
+    $('#id_projectsite').select2()
+    $('#id_whm').prop('disabled', true);
+    
+    $('form').bind('submit', function () {
+        $(this).find('#id_whm').prop('disabled', false);
+    });
+</script>
 <style>span.select2-selection.select2-selection--single {height: 30px;}</style>
 {%endblock%}

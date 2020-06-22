@@ -62,10 +62,6 @@
                                                 </th>
                                             {% endif %}
                                             <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                                aria-label="Person In-Charge: activate to sort column ascending" style="width: 73px;">
-                                                Send To
-                                            </th>
-                                            <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
                                                 aria-label="Actions: activate to sort column ascending" style="width: 53px;">
                                                 Actions
                                             </th>
@@ -80,7 +76,6 @@
                                             {% if request.user.groups.all.0.name != "Person In-Charge"%}
                                                 <td>{{i.pic}}</td>
                                             {% endif %}
-                                            <td>{{i.whm}}</td>
                                             <td><a class="btn btn-outline-primary" href="{% url 'joborder_detail' i.id%}">View</a></td>
                                         </tr>
                                         {% endfor %}

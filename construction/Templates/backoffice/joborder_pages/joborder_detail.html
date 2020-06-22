@@ -60,9 +60,6 @@
                         <div class="col-md-6 ">
                             <h6 class="sub">Prepared By: <span class="txt">{{data.pic}}</span></h6>
                         </div>
-                        <div class="col-md-6 ">
-                            <h6 class="sub">Send to: <span class="txt">{{data.whm}}</span></h6>
-                        </div>
                     </div>
                     <div class="table-responsive-lg mt-4">
                         <table class="table">
@@ -77,27 +74,25 @@
                             </thead>
                             <tbody>
                                 {% for i in data2 %}
-                                <tr>
-                                    <td>{{i.personnel}}</td>
-                                    <td>{{i.activity}}</td>
-                                    <td>{{i.remarks}}</td>
-                                    <td style="min-width: 100px;">
-                                        {{i.date}}
-                                    </td>
-                                    <td style="min-width: 100px;">
-                                        {{i.date2}}
-                                    </td>
-                                    {% if i.status == "Pending"%}
-                                        <td><span class="badge badge-warning">{{i.status}}</span></td>
-                                    {% elif i.status == "On-going"%}
-                                        <td><span class="badge badge-primary">{{i.status}}</span></td>
-                                    {% else %}
-                                        <td><span class="badge badge-success">{{i.status}}</span></td>
-                                    {% endif %}
-                                   
-                                    <td>{{i.completion_date}}</td>
-                                   
-                                </tr>
+                                    <tr>
+                                        <td>{{i.personnel}}</td>
+                                        <td>{{i.activity}}</td>
+                                        <td>{{i.remarks}}</td>
+                                        <td style="min-width: 100px;">
+                                            {{i.date}}
+                                        </td>
+                                        <td style="min-width: 100px;">
+                                            {{i.date2}}
+                                        </td>
+                                        {% if i.status == "Pending"%}
+                                            <td><span class="badge badge-warning">{{i.status}}</span></td>
+                                        {% elif i.status == "On-going"%}
+                                            <td><span class="badge badge-primary">{{i.status}}</span></td>
+                                        {% else %}
+                                            <td><span class="badge badge-success">{{i.status}}</span></td>
+                                        {% endif %}
+                                        <td>{{i.completion_date}}</td>
+                                    </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
@@ -105,11 +100,11 @@
                 </div>
                 <div class="btn-grp mb-5">
                     {% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Person In-Charge"%}
-                    <a href="{% url 'joborder_delete' data.id%}" class="btn btn-outline-danger float-right mr-3">Delete</a>
-                    <a href="{% url 'joborder_update' data.id%}" class="btn btn-outline-primary float-right mr-3">Edit</a>
+                        <a href="{% url 'joborder_delete' data.id%}" class="btn btn-outline-danger float-right mr-3">Delete</a>
+                        <a href="{% url 'joborder_update' data.id%}" class="btn btn-outline-primary float-right mr-3">Edit</a>
                     {% endif %}
                     {% if request.user.groups.all.0.name == "Warehouseman"%}
-                    <a href="{% url 'joborder_report' data.id%}" class="btn btn-outline-primary float-right mr-3">Update Report</a>
+                        <a href="{% url 'joborder_report' data.id%}" class="btn btn-outline-primary float-right mr-3">Update Report</a>
                     {% endif %}
                 </div>
             </div>
