@@ -22,6 +22,9 @@ from .forms import *
 from .models import *
 import json
 
+import datetime
+from datetime import datetime
+
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.http import JsonResponse
@@ -216,6 +219,7 @@ def ProjectUpdateView(request,pk):
             messages.success(request, 'Project Details has been updated!')
             return redirect('project_detail', pk=data.id)
         else:
+            print(form.errors)
             messages.warning(request, 'Failed to update Project')
     else:
         form = ProjectUpdateForm(instance=data)
@@ -314,8 +318,6 @@ class QuotationCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     login_url ="signin"
     redirect_field_name="redirect_to"
     form_class = QuotationForm
-    # model=Quotation
-    # fields=('projectsite','subject','date',)
     template_name ='backoffice/quotation_pages/quotation_create.html'
     success_message = "Quotation has been created"
     
@@ -486,13 +488,27 @@ def ProgressUpdateView(request,pk):
             for i in data2:
                 divisor+=i.level
                 if i.status == "Done":
+                    i.completion_date = datetime.date.today()
+                    i.save()
                     dividend+=i.level
+                elif i.status == "On-going":
+                    i.start_date = datetime.date.today()
+                    i.completion_date = None
+                    i.save()
+                else:
+                    i.start_date = None
+                    i.completion_date = None
+                    i.save()
             percentage = (dividend/divisor)*100
             data.total_progress = percentage
             data.save()
             if data.total_progress == 100:
-                data3.status = "Completed"
-                data3.save()
+                if data3.comdate < datetime.date.today():
+                    data3.status = "Completed (Overdue)"
+                    data3.save()
+                else:
+                    data3.status = "Completed"
+                    data3.save()
                 messages.success(request,"Progress has been updated!")
                 return redirect('project_detail', pk=data3.id)
             else:
@@ -821,12 +837,11 @@ def ProjectInventoryListView(request):
     return render(request, 'backoffice/inventory_pages/inventory_list.html', context)
 
 @login_required(login_url='signin')
-@staff_only
-def ProjectInventoryDetailView(request,pk):
-    data = ProjectInventory.objects.get(id=pk)
-    data2 = ProjectInventoryDetails.objects.filter(inventory=data)
-    context = {'data':data, 'data2':data2}
-    return render(request, 'backoffice/inventory_pages/inventory_detail.html', context)
+@admin_only
+def ExternalProjectInventoryListView(request):
+    data2 = ExternalProjectInventory.objects.all()
+    context = {'data2':data2}
+    return render(request, 'backoffice/inventory_pages/externalorder_inventory_list.html', context)
 
 @login_required(login_url='signin')
 @whm_only
@@ -838,6 +853,15 @@ def ProjectInventoryList_WHM(request):
     return render(request, 'backoffice/inventory_pages/inventory_list.html', context)
 
 @login_required(login_url='signin')
+@whm_only
+def ExternalProjectInventoryList_WHM(request):
+    user = request.user
+    data = ProjectSite.objects.filter(whm=user)
+    data2 = ExternalProjectInventory.objects.filter(projectsite__in=data)
+    context = {'data2':data2}
+    return render(request, 'backoffice/inventory_pages/externalorder_inventory_list.html', context)
+
+@login_required(login_url='signin')
 @pm_only
 def ProjectInventoryList_PM(request):
     user = request.user
@@ -847,6 +871,15 @@ def ProjectInventoryList_PM(request):
     return render(request, 'backoffice/inventory_pages/inventory_list.html', context)
 
 @login_required(login_url='signin')
+@pm_only
+def ExternalProjectInventoryList_PM(request):
+    user = request.user
+    data = ProjectSite.objects.filter(pm=user)
+    data2 = ExternalProjectInventory.objects.filter(projectsite__in=data)
+    context = {'data2':data2}
+    return render(request, 'backoffice/inventory_pages/externalorder_inventory_list.html', context)
+
+@login_required(login_url='signin')
 @pic_only
 def ProjectInventoryList_PIC(request):
     user = request.user
@@ -854,6 +887,31 @@ def ProjectInventoryList_PIC(request):
     data2 = ProjectInventory.objects.filter(projectsite__in=data)
     context = {'data2':data2}
     return render(request, 'backoffice/inventory_pages/inventory_list.html', context)
+
+@login_required(login_url='signin')
+@pic_only
+def ExternalProjectInventoryList_PIC(request):
+    user = request.user
+    data = ProjectSite.objects.filter(pic=user)
+    data2 = ExternalProjectInventory.objects.filter(projectsite__in=data)
+    context = {'data2':data2}
+    return render(request, 'backoffice/inventory_pages/externalorder_inventory_list.html', context)
+
+@login_required(login_url='signin')
+@staff_only
+def ProjectInventoryDetailView(request,pk):
+    data = ProjectInventory.objects.get(id=pk)
+    data2 = ProjectInventoryDetails.objects.filter(inventory=data)
+    context = {'data':data, 'data2':data2}
+    return render(request, 'backoffice/inventory_pages/inventory_detail.html', context)
+
+@login_required(login_url='signin')
+@staff_only
+def ExternalProjectInventoryDetailView(request,pk):
+    data = ExternalProjectInventory.objects.get(id=pk)
+    data2 = ExternalProjectInventoryDetails.objects.filter(inventory=data)
+    context = {'data':data, 'data2':data2}
+    return render(request, 'backoffice/inventory_pages/externalorder_inventory_detail.html', context)
 
 @login_required(login_url='signin')
 @whm_only
@@ -903,6 +961,55 @@ def ProjectInventoryReport_WHM(request,pk):
     context = {'data':data, 'data2':data2, 'form':form, 'formset':formset}
     return render(request, 'backoffice/inventory_pages/inventory_detail_whm.html', context)
 
+@login_required(login_url='signin')
+@whm_only
+def ExternalProjectInventoryReport_WHM(request,pk):
+    data = ExternalProjectInventory.objects.get(id=pk)
+    data2 = ExternalProjectInventoryDetails.objects.filter(inventory=data).order_by('articles')
+    if request.method == 'POST':
+        form = ExternalOrderReportForm(request.POST)
+        formset = ExternalOrderReportFormSet(request.POST)
+        if form.is_valid() and formset.is_valid():
+            form = form.save(False)
+            formset = formset.save(False)
+            count=0
+            count2=0
+            for i in formset:
+                count+=1
+            for j in formset:
+                for k in data2:
+                    if j.articles.id == k.id:
+                        print("Article Equal 1st loop")
+                        count2+=1
+                        if j.quantity > k.quantity:
+                            messages.error(request, "Invalid Input. Quantity cannot be higher than the current stock of the item in Inventory")
+                            return redirect('external_inventory_whm_detail', pk=data.id)
+                    else:
+                        print("they are not equal")
+            if count == count2:
+                for x in formset:
+                    for y in data2:
+                        if x.articles.id == y.id:
+                            if y.quantity >= x.quantity:
+                                y.quantity -= x.quantity
+                                y.save()
+                form.save()
+                for a in formset:
+                    a.report = form
+                    a.save()
+                data.date=datetime.date.today
+                data.save()
+                messages.success(request, "Daily Report has been created")
+                return redirect('external_inventory_whm_detail', pk=data.id)
+            else:
+                messages.error(request, "Invalid Input. Articles on Form doesnt exist on Inventory")
+                return redirect('external_inventory_whm_detail', pk=data.id)
+    else:
+        form = ExternalOrderReportForm(initial={'projectsite':data.projectsite, 'whm':request.user})
+        formset =ExternalOrderReportFormSet()
+    context = {'data':data, 'data2':data2, 'form':form, 'formset':formset}
+    return render(request, 'backoffice/inventory_pages/externalorder_inventory_detail_whm.html', context)
+
 #################################################################################################################################
 #################################################################################################################################
 class ExternalOrderCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
@@ -923,10 +1030,11 @@ class ExternalOrderCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateVie
 
     def get_initial(self):
         return { 'whm':self.request.user }
-        
+
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         if self.request.POST:
+            data["form"] = self.form_class(self.request.POST, self.request.FILES)
             data["formset"] = ExternalOrderFormSet(self.request.POST)
         else:
             data["formset"] = ExternalOrderFormSet()
@@ -945,6 +1053,26 @@ class ExternalOrderCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateVie
             for i in externalorderdetail:
                 externalorder.amount += i.get_total()
             externalorder.save()
+            try:
+                data2 = ExternalProjectInventory.objects.get(projectsite=externalorder.projectsite)
+                for i in externalorderdetail:
+                    try:
+                        data3 = ExternalProjectInventoryDetails.objects.get(articles=i.articles)
+                        data3.quantity += i.quantity
+                        data3.save()
+                    except ObjectDoesNotExist:
+                        data3 = ExternalProjectInventoryDetails.objects.create(inventory=data2, articles=i.articles, unit=i.unit, quantity=i.quantity)
+                        data3.save()
+            except ObjectDoesNotExist:
+                data2 = ExternalProjectInventory.objects.create(projectsite=externalorder.projectsite)
+                for i in externalorderdetail:
+                    try:
+                        data3 = ExternalProjectInventoryDetails.objects.get(articles=i.articles)
+                        data3.quantity += i.quantity
+                        data3.save()
+                    except ObjectDoesNotExist:
+                        data3 = ExternalProjectInventoryDetails.objects.create(inventory=data2, articles=i.articles, unit=i.unit, quantity=i.quantity)
+                        data3.save()
             return super(ExternalOrderCreateView, self).form_valid(form)
 
     def get_success_url(self):
@@ -1027,7 +1155,21 @@ def ExternalOrderListView_WHM(request):
 def ExternalOrderDetailView(request,pk):
     data = ExternalOrder.objects.get(id=pk)
     data2 = ExternalOrderDetails.objects.filter(externalorder=data.id)
-    context = {'data':data,'data2':data2,}
+    if request.method == "POST":
+        form = ExternalOrderReportForm(request.POST)
+        formset = ExternalOrderReportFormSet(request.POST)
+        if form.is_valid() and formset.is_valid():
+            form = form.save()
+            formset = formset.save(False)
+            formset.report = form
+            formset.save()
+            messages.success(request, "Material Report has been submited")
+            return redirect('externalorder_detail', pk=data.id)
+    else:
+        form = ExternalOrderReportForm()
+        formset = ExternalOrderReportFormSet()
+
+    context = {'data':data,'data2':data2, 'form':form, 'formset':formset}
     return render(request, 'backoffice/externalorder_pages/externalorder_detail.html', context)
 
 @login_required(login_url = 'signin')
@@ -1087,6 +1229,8 @@ class JobOrderCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
                 data4 = Personnel.objects.get(id=i.personnel.id)
                 data4.status = "Currently Assigned"
                 data4.projectsite = data2.projectsite
+                data4.date = data3.date
+                data4.dat2 = data3.date2
                 data4.save()
             return super(JobOrderCreateView, self).form_valid(form)
 
@@ -1182,8 +1326,16 @@ def JobOrderReportView(request,pk):
                         i.save()
                     data3 = Personnel.objects.get(id=i.personnel.id)
                     data3.status = "Available"
+                    data3.date = None
+                    data3.date2 = None
                     data3.save()
                 else:
+                    data3 = Personnel.objects.get(id=i.personnel.id)
+                    data3.projectsite=data.projectsite
+                    data3.status = "Currently Assigned"
+                    data3.date = i.date
+                    data3.date2 = i.date2
+                    data3.save()
                     i.completion_date = None
                     i.save()
             messages.success(request, "Job Order status has been updated!")
@@ -1593,15 +1745,18 @@ def dailysitephotosDeleteView(request,pk):
 @admin_only
 def ProjectDailyReportListView(request):
     data = ProjectDailyReport.objects.all()
-    context = {'data':data}
+    data2 = ExternalOrderReport.objects.all()
+    context = {'data':data, 'data2':data2}
     return render(request, 'backoffice/report_pages/dailyreport_list.html', context)
+
 
 @login_required(login_url = 'signin')
 @pm_only
 def ProjectDailyReportListView_PM(request):
     project = ProjectSite.objects.filter(pm=request.user)
     data = ProjectDailyReport.objects.filter(projectsite__in=project)
-    context = {'data':data}
+    data2 = ExternalOrderReport.objects.filter(projectsite__in=project)
+    context = {'data':data, 'data2':data2}
     return render(request, 'backoffice/report_pages/dailyreport_list.html', context)
 
 @login_required(login_url = 'signin')
@@ -1609,7 +1764,8 @@ def ProjectDailyReportListView_PM(request):
 def ProjectDailyReportListView_PIC(request):
     project = ProjectSite.objects.filter(pic=request.user)
     data = ProjectDailyReport.objects.filter(projectsite__in=project)
-    context = {'data':data}
+    data2 = ExternalOrderReport.objects.filter(projectsite__in=project)
+    context = {'data':data, 'data2':data2}
     return render(request, 'backoffice/report_pages/dailyreport_list.html', context)
 
 @login_required(login_url = 'signin')
@@ -1617,7 +1773,8 @@ def ProjectDailyReportListView_PIC(request):
 def ProjectDailyReportListView_WHM(request):
     project = ProjectSite.objects.filter(whm=request.user)
     data = ProjectDailyReport.objects.filter(projectsite__in=project)
-    context = {'data':data}
+    data2 = ExternalOrderReport.objects.filter(projectsite__in=project)
+    context = {'data':data, 'data2':data2}
     return render(request, 'backoffice/report_pages/dailyreport_list.html', context)
 
 @login_required(login_url = 'signin')
@@ -1628,12 +1785,51 @@ def ProjectDailyReportDetailView(request, pk):
     context={'data':data, 'data2':data2}
     return render(request, 'backoffice/report_pages/dailyreport_detail.html', context)
 
+@login_required(login_url = 'signin')
+@staff_only
+def ProjectDailyReportDeleteView(request, pk):
+    data = ProjectDailyReport.objects.get(id=pk)
+    data2 = ProjectDailyReportDetails.objects.filter(report=data.id)
+    if request.method == "POST":
+        data.delete()
+        messages.success(request, "Material Report has been deleted!")
+    context={'data':data, 'data2':data2}
+    return render(request, 'backoffice/report_pages/materialreport_delete.html', context)
+
+@login_required(login_url = 'signin')
+@staff_only
+def ExternalOrderReportDetailView(request, pk):
+    data = ExternalOrderReport.objects.get(id=pk)
+    data2 = ExternalOrderDetailsReport.objects.filter(report=data.id)
+    context={'data':data, 'data2':data2}
+    return render(request, 'backoffice/report_pages/external_report_detail.html', context)
+
+@login_required(login_url = 'signin')
+@staff_only
+def ExternalOrderReportDeleteView(request, pk):
+    data = ExternalOrderReport.objects.get(id=pk)
+    data2 = ExternalOrderDetailsReport.objects.filter(report=data.id)
+    if request.method == "POST":
+        data.delete()
+        messages.success(request, "Material Report has been deleted!")
+        group = request.user.groups.all()[0].name
+        if group == "Admin":
+            return redirect('dailyreport_detail')
+        elif group == "Warehouseman":
+            return redirect('dailyreport_list_whm')
+        return redirect('dailyreport_list')
+    context={'data':data, 'data2':data2}
+    return render(request, 'backoffice/report_pages/external_report_delete.html', context)
+
+
 def WeeklyReport(request):
     form = WeeklyReportForm
     if request.method == 'POST':
         projectsite = request.POST.get('projectsite')
         datefrom = request.POST.get('datefrom')
+        datefrom = datetime.datetime.strptime(datefrom, "%Y-%m-%d")
         dateto = request.POST.get('dateto')
+        dateto = datetime.datetime.strptime(dateto, "%Y-%m-%d")
         data = ProjectSite.objects.get(id=projectsite)
         try:
             requisition = Requisition.objects.filter(projectsite_id=data.id, date__range=[datefrom, dateto])

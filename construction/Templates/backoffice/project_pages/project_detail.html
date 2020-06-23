@@ -147,22 +147,20 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    {% if inventory%}
-                                    {% for i in inventory%}
-                                    <tr role="row" class="odd">
-                                        <td>{{i.last_update}}</td>
-                                        <td><a href="{% url 'inventory_detail' i.id %}" class="btn btn-outline-primary">View</a></td>
-                                    </tr>
-                                    {% endfor %}
-                                    {% else %}
-                                    <tr>
-                                        <td colspan="2">
-                                            <p class="text-center">No Data Available</p><br>
-                                        </td>
-                                    </tr>
-                                    {% endif %}
+                                {% if inventory%}
+                                {% for i in inventory%}
+                                <tr role="row" class="odd">
+                                    <td>{{i.last_update}}</td>
+                                    <td><a href="{% url 'inventory_detail' i.id %}" class="btn btn-outline-primary">View</a></td>
                                 </tr>
+                                {% endfor %}
+                                {% else %}
+                                <tr>
+                                    <td colspan="2">
+                                        <p class="text-center">No Data Available</p><br>
+                                    </td>
+                                </tr>
+                                {% endif %}
                             </tbody>
                         </table>
                     </div>
@@ -284,9 +282,10 @@
                                         <td>{{i.supplier}}</td>
                                         <td>{{i.date}}</td>
                                         <td>
-                                            <form action="{% url 'externalorder_detail' i.id%}">
+                                            <a href="{% url 'externalorder_detail' i.id%}" class="btn btn-outline-primary">View</a>
+                                            <!-- <form action="{% url 'externalorder_detail' i.id%}">
                                                 <button class="btn btn-outline-primary">View</button>
-                                            </form>
+                                            </form> -->
                                         </td>
                                     </tr>
                                     {% endfor %}
@@ -360,12 +359,12 @@
                             <tbody>
                                 <tr>
                                     {% if sitephotos%}
-                                    {% for i in sitephotos%}
-                                    <tr role="row" class="odd">
-                                        <td class="text-center">{{i.date}}</td>
-                                        <td class="text-center"><a href="{% url 'sitephotos_detail' i.id%}" class="btn btn-outline-primary">View</a></td>
-                                    </tr>
-                                    {% endfor %}
+                                        {% for i in sitephotos%}
+                                        <tr role="row" class="odd">
+                                            <td class="text-center">{{i.date}}</td>
+                                            <td class="text-center"><a href="{% url 'sitephotos_detail' i.id%}" class="btn btn-outline-primary">View</a></td>
+                                        </tr>
+                                        {% endfor %}
                                     {% else %}
                                     <tr>
                                         <td colspan="2">
@@ -442,7 +441,7 @@
                                 <thead>
                                     <tr>
                                         <th>Project Start Date</th>
-                                        <th>Project End Date</th>
+                                        <th>Project Completion Date</th>
                                         <th>Maintenance Period End Date</th>
                                         <th>Project Status</th>
                                     </tr>
@@ -456,6 +455,8 @@
                                         <td><span class="badge badge-warning">{{data.status}}</span></td>
                                         {% elif data.status == "On-going"%}
                                         <td><span class="badge badge-primary">{{data.status}}</span></td>
+                                        {% elif data.status == "Completed (Overdue)"%}
+                                        <td><span class="badge badge-danger">{{data.status}}</span></td>
                                         {% else %}
                                         <td><span class="badge badge-success">{{data.status}}</span></td>
                                         {% endif %}
@@ -494,29 +495,33 @@
                                     <th>Scope of Work</th>
                                     <th>Level</th>
                                     <th>Status</th>
+                                    <th>Start Date</th>
+                                    <th>Completion Date</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% if data3 %}
-                                {% for i in data3 %}
-                                    <tr>
-                                        <td>{{i.scope_of_work}}</td>
-                                        {% if i.level == 1 %}
-                                            <td>Low</td>
-                                        {% elif i.level == 3 %}
-                                            <td>Medium</td>
-                                        {% else %}
-                                            <td>High</td>
-                                        {% endif%}
-                                        {% if i.status == "Pending"%}
-                                            <td><span class="badge badge-warning">{{i.status}}</span></td>
-                                        {% elif i.status == "On-going"%}
-                                            <td><span class="badge badge-primary">{{i.status}}</span></td>
-                                        {% else %}
-                                            <td><span class="badge badge-success">{{i.status}}</span></td>
-                                        {% endif %}
-                                    </tr>
-                                {% endfor %}
+                                    {% for i in data3 %}
+                                        <tr>
+                                            <td>{{i.scope_of_work}}</td>
+                                            {% if i.level == 1 %}
+                                                <td>Low</td>
+                                            {% elif i.level == 3 %}
+                                                <td>Medium</td>
+                                            {% else %}
+                                                <td>High</td>
+                                            {% endif%}
+                                            {% if i.status == "Pending"%}
+                                                <td><span class="badge badge-warning">{{i.status}}</span></td>
+                                            {% elif i.status == "On-going"%}
+                                                <td><span class="badge badge-primary">{{i.status}}</span></td>
+                                            {% else %}
+                                                <td><span class="badge badge-success">{{i.status}}</span></td>
+                                            {% endif %}
+                                            <td>{{i.start_date}}</td>
+                                            <td>{{i.completion_date}}</td>
+                                        </tr>
+                                    {% endfor %}
                                 {% else %}
                                     <tr>
                                         <td colspan="3"><p class="text-center">No data available</p></td>

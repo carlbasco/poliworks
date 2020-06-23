@@ -80,7 +80,9 @@ urlpatterns = [
 
     #Inventory
     path('materials/inventory_list', views.ProjectInventoryListView, name="inventory_list"),
+    path('materials/inventory_list/external', views.ExternalProjectInventoryListView, name="external_inventory_list"),
     path('materials/inventory/<int:pk>', views.ProjectInventoryDetailView, name="inventory_detail"),
+    path('materials/inventory/external/<int:pk>', views.ExternalProjectInventoryDetailView, name="external_inventory_detail"),
 
     #Reports
     path('reports/sitephotos', views.SitePhotosCreateView.as_view(), name="sitephotos"),
@@ -94,8 +96,14 @@ urlpatterns = [
     path('reports/issues', views.ProjectIssuesCreateView.as_view(), name="issues"),
     path('reports/issues_list', views.ProjectIssuesList, name="issues_list"),
     path('reports/issues/<int:pk>', views.ProjectIssuesDetailView, name="issues_detail"),
-    path('reports/dailyreport_list', views. ProjectDailyReportListView, name="dailyreport_list"),
-    path('reports/dailyreport/<int:pk>', views. ProjectDailyReportDetailView, name="dailyreport_detail"),
+
+    path('reports/materialreport_list', views. ProjectDailyReportListView, name="dailyreport_list"),
+
+    path('reports/materialreport/<int:pk>', views. ProjectDailyReportDetailView, name="dailyreport_detail"),
+    path('reports/materialreport/<int:pk>/delete', views. ProjectDailyReportDeleteView, name="materialreport_delete"),
+    
+    path('reports/materialreport/external/<int:pk>', views. ExternalOrderReportDetailView, name="external_report_detail"),
+    path('reports/materialreport/external/<int:pk>/delete', views. ExternalOrderReportDeleteView, name="external_report_delete"),
 
     #client
     path('myproject/', views.Client_home, name="client_home"),
@@ -123,6 +131,7 @@ urlpatterns = [
     path('pm/project_list', views.ProjectListView_PM, name="project_list_pm"),
     path('pm/project/quotation_list', views.QuotationListView_PM, name="quotation_list_pm"),
     path('pm/inventory', views.ProjectInventoryList_PM, name="inventory_pm"),
+    path('pm/inventory/external', views.ExternalProjectInventoryList_PM, name="external_inventory_pm"),
     path('pm/materials/requisition_list', views.RequisitionListView_PM, name="requisition_list_pm"),
     path('pm/materials/externalorder_list', views.ExternalOrderListView_PM, name="externalorder_list_pm"),
     path('pm/joborder_list', views.JobOrderListView_PM, name="joborder_list_pm"),
@@ -137,6 +146,7 @@ urlpatterns = [
     path('pic/task/rework_list', views.ReworkListView_PIC, name="rework_list_pic"),
     path('pic/reports/issues_list', views.ProjectIssuesList_PIC, name="issues_list_pic"),
     path('pic/inventory', views.ProjectInventoryList_PIC, name="inventory_pic"),
+    path('pic/inventory/external', views.ExternalProjectInventoryList_PIC, name="external_inventory_pic"),
     path('pic/materials/requisition_list', views.RequisitionListView_PIC, name="requisition_list_pic"),
     path('pic/materials/externalorder_list', views.ExternalOrderListView_PIC, name="externalorder_list_pic"),
     path('pic/reports/dailyreport_list', views. ProjectDailyReportListView_PIC, name="dailyreport_list_pic"),
@@ -147,7 +157,9 @@ urlpatterns = [
     path('whm/joborder_list', views.JobOrderListView_WHM, name="joborder_list_whm"),
     path('whm/requisition/<int:pk>/action', views.RequisitionActionView_WHM, name="requisition_action_whm"),
     path('whm/inventory', views.ProjectInventoryList_WHM, name="inventory_whm"),
+    path('whm/inventory/external', views.ExternalProjectInventoryList_WHM, name="external_inventory_whm"),
     path('whm/inventory/<int:pk>', views.ProjectInventoryReport_WHM, name="inventory_whm_detail"),
+    path('whm/inventory/external/<int:pk>', views.ExternalProjectInventoryReport_WHM, name="external_inventory_whm_detail"),
     path('whm/reports/issues_list', views.ProjectIssuesList_WHM, name="issues_list_whm"),
     path('whm/reports/issues/<int:pk>/edit', views.ProjectIssuesUpdateView.as_view(), name="issues_update"),
     path('reports/issues/<int:pk>/delete', views.ProjectIssuesDeleteView, name="issues_delete"),

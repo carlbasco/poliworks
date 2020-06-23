@@ -20,7 +20,7 @@
 </div>
 <div class="card">
     <div class="card-body">
-    <h4 class="card-title">List of Daily Report</h4>
+    <h4 class="card-title">List of Material Report</h4>
         <div class="table-responsive">
             <div class="row">
             <div class="col-12">
@@ -36,7 +36,7 @@
                                         </th>
                                         <th class="sorting font-weight-bold"" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
                                             aria-label="Client: activate to sort column ascending" style="width: 50px;">
-                                            Warehouseman
+                                            Type of Reports
                                         </th>
                                         <th class="sorting font-weight-bold"" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
                                             aria-label="Client: activate to sort column ascending" style="width: 50px;">
@@ -52,9 +52,17 @@
                                     {% for i in data%}
                                     <tr role="row" class="odd">
                                         <td>{{i.projectsite}}</td>
-                                        <td>{{i.whm}}</td>
+                                        <td>Material Report</td>
                                         <td>{{i.date}}</td>
                                         <td><a href="{% url 'dailyreport_detail' i.id%}" class="btn btn-outline-primary">view</a></td>
+                                    </tr>
+                                    {% endfor %}
+                                    {% for j in data2%}
+                                    <tr role="row" class="odd">
+                                        <td>{{j.projectsite}}</td>
+                                        <td>External Order Material Report </td>
+                                        <td>{{j.date}}</td>
+                                        <td><a href="{% url 'external_report_detail' j.id %}" class="btn btn-outline-primary">view</a></td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>

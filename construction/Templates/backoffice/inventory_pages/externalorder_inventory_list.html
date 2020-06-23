@@ -5,22 +5,23 @@
 <span class="text-uppercase page-subtitle">Materials</span>
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb bg-inverse-primary">
-        <li class="breadcrumb-item active" aria-current="page">
-            Inventory List
-        </li>
         <li class="breadcrumb-item">
             {% if request.user.groups.all.0.name == "Project Manager"%}
-                <a href="{% url 'external_inventory_pm'%}">External Order Inventory List</a>
+                <a href="{% url 'inventory_pm'%}">Inventory List</a>
             {% elif request.user.groups.all.0.name == "Person In-Charge"%}
-                <a href="{% url 'external_inventory_pic'%}">External Order Inventory List</a>
+                <a href="{% url 'inventory_pic'%}">Inventory List</a>
             {% elif request.user.groups.all.0.name == "Warehouseman"%}
-                <a href="{% url 'external_inventory_whm'%}">External Order Inventory List</a>
+                <a href="{% url 'inventory_whm'%}">Inventory List</a>
             {% else %}
-                <a href="{% url 'external_inventory_list'%}">External Order Inventory List</a>
+                <a href="{% url 'inventory_list'%}">Inventory List</a>
             {% endif %}
         </li>
+        <li class="breadcrumb-item active" aria-current="page">
+            External OrderInventory List
+        </li>
+        
     </ol>
-</nav>
+</nav>  
 
 <div class="col-md-12 mx-auto">
     {% for message in messages %}
@@ -37,9 +38,10 @@
         </div>
     {% endfor %}
 </div>
-<div class="card">
+
+<div class="card mt-5">
     <div class="card-body">
-    <h4 class="card-title">List of Inventory</h4>
+    <h4 class="card-title">List of External Order Inventory</h4>
         <div class="table-responsive">
             <div class="row">
             <div class="col-12">
@@ -69,9 +71,9 @@
                                         <td>{{i.projectsite}}</td>
                                         <td>{{i.last_update}}</td>
                                         {% if request.user.groups.all.0.name == "Warehouseman" %}
-                                        <td><a href="{% url 'inventory_whm_detail' i.id %}" class="btn btn-outline-primary">View</a></td>
+                                        <td><a href="{% url 'external_inventory_whm_detail' i.id %}" class="btn btn-outline-primary">View</a></td>
                                         {% else %}
-                                        <td><a href="{% url 'inventory_detail' i.id %}" class="btn btn-outline-primary">View</a></td>
+                                        <td><a href="{% url 'external_inventory_detail' i.id %}" class="btn btn-outline-primary">View</a></td>
                                         {% endif %}
                                     </tr>
                                     {% endfor %}
@@ -85,5 +87,4 @@
         </div>
     </div>
 </div>
-
 {% endblock %}

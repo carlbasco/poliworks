@@ -115,6 +115,14 @@
                                                     </th>
                                                     <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
                                                         ria-label="Actions: activate to sort column ascending" style="width: 50px;">
+                                                        From
+                                                    </th>
+                                                    <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                                        ria-label="Actions: activate to sort column ascending" style="width: 50px;">
+                                                        To
+                                                    </th>
+                                                    <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                                        ria-label="Actions: activate to sort column ascending" style="width: 50px;">
                                                         Action
                                                     </th>
                                                 </tr>
@@ -132,6 +140,8 @@
                                                         <td class="text-center"><label class="badge badge-primary">{{i.status}}</label></td>
                                                         <td class="text-center">N/A</td>
                                                     {% endif %}
+                                                    <td>{{i.date}}</td>
+                                                    <td>{{i.date2}}</td>
                                                     <td class="text-center"><a class="btn btn-outline-primary" href="{% url 'personnel_detail' i.id %}">View</a></td>
                                                 </tr>
                                                 {% endfor %}

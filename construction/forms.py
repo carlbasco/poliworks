@@ -274,7 +274,7 @@ QuotationUpdateFormSet = inlineformset_factory(Quotation, QuotationDetails,
 class ProgressForm(forms.ModelForm):
     class Meta:
         model=ProjectProgress
-        exclude=('total_progress',)
+        exclude=('total_progress', 'completion_date', )
 
 ProgressFormset = inlineformset_factory(ProjectProgress, ProjectProgressDetails,
     form=ProgressForm,
@@ -365,6 +365,9 @@ class ExternalOrderForm(forms.ModelForm):
         model = ExternalOrder
         fields = '__all__'
         exclude = ('amount',)
+        widgets={
+            'image' : forms.FileInput(attrs={'class':'custom-file-input'})
+        }
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
@@ -405,7 +408,21 @@ ExternalOrderUpdateFormSet = inlineformset_factory(ExternalOrder, ExternalOrderD
         'unitprice':forms.NumberInput(attrs={'class':'form-control','required': 'true'})
     }    
 )
+class ExternalOrderReportForm(forms.ModelForm):
+    class Meta:
+        model = ExternalOrderReport
+        fields = '__all__'
 
+ExternalOrderReportFormSet = inlineformset_factory(ExternalOrderReport, ExternalOrderDetailsReport,
+    form=ExternalOrderReportForm,
+    extra=1,
+    can_delete=True,
+    widgets={
+        'articles':forms.Select(attrs={'class':'form-control art'}),
+        'quantity':forms.NumberInput(attrs={'class':'form-control','required': 'true'}),
+        'remarks':forms.TextInput(attrs={'class':'form-control'}),
+    }
+)
 #################################################################################################################################
 #################################################################################################################################
 class JobOrderForm(forms.ModelForm):

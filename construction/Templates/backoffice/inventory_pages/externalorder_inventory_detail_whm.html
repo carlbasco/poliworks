@@ -73,7 +73,7 @@
             <div class="card-header" id="headingTwo">
                 <h1 class="mb-0 text-center">
                 <button class="btn btn-link btn-cardheader report" type="button" data-toggle="collapse" data-target="#table" aria-expanded="false" aria-controls="collapseTwo">
-                Inventory</button>
+                External Order Inventory</button>
                 </h1>
             </div>
             <div id="table" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionExample">
@@ -110,17 +110,14 @@
                                                 {% for i in data2 %}
                                                 <tr>
                                                     <td>{{i.articles}}</td>
-                                                    <td>{{i.articles.unit}}</td>
+                                                    <td>{{i.unit}}</td>
                                                     <td>{{i.quantity}}</td>
                                                 </tr>
                                                 {% endfor %}
                                             </tbody>
                                         </table>
-                                        
                                     </div>
-                                    
                                 </div>
-                                
                             </div>
                         </div>
                     </div>

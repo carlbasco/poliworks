@@ -17,19 +17,24 @@
             <table class="table table-bordered ">
                 <thead>
                     <tr>
-                        <th class="w-50">PERIOD</th>
                         <th class="w-50">
-                            <li style="list-style: none"><strong>From: </strong>{{datefrom}}</li>
-                            <li style="list-style: none"><strong>  To: </strong> {{dateto}}</li>
+                            <table class="table-borderless">
+                                <td>PERIOD</td>
+                            </table>
+                        </th>
+                        <th class="w-50">
+                            <table class="col-md-12 table-borderless">
+                                <td>From: </strong>{{datefrom|date:"F d, Y"}}</td>
+                                <td>To: </strong> {{dateto|date:"F d, Y"}}</td>
+                            </table>
                         </th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>PROJECT SITE</td>
-                        <td>{{data.projectsite}}</td>
+                        <td class="pl-4"><h5 >PROJECT SITE</h5></td>
+                        <td class="pl-4"><h5>{{data.projectsite}}</h5></td>
                     </tr>
-                    
                 </tbody>
             </table>
         </div>
@@ -60,9 +65,7 @@
         <div class="col-md-10 mx-auto table-responsive mb-5">
             <h3 class="text-center font-weight-bold table-title">ISSUES ON SITE</h3>
             <table class="table table-bordered">
-                <thead class="thead" id="head_tbl">
-                    
-                </thead>
+                <thead class="thead" id="head_tbl"></thead>
                 <tbody>
                     {% if projectissues %}
                     {% for i in projectissues %}
@@ -80,15 +83,15 @@
         </div>
 
         <div class="col-md-10 mx-auto table-responsive mb-5">
-            <h3 class="text-center font-weight-bold table-title">JOBORDER</h3>
+            <h3 class="text-center font-weight-bold table-title">JOB ORDER</h3>
             <table class="table table-bordered">
                 <thead class="thead" id="head_tbl">
-                    <th class="font-weight-bold" style="width: 250px;">Personnel</th>
+                    <th class="font-weight-bold" style="width: 150px;">Personnel</th>
                     <th class="font-weight-bold">Activity</th>
+                    <th class="font-weight-bold" style="min-width: 250px;">Remarks</th>
                     <th class="font-weight-bold">From</th>
                     <th class="font-weight-bold">To</th>
                     <th class="font-weight-bold">Status</th>
-                    <th class="font-weight-bold" style="width: 150px;">Remarks</th>
                     <th class="font-weight-bold" style="width: 150px;">Completion Date</th>
                 </thead>
                 <tbody>
@@ -97,10 +100,10 @@
                             <tr>
                                 <td>{{i.personnel}}</td>
                                 <td>{{i.activity}}</td>
+                                <td>{{i.remarks}}</td>
                                 <td>{{i.date}}</td>
                                 <td>{{i.date2}}</td>
                                 <td>{{i.status}}</td>
-                                <td>{{i.remarks}}</td>
                                 <td>{{i.completion_date}}</td>
                             </tr>
                         {% endfor %}

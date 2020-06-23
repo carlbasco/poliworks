@@ -37,7 +37,7 @@
         </div>
     {% endfor %}
 </div> 
-<form action="" method="POST" id="">
+<form action="" method="POST" id="" enctype="multipart/form-data">
     {% csrf_token%}
     <div class="card card-form">
         <div class="card-header" id="card_header_content">
@@ -83,9 +83,16 @@
                     {% endfor %}
                 </table>
             </div>
-            <div class="row">
-                <div class="form-group col-md-8">
+            <div class="row col-md-12">
+                <div class="form-group col-md-4">
+                    <label for="">OR Image</label>
+                    <div class="custom-file">
+                        {{form.image}}
+                        <label class="custom-file-label" for="customFile">Choose file</label>
+                    </div>
+                    <div id="preview"></div>
                 </div>
+                <div class="form-group col-md-4"></div>
                 <div class="form-group col-md-4">
                     <div class="form-group">
                       <label for="total_amount">Total Amount</label>
@@ -117,6 +124,24 @@
     $('form').bind('submit', function () {
         $(this).find('#id_whm').prop('disabled', false);
     });
+
+    function previewImages() {  
+        var $preview = $('#preview').empty();
+        if (this.files) $.each(this.files, readAndPreview);
+
+        function readAndPreview(i, file) {
+            if (!/\.(jpe?g|png|gif)$/i.test(file.name)){
+                return alert(file.name +" is not an image");
+            } // else...
+            var reader = new FileReader();
+
+            $(reader).on("load", function() {
+                $preview.append($("<img/>", {src:this.result, height:100}));
+            });
+            reader.readAsDataURL(file);
+        }
+    }
+    $('#id_image').on("change", previewImages);
 </script>
 <style>span.select2-selection.select2-selection--single {height: 30px;}</style>
 {%endblock%}
