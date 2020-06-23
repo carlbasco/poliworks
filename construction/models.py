@@ -137,9 +137,9 @@ class ProjectSite(models.Model):
     }
     typeofproject = models.CharField(max_length=255, choices=projecttype, null=True, verbose_name='Project Type')
     lotarea = models.CharField(max_length=255, blank=True, verbose_name='Lot Area')
-    startdate = models.DateField(('Start Project Date'),  help_text='Format: YYYY-MM-DD', blank=True)
-    comdate = models.DateField(('Project Completion Date'), help_text='Format: YYYY-MM-DD', blank=True)
-    mpd = models.DateField(('Maintenance Period End Date'), help_text='Format: YYYY-MM-DD', blank=True)
+    startdate = models.DateField(('Start Project Date'),  help_text='Format: YYYY-MM-DD', blank=True,null=True)
+    comdate = models.DateField(('Project Completion Date'), help_text='Format: YYYY-MM-DD', blank=True, null=True)
+    mpd = models.DateField(('Maintenance Period End Date'), help_text='Format: YYYY-MM-DD', blank=True, null=True)
     # 
     design=models.ImageField(upload_to=project_upload_path, blank=True, null=True)
     class Meta:

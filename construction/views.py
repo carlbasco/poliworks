@@ -757,14 +757,14 @@ def RequisitionActionView_WHM(request,pk):
                                 j.status2 = None
                                 j.quantity2 = None
                                 j.save()
-                            messages.error(request,"Invalid Input. Quantity Recieved cannot be higher than Quantity")
+                            messages.error(request,"Invalid Input. Quantity Received cannot be higher than Quantity Requested")
                             return redirect("requisition_action_whm", pk=data.id)
                         elif i.quantity == i.quantity2:
                             for j in data2:
                                 j.status2 = None
                                 j.quantity2 = None
                                 j.save()
-                            messages.error(request,'Invalid Input. Quantity Recieved cannot be equal to the Quantity when selected in action is "Incomplete"')
+                            messages.error(request,'Invalid Input. Quantity Received cannot be equal to the Quantity Requested when selected in action is "Incomplete"')
                             return redirect("requisition_action_whm", pk=data.id)
                         elif i.quantity2 == 0:
                             for j in data2:
@@ -776,7 +776,7 @@ def RequisitionActionView_WHM(request,pk):
                 try:
                     data3 =  ProjectInventory.objects.get(projectsite=data.projectsite)
                     for k in data2:
-                        if k.status2 !="Not Recieved" and k.status !="Pending" and k.status !="Canceled":
+                        if k.status2 !="Not Received" and k.status !="Pending" and k.status !="Canceled":
                             try:
                                 data4 = ProjectInventoryDetails.objects.get(inventory=data3,articles=k.articles)
                                 data4.quantity += k.quantity2
@@ -797,7 +797,7 @@ def RequisitionActionView_WHM(request,pk):
                 except ObjectDoesNotExist:
                     data3 = ProjectInventory.objects.create(projectsite=data.projectsite)
                     for k in data2:
-                        if k.status2 !="Not Recieved" and k.status !="Pending" and k.status !="Canceled":
+                        if k.status2 !="Not Received" and k.status !="Pending" and k.status !="Canceled":
                             try:
                                 data4 = ProjectInventoryDetails.objects.get(inventory=data3, articles=k.articles)
                                 data4.quantity += k.quantity2
@@ -1229,8 +1229,8 @@ class JobOrderCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
                 data4 = Personnel.objects.get(id=i.personnel.id)
                 data4.status = "Currently Assigned"
                 data4.projectsite = data2.projectsite
-                data4.date = data3.date
-                data4.dat2 = data3.date2
+                data4.date = i.date
+                data4.dat2 = i.date2
                 data4.save()
             return super(JobOrderCreateView, self).form_valid(form)
 
@@ -1367,6 +1367,8 @@ def JobOrderDeleteView(request,pk):
         for i in data2:
             data3 = Personnel.objects.get(id=i.personnel.id)
             data3.status = "Available"
+            data3.date = None
+            data3.date2 = None
             data3.save()
         data.delete()
         messages.success(request, 'Job Order has been deleted!', extra_tags='success')
@@ -1695,7 +1697,6 @@ def dailysitephotosListView_WHM(request):
     data = SitePhotos.objects.filter(projectsite__in=project)
     context={'data':data}
     return render(request, 'backoffice/report_pages/dailysitephotos_list.html', context)
-
 
 @login_required(login_url = 'signin')
 @staff_only

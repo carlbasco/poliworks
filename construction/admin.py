@@ -50,7 +50,7 @@ class ProvinceAdmin(ImportExportModelAdmin):
 class CityAdmin(ImportExportModelAdmin):
     exclude = ('id', )
     list_display=('id','name','province')
-    search_fields =('name','province')
+    search_fields =['name','id']
     ordering=('id','province')
     list_per_page=20
 

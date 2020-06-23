@@ -355,7 +355,7 @@ RequisitionActionFormSet_whm = inlineformset_factory(Requisition, RequisitionDet
     extra=0,
     widgets={
         'status2':forms.Select(attrs={'class':'form-control', 'required':True}),
-        'quantity2':forms.NumberInput(attrs={'class':'form-control', 'required':True }),
+        'quantity2':forms.NumberInput(attrs={'class':'form-control'}),
     }
 )
 #################################################################################################################################
@@ -533,6 +533,11 @@ class SitePhotostForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['projectsite'].queryset = ProjectSite.objects.filter(whm=user)
 
+class SitePhotostNewForm(forms.ModelForm):
+    class Meta:
+        model=SitePhotos
+        fields='__all__'
+
 class SitePhotostDetailsForm(forms.ModelForm):
     class Meta:
         model=SitePhotosDetails
@@ -543,7 +548,7 @@ class SitePhotostDetailsForm(forms.ModelForm):
         }
 
 SitePhotostFormset = inlineformset_factory(SitePhotos, SitePhotosDetails,
-    form=SitePhotostForm,
+    form=SitePhotostNewForm,
     exclude=('projectsite','date',),
     extra=0,
     can_delete=True,
