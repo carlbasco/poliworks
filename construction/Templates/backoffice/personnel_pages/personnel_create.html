@@ -70,7 +70,7 @@
                                 {{form.city|as_crispy_field}}
                             </div>
                             <div class="form-group col-md-8 ">
-                                <button type="button" id="sbmt-modal" class="btn btn-outline-primary btn-rounded" style="float:right" data-toggle="modal" data-target="#exampleModal-2">Add Personnel</button>
+                                <button type="button" id="sbmt-modal" class="btn btn-outline-primary btn-rounded mb-3" style="float:right" data-toggle="modal" data-target="#exampleModal-2">Add Personnel</button>
                             </div>
                             <div class="modal fade" id="exampleModal-2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-2" style="display: none;" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
@@ -153,9 +153,12 @@
                                                     <td>"{{i.skill.all|join:'", "'}}"</td>
                                                     {% if i.status == "Currently Assigned" %}
                                                         <td class="text-center"><label class="badge badge-warning">{{i.status}}</label></td>
-                                                        <td class="text-center">{{i.projectsite}}</td>
-                                                        {% elif i.status == "Available"%}
+                                                    {% elif i.status == "Available"%}
                                                         <td class="text-center"><label class="badge badge-primary">{{i.status}}</label></td>
+                                                    {% endif %}
+                                                    {% if i.projectsite %}
+                                                        <td class="text-center">{{i.projectsite}}</td>
+                                                    {% else %}
                                                         <td class="text-center">N/A</td>
                                                     {% endif %}
                                                     <td>{{i.date}}</td>

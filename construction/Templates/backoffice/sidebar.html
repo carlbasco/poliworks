@@ -106,7 +106,6 @@
             </div>
         </li>
        
-        {% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Person In-Charge" or request.user.groups.all.0.name == "Project Manager"%}
         <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#account-dropdown" aria-expanded="false" aria-controls="account-dropdown">
                 <i class="menu-icon mdi mdi-account-multiple"></i>
@@ -144,7 +143,6 @@
                 </ul>
             </div>
         </li>
-        {% endif %}
         
         {% if request.user.groups.all.0.name == "Admin"%}
         <li class="nav-item">

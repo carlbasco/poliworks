@@ -156,25 +156,38 @@
                                                 </th>
                                                 <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
                                                     ria-label="Actions: activate to sort column ascending" style="width: 50px;">
+                                                    From
+                                                </th>
+                                                <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                                    ria-label="Actions: activate to sort column ascending" style="width: 50px;">
+                                                    To
+                                                </th>
+                                                <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                                    ria-label="Actions: activate to sort column ascending" style="width: 50px;">
                                                     Action
                                                 </th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {% for i in view.data2%}
-                                            <tr role="row" class="odd">
-                                                <td>{{i.full_name}}</td>
-                                                <td>{{i.personnel_type}}</td>
-                                                <td>"{{i.skill.all|join:'", "'}}"</td>
-                                                {% if i.status == "Currently Assigned" %}
-                                                    <td class="text-center"><label class="badge badge-warning">{{i.status}}</label></td>
-                                                    <td class="text-center">{{i.projectsite}}</td>
+                                                <tr role="row" class="odd">
+                                                    <td>{{i.full_name}}</td>
+                                                    <td>{{i.personnel_type}}</td>
+                                                    <td>"{{i.skill.all|join:'", "'}}"</td>
+                                                    {% if i.status == "Currently Assigned" %}
+                                                        <td class="text-center"><label class="badge badge-warning">{{i.status}}</label></td>
                                                     {% elif i.status == "Available"%}
-                                                    <td class="text-center"><label class="badge badge-primary">{{i.status}}</label></td>
-                                                    <td class="text-center">N/A</td>
-                                                {% endif %}
-                                                <td class="text-center"><a class="btn btn-outline-primary" href="{% url 'personnel_detail' i.id %}">View</a></td>
-                                            </tr>
+                                                        <td class="text-center"><label class="badge badge-primary">{{i.status}}</label></td>
+                                                    {% endif %}
+                                                    {% if i.projectsite %}
+                                                        <td class="text-center">{{i.projectsite}}</td>
+                                                    {% else %}
+                                                        <td class="text-center">N/A</td>
+                                                    {% endif %}
+                                                    <td>{{i.date}}</td>
+                                                    <td>{{i.date2}}</td>
+                                                    <td class="text-center"><a class="btn btn-outline-primary" href="{% url 'personnel_detail' i.id %}">View</a></td>
+                                                </tr>
                                             {% endfor %}
                                         </tbody>
                                     </table>
@@ -191,6 +204,16 @@
 {% endblock %}
 {%block javascript%}
 <script type="text/javascript">
+    var dateToday = new Date();
+    $("#id_date").datepicker({
+        startDate: dateToday,
+        format:'yyyy-mm-dd',
+    });
+    $("#id_duration").datepicker({
+        startDate: dateToday,
+        startDate: dateToday
+    });
+
     $('.formset_row').formset({
         addText: 'Add',
         deleteText: 'Remove',
@@ -204,6 +227,7 @@
     });
 
     $('.add-row').click(function(){
+        $('.personnel').select2()
         $(".dateinput").datepicker({
             format:'yyyy-mm-dd',
         });

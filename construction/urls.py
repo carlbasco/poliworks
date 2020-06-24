@@ -44,7 +44,7 @@ urlpatterns = [
     path('task/joborder/<int:pk>', views.JobOrderDetailView, name="joborder_detail"),
     path('task/joborder/<int:pk>/edit', views.JobOrderUpdateView.as_view(), name="joborder_update"),
     path('task/joborder/<int:pk>/delete', views.JobOrderDeleteView, name="joborder_delete"),
-    path('task/joborder/<int:pk>/report', views.JobOrderReportView, name="joborder_report"),
+    path('task/joborder/report/<int:pk>', views.JobOrderReportView, name="joborder_report"),
 
     #Personnel
     path('personnel/add', views.PersonnelCreateView, name="personnel_create"),

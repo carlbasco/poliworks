@@ -94,7 +94,8 @@
 <script>
     var dateToday = new Date();
     $(".dateinput").datepicker({
-        startDate: dateToday
+        startDate: dateToday,
+        format:'yyyy-mm-dd',
     });
 
     $('#id_pm').select2();

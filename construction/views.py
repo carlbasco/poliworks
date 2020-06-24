@@ -553,7 +553,7 @@ class RequisitionUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView)
         self.object = form.save()
         if formset.is_valid():
             formset.instance = self.object
-            formset.save()
+            formset.save
             return super(RequisitionUpdateView, self).form_valid(form)
 
     def get_success_url(self):
@@ -646,6 +646,10 @@ def RequisitionDeleteView(request, pk):
         group = request.user.groups.all()[0].name
         if group == "Warehouseman":
             return redirect("requisition_list_whm")
+        elif group == "Person In-Charge":
+            return redirect("requisition_list_pic")
+        elif group == "Project Manager":
+            return redirect("requisition_list_pic")
         elif group == "Admin":
             return redirect("requisition_list")
 
@@ -739,13 +743,9 @@ def RequisitionActionView_WHM(request,pk):
                                 data4 = ProjectInventoryDetails.objects.get(inventory=data3,articles=k.articles)
                                 data4.quantity += k.quantity2
                                 data4.save()
-                                # k.status = "Delivered"
-                                # k.save()
                             except ObjectDoesNotExist:
                                 data4 = ProjectInventoryDetails.objects.create(inventory=data3, articles=k.articles, quantity=k.quantity2)
                                 data4.save()
-                                # k.status = "Delivered"
-                                # k.save()
                     data3.last_update = datetime.date.today()
                     data3.save()
                     data.status = "Closed"
@@ -764,13 +764,9 @@ def RequisitionActionView_WHM(request,pk):
                                 data4 = ProjectInventoryDetails.objects.get(inventory=data3, articles=k.articles)
                                 data4.quantity += k.quantity2
                                 data4.save()
-                                # k.status = "Delivered"
-                                # k.save()
                             except ObjectDoesNotExist:
                                 data4 = ProjectInventoryDetails.objects.create(inventory=data3, articles=k.articles, quantity=k.quantity2)
                                 data4.save()
-                                # k.status = "Delivered"
-                                # k.save()
                     data3.last_update = datetime.date.today()
                     data3.save()
                     data.status = "Closed"
@@ -1146,7 +1142,11 @@ def ExternalOrderDeleteView(request,pk):
     if request.method == 'POST':
         data.delete()
         messages.success(request, 'External Order has been deleted!', extra_tags='success')
-        return redirect("externalorder_create")
+        group = request.user.groups.all()[0].name
+        if group == "Warehouseman":
+            return redirect("externalorder_list_whm")
+        elif group == "Admin":
+            return redirect("externalorder_list")
     context = {'data':data,'data2':data2,}
     return render(request, 'backoffice/externalorder_pages/externalorder_delete.html', context)
 
@@ -1229,6 +1229,14 @@ class JobOrderUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         self.object = form.save()
         if formset.is_valid():
             formset.instance = self.object
+            formset.save(commit=False)
+            for j in formset.deleted_objects:
+                data5 =Personnel.objects.get(id=j.personnel.id)
+                data5.status = "Available"
+                data5.projectsite = None
+                data5.date = None
+                data5.date2 = None
+                data5.save()
             formset.save()
             data2 = self.object
             data3 = JobOrderTask.objects.filter(joborder=data2.id)
@@ -1236,6 +1244,8 @@ class JobOrderUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
                 data4 = Personnel.objects.get(id=i.personnel.id)
                 data4.status = "Currently Assigned"
                 data4.projectsite = data2.projectsite
+                data4.date = i.date
+                data4.date2 = i.date2
                 data4.save()
             return super(JobOrderUpdateView, self).form_valid(form)
 
@@ -1292,6 +1302,7 @@ def JobOrderReportView(request,pk):
                         i.save()
                     data3 = Personnel.objects.get(id=i.personnel.id)
                     data3.status = "Available"
+                    data3.projectsite = None
                     data3.date = None
                     data3.date2 = None
                     data3.save()
@@ -1760,6 +1771,15 @@ def ProjectDailyReportDeleteView(request, pk):
     if request.method == "POST":
         data.delete()
         messages.success(request, "Material Report has been deleted!")
+        group = request.user.groups.all()[0].name
+        if group == "Warehouseman":
+            return redirect("dailyreport_list_whm")
+        elif group == "Person In-Charge":
+            return redirect("dailyreport_list_pic")
+        elif group == "Project Manager":
+            return redirect("dailyreport_list_pic")
+        elif group == "Admin":
+            return redirect("dailyreport_list")
     context={'data':data, 'data2':data2}
     return render(request, 'backoffice/report_pages/materialreport_delete.html', context)
 

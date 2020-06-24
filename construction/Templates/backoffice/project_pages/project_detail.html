@@ -118,7 +118,9 @@
                             <tr>
                                 <td colspan="5">
                                     <p class="text-center">No Data Available</p><br>
+                                    {% if request.user.groups.all.0.name == "Project Manager" %}
                                     <a href="{% url 'quotation_create'%}">Create Quotation</a>
+                                    {% endif %}
                                 </td>
                             </tr>
                             {% endif%}

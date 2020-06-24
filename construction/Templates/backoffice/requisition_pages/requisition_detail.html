@@ -83,10 +83,10 @@
                                     {% else %}
                                         {% if i.status == "To be Delivered"%}
                                         <td class="text-center"><label class="badge badge-primary">{{i.status}}</label></td>
-                                        {% elif i.status == "Completed"%}
-                                            <td class="text-center"><label class="badge badge-success">{{i.status}}</label></td>
+                                        {% elif i.status == "Canceled"%}
+                                            <td class="text-center"><label class="badge badge-danger">{{i.status}}</label></td>
                                         {% else %}
-                                            <td class="text-center"><label class="badge badge-warning">{{i.status}}</label></td>
+                                            <td class="text-center"><label class="badge badge-warning">Pending</label></td>
                                         {% endif %}
                                     {% endif %}
                                     

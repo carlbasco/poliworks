@@ -103,9 +103,7 @@
                                         <td><span class="badge badge-success">{{i.status}}</span></td>
                                         {% endif %}
                                         <td>
-                                        <form action="{% url 'client_quotation' i.id%}">
-                                            <button class="btn btn-outline-primary view-btn">View</button>
-                                        </form>
+                                            <a href="{% url 'client_quotation' i.id%}" class="btn btn-sm btn-outline-primary view-btn">View</a>
                                         </td>
                                     </tr>
                                     {% endfor %}
