@@ -11,8 +11,6 @@ a#bullet-sm.navbar-brand{
     font-size: x-large;
 }
 .py-4{
-    /* background: rgb(38,108,170);
-    background: linear-gradient(45deg, rgba(38,108,170,1) 17%, rgba(177,177,177,1) 17%, rgba(167,172,177,1) 50%, rgba(38,108,170,1) 50%);  */
     background: linear-gradient(45deg, rgba(177,177,177,1) 0%, rgba(177,177,177,1) 0%);
 }
 .d-sm-inline-block{
@@ -24,7 +22,7 @@ a#bullet-sm.navbar-brand{
 #contact{
     margin:auto;
 }
-.pb-5 {
+.footer-top {
     padding-bottom: 1rem;
     padding-top: 1rem;
     box-shadow: 1px 9px 35px -1px rgba(0,0,0,0.75);
@@ -77,4 +75,7 @@ div.row.contact-details img{
 h1#title {
     color: #00529C;
     font-size: 3rem;
+}
+div#navbarSupportedContent {
+    text-align: center;
 }
