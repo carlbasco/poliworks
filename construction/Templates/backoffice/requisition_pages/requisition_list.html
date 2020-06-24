@@ -31,7 +31,7 @@
     {% endfor %}
 </div>
 <div class="row">
-    <div class="col-md-4 grid-margin stretch-card">
+    <div class="col-md-3 grid-margin stretch-card">
         <div class="card aligner-wrapper" id="card_completed">
             <div class="card-body" >
                 <div class="absolute left top bottom h-100 v-strock-2 bg-success"></div>
@@ -42,7 +42,18 @@
             </div>
         </div>
     </div>
-    <div class="col-md-4 grid-margin stretch-card">
+    <div class="col-md-3 grid-margin stretch-card">
+        <div class="card aligner-wrapper" id="card_completed">
+            <div class="card-body" >
+                <div class="absolute left top bottom h-100 v-strock-2 bg-danger"></div>
+                <p class="text-muted mb-2">Incomplete Order (Closed)</p>
+                <div class="d-flex align-items-center">
+                    <h1 class="font-weight-medium mb-2">{{incomplete}}</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 grid-margin stretch-card">
         <div class="card aligner-wrapper" id="card_delivered">
             <div class="card-body" >
                 <div class="absolute left top bottom h-100 v-strock-2 bg-primary"></div>
@@ -53,7 +64,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-4 grid-margin stretch-card" >
+    <div class="col-md-3 grid-margin stretch-card" >
         <div class="card aligner-wrapper" id="card_pending">
             <div class="card-body">
                 <div class="absolute left top bottom h-100 v-strock-2 bg-warning"></div>
@@ -111,7 +122,9 @@
                                             <td><label class="badge badge-info">{{i.status}}</label></td>
                                         {% elif i.status == "To be Delivered"%}
                                             <td><label class="badge badge-primary">{{i.status}}</label></td>
-                                        {% else%}
+                                        {% elif i.status == "Incomplete Order (Closed)"%}
+                                            <td><label class="badge badge-danger">{{i.status}}</label></td>
+                                        {% elif i.status == "Closed"%}
                                             <td><label class="badge badge-success">{{i.status}}</label></td>
                                         {% endif %}
                                         <td>

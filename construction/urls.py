@@ -14,10 +14,7 @@ urlpatterns = [
     path('sign-out/', views.signout, name="signout"),
 
     #signuppages
-    path('signup/client', views.signupclient, name="signupclient"),
-    path('signup/whm', views.signupwhm, name="signupwhm"),
-    path('signup/pic', views.signuppic, name="signuppic"),
-    path('signup/pm', views.signuppm, name="signuppm"),
+    path('signup', views.SignupView, name="signup"),
 
     #UserProfiles
     path('profile', views.profile, name="userprofile"),

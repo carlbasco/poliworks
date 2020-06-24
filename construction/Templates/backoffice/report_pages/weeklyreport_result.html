@@ -124,6 +124,7 @@
                         <th class="text-center">Quantity</th>
                         <th class="text-center">Unit</th>
                         <th class="text-center">Articles</th>
+                        <th class="text-center">Date Requested</th>
                         <th class="text-center">Status</th>
                     </tr>
                 </thead>
@@ -134,7 +135,12 @@
                             <td class="text-center">{{i.quantity}}</td>
                             <td class="text-center">{{i.articles.unit}}</td>
                             <td>{{i.articles}}</td>
+                            <td class="text-center">{{i.requisition.date}}</td>
+                            {% if i.status2 != None %}
+                            <td class="text-center">{{i.status2}}</td>
+                            {% else %}
                             <td class="text-center">{{i.status}}</td>
+                            {% endif %}
                         </tr>
                         {% endfor %}
                     {% else %}

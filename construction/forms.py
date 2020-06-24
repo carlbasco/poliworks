@@ -43,6 +43,29 @@ class UserAdminChangeForm(forms.ModelForm):
     def clean_password(self):
         return self.initial["password"]
 
+class SignupForm(forms.ModelForm):
+    choice = {('Project Manager', 'Project Manager'), ('Person In-Charge', 'Person In-Charge'), ('Warehouseman', 'Warehouseman'), ('Client', 'Client')}
+    account = forms.ChoiceField(label="Account Type", choices=choice)
+    password = forms.CharField(label='Password', widget=forms.PasswordInput)
+    cpassword = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
+    class Meta:
+        model = User
+        fields = ['email','first_name','middle_name','last_name','suffix']
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        qs = User.objects.filter(email=email)
+        if qs.exists():
+            raise forms.ValidationError("email is taken")
+        return email
+
+    def clean_cpassword(self):
+        password = self.cleaned_data.get("password")
+        cpassword = self.cleaned_data.get("cpassword")
+        if password and cpassword and password != cpassword:
+            raise forms.ValidationError("Passwords don't match")
+        return cpassword
+
 class SignupFormClient(forms.ModelForm):
     password = forms.CharField(label='Password', widget=forms.PasswordInput)
     cpassword = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)

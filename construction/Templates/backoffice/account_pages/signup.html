@@ -2,65 +2,87 @@
 {% load static %}
 {% load crispy_forms_tags%}
 {% block content %}
-<form action="" method="POST" enctype="multipart/form-data">
+<div class="page-header row no-gutters py-4">
+    <div class="col-sm-12 text-center text-sm-left mb-0">
+        <span class="text-uppercase page-subtitle">Account</span>
+    </div>
+</div>
+<div class="col-md-12 mx-auto">
+    {% for message in messages %}
+        <div class="alert alert-{{message.level_tag}} alert-dismissible fade show" role="alert">
+            {% if message.level_tag  == "success" %}
+                <strong>Success! </strong>
+            {% else %}
+                <strong>Error! </strong>
+            {% endif %}
+            {{message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endfor %}
+</div>
+<form action="" method="POST" id="signupForm">
     {% csrf_token%}
-    <div class="col-md-8  m-auto">
-        <div class="card card-form">
-            <div class="card-header" id="card_header_content">
-                <h3 style="text-align: center;">New Project</h3>
-            </div>
-            <div class=card-boy>
-                <div id="newprojectform">
+        <div class="col-lg-8 m-auto">
+            <div class="card card-form">
+                <div class="card-header" id="card_header_content">
+                    <h3 style="text-align: center;">Create Account</h3>
+                </div>
+                <div class="card-body">
                     <div class="row justify-content-center">
                         <div class="form-group col-md-10">
-                            <h5 class="font-weight-bold">Project Staffs:</h5>
+                            <h5 class="font-weight-bold">Account Details:</h5>
                         </div>
                         <div class="form-group col-md-8">
-                            {{form.pm|as_crispy_field}}
+                            {{user.email|as_crispy_field}}
                         </div>
                         <div class="form-group col-md-8">
-                            {{form.client|as_crispy_field}}
+                            {{user.password|as_crispy_field}}
                         </div>
+                        <div class="form-group col-md-8">
+                            {{user.cpassword|as_crispy_field}}
+                        </div>
+                        <div class="form-group col-md-8">
+                            {{user.account|as_crispy_field}}
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
                         <div class="form-group col-md-10">
-                            <h5 class="font-weight-bold">Project Details:</h5>
+                            <h5 class="font-weight-bold">Personal Information:</h5>
                         </div>
                         <div class="form-group col-md-8">
-                            {{form.projectsite|as_crispy_field}}
+                            {{user.first_name|as_crispy_field}}
                         </div>
                         <div class="form-group col-md-8">
-                            {{form.typeofproject|as_crispy_field}}
+                            {{user.middle_name|as_crispy_field}}
                         </div>
                         <div class="form-group col-md-8">
-                            {{form.lotarea|as_crispy_field}}
+                            {{user.last_name|as_crispy_field}}
                         </div>
                         <div class="form-group col-md-8">
-                            <label for="">Design </label>
-                            <div class="custom-file">
-                                {{form.design}}
-                                <label class="custom-file-label" for="customFile">Choose file</label>
-                            </div>
-                            <img id="design_img" src="#" alt="your image" />
+                            {{user.suffix|as_crispy_field}}
                         </div>
                         <div class="form-group col-md-8">
-                            {{form.address|as_crispy_field}}
+                            {{profile.sex|as_crispy_field}}
                         </div>
                         <div class="form-group col-md-8">
-                            {{form.province|as_crispy_field}}
+                            {{profile.birthdate|as_crispy_field}}
                         </div>
                         <div class="form-group col-md-8">
-                            {{form.city|as_crispy_field}}
+                            {{profile.phone|as_crispy_field}}
                         </div>
                         <div class="form-group col-md-8">
-                            {{form.startdate|as_crispy_field}}
+                            {{profile.address|as_crispy_field}}
                         </div>
                         <div class="form-group col-md-8">
-                            {{form.comdate|as_crispy_field}}
+                            {{profile.province|as_crispy_field}}
                         </div>
                         <div class="form-group col-md-8">
-                            {{form.mpd|as_crispy_field}}
+                            {{profile.city|as_crispy_field}}
                         </div>
                         <div class="form-group col-md-8">
-                            <button type="button" id="sbmt-modal" class="btn btn-outline-primary btn-rounded" style="float:right" data-toggle="modal" data-target="#exampleModal-2">Create Project</button>
+                            <button type="button" id="sbmt-modal" class="btn btn-outline-primary btn-rounded" style="float:right" data-toggle="modal" data-target="#exampleModal-2">Create Account</button>
                         </div>
                         <div class="modal fade" id="exampleModal-2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-2" style="display: none;" aria-hidden="true">
                             <div class="modal-dialog" role="document">
@@ -72,10 +94,10 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <p>Are you sure you want to Create project?</p>
+                                        <p>Are you sure you want to create Account?</p>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="submit" class="btn btn-outline-primary" >Submit</button>
+                                        <button type="submit" class="btn btn-outline-primary" >Create Account</button>
                                         <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
                                     </div>
                                 </div>
@@ -85,37 +107,10 @@
                 </div>
             </div>
         </div>
-    </div>
 </form>
 {% endblock %}
 
 {% block javascript%}
 <script src="{% static 'assets/js/custom/province-city.js'%}"></script>
-<script>
-    var dateToday = new Date();
-    $(".dateinput").datepicker({
-        startDate: dateToday
-    });
-
-    $('#id_pm').select2();
-    $('#id_client').select2();
-    $('#design_img').hide();
-
-    var reader = new FileReader();
-    reader.onload = function (e) {
-        $('#design_img').show();
-        $('#design_img').attr('src', e.target.result);
-    }
-    
-   function readURL(input) {
-        if (input.files && input.files[0]) {
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-    
-    $("#id_design").change(function(){
-        readURL(this);
-    });
-</script>
-<style>span.select2-selection.select2-selection--single {height: 30px;}</style>
+<style>span.select2-selection.select2-selection--single {height: 35px;}</style>
 {% endblock %}

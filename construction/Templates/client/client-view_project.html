@@ -13,7 +13,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-3 text-center"><strong >Project Start Date:</strong><p>{{data.startdate}}</p></div>
-                            <div class="col-md-3 text-center"><strong>Project End Date:</strong><p>{{data.comdate}}</p></div>
+                            <div class="col-md-3 text-center"><strong>Project Completion Date:</strong><p>{{data.comdate}}</p></div>
                             <div class="col-md-3 text-center"><strong>Maintenance Period End Date:</strong><p>{{data.mpd}}</p></div>
                             <div class="col-md-3 text-center">
                                 <strong>Project Status</strong>
@@ -21,6 +21,8 @@
                                     <p><span class="badge badge-warning">{{data.status}}</span></p>
                                 {% elif data.status == "On-going"%}
                                     <p><span class="badge badge-primary">{{data.status}}</span></p>
+                                {% elif data.satatus == "Done (Overdue)"%}
+                                    <p><span class="badge badge-danger">{{data.status}}</span></p>
                                 {% else %}
                                     <p><span class="badge badge-success">{{data.status}}</span></p>
                                 {% endif %}
@@ -39,6 +41,8 @@
                                             <tr>
                                                 <th>Scope of Work</th>
                                                 <th>Status</th>
+                                                <th>Start Date</th>
+                                                <th>Completion Date</th>
                                             </tr>
                                     </thead>
                                     <tbody>
@@ -52,6 +56,8 @@
                                                 {% else %}
                                                 <td><span class="badge badge-success">{{i.status}}</span></td>
                                                 {% endif %}
+                                                <td>{{i.start_date}}</td>
+                                                <td>{{i.completion_date}}</td>
                                             </tr>
                                             {% endfor %}
                                     </tbody>
@@ -121,14 +127,14 @@
                     <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionExample">
                         <div class="card-body">
                             <ul class="ul-projectdetails">
-                                    <li class="projectdetails"><strong>Project Site: </strong> {{data.projectsite}}</li>
-                                    <li class="projectdetails"><strong>Project Manager: </strong> {{data.pm}}</li>
-                                    <li class="projectdetails"><strong>Person In-Charge: </strong> {{data.pic}}</li>
-                                    <li class="projectdetails"><strong>Project Type: </strong> {{data.typeofproject}}</li>
-                                    <li class="projectdetails"><strong>Lot Area: </strong> {{data.lotarea}}</li>
-                                    <li class="projectdetails"><strong>Address: </strong>{{data.address}}</li>
-                                    <li class="projectdetails"><strong>City: </strong>{{data.city}}</li>
-                                    <li class="projectdetails"><strong>Province: </strong>{{data.province}}</li>
+                                <li class="projectdetails"><strong>Project Site: </strong> {{data.projectsite}}</li>
+                                <li class="projectdetails"><strong>Project Manager: </strong> {{data.pm}}</li>
+                                <li class="projectdetails"><strong>Person In-Charge: </strong> {{data.pic}}</li>
+                                <li class="projectdetails"><strong>Project Type: </strong> {{data.typeofproject}}</li>
+                                <li class="projectdetails"><strong>Lot Area: </strong> {{data.lotarea}}</li>
+                                <li class="projectdetails"><strong>Address: </strong>{{data.address}}</li>
+                                <li class="projectdetails"><strong>City: </strong>{{data.city}}</li>
+                                <li class="projectdetails"><strong>Province: </strong>{{data.province}}</li>
                             </ul>
                         </div>
                     </div>

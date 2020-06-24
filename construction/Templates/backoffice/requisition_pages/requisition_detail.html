@@ -74,13 +74,22 @@
                                     <td>{{i.articles}}</td>
                                     <td class="text-center">{{i.articles.unit}}</td>
                                     <td class="text-center">{{i.quantity}}</td>
-                                    {% if i.status == "To be Delivered"%}
-                                        <td class="text-center"><label class="badge badge-primary">{{i.status}}</label></td>
-                                    {% elif i.status == "Completed"%}
-                                        <td class="text-center"><label class="badge badge-success">{{i.status}}</label></td>
+                                    {% if i.status2 %}
+                                        {% if i.status2 == "Complete"%}
+                                            <td class="text-center"><label class="badge badge-success">{{i.status2}}</label></td>
+                                        {% elif i.status2 == "Incomplete" or "Not Recieved"%}
+                                            <td class="text-center"><label class="badge badge-danger">{{i.status2}}</label></td>
+                                        {% endif %}
                                     {% else %}
-                                        <td class="text-center"><label class="badge badge-warning">{{i.status}}</label></td>
+                                        {% if i.status == "To be Delivered"%}
+                                        <td class="text-center"><label class="badge badge-primary">{{i.status}}</label></td>
+                                        {% elif i.status == "Completed"%}
+                                            <td class="text-center"><label class="badge badge-success">{{i.status}}</label></td>
+                                        {% else %}
+                                            <td class="text-center"><label class="badge badge-warning">{{i.status}}</label></td>
+                                        {% endif %}
                                     {% endif %}
+                                    
                                 </tr>
                                 {% endfor %}
                             </tbody>
