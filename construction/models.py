@@ -136,12 +136,13 @@ class ProjectSite(models.Model):
         ('Industrial Cement Flooring Finish', 'Industrial Cement Flooring Finish'),
     }
     typeofproject = models.CharField(max_length=255, choices=projecttype, null=True, verbose_name='Project Type')
-    lotarea = models.CharField(max_length=255, blank=True, verbose_name='Lot Area')
+    lotarea = models.CharField(max_length=255, blank=True, verbose_name='Lot Area', 
+        help_text="Please indicate if square meter, square kilometer, square mile, hectare, acre")
     startdate = models.DateField(('Start Project Date'),  help_text='Format: YYYY-MM-DD', blank=True,null=True)
     comdate = models.DateField(('Project Completion Date'), help_text='Format: YYYY-MM-DD', blank=True, null=True)
     mpd = models.DateField(('Maintenance Period End Date'), help_text='Format: YYYY-MM-DD', blank=True, null=True)
     # 
-    design=models.ImageField(upload_to=project_upload_path, blank=True, null=True)
+    design=models.ImageField(('Blueprint'),upload_to=project_upload_path, blank=True, null=True)
     class Meta:
         verbose_name='Projects'
         verbose_name_plural='Projects'

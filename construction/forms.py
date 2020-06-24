@@ -65,6 +65,13 @@ class SignupForm(forms.ModelForm):
         if password and cpassword and password != cpassword:
             raise forms.ValidationError("Passwords don't match")
         return cpassword
+    
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data["password"])
+        if commit:
+            user.save()
+        return user
 
 class SignupFormClient(forms.ModelForm):
     password = forms.CharField(label='Password', widget=forms.PasswordInput)
@@ -96,96 +103,6 @@ class SignupFormClient(forms.ModelForm):
             group.user_set.add(user)
         return user
         
-class SignupFormWHM(forms.ModelForm):
-    password = forms.CharField(label='Password', widget=forms.PasswordInput)
-    cpassword = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
-    class Meta:
-        model = User
-        fields = ['email','first_name','middle_name','last_name','suffix']
-
-    def clean_email(self):
-        email = self.cleaned_data.get('email')
-        qs = User.objects.filter(email=email)
-        if qs.exists():
-            raise forms.ValidationError("email is taken")
-        return email
-
-    def clean_cpassword(self):
-        password = self.cleaned_data.get("password")
-        cpassword = self.cleaned_data.get("cpassword")
-        if password and cpassword and password != cpassword:
-            raise forms.ValidationError("Passwords don't match")
-        return cpassword
-
-    def save(self, commit=True):
-        user = super(SignupFormWHM, self).save(commit=False)
-        user.set_password(self.cleaned_data["password"])
-        if commit:
-            user.save()
-            group = Group.objects.get(name='Warehouseman') 
-            group.user_set.add(user)
-        return user
-
-class SignupFormPIC(forms.ModelForm):
-    password = forms.CharField(label='Password', widget=forms.PasswordInput)
-    cpassword = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
-    class Meta:
-        model = User
-        fields = ['email','first_name','middle_name','last_name','suffix']
-
-    def clean_email(self):
-        email = self.cleaned_data.get('email')
-        qs = User.objects.filter(email=email)
-        if qs.exists():
-            raise forms.ValidationError("email is taken")
-        return email
-
-    def clean_cpassword(self):
-        password = self.cleaned_data.get("password")
-        cpassword = self.cleaned_data.get("cpassword")
-        if password and cpassword and password != cpassword:
-            raise forms.ValidationError("Passwords don't match")
-        return cpassword
-
-    def save(self, commit=True):
-        user = super(SignupFormPIC, self).save(commit=False)
-        user.set_password(self.cleaned_data["password"])
-        if commit:
-            user.save()
-            group = Group.objects.get(name='Person In-Charge') 
-            group.user_set.add(user)
-        return user
-
-class SignupFormPM(forms.ModelForm):
-    password = forms.CharField(label='Password', widget=forms.PasswordInput)
-    cpassword = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
-    class Meta:
-        model = User
-        fields = ['email','first_name','middle_name','last_name','suffix']
-
-    def clean_email(self):
-        email = self.cleaned_data.get('email')
-        qs = User.objects.filter(email=email)
-        if qs.exists():
-            raise forms.ValidationError("email is taken")
-        return email
-
-    def clean_cpassword(self):
-        password = self.cleaned_data.get("password")
-        cpassword = self.cleaned_data.get("cpassword")
-        if password and cpassword and password != cpassword:
-            raise forms.ValidationError("Passwords don't match")
-        return cpassword
-
-    def save(self, commit=True):
-        user = super(SignupFormPM, self).save(commit=False)
-        user.set_password(self.cleaned_data["password"])
-        if commit:
-            user.save()
-            group = Group.objects.get(name='Project Manager') 
-            group.user_set.add(user)
-        return user
-
 class ProfileForm(forms.ModelForm):
     class Meta:
         model=Profile
