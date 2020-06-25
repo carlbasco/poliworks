@@ -452,6 +452,9 @@ class ProjectIssuesForm(forms.ModelForm):
     class Meta:
         model=ProjectIssues
         fields = '__all__'
+        widgets={
+            'date':forms.TextInput(attrs={'data-toggle':'datepicker'})
+        }
     
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
@@ -467,6 +470,9 @@ class SitePhotostForm(forms.ModelForm):
     class Meta:
         model=SitePhotos
         fields='__all__'
+        widgets={
+            'date':forms.TextInput(attrs={'data-toggle':'datepicker'})
+        }
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)

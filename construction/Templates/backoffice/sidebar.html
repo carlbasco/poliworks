@@ -191,7 +191,7 @@
                     </li>
                     {% elif request.user.groups.all.0.name == "Warehouseman"%}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'issues_list_whm' %}">Project Issues</a>
+                        <a class="nav-link" href="{% url 'issues' %}">Project Issues</a>
                     </li>
                     {% endif %}
 
@@ -201,7 +201,7 @@
                         {% elif request.user.groups.all.0.name == "Person In-Charge"%}
                             <a class="nav-link" href="{% url 'sitephotos_list_pic'%}">Site Photos</a>
                         {% elif request.user.groups.all.0.name == "Warehouseman"%}
-                            <a class="nav-link" href="{% url 'sitephotos_list_whm'%}">Site Photos</a>
+                            <a class="nav-link" href="{% url 'sitephotos'%}">Site Photos</a>
                         {% else %}
                             <a class="nav-link" href="{% url 'sitephotos_list'%}">Site Photos</a>
                         {% endif %}
@@ -227,8 +227,8 @@
         </li>
         <li class="nav-item " id="account">
             <a class="nav-link" data-toggle="collapse" href="#account_opt" aria-expanded="false" aria-controls="personnel-dropdown">
-                <i class="menu-icon mdi mdi-account"></i>
-                <span class="menu-title">Account</span>
+                <i class="menu-icon mdi mdi-settings"></i>
+                <span class="menu-title">Option</span>
                 <i class="menu-arrow"></i>
             </a>
             <div class="collapse" id="account_opt">

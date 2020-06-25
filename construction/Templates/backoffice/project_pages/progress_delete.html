@@ -51,11 +51,11 @@
                 <p class="ptxt">Are you sure you want to delete it?</p> 
             </div>
             <div class="modal-footer">
-                <a href="{% url 'dailyreport_detail' data.id %}" class="btn btn-outline-secondary">Close</a>
                 <form action="" method="POST">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-outline-danger view-btn">Delete</button>
                 </form>
+                <a href="{% url 'dailyreport_detail' data.id %}" class="btn btn-outline-secondary">Close</a>
             </div>
         </div>
     </div>

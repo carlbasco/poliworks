@@ -90,13 +90,11 @@
                 <p class="ptxt">Are you sure you want to delete it?</p> 
             </div>
             <div class="modal-footer">
-                <form action="{% url 'joborder_detail' data.id%}">
-                    <button type="submit" class="btn btn-outline-secondary">Close</button>
-                </form>
                 <form action="" method="POST">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-outline-danger view-btn">Delete</button>
                 </form>
+                <a href="{% url 'joborder_detail' data.id%}" class="btn btn-outline-secondary" >Close</a>
             </div>
         </div>
     </div>

@@ -270,11 +270,12 @@
                 </div>
                 <div id="externalorder" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
                     <div class="card-body">
-                       <table class="table table-borderless">
+                       <table class="table table-borderless table-responsive">
                            <thead>
                                <tr>
                                    <th class="text-center">Supplier</th>
                                    <th class="text-center">Date</th>
+                                   <th class="text-center">Action</th>
                                </tr>
                            </thead>
                            <tbody>
@@ -285,9 +286,6 @@
                                         <td>{{i.date}}</td>
                                         <td>
                                             <a href="{% url 'externalorder_detail' i.id%}" class="btn btn-outline-primary">View</a>
-                                            <!-- <form action="{% url 'externalorder_detail' i.id%}">
-                                                <button class="btn btn-outline-primary">View</button>
-                                            </form> -->
                                         </td>
                                     </tr>
                                     {% endfor %}
@@ -313,11 +311,12 @@
                 </div>
                 <div id="rework" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
                     <div class="card-body">
-                       <table class="table">
+                       <table class="table table-responsive table-borderless">
                            <thead>
                                <tr>
                                    <th class="text-center">Subject</th>
                                    <th class="text-center">Date</th>
+                                   <th class="text-center">Action</th>
                                </tr>
                            </thead>
                            <tbody>
@@ -396,9 +395,10 @@
                                 <thead>
                                     <tr>
                                         <th>Full Name</th>
-                                        <th>Type of Personnel</th>
-                                        <th>Skill</th>
-                                        <th>Action</th>
+                                        <th class="text-center">Type of Personnel</th>
+                                        <th class="text-center">From</th>
+                                        <th class="text-center">To</th>
+                                        <th class="text-center">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -407,7 +407,8 @@
                                             <tr>
                                                 <td>{{i.full_name}}</td>
                                                 <td>{{i.personnel_type}}</td>
-                                                <td>"{{i.skill.all|join:'", "'}}"</td>
+                                                <td>{{i.date}}</td>
+                                                <td>{{i.date2}}</td>
                                                 <td>
                                                     <a class="btn btn-outline-primary" href="{% url 'personnel_detail' i.id%}">View</a>
                                                 </td>

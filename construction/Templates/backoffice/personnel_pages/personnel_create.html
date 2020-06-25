@@ -26,17 +26,20 @@
     {% endfor %}
 </div>  
 <div class="row">
-    <div class="col-md-4 mb-5">
-        <div class="card card-form">
-            <div class="card-header" id="card_header_content">
-                <h3 style="text-align: center;">Personnel Form</h3>
-            </div>
-            <div class=card-boy>
-                <div class="col-md-12">
-                    <form action="" method="POST">
-                        {% csrf_token%}
+    <div class="modal fade" id="personnelmodal" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content form-modal-content">
+                <form action="" method="POST">
+                    {% csrf_token%}
+                    <div class="modal-header form-modal-header">
+                        <h4 class="modal-title">Personnel Form</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
                         <div class="row justify-content-center">
-                            <div class="form-group col-md-8 mt-5" style="min-width: 200px;">
+                            <div class="form-group col-md-8" style="min-width: 200px;">
                                 {{form.first_name|as_crispy_field}}
                             </div>
                             <div class="form-group col-md-8" style="min-width: 200px;">
@@ -68,111 +71,93 @@
                             </div>
                             <div class="form-group col-md-8" style="min-width: 200px;">
                                 {{form.city|as_crispy_field}}
-                            </div>
-                            <div class="form-group col-md-8 ">
-                                <button type="button" id="sbmt-modal" class="btn btn-outline-primary btn-rounded mb-3" style="float:right" data-toggle="modal" data-target="#exampleModal-2">Add Personnel</button>
-                            </div>
-                            <div class="modal fade" id="exampleModal-2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-2" style="display: none;" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h4 class="modal-title" id="exampleModalLabel-2">Confirmation</h4>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">×</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p>Are you sure you want to submit this form?</p>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="submit" class="btn btn-outline-primary" >Submit</button>
-                                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                
-            </div>
-        </div>
-    </div>
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-body">
-            <h4 class="card-title">List of Personnel</h4>
-                <div class="table-responsive">
-                    <div class="row">
-                        <div class="col-12">
-                            <div id="order-listing_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <table id="order-listing" class="table dataTable no-footer" role="grid" aria-describedby="order-listing_info">
-                                            <thead>
-                                                <tr role="row">
-                                                    <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                                        aria-label="Client: activate to sort column ascending" style="width: 50px;">
-                                                        Full Name
-                                                    </th>
-                                                    <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                                        aria-label="Status: activate to sort column ascending" style="width: 50px;">
-                                                        Type of Personnel
-                                                    </th>
-                                                    <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                                        ria-label="Actions: activate to sort column ascending" style="width: 50px;">
-                                                        Skill
-                                                    </th>
-                                                    <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                                        ria-label="Actions: activate to sort column ascending" style="width: 50px;">
-                                                        Status
-                                                    </th>
-                                                    <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                                        ria-label="Actions: activate to sort column ascending" style="width: 50px;">
-                                                        Project Site
-                                                    </th>
-                                                    <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                                        ria-label="Actions: activate to sort column ascending" style="width: 50px;">
-                                                        From
-                                                    </th>
-                                                    <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                                        ria-label="Actions: activate to sort column ascending" style="width: 50px;">
-                                                        To
-                                                    </th>
-                                                    <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                                        ria-label="Actions: activate to sort column ascending" style="width: 50px;">
-                                                        Action
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {% for i in data%}
-                                                <tr role="row" class="odd">
-                                                    <td>{{i.full_name}}</td>
-                                                    <td>{{i.personnel_type}}</td>
-                                                    <td>"{{i.skill.all|join:'", "'}}"</td>
-                                                    {% if i.status == "Currently Assigned" %}
-                                                        <td class="text-center"><label class="badge badge-warning">{{i.status}}</label></td>
-                                                    {% elif i.status == "Available"%}
-                                                        <td class="text-center"><label class="badge badge-primary">{{i.status}}</label></td>
-                                                    {% endif %}
-                                                    {% if i.projectsite %}
-                                                        <td class="text-center">{{i.projectsite}}</td>
-                                                    {% else %}
-                                                        <td class="text-center">N/A</td>
-                                                    {% endif %}
-                                                    <td>{{i.date}}</td>
-                                                    <td>{{i.date2}}</td>
-                                                    <td class="text-center"><a class="btn btn-outline-primary" href="{% url 'personnel_detail' i.id %}">View</a></td>
-                                                </tr>
-                                                {% endfor %}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
+                                <small class="text-muted"><i>Please check all fields before you submit</i></small>
                             </div>
                         </div>
                     </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-outline-primary" >Submit</button>
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header card-list">
+                <button type="button" class="btn btn-outline-primary btn-add" data-toggle="modal" data-target="#personnelmodal">
+                    <i class="mdi mdi-account-plus"></i>Add Personnel
+                </button>
+                <h4 class="card-title">Personnel List
+                    <button type="button" class="btn btn-outline-primary btn-add-responsive " data-toggle="modal" data-target="#personnelmodal" >
+                        <i class="mdi mdi-account-plus"></i>
+                    </button>
+                </h4>
+            </div>
+            <div class="card-body">
+                <div id="order-listing_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                    <table id="order-listing" class="table dataTable no-footer table-responsive" role="grid" aria-describedby="order-listing_info">
+                        <thead>
+                            <tr role="row">
+                                <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                    aria-label="Client: activate to sort column ascending" style="width: 50px;">
+                                    Full Name
+                                </th>
+                                <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                    aria-label="Status: activate to sort column ascending" style="width: 50px;">
+                                    Type of Personnel
+                                </th>
+                                <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                    ria-label="Actions: activate to sort column ascending" style="width: 50px;">
+                                    Skill
+                                </th>
+                                <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                    ria-label="Actions: activate to sort column ascending" style="width: 50px;">
+                                    Status
+                                </th>
+                                <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                    ria-label="Actions: activate to sort column ascending" style="width: 50px;">
+                                    Project Site
+                                </th>
+                                <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                    ria-label="Actions: activate to sort column ascending" style="width: 50px;">
+                                    From
+                                </th>
+                                <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                    ria-label="Actions: activate to sort column ascending" style="width: 50px;">
+                                    To
+                                </th>
+                                <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                    ria-label="Actions: activate to sort column ascending" style="width: 50px;">
+                                    Action
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in data%}
+                            <tr role="row" class="odd">
+                                <td>{{i.full_name}}</td>
+                                <td>{{i.personnel_type}}</td>
+                                <td>"{{i.skill.all|join:'", "'}}"</td>
+                                {% if i.status == "Currently Assigned" %}
+                                    <td class="text-center"><label class="badge badge-warning">{{i.status}}</label></td>
+                                {% elif i.status == "Available"%}
+                                    <td class="text-center"><label class="badge badge-primary">{{i.status}}</label></td>
+                                {% endif %}
+                                {% if i.projectsite %}
+                                    <td class="text-center">{{i.projectsite}}</td>
+                                {% else %}
+                                    <td class="text-center">N/A</td>
+                                {% endif %}
+                                <td>{{i.date}}</td>
+                                <td>{{i.date2}}</td>
+                                <td class="text-center"><a class="btn btn-outline-primary" href="{% url 'personnel_detail' i.id %}">View</a></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

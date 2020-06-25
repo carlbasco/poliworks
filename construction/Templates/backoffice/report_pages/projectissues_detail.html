@@ -11,15 +11,11 @@
             {% elif request.user.groups.all.0.name == "Person In-Charge"%}
                 <a href="{% url 'issues_list_pic'%}">Project Issues List</a>
             {% elif request.user.groups.all.0.name == "Warehouseman"%}
-                <a href="{% url 'issues_list_whm'%}">Project Issues List</a>
+                <a href="{% url 'issues'%}">Project Issues List</a>
             {% else %}
                 <a href="{% url 'issues_list'%}">Project Issues List</a>
             {% endif %}
         </li>
-        <li class="breadcrumb-item">
-            <a href="{% url 'issues'%}">Project Issues Form</a>
-        </li>
-        
     </ol>
 </nav>
 <div class="col-md-10 m-auto">
@@ -46,10 +42,12 @@
                 </div>
             </div>
         </div>
-        {% if request.user.groups.all.0.name == "Warehouseman"%}
+        {% if request.user.groups.all.0.name == "Warehouseman" or request.user.groups.all.0.name == "Admin"%}
             <div class="btn-grp mb-5">
                 <a href="{% url 'issues_delete' data.id%}" class="btn btn-outline-danger float-right mr-5">Delete</a>
+                {% if request.user.groups.all.0.name == "Warehouseman"%}
                 <a href="{% url 'issues_update' data.id%}" class="btn btn-outline-primary float-right mr-3">Edit</a>
+                {% endif %}
             </div>
         {% endif %}
     </div>

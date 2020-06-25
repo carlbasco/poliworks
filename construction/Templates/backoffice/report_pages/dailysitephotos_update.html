@@ -39,7 +39,7 @@
         </div>
     {% endfor %}
 </div>
-<div class="container-fluid">
+
     <div class="row justify-content-center">
         <div class="col col-md-12">
             <div class="card">
@@ -48,15 +48,15 @@
                 </div>
                 <div class="card-body">
                     <div class="row"> 
-                        <div class = "col-md-7">
-                            <h6 class="sub">Project Site: <span class="txt">{{data.projectsite}}</span></h6>
+                        <div class = "col-md-9">
+                            <h6>Project Site: <span class="txt">{{data.projectsite}}</span></h6>
                         </div>
-                        <div class="col-md-5">
-                            <h6 class="sub float-right">Date Created: <span class="txt">{{data.date}}</span></h6>
+                        <div class="col-md-3">
+                            <h6>Date Created: <span class="txt">{{data.date}}</span></h6>
                         </div>
                     </div>
-                    <div class="col-md-12 table-responsive">
-                        <form action="" method="post">
+                    <form action="" method="post">
+                        <div class="col-md-12 table-responsive">
                             {% csrf_token%}
                             <table class="table mt-4 ">
                                 <thead>
@@ -74,7 +74,7 @@
                                             <td class="text-center">
                                                 <div class="div-tbl-img">
                                                     {% if i.image %}
-                                                    <img src="{{i.image.value.url}}" class="rounded table-img" width="100%">
+                                                    <img src="{{i.image.value.url}}" class="rounded table-img img-fluid p-3 mx-auto d-block" width="100%">
                                                     {% endif %}
                                                 </div>
                                             </td>
@@ -86,34 +86,33 @@
                                         {% endfor %}
                                 </tbody>
                             </table>
-                            <button type="button" id="sbmt-modal" class="btn btn-outline-primary btn-rounded" style="float:right" data-toggle="modal" data-target="#exampleModal-2">Update</button>
-                            <div class="modal fade" id="exampleModal-2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-2" style="display: none;" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h4 class="modal-title" id="exampleModalLabel-2">Confirmation</h4>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">×</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p>Are you sure you want to update this form?</p>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="submit" class="btn btn-outline-primary" >Submit</button>
-                                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
-                                        </div>
+                        </div>
+                        <button type="button" id="sbmt-modal" class="btn btn-outline-primary btn-rounded" style="float:right" data-toggle="modal" data-target="#exampleModal-2">Update</button>
+                        <div class="modal fade" id="exampleModal-2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-2" style="display: none;" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title" id="exampleModalLabel-2">Confirmation</h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Are you sure you want to update this form?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-outline-primary" >Submit</button>
+                                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
                                     </div>
                                 </div>
                             </div>
-                        </form>
-                    </div>
-                    
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-</div>
+
 {% endblock %}
 
 {% block javascript%}

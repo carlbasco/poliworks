@@ -9,17 +9,17 @@
         <li class="breadcrumb-item active" aria-current="page">
             Site Photos Form
         </li>
-        <li class="breadcrumb-item " >
-            {% if request.user.groups.all.0.name == "Project Manager"%}
-                <a href="{% url 'sitephotos_list_pm' %}">Site Photos</a>
-            {% elif request.user.groups.all.0.name == "Person In-Charge"%}
-                <a href="{% url 'sitephotos_list_pic'%}">Site Photos</a>
-            {% elif request.user.groups.all.0.name == "Warehouseman"%}
-                <a href="{% url 'sitephotos_list_whm'%}">Site Photos</a>
-            {% else %}
-                <a href="{% url 'sitephotos_list'%}">Site Photos</a>
-            {% endif %}
-        </li>
+        {% if request.user.groups.all.0.name != "Warehouseman" %}
+            <li class="breadcrumb-item">
+                {% if request.user.groups.all.0.name == "Project Manager"%}
+                    <a href="{% url 'sitephotos_list_pm' %}">Site Photos</a>
+                {% elif request.user.groups.all.0.name == "Person In-Charge"%}
+                    <a href="{% url 'sitephotos_list_pic'%}">Site Photos</a>
+                {% elif request.user.groups.all.0.name == "Admin" %}
+                    <a href="{% url 'sitephotos_list'%}">Site Photos</a>
+                {% endif %}
+            </li>
+        {% endif %}
     </ol>
 </nav>
 <div class="col-md-12 mx-auto">
@@ -37,20 +37,79 @@
         </div>
     {% endfor %}
 </div>
-<div class="row">
-    <div class="col-md-5 m-auto">
-        <form action="" method="POST" id="" enctype="multipart/form-data">
-            <div class="card card-form">
-                <div class="card-header" id="card_header_content">
-                    <h3 style="text-align: center;">Daily Site Photos</h3>
+
+
+<div class="card">
+    <div class="card-header card-list">
+        <button type="button" class="btn btn-outline-primary btn-add" data-toggle="modal" data-target="#sitephotosmodal">
+            <i class="mdi mdi-file-document"></i>New Site Photos
+        </button>
+        <h4 class="card-title">Site Photos List
+            <button type="button" class="btn btn-outline-primary btn-add-responsive " data-toggle="modal" data-target="#sitephotosmodal" >
+                <i class="mdi mdi-file-document"></i>
+            </button>
+        </h4>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <div class="row">
+                <div class="col-12">
+                    <div id="order-listing_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <table id="order-listing" class="table dataTable no-footer" role="grid" aria-describedby="order-listing_info">
+                                    <thead>
+                                        <tr role="row">
+                                            <th class="sorting font-weight-bold" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                                aria-label="Project: activate to sort column ascending" style="width: 100px;">
+                                                Project Site
+                                            </th>
+                                            <th class="sorting font-weight-bold"" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                                aria-label="Client: activate to sort column ascending" style="width: 50px;">
+                                                Date
+                                            </th>
+                                            <th class="sorting font-weight-bold"" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                            aria-label="Actions: activate to sort column ascending" style="width: 50px;">
+                                                Actions
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for i in view.qs%}
+                                        <tr role="row" class="odd">
+                                            <td>{{i.projectsite}}</td>
+                                            <td>{{i.date}}</td>
+                                            <td><a href="{% url 'sitephotos_detail' i.id%}" class="btn btn-outline-primary">view</a></td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    {% csrf_token%}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="sitephotosmodal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content form-modal-content">
+            <form action="" method="POST" id="" enctype="multipart/form-data">
+                {% csrf_token%}
+                <div class="modal-header form-modal-header">
+                    <h4 class="modal-title">Site Photos Form</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
                     <div class="form-group mb-3">
                         {{form.projectsite|as_crispy_field}} 
                     </div>
                     <div class="form-group mt-4">
-                        <label for="">Image </label>
+                        <label for="">Image<span class="asteriskField">*</span> </label>
                         <div class="custom-file">
                             {{form2.image}}
                             <label class="custom-file-label" for="customFile">Choose file</label>
@@ -59,32 +118,18 @@
                     </div>
                     <div class="form-group  mt-4">
                         {{form.date|as_crispy_field}} 
+                        <small class="text-muted"><i>Pleace check all fields before you submit</i></small>
                     </div>   
-                    <button type="button" id="sbmt-modal" class="btn btn-outline-primary btn-rounded mt-3" style="float:right" data-toggle="modal" data-target="#exampleModal-2">Submit</button>
-                    <div class="modal fade" id="exampleModal-2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-2" style="display: none;" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title" id="exampleModalLabel-2">Confirmation</h4>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">×</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <p>Are you sure you want to submit this form?</p>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-outline-primary" >Submit</button>
-                                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
-            </div>
-        </form>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-primary" >Submit</button>
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
+
 {%endblock%}
 {% block javascript %}
 <script>
@@ -106,6 +151,13 @@
     }
     $('#id_image').on("change", previewImages);
     $('#id_projectsite').select2()
+    
+    $(function() {
+      $('[data-toggle="datepicker"]').datepicker({
+        autoHide: true,
+        zIndex: 2048,
+      });
+    });
 </script>
 <style>span.select2-selection.select2-selection--single {height: 30px;}</style>
 {% endblock %}

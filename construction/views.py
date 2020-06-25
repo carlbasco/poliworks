@@ -63,7 +63,7 @@ def signin(request):
             else:
                 return redirect('project_list')
         else:
-            messages.warning(request, 'Email or Password is incorrect')
+            messages.warning(request, 'Email or Password is incorrect.')
     return render(request, 'frontend/signin.html')
 
 def signout(request):
@@ -90,7 +90,7 @@ def SignupView(request):
             password_form = PasswordResetForm({'email':account.email})
             if password_form.is_valid():
                 password_form.save(request= request, email_template_name='email/welcome.html', subject_template_name='email/welcome_subject.txt')
-                messages.success(request, f'{role} account has been created!')
+                messages.success(request, f'{role} account has been created.')
                 return redirect('signup')
     else:
         user = SignupForm()
@@ -116,7 +116,7 @@ def editprofile(request):
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
-            messages.success(request, ' Your Profile has been updated')
+            messages.success(request, ' Your Profile has been updated.')
             return redirect('userprofile')
     else:
         user_form = UserEditForm(instance=user)
@@ -130,7 +130,7 @@ def ChangePasswordView(request):
     if form.is_valid():
         form.save()
         update_session_auth_hash(request, form.user)
-        messages.success(request, "Password has been changed!")
+        messages.success(request, "Password has been changed.")
         return redirect('userprofile')
     context={'form':form,}
     return render(request, 'backoffice/account_pages/change_password.html', context)
@@ -146,10 +146,10 @@ def ProjectCreateView(request):
         form = ProjectForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Project has been created!')
+            messages.success(request, 'Project has been created.')
             return redirect('project_list')
         else:
-            messages.info(request, 'Failed on Creating Project')
+            messages.error(request, 'Failed on Creating Project')
             return redirect('project_create')
     context = {'form':form}
     return render(request, 'backoffice/project_pages/project_create.html', context)
@@ -162,11 +162,10 @@ def ProjectUpdateView(request,pk):
         form = ProjectUpdateForm(request.POST, request.FILES, instance=data)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Project Details has been updated!')
+            messages.success(request, 'Project Details has been updated.')
             return redirect('project_detail', pk=data.id)
         else:
-            print(form.errors)
-            messages.warning(request, 'Failed to update Project')
+            messages.warning(request, 'Failed to update Project.')
     else:
         form = ProjectUpdateForm(instance=data)
     context = {'form':form, 'data':data}
@@ -384,7 +383,7 @@ def QuotationDetailView(request,pk):
     if request.method == "POST":
         try:
             data3 = ProjectProgress.objects.get(projectsite=data.projectsite.id)
-            messages.warning(request, "There is an existing Work Progress. Please delete the previous one to create a new Work Progress")
+            messages.warning(request, "There is an existing Work Progress. Please delete the previous one to create a new Work Progress.")
             return redirect('quotation_detail',pk=data.id)
         except ObjectDoesNotExist:
             data3 = ProjectProgress.objects.create(projectsite=data.projectsite) 
@@ -398,7 +397,7 @@ def QuotationDetailView(request,pk):
             data4.save()
             project.status = "On-going"
             project.save()
-            messages.success(request, "Work Progress has been created!")
+            messages.success(request, "Work Progress has been created.")
             return redirect('project_detail',pk=project.id)
     context = { 'data':data, 'data2':data2 }
     return render(request, 'backoffice/quotation_pages/quotation_detail.html', context)
@@ -410,7 +409,7 @@ def QuotationDeleteView(request,pk):
     data2 = QuotationDetails.objects.filter(quotation=data.id)
     if request.method == 'POST':
         data.delete()
-        messages.success(request, 'Quotion has been deleted!', extra_tags='success')
+        messages.success(request, 'Quotion has been deleted.')
         # if request.user.groups.all()[0].name=="Project Manager":
         return redirect('project_detail', pk=data.projectsite.id)
         # else:
@@ -455,12 +454,12 @@ def ProgressUpdateView(request,pk):
                 else:
                     data3.status = "Completed"
                     data3.save()
-                messages.success(request,"Progress has been updated!")
+                messages.success(request,"Progress has been updated.")
                 return redirect('project_detail', pk=data3.id)
             else:
                 data3.status = "On-going"
                 data3.save()
-                messages.success(request,"Progress has been updated!")
+                messages.success(request,"Progress has been updated.")
                 return redirect('project_detail', pk=data3.id)
     else:
         formset = ProgressFormset(instance=data)
@@ -642,7 +641,7 @@ def RequisitionDeleteView(request, pk):
     data2 = RequisitionDetails.objects.filter(requisition=data.id)
     if request.method == 'POST':
         data.delete()
-        messages.success(request, 'Requisition has been deleted!', extra_tags='success')
+        messages.success(request, 'Requisition has been deleted.', extra_tags='success')
         group = request.user.groups.all()[0].name
         if group == "Warehouseman":
             return redirect("requisition_list_whm")
@@ -688,7 +687,7 @@ def RequisitionActionView(request,pk):
                         elif total == to_be_delivered:
                             data.save()
                             data.status = "To be Delivered"
-                messages.success(request, "Requistion has been complied")
+                messages.success(request, "Requistion has been complied.")
                 return redirect('requisition_detail',pk=data.id)
             else:
                 print(formset.errors)
@@ -696,7 +695,7 @@ def RequisitionActionView(request,pk):
         context={'formset':formset, 'data':data, 'data2':data2}
         return render(request, 'backoffice/requisition_pages/requisition_action.html', context)
     else:
-        messages.warning(request, "Cannot update this requisition because it is closed")
+        messages.warning(request, "Cannot update this requisition because it is closed.")
         return redirect('requisition_detail',pk=data.id)
 
 @login_required(login_url='signin')
@@ -754,7 +753,7 @@ def RequisitionActionView_WHM(request,pk):
                         if l.status2 == "Not Recieved" or l.status == "Incomplete":
                             data.status = "Incomplete Order (Closed)"
                             data.save()
-                    messages.success(request, "Delivered Items has been added to Inventory")
+                    messages.success(request, "Delivered Items has been added to Inventory.")
                     return redirect('requisition_detail',pk=data.id)
                 except ObjectDoesNotExist:
                     data3 = ProjectInventory.objects.create(projectsite=data.projectsite)
@@ -775,7 +774,7 @@ def RequisitionActionView_WHM(request,pk):
                         if l.status2 == "Not Recieved" or l.status == "Incomplete":
                             data.status = "Incomplete Order (Closed)"
                             data.save()
-                    messages.success(request, "Delivered Items has been added to Inventory")
+                    messages.success(request, "Delivered Items has been added to Inventory.")
                     return redirect('requisition_detail',pk=data.id)    
             else:
                 print(formset.errors)
@@ -912,7 +911,7 @@ def ProjectInventoryReport_WHM(request,pk):
                     a.save()
                 data.date=datetime.date.today
                 data.save()
-                messages.success(request, "Daily Report has been created")
+                messages.success(request, "Daily Report has been created.")
                 return redirect('inventory_whm_detail', pk=data.id)
             else:
                 messages.error(request, "Invalid Input. Articles on Form doesnt exist on Inventory")
@@ -961,7 +960,7 @@ def ExternalProjectInventoryReport_WHM(request,pk):
                     a.save()
                 data.date=datetime.date.today
                 data.save()
-                messages.success(request, "Daily Report has been created")
+                messages.success(request, "Daily Report has been created.")
                 return redirect('external_inventory_whm_detail', pk=data.id)
             else:
                 messages.error(request, "Invalid Input. Articles on Form doesnt exist on Inventory")
@@ -979,7 +978,7 @@ class ExternalOrderCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateVie
     redirect_field_name = "redirect_to"
     form_class = ExternalOrderForm
     template_name ='backoffice/externalorder_pages/externalorder_create.html'
-    success_message = "External Order has been created!"
+    success_message = "External Order has been created."
 
     @method_decorator(staff_only, name='dispatch')
     def dispatch(self, *args, **kwargs):
@@ -1047,7 +1046,7 @@ class ExternalOrderUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateVie
     fields = ('projectsite','supplier','date','whm')
     exclude = ['totalprice']
     template_name ='backoffice/externalorder_pages/externalorder_update.html'
-    success_message = "External Order has been updated!"
+    success_message = "External Order has been updated."
 
     @method_decorator(staff_only, name='dispatch')
     def dispatch(self, *args, **kwargs):
@@ -1125,7 +1124,7 @@ def ExternalOrderDetailView(request,pk):
             formset = formset.save(False)
             formset.report = form
             formset.save()
-            messages.success(request, "Material Report has been submited")
+            messages.success(request, "Material Report has been submited.")
             return redirect('externalorder_detail', pk=data.id)
     else:
         form = ExternalOrderReportForm()
@@ -1141,7 +1140,7 @@ def ExternalOrderDeleteView(request,pk):
     data2 = ExternalOrderDetails.objects.filter(externalorder=data.id)
     if request.method == 'POST':
         data.delete()
-        messages.success(request, 'External Order has been deleted!', extra_tags='success')
+        messages.success(request, 'External Order has been deleted.')
         group = request.user.groups.all()[0].name
         if group == "Warehouseman":
             return redirect("externalorder_list_whm")
@@ -1209,7 +1208,7 @@ class JobOrderUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = JobOrder
     fields = '__all__'
     template_name ='backoffice/joborder_pages/joborder_update.html'
-    success_message = "Job Order has been updated!"
+    success_message = "Job Order has been updated."
     
     @method_decorator(staff_only, name='dispatch')
     def dispatch(self, *args, **kwargs):
@@ -1315,10 +1314,9 @@ def JobOrderReportView(request,pk):
                     data3.save()
                     i.completion_date = None
                     i.save()
-            messages.success(request, "Job Order status has been updated!")
+            messages.success(request, "Job Order status has been updated.")
             return redirect('joborder_detail', pk=data.id)
         else:
-            print(formset.errors)
             messages.warning(request, "Failed")
             return redirect('joborder_detail', pk=data.id)
     else:
@@ -1348,7 +1346,7 @@ def JobOrderDeleteView(request,pk):
             data3.date2 = None
             data3.save()
         data.delete()
-        messages.success(request, 'Job Order has been deleted!', extra_tags='success')
+        messages.success(request, 'Job Order has been deleted.')
         return redirect("joborder_create")
     context = {'data':data,'data2':data2}
     return render(request, 'backoffice/joborder_pages/joborder_delete.html', context)
@@ -1391,7 +1389,7 @@ def PersonnelDeleteView(request, pk):
     data = Personnel.objects.get(id=pk)
     if request.method == 'POST':
         data.delete()
-        messages.success(request, 'Personnel has been deleted!', extra_tags='success')
+        messages.success(request, 'Personnel has been deleted.')
         return redirect("personnel_create")
     context = {'data':data}
     return render(request, 'backoffice/personnel_pages/personnel_delete.html', context)
@@ -1404,7 +1402,7 @@ def PersonnelUpdateView(request, pk):
         form = PersonnelForm(request.POST, instance=data)
         if form.is_valid():
             form.save()
-            messages.success(request, "Personnel Information has been updated", extra_tags='success')
+            messages.success(request, "Personnel Information has been updated.")
             return redirect('personnel_detail', pk=data.id)
     else:
         form = PersonnelForm(instance=data)
@@ -1419,7 +1417,7 @@ class ReworkCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     redirect_field_name = "redirect_to"
     form_class = ReworkNewForm
     template_name ='backoffice/rework_pages/rework_create.html'
-    success_message = "Rework Form has been created!"
+    success_message = "Rework Form has been created."
     
     @method_decorator(pm_only, name='dispatch')
     def dispatch(self, *args, **kwargs):
@@ -1429,6 +1427,10 @@ class ReworkCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         kwargs = super().get_form_kwargs()
         kwargs.update({'user': self.request.user})
         return kwargs
+
+    def reworkqs(self):
+        project = ProjectSite.objects.filter(pm=self.request.user)
+        return Rework.objects.filter(projectsite__in=project).order_by('-date')
 
     def get_initial(self):
         return { 'pm':self.request.user }
@@ -1446,7 +1448,7 @@ class ReworkUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Rework
     fields =('instruction',)
     template_name ='backoffice/rework_pages/rework_update.html'
-    success_message = "Rework Form has been updated!"
+    success_message = "Rework Form has been updated."
     
     @method_decorator(pm_only, name='dispatch')
     def dispatch(self, *args, **kwargs):
@@ -1461,7 +1463,7 @@ class ReworkUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         return reverse_lazy("rework_detail", kwargs={'pk':data})
 
 @login_required(login_url = 'signin')
-@allowed_users(allowed_roles = ['Admin','Project Manager', 'Person In-Charge'])
+@admin_only
 def ReworkListView(request):
     data = Rework.objects.all().order_by('-date')
     context={'data':data}
@@ -1496,7 +1498,7 @@ def ReworkDeleteView(request, pk):
     data = Rework.objects.get(id=pk)
     if request.method == 'POST':
         data.delete()
-        messages.success(request, 'Rework has been deleted!', extra_tags='success')
+        messages.success(request, 'Rework has been deleted!.')
         return redirect('rework_create')
     context={'data':data}
     return render(request, 'backoffice/rework_pages/rework_delete.html', context) 
@@ -1519,6 +1521,11 @@ class ProjectIssuesCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateVie
         kwargs = super().get_form_kwargs()
         kwargs.update({'user': self.request.user})
         return kwargs
+    
+    def data2(self):
+        user =self.request.user
+        project = ProjectSite.objects.filter(whm=user)
+        return ProjectIssues.objects.filter(projectsite__in=project)
 
     def get_initial(self):
         return { 'whm':self.request.user }
@@ -1528,7 +1535,7 @@ class ProjectIssuesCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateVie
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy("issues_list_whm")
+        return reverse_lazy("issues")
 
 class ProjectIssuesUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     login_url ="signin"
@@ -1536,7 +1543,7 @@ class ProjectIssuesUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateVie
     model = ProjectIssues
     fields =('description',)
     template_name ='backoffice/report_pages/projectissues_update.html'
-    success_message = "Project Issues has been updated!"
+    success_message = "Project Issues has been ."
     
     @method_decorator(whm_only, name='dispatch')
     def dispatch(self, *args, **kwargs):
@@ -1547,7 +1554,7 @@ class ProjectIssuesUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateVie
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy("issues_list_whm")
+        return reverse_lazy("issues")
     
 @login_required(login_url='signin')
 @allowed_users(allowed_roles = ['Admin','Warehouseman'])
@@ -1555,8 +1562,12 @@ def ProjectIssuesDeleteView(request,pk):
     data = ProjectIssues.objects.get(id=pk)
     if request.method == 'POST':
         data.delete()
-        messages.success(request, 'Project Issues has been deleted!')
-        return redirect('issues_list_whm')
+        messages.success(request, 'Project Issues has been deleted.')
+        group = request.user.groups.all()[0].name
+        if group == "Warehouseman":
+            return redirect('issues')
+        elif group == "Admin":
+            return redirect('issues_list')
     context ={'data':data}
     return render(request, 'backoffice/report_pages/projectissues_delete.html', context)
     
@@ -1616,6 +1627,10 @@ class SitePhotosCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         kwargs = super().get_form_kwargs()
         kwargs.update({'user': self.request.user})
         return kwargs
+
+    def qs(self):
+        project = ProjectSite.objects.filter(whm=self.request.user)
+        return SitePhotos.objects.filter(projectsite__in=project).order_by('-date')
 
     def get_initial(self):
         return { 'whm':self.request.user }
@@ -1681,7 +1696,7 @@ def dailysitephotosDetailView(request,pk):
     data = SitePhotos.objects.get(id=pk)
     data2 = SitePhotosDetails.objects.filter(sitephotos=data)
     context={'data':data, 'data2':data2}
-    return render(request, 'backoffice/report_pages/dailysitephotos.detail.html', context)
+    return render(request, 'backoffice/report_pages/dailysitephotos_detail.html', context)
 
 @login_required(login_url = 'signin')
 @allowed_users(allowed_roles = ['Admin','Project Manager', 'Person In-Charge'])
@@ -1692,7 +1707,7 @@ def dailysitephotosUpdateView(request,pk):
         formset = SitePhotostFormset(request.POST, instance=data)
         if formset.is_valid():
             formset.save()
-            messages.success(request, "Daily Site Photos has been updated")
+            messages.success(request, "Daily Site Photos has been updated.")
             return redirect('sitephotos_detail', pk=data.id)
     context={'formset':formset, 'data':data}
     return render(request, 'backoffice/report_pages/dailysitephotos_update.html', context)
@@ -1705,7 +1720,7 @@ def dailysitephotosDeleteView(request,pk):
     if request.method == 'POST':
         data2.delete()
         data.delete()
-        messages.success(request, "Daily Site Photos has been deleted")
+        messages.success(request, "Daily Site Photos has been deleted.")
         group = request.user.groups.all()[0].name
         if group == "Warehouseman":
             return redirect('sitephotos')
@@ -1764,13 +1779,13 @@ def ProjectDailyReportDetailView(request, pk):
     return render(request, 'backoffice/report_pages/dailyreport_detail.html', context)
 
 @login_required(login_url = 'signin')
-@staff_only
+@admin_only
 def ProjectDailyReportDeleteView(request, pk):
     data = ProjectDailyReport.objects.get(id=pk)
     data2 = ProjectDailyReportDetails.objects.filter(report=data.id)
     if request.method == "POST":
         data.delete()
-        messages.success(request, "Material Report has been deleted!")
+        messages.success(request, "Material Report has been deleted.")
         group = request.user.groups.all()[0].name
         if group == "Warehouseman":
             return redirect("dailyreport_list_whm")
@@ -1792,13 +1807,13 @@ def ExternalOrderReportDetailView(request, pk):
     return render(request, 'backoffice/report_pages/external_report_detail.html', context)
 
 @login_required(login_url = 'signin')
-@staff_only
+@admin_only
 def ExternalOrderReportDeleteView(request, pk):
     data = ExternalOrderReport.objects.get(id=pk)
     data2 = ExternalOrderDetailsReport.objects.filter(report=data.id)
     if request.method == "POST":
         data.delete()
-        messages.success(request, "Material Report has been deleted!")
+        messages.success(request, "Material Report has been deleted.")
         group = request.user.groups.all()[0].name
         if group == "Admin":
             return redirect('dailyreport_detail')
@@ -1891,9 +1906,9 @@ def ClientQuotationView(request,pk):
         data.status = request.POST.get("status")
         data.save()
         if data.status == "Accepted":
-            messages.success(request, "Quotation has been accpeted")
+            messages.success(request, "Quotation has been accpeted.")
         else:
-            messages.success(request, "Quotation has been rejected")
+            messages.success(request, "Quotation has been rejected.")
         return redirect('client_home')
     context = {'data':data, 'data2':data2,}
     return render(request, 'client/client-quotation.html', context)
@@ -1916,7 +1931,7 @@ def ClientProfileUpdateView(request):
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
-            messages.info(request, ' Your Profile has been updated')
+            messages.success(request, ' Your Profile has been updated')
             return redirect('client_profile')
     else:
         user_form = UserEditForm(instance=user)
@@ -1931,7 +1946,7 @@ def ClientChangePasswordView(request):
     if form.is_valid():
         form.save()
         update_session_auth_hash(request, form.user)
-        messages.success(request, "Password has been changed!")
+        messages.success(request, "Password has been changed.")
         return redirect('client_profile')
     context={'form':form,}
     return render(request, 'client/client-change_password.html', context)

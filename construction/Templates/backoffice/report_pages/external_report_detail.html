@@ -72,7 +72,9 @@
                                 {% endfor %}
                             </tbody>
                         </table>
+                        {% if request.user.groups.all.0.name == "Admin"%}
                         <a href="{% url 'external_report_delete' data.id%}" class="btn btn-outline-danger float-right mt-3 mr-3">Delete</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>

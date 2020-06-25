@@ -58,22 +58,31 @@
         width: 100%;
         visibility: visible;
     }
+    .btn-add-responsive{
+        visibility: visible;
+        float:right;
+    }
+    .btn-add{
+        visibility: hidden;
+        float:none;
+    }
 }
-
-
 ul#usernav{
     visibility: hidden!important;
 }
-
 @media only screen and (min-width: 992px){
     ul#usernav {
        visibility: visible!important;
     }
+    .btn-add-responsive{
+        visibility: hidden;
+        float:none;
+    }
+    .btn-add{
+        visibility: visible;
+        float:right;
+    }
 }
-
-/* #account_menu{
-    width: 260px;
-} */
 #bt-account{
     padding: 0 4.2rem 0 4.2rem;
     width: 260px;
@@ -339,3 +348,23 @@ h3.text-center.font-weight-bold.table-title {
 td{
     min-width: 150px;
 }
+.form-modal-content{
+    background-color: white!important;
+    border:none;
+}
+.form-modal-header{
+    background-color:rgba(38,108,170,1);
+    color:white;
+    text-align: center;
+}
+
+.modal .modal-dialog .modal-content .form-modal-header .close span {
+    font-size: 30px;
+    font-weight: 400;
+    color: white;
+}
+
+.card .card-list{
+    border-bottom: 0!important;
+}
+

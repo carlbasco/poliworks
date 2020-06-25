@@ -41,26 +41,15 @@
 
         <div class="col-md-10 mx-auto mb-5">
             <h3 class="text-center font-weight-bold table-title">SITE PHOTOS</h3>
-            <table class="table table-borderless">
-                <thead>
-                </thead>
-                <tbody>
-                    {% if sitephotosdetails%}
-                        {% for i in sitephotosdetails%}
-                        <tr>
-                            <td class="text-center">
-                                <img id="sitephotosdetails" src="{{i.image.url}}" alt="" style="width: auto; height: auto; border-radius: 0;">
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    {% else %}
-                    <tr>
-                        <td class="text-center">No Data Available on this date</td>
-                    </tr>
-                    {% endif %}
-                </tbody>
-            </table>
+            <div class="col-md-10 mx-auto">
+                {% if sitephotosdetails%}
+                    {% for i in sitephotosdetails%}
+                        <img src="{{i.image.url}}" class="img-fluid rounded mx-auto d-block mb-3" alt="Responsive image">
+                    {% endfor %}
+                {% endif %}
+            </div>
         </div>
+        
 
         <div class="col-md-10 mx-auto table-responsive mb-5">
             <h3 class="text-center font-weight-bold table-title">ISSUES ON SITE</h3>

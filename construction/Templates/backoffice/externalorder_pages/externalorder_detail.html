@@ -95,7 +95,7 @@
                 </div>
                 <div class="btn-grp mb-5">
                     {% if request.user.groups.all.0.name == "Admin"%}
-                    <a href="{% url 'externalorder_delete' data.id%}" class="btn btn-outline-danger float-right mr-4">Delete</a>
+                        <a href="{% url 'externalorder_delete' data.id%}" class="btn btn-outline-danger float-right mt-3 mr-4">Delete</a>
                     {% endif %}
                 </div>
             </div>

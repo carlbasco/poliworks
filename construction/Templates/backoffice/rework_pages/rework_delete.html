@@ -41,10 +41,6 @@
                     <div class = "col-md-8">
                         <h6 class="sub">Prepared by: <span class="txt">{{data.pm}}</span></h6>
                     </div>
-                    <div class="col-md-4">
-                        <h6 class="sub">Send to: <span class="txt">{{data.pic}}</span></h6>
-                        
-                    </div>
                     <div class="col-10 mx-auto">
                         <h6>Instruction:</h6>
                         <textarea name="instruction" cols="40" rows="10" class="textarea form-control" required="" id="id_instruction" readonly>{{data.instruction}}</textarea>
@@ -76,13 +72,11 @@
                 <p class="ptxt">Are you sure you want to delete it?</p> 
             </div>
             <div class="modal-footer">
-                <form action="{% url 'rework_detail' data.id%}">
-                    <button type="submit" class="btn btn-outline-secondary">Close</button>
-                </form>
                 <form action="" method="POST">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-outline-danger view-btn">Delete</button>
                 </form>
+                <a href="{% url 'rework_detail' data.id%}" class="btn btn-outline-secondary" >Close</a>
             </div>
         </div>
     </div>

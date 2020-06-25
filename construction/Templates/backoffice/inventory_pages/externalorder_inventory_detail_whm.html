@@ -20,10 +20,10 @@
     {% endfor %}
 </div>
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-12 mb-5">
         <div class="card">
             <div class="card-header" id="headingTwo">
-                <h2 class="mb-3 mt-3 text-center">
+                <h2 class="text-center">
                 <button class="btn btn-link btn-cardheader report" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                 Project Daily Report</button>
                 </h2>
@@ -127,11 +127,15 @@
                                             </thead>
                                             <tbody>
                                                 {% for i in data2 %}
-                                                <tr>
-                                                    <td>{{i.articles}}</td>
-                                                    <td>{{i.unit}}</td>
-                                                    <td>{{i.quantity}}</td>
-                                                </tr>
+                                                    <tr>
+                                                        <td>{{i.articles}}</td>
+                                                        <td>{{i.unit}}</td>
+                                                        {% if i.quantity %}
+                                                            <td>{{i.quantity}}</td>
+                                                        {% else %}
+                                                            <td>0</td>
+                                                        {% endif %}
+                                                    </tr>
                                                 {% endfor %}
                                             </tbody>
                                         </table>

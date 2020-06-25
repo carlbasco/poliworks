@@ -82,13 +82,11 @@
                 <p class="ptxt">Are you sure you want to delete it?</p> 
             </div>
             <div class="modal-footer">
-                <form action="{% url 'issue_detail' data.id%}">
-                    <button type="submit" class="btn btn-outline-secondary">Close</button>
-                </form>
-                <form action="" method="POST">
+                <form action="{% url 'issue_detail' data.id%}" method="POST">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-outline-danger view-btn">Delete</button>
                 </form>
+                <a href="" class="btn btn-outline-secondary" >Close</a>
             </div>
         </div>
     </div>

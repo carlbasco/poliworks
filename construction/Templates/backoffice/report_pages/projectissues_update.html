@@ -6,7 +6,7 @@
 <span class="text-uppercase page-subtitle">Report</span>
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb bg-inverse-primary">
-        <li class="breadcrumb-item">
+        <!-- <li class="breadcrumb-item">
             {% if request.user.groups.all.0.name == "Project Manager"%}
                 <a href="{% url 'issues_list_pm'%}">Project Issues List</a>
             {% elif request.user.groups.all.0.name == "Person In-Charge"%}
@@ -16,9 +16,9 @@
             {% else %}
                 <a href="{% url 'issues_list'%}">Project Issues List</a>
             {% endif %}
-        </li>
+        </li> -->
         <li class="breadcrumb-item ">
-            <a href="{% url 'issues'%}">Project Issues Form</a>
+            <a href="{% url 'issues'%}">Project Issues List</a>
         </li>
     </ol>
 </nav>
@@ -43,7 +43,7 @@
                         <div class="form-group col-md-12 mt-2">
                             <td>{{form.description|as_crispy_field}}</td>
                         </div>
-                        <div class="form-group col-md-8">
+                        <div class="form-group col-md-8"></div>
                         <div class="form-group col-md-4">
                             <label for="">Prepared By:</label>
                             <input type="text"  class="form-control" value=" {{form.instance.whm}}" readonly>
