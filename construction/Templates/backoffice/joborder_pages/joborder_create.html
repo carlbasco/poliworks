@@ -37,160 +37,162 @@
         </div>
     {% endfor %}
 </div>
-<div class="col-md-12 mb-5">
-    <div class="card card-form">
-        <div class="card-header" id="card_header_content">
-            <h3 style="text-align: center;">Job Order Form</h3>
-        </div>
-        <div class="card-body">
-            <form action="" method="POST" id="">
-                {% csrf_token%}
-                <div class="col-lg-12">
-                    <div class="row justify-content-center">
-                        <div class="form-group col-md-12">
-                            {{form.projectsite|as_crispy_field}} 
-                        </div>
-                        <div class="form-group col-md-6">
-                            {{form.date|as_crispy_field}}
-                        </div>
-                        <div class="form-group col-md-6">
-                            {{form.duration|as_crispy_field}}
-                        </div>
-                    </div>
-                </div>
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <th style="min-width: 250px;">Personnel <span class="asteriskField">*</span></th>
-                            <th style="min-width: 350px;">Activity <span class="asteriskField">*</span></th>
-                            <th class="text-center" style="min-width: 150px;" colspan="2">Duration <span class="asteriskField">*</span></th>
-                            <th style="min-width: 350px;">Remarks</span></th>
-                            <th>Delete</th>
-                        </thead>
-                        {{ formset.management_form }}
-                        {% for form in formset.forms %}
-                        <tr class="formset_row">
-                            <td>{{form.personnel}}</td>
-                            <td>{{form.activity}}</td>
-                            <td>
-                                <label>From</label>
-                                {{form.date}}
-                                <small class="form-text text-muted">Format: yyyy-mm-dd</small>
-                            </td>
-                            <td>
-                                <label>To</label>
-                                {{form.date2}}
-                                <small class="form-text text-muted">Format: yyyy-mm-dd</small>
-                            </td>
-                            <td style="min-width: 350px;">{{form.remarks}}</td>
-                            <td>{{form.DELETE}}</td>
-                        </tr>
-                        {% endfor %}
-                    </table>
-                </div>
-                <br>
-                <div class="row mt-3">
-                    <div class="form-group col-md-8">
-                    </div>
-                    <div class="form-group col-md-4">
-                        {{form.pic|as_crispy_field}}
-                    </div>
-                </div>
-                <button type="button" id="sbmt-modal" class="btn btn-outline-primary btn-rounded" style="float:right" data-toggle="modal" data-target="#exampleModal-2">Submit</button>
-                <div class="modal fade" id="exampleModal-2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-2" style="display: none;" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="modal-title" id="exampleModalLabel-2">Confirmation</h4>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">×</span>
-                                </button>
+<div class="row">
+    <div class="col-md-12 mb-5">
+        <div class="card card-form">
+            <div class="card-header" id="card_header_content">
+                <h3 style="text-align: center;">Job Order Form</h3>
+            </div>
+            <div class="card-body">
+                <form action="" method="POST" id="">
+                    {% csrf_token%}
+                    <div class="col-lg-12">
+                        <div class="row justify-content-center">
+                            <div class="form-group col-md-12">
+                                {{form.projectsite|as_crispy_field}} 
                             </div>
-                            <div class="modal-body">
-                                <p>Are you sure you want to submit this form?</p>
+                            <div class="form-group col-md-6">
+                                {{form.date|as_crispy_field}}
                             </div>
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-outline-primary" >Submit</button>
-                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                            <div class="form-group col-md-6">
+                                {{form.duration|as_crispy_field}}
                             </div>
                         </div>
                     </div>
-                </div>
-            </form>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <th style="min-width: 250px;">Personnel <span class="asteriskField">*</span></th>
+                                <th style="min-width: 350px;">Activity <span class="asteriskField">*</span></th>
+                                <th class="text-center" style="min-width: 150px;" colspan="2">Duration <span class="asteriskField">*</span></th>
+                                <th style="min-width: 350px;">Remarks</span></th>
+                                <th>Delete</th>
+                            </thead>
+                            {{ formset.management_form }}
+                            {% for form in formset.forms %}
+                            <tr class="formset_row">
+                                <td>{{form.personnel}}</td>
+                                <td>{{form.activity}}</td>
+                                <td>
+                                    <label>From</label>
+                                    {{form.date}}
+                                    <small class="form-text text-muted">Format: yyyy-mm-dd</small>
+                                </td>
+                                <td>
+                                    <label>To</label>
+                                    {{form.date2}}
+                                    <small class="form-text text-muted">Format: yyyy-mm-dd</small>
+                                </td>
+                                <td style="min-width: 350px;">{{form.remarks}}</td>
+                                <td>{{form.DELETE}}</td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                    <br>
+                    <div class="row mt-3">
+                        <div class="form-group col-md-8">
+                        </div>
+                        <div class="form-group col-md-4">
+                            {{form.pic|as_crispy_field}}
+                        </div>
+                    </div>
+                    <button type="button" id="sbmt-modal" class="btn btn-outline-primary btn-rounded" style="float:right" data-toggle="modal" data-target="#exampleModal-2">Submit</button>
+                    <div class="modal fade" id="exampleModal-2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-2" style="display: none;" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="exampleModalLabel-2">Confirmation</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Are you sure you want to submit this form?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-outline-primary" >Submit</button>
+                                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
-
-<div class="col-md-12 mb-5">
-    <div class="card">
-        <div class="card-body">
-        <h4 class="card-title">List of Personnel</h4>
-            <div class="table-responsive">
-                <div class="row">
-                    <div class="col-12">
-                        <div id="order-listing_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <table id="order-listing" class="table dataTable no-footer" role="grid" aria-describedby="order-listing_info">
-                                        <thead>
-                                            <tr role="row">
-                                                <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                                    aria-label="Client: activate to sort column ascending" style="width: 50px;">
-                                                    Full Name
-                                                </th>
-                                                <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                                    aria-label="Status: activate to sort column ascending" style="width: 50px;">
-                                                    Type of Personnel
-                                                </th>
-                                                <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                                    ria-label="Actions: activate to sort column ascending" style="width: 50px;">
-                                                    Skill
-                                                </th>
-                                                <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                                    ria-label="Actions: activate to sort column ascending" style="width: 50px;">
-                                                    Status
-                                                </th>
-                                                <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                                    ria-label="Actions: activate to sort column ascending" style="width: 50px;">
-                                                    Project Site
-                                                </th>
-                                                <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                                    ria-label="Actions: activate to sort column ascending" style="width: 50px;">
-                                                    From
-                                                </th>
-                                                <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                                    ria-label="Actions: activate to sort column ascending" style="width: 50px;">
-                                                    To
-                                                </th>
-                                                <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                                    ria-label="Actions: activate to sort column ascending" style="width: 50px;">
-                                                    Action
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for i in view.data2%}
-                                                <tr role="row" class="odd">
-                                                    <td>{{i.full_name}}</td>
-                                                    <td>{{i.personnel_type}}</td>
-                                                    <td>"{{i.skill.all|join:'", "'}}"</td>
-                                                    {% if i.status == "Currently Assigned" %}
-                                                        <td class="text-center"><label class="badge badge-warning">{{i.status}}</label></td>
-                                                    {% elif i.status == "Available"%}
-                                                        <td class="text-center"><label class="badge badge-primary">{{i.status}}</label></td>
-                                                    {% endif %}
-                                                    {% if i.projectsite %}
-                                                        <td class="text-center">{{i.projectsite}}</td>
-                                                    {% else %}
-                                                        <td class="text-center">N/A</td>
-                                                    {% endif %}
-                                                    <td>{{i.date}}</td>
-                                                    <td>{{i.date2}}</td>
-                                                    <td class="text-center"><a class="btn btn-outline-primary" href="{% url 'personnel_detail' i.id %}">View</a></td>
+    
+    <div class="col-md-12 mb-5">
+        <div class="card">
+            <div class="card-body">
+            <h4 class="card-title">List of Personnel</h4>
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-12">
+                            <div id="order-listing_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table id="order-listing" class="table dataTable no-footer" role="grid" aria-describedby="order-listing_info">
+                                            <thead>
+                                                <tr role="row">
+                                                    <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                                        aria-label="Client: activate to sort column ascending" style="width: 50px;">
+                                                        Full Name
+                                                    </th>
+                                                    <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                                        aria-label="Status: activate to sort column ascending" style="width: 50px;">
+                                                        Type of Personnel
+                                                    </th>
+                                                    <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                                        ria-label="Actions: activate to sort column ascending" style="width: 50px;">
+                                                        Skill
+                                                    </th>
+                                                    <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                                        ria-label="Actions: activate to sort column ascending" style="width: 50px;">
+                                                        Status
+                                                    </th>
+                                                    <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                                        ria-label="Actions: activate to sort column ascending" style="width: 50px;">
+                                                        Project Site
+                                                    </th>
+                                                    <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                                        ria-label="Actions: activate to sort column ascending" style="width: 50px;">
+                                                        From
+                                                    </th>
+                                                    <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                                        ria-label="Actions: activate to sort column ascending" style="width: 50px;">
+                                                        To
+                                                    </th>
+                                                    <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                                        ria-label="Actions: activate to sort column ascending" style="width: 50px;">
+                                                        Action
+                                                    </th>
                                                 </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                {% for i in view.data2%}
+                                                    <tr role="row" class="odd">
+                                                        <td>{{i.full_name}}</td>
+                                                        <td>{{i.personnel_type}}</td>
+                                                        <td>"{{i.skill.all|join:'", "'}}"</td>
+                                                        {% if i.status == "Currently Assigned" %}
+                                                            <td class="text-center"><label class="badge badge-warning">{{i.status}}</label></td>
+                                                        {% elif i.status == "Available"%}
+                                                            <td class="text-center"><label class="badge badge-primary">{{i.status}}</label></td>
+                                                        {% endif %}
+                                                        {% if i.projectsite %}
+                                                            <td class="text-center">{{i.projectsite}}</td>
+                                                        {% else %}
+                                                            <td class="text-center">N/A</td>
+                                                        {% endif %}
+                                                        <td>{{i.date}}</td>
+                                                        <td>{{i.date2}}</td>
+                                                        <td class="text-center"><a class="btn btn-outline-primary" href="{% url 'personnel_detail' i.id %}">View</a></td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -200,6 +202,7 @@
         </div>
     </div>
 </div>
+
 
 {% endblock %}
 {%block javascript%}

@@ -102,19 +102,12 @@ i.menu-con, a.nav-link:hover{
     min-height: 35em;
 }
 .content-wrapper {
-    /* background: lightgray; */
     background: #f5f6f8;
-        background-image: initial;
-        background-position-x: initial;
-        background-position-y: initial;
-        background-size: initial;
-        background-attachment: initial;
-        background-origin: initial;
-        background-clip: initial;
-        background-color: rgb(245, 246, 248);
+    padding: 1rem 1rem;
 }
 .footer{
-    padding:5px
+    padding:5px;
+    border-top: none;
 }
 .wizard > .content > .body input {
     display: block;
@@ -213,8 +206,8 @@ span.txt{
 }
 #card_header_content{
     background-color: rgba(38,108,170,1);
-    border-top-left-radius: 25px;
-    border-top-right-radius: 25px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
     color:white;
 }
 .edit-delete-btn{
@@ -263,7 +256,7 @@ a#btn-signout{
 }
 #changepassword_body{
     background-color: white;
-    border-radius: 25px;
+    border-radius: 10px;
 }
 
 .sidebar .nav.sub-menu {
@@ -278,7 +271,7 @@ a#btn-signout{
     background: white;
 }
 .card.card-form {
-    border-radius: 25px;
+    border-radius: 10px;
 }
 .form-group {
     margin-bottom: .5rem!important;
@@ -342,4 +335,7 @@ img.rounded.table-img {
 h3.text-center.font-weight-bold.table-title {
     margin-bottom: 30px;
     border: solid 1px lightgray;
+}
+td{
+    min-width: 150px;
 }

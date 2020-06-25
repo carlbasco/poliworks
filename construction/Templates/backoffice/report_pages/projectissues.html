@@ -22,60 +22,63 @@
         </li>
     </ol>
 </nav>
-<div class="col-md-8 m-auto">
-    <form action="" method="POST" id="">
-        {% csrf_token%}   
-        <div class="card card-form">
-            <div class="card-header" id="card_header_content">
-                <h3 style="text-align: center;">Project Issues Form</h3>
-            </div>
-            <div class="card-body">
-                <div class="col-lg-12">
-                    <div class="row justify-content-center">
+<div class="row"> 
+    <div class="col-md-8 m-auto">
+        <form action="" method="POST" id="">
+            {% csrf_token%}   
+            <div class="card card-form">
+                <div class="card-header" id="card_header_content">
+                    <h3 style="text-align: center;">Project Issues Form</h3>
+                </div>
+                <div class="card-body">
+                    <div class="col-lg-12">
+                        <div class="row justify-content-center">
+                            <div class="form-group col-md-8">
+                                {{form.projectsite|as_crispy_field}} 
+                            </div>
+                            <div class="form-group col-md-4">
+                                {{form.date|as_crispy_field}}
+                            </div>
+                            <div class="form-group col-md-12">
+                                <td>{{form.description|as_crispy_field}}</td>
+                            </div>
+                            <div class="form-group col-md-8">
+                            </div>
+                            <div class="form-group col-md-4">
+                                {{form.whm|as_crispy_field}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="form-group col-md-8">
-                            {{form.projectsite|as_crispy_field}} 
-                        </div>
-                        <div class="form-group col-md-4">
-                            {{form.date|as_crispy_field}}
-                        </div>
-                        <div class="form-group col-md-12">
-                            <td>{{form.description|as_crispy_field}}</td>
-                        </div>
-                        <div class="form-group col-md-8">
-                        </div>
-                        <div class="form-group col-md-4">
-                            {{form.whm|as_crispy_field}}
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-md-8">
-                    </div>
-                </div>
-                <button type="button" id="sbmt-modal" class="btn btn-outline-primary btn-rounded" style="float:right" data-toggle="modal" data-target="#exampleModal-2">Submit</button>
-                <div class="modal fade" id="exampleModal-2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-2" style="display: none;" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="modal-title" id="exampleModalLabel-2">Confirmation</h4>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">×</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <p>Are you sure you want to submit this form?</p>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-outline-primary" >Submit</button>
-                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" id="sbmt-modal" class="btn btn-outline-primary btn-rounded" style="float:right" data-toggle="modal" data-target="#exampleModal-2">Submit</button>
+                    <div class="modal fade" id="exampleModal-2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-2" style="display: none;" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="exampleModalLabel-2">Confirmation</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Are you sure you want to submit this form?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-outline-primary" >Submit</button>
+                                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
+
 
 {%endblock%}
 

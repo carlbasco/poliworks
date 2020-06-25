@@ -21,80 +21,85 @@
 
 <form action="" method="POST">
 {% csrf_token%}
-    <div class="card card-form">
-        <div class="card-header" id="card_header_content">
-            <h3 style="text-align: center;">Quotation Form</h3>
-        </div>
-        <div class="card-body">
-            <div class="col-lg-12">
-                <div class="row justify-content-center">
-                    <div class="form-group col-md-8">
-                        {{form.projectsite|as_crispy_field}} 
-                    </div>
-                    <div class="form-group col-md-4">
-                        {{form.date|as_crispy_field}}
-                    </div>
-                    <div class="form-group col-md-8">
-                        {{form.subject|as_crispy_field}}
-                    </div>
-                    <div class="form-group col-md-4">
-                        
-                    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-form">
+                <div class="card-header" id="card_header_content">
+                    <h3 style="text-align: center;">Quotation Form</h3>
                 </div>
-            </div>
-            <table id="tbl_quotation" class="table table-responsive-sm">
-                <thead>
-                    <th style="min-width: 250px;">Scope of Work <span class="asteriskField">*</span></th>
-                    <th style="min-width: 100px;">Unit</th>
-                    <th style="min-width: 100px;">Quantity <span class="asteriskField">*</span></th>
-                    <th style="min-width: 150px;">Total Cost</th>
-                    <th>Delete</th>
-                </thead>
-                {{ formset.management_form }}
-                {% for i in formset.forms %}
-                <tr class="formset_row">
-                    <td style="min-width: 250px;">{{i.scope_of_work}}</td>
-                    <td>{{i.unit}}</td>
-                    <td>{{i.quantity}}</td>
-                    <td>{{i.tcost}}</td>
-                    <td>{{i.delete}}</td>
-                </tr>
-                {% endfor %}
-            </table>
-            
-            <div class="row">
-                <div class="form-group col-md-8">
-                </div>
-                <div class="form-group col-md-4">
-                    <div class="form-group">
-                      <label for="total_amount">Total Amount</label>
-                      <input type="text"
-                        class="form-control" name="total_amount" id="total_amount" aria-describedby="helpId" placeholder="" value="0" readonly>
-                    </div>
-                </div>
-            </div>
-            <button type="button" id="sbmt-modal" class="btn btn-outline-primary btn-rounded" style="float:right" data-toggle="modal" data-target="#exampleModal-2">Submit</button>
-            <div class="modal fade" id="exampleModal-2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-2" style="display: none;" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title" id="exampleModalLabel-2">Confirmation</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
+                <div class="card-body">
+                    <div class="col-lg-12">
+                        <div class="row justify-content-center">
+                            <div class="form-group col-md-8">
+                                {{form.projectsite|as_crispy_field}} 
+                            </div>
+                            <div class="form-group col-md-4">
+                                {{form.date|as_crispy_field}}
+                            </div>
+                            <div class="form-group col-md-8">
+                                {{form.subject|as_crispy_field}}
+                            </div>
+                            <div class="form-group col-md-4">
+                                
+                            </div>
                         </div>
-                        <div class="modal-body">
-                            <p>Are you sure you want to submit this form?</p>
+                    </div>
+                    <table id="tbl_quotation" class="table table-responsive-sm">
+                        <thead>
+                            <th style="min-width: 250px;">Scope of Work <span class="asteriskField">*</span></th>
+                            <th style="min-width: 100px;">Unit</th>
+                            <th style="min-width: 100px;">Quantity <span class="asteriskField">*</span></th>
+                            <th style="min-width: 150px;">Total Cost</th>
+                            <th>Delete</th>
+                        </thead>
+                        {{ formset.management_form }}
+                        {% for i in formset.forms %}
+                        <tr class="formset_row">
+                            <td style="min-width: 250px;">{{i.scope_of_work}}</td>
+                            <td>{{i.unit}}</td>
+                            <td>{{i.quantity}}</td>
+                            <td>{{i.tcost}}</td>
+                            <td>{{i.delete}}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    
+                    <div class="row">
+                        <div class="form-group col-md-8">
                         </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-outline-primary" >Submit</button>
-                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                        <div class="form-group col-md-4">
+                            <div class="form-group">
+                              <label for="total_amount">Total Amount</label>
+                              <input type="text"
+                                class="form-control" name="total_amount" id="total_amount" aria-describedby="helpId" placeholder="" value="0" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" id="sbmt-modal" class="btn btn-outline-primary btn-rounded" style="float:right" data-toggle="modal" data-target="#exampleModal-2">Submit</button>
+                    <div class="modal fade" id="exampleModal-2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-2" style="display: none;" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="exampleModalLabel-2">Confirmation</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Are you sure you want to submit this form?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-outline-primary" >Submit</button>
+                                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    
 </form>
 {% endblock %}
 
