@@ -134,7 +134,7 @@
                         {% if request.user.groups.all.0.name == "Admin" %}
                             <a class="nav-link" href="{% url 'rework_list'%}">Rework</a>
                         {% elif request.user.groups.all.0.name == "Project Manager" %}
-                            <a class="nav-link" href="{% url 'rework_list_pm'%}">Rework</a>
+                            <a class="nav-link" href="{% url 'rework_create'%}">Rework</a>
                         {% elif request.user.groups.all.0.name == "Person In-Charge" %}
                             <a class="nav-link" href="{% url 'rework_list_pic'%}">Rework</a>
                         {% endif %}

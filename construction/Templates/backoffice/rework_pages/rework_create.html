@@ -89,7 +89,7 @@
             <form action="" method="POST" id="">
                 {% csrf_token%}
                 <div class="modal-header form-modal-header">
-                    <h4 class="modal-title">Site Photos Form</h4>
+                    <h4 class="modal-title">Rework Form</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -133,6 +133,12 @@
     
     $('form').bind('submit', function () {
         $(this).find('#id_pm').prop('disabled', false);
+    });
+    $(function() {
+      $('[data-toggle="datepicker"]').datepicker({
+        autoHide: true,
+        zIndex: 2048,
+      });
     });
 </script>
 <style>span.select2-selection.select2-selection--single {height: 30px;}</style>

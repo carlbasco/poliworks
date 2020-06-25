@@ -435,11 +435,15 @@ class ReworkForm(forms.ModelForm):
     class Meta:
         model=Rework
         fields='__all__'
+        
 
 class ReworkNewForm(forms.ModelForm):
     class Meta:
         model=Rework
         fields='__all__'
+        widgets={
+            'date':forms.TextInput(attrs={'data-toggle':'datepicker'})
+        }
     
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
