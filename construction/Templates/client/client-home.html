@@ -19,49 +19,53 @@
 </div>
 
 <div class="container-fluid" id="my_project">
-    <div class="col-md-10 mx-auto">
-        <div class="card">
-            <div class="card-header">
-                <h2 class="mb-0">Project List</h2>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive-xl">
-                    <table class="table ">
-                        <thead>
-                            <tr>
-                                <th>Project</th>
-                                <th>Project Manager</th>
-                                <th>Person In-Charge</th>
-                                <th>Date Started</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for i in data %}
-                            <tr>
-                                <td>{{i.projectsite}}</td>
-                                <td>{{i.pm}}</td>
-                                <td>{{i.pic}}</td>
-                                <td>{{i.startdate}}</td>
-                                <td>
-                                    <h5><label class="badge badge-info">{{i.status}}</label></h>
-                                </td>
-                                <td>
-                                    <form action="{% url 'client_view_project' i.id%}">
-                                        <button class="btn btn-outline-primary view-btn">View</button>
-                                    </form>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+    <div class="row">
+        <div class="col-md-10 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="mb-0">Project List</h2>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive-xl">
+                        <table class="table ">
+                            <thead>
+                                <tr>
+                                    <th>Project</th>
+                                    <th>Project Manager</th>
+                                    <th>Person In-Charge</th>
+                                    <th>Date Started</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in data %}
+                                <tr>
+                                    <td>{{i.projectsite}}</td>
+                                    <td>{{i.pm}}</td>
+                                    <td>{{i.pic}}</td>
+                                    <td>{{i.startdate}}</td>
+                                    {% if i.status == "Pending"%}
+                                        <td><span class="badge badge-warning">{{i.status}}</span></td>
+                                    {% elif i.status == "On-going"%}
+                                        <td><span class="badge badge-primary">{{i.status}}</span></td>
+                                    {% elif i.status == "Completed (Overdue)"%}
+                                        <td><span class="badge badge-danger">{{i.status}}</span></td>
+                                    {% else %}
+                                        <td><span class="badge badge-success">{{i.status}}</span></td>
+                                    {% endif %}
+                                    <td>
+                                        <a href="{% url 'client_view_project' i.id%}"class="btn btn-sm btn-outline-primary">View</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    
-    
 </div>
 {% endblock %}
 

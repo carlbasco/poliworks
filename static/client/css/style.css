@@ -179,3 +179,6 @@ div#image_profileupdate{
 .pd-100{
     padding-bottom:100px
 }
+th {
+    min-width: 160px;
+}

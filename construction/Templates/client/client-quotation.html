@@ -8,7 +8,16 @@
         <div class="col col-md-8">
             <div class="card mb-5">
                 <div class="card-header">
-                    <h2 class="mb-0">Quotation</h2>
+                    <h2 class="mb-0">
+                        <form action="javascript:history.back()">
+                            <button type="submit" class="btn btn-primary btn-back-responsive float-left">
+                                <svg class="bi bi-arrow-left-circle-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-7.646 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L6.207 7.5H11a.5.5 0 0 1 0 1H6.207l2.147 2.146z"></path>
+                                  </svg>
+                            </button>
+                        </form>
+                        Quotation
+                    </h2>
                 </div>
                 <div class="card-body">
                 <form action="" method="post">
@@ -69,8 +78,8 @@
                                     <p class="ptxt">Are you sure you want to accept it?</p> 
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
                                     <button type="submit" value="Accepted" class="btn btn-outline-primary" name="status" id="status_accept">Accept</button>
+                                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
                                 </div>
                             </div>
                         </div>
@@ -89,8 +98,8 @@
                                     <p class="ptxt">Are you sure you want to reject it?</p> 
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
                                     <button type="submit" value="Rejected" class="btn btn-outline-danger" name="status" id="status_accept">Reject</button>
+                                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
                                 </div>
                             </div>
                         </div>

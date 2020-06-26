@@ -98,4 +98,27 @@ class QuotationAdmin(admin.ModelAdmin):
     search_fields = ('projectsite', 'subject')
     ordering = ('date',)
 
+class ExternalInventoryDetailsAdmin(admin.TabularInline):
+    model = ExternalProjectInventoryDetails
+
+class ExternalInventoryAdmin(admin.ModelAdmin):
+    inlines = [ExternalInventoryDetailsAdmin]
+    form = ExternalInventoryAdminForm
+    list_display = ('projectsite',)
+    search_fields = ('projectsite', )
+
+admin.site.register(ExternalProjectInventory, ExternalInventoryAdmin)
+
+class InventoryDetailsAdmin(admin.TabularInline):
+    model = ProjectInventoryDetails
+
+class ProjectInventoryAdmin(admin.ModelAdmin):
+    inlines = [InventoryDetailsAdmin]
+    form = InventoryAdminForm
+    list_display = ('projectsite', 'last_update')
+    search_fields= ('projectsite',)
+    
+
+admin.site.register(ProjectInventory, ProjectInventoryAdmin)
+
 admin.site.register(Quotation, QuotationAdmin)

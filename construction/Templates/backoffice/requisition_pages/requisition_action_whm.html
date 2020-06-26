@@ -58,8 +58,8 @@
                             <h6 class="sub">Prepared by: <span class="txt">{{data.whm}}</span></h6>
                         </div>
                     </div>
-                    <div class="table-responsive-lg col-lg-12">
-                        <form action="" method="post">
+                    <form action="" method="post">
+                        <div class="table-responsive-lg col-lg-12">
                             {% csrf_token %}
                             <table class="table">
                                 <thead class="thead" id="head_tbl">
@@ -85,7 +85,8 @@
                                         {% endfor %}
                                     </tbody>
                             </table>
-                            <button type="button" id="sbmt-modal" class="btn btn-outline-primary btn-rounded" style="float:right" data-toggle="modal" data-target="#exampleModal-2">Submit</button>
+                        </div>
+                        <button type="button" id="sbmt-modal" class="btn btn-outline-primary btn-rounded" style="float:right" data-toggle="modal" data-target="#exampleModal-2">Submit</button>
                             <div class="modal fade" id="exampleModal-2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-2" style="display: none;" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
@@ -105,8 +106,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </form>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>

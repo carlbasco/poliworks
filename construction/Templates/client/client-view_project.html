@@ -5,7 +5,7 @@
 <div class="container-fluid" id="view_project">
     <section>
         <div class="row">
-            <div class="col col-md-7">
+            <div class="col-md-7 mb-5">
                 <div class="card">
                     <div class="card-header">
                         <h2 class="mb-0">Overview</h2>
@@ -29,14 +29,17 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="mx-auto d-flex align-items-center ">
-                                <div class="forth circle "{% if data3 %} data-value="{{data3.total_progress}}" {% endif %}>
-                                <strong></strong>
+                            {% if data3 %}
+                                <div class="mx-auto d-flex align-items-center ">
+                                    <div class="forth circle "{% if data3 %} data-value="{{data3.total_progress}}" {% endif %}>
+                                        <strong></strong>
+                                    </div>
+                                    <h3>Project Progress</h3>
                                 </div>
-                            <h3>Project Progress</h3>
-                            </div>
-                            <div class="col-md-10 table-responsive-l mx-auto ">
-                                <table class="table table-bordered table-responsive-l">
+                            {% endif %}
+                            {% if data4 %}
+                            <div class="col-md-12 table-responsive mx-auto ">
+                                <table class="table table-bordered">
                                     <thead>
                                             <tr>
                                                 <th>Scope of Work</th>
@@ -63,11 +66,12 @@
                                     </tbody>
                                 </table>
                             </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="accordion col col-md-5" id="accordionExample">
+            <div class="accordion col-md-5 mb-5" id="accordionExample">
                 <div class="card">
                     <div class="card-header" id="headingOne">
                     <h2 class="mb-0">
@@ -94,7 +98,7 @@
                                     <tr>
                                         <td>{{i.subject}}</td>
                                         <td>{{i.date}}</td>
-                                        <td>{{i.amount}}</td>
+                                        <td class="text-right">{{i.amount}}</td>
                                         {% if i.status == "Rejected"%}
                                         <td><span class="badge badge-danger">{{i.status}}</span></td>
                                         {% elif i.status == "Pending"%}

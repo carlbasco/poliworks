@@ -309,7 +309,7 @@ class Inventory(models.Model):
         verbose_name_plural = 'Inventory Office'
 
     def __str__(self):
-        return self.description
+        return self.description 
 
 class Requisition(models.Model):
     projectsite = models.ForeignKey(ProjectSite, on_delete=models.CASCADE, related_name='requisition_project',verbose_name='Project Site')
@@ -394,7 +394,7 @@ class SitePhotosDetails(models.Model):
         verbose_name='Site Photos'
 
 class ProjectInventory(models.Model):
-    projectsite = models.OneToOneField(ProjectSite, on_delete=models.CASCADE, related_name='inventory_project',verbose_name='Project Site')
+    projectsite = models.OneToOneField(ProjectSite, on_delete=models.CASCADE,verbose_name='Project Site')
     last_update = models.DateField(auto_now=True)
     class Meta:
         verbose_name_plural='ProjectSite Inventory'
@@ -406,7 +406,7 @@ class ProjectInventoryDetails(models.Model):
     quantity = models.IntegerField(('Quantity'), null=True, blank=True)
 
     def __str__(self):
-        return self.articles
+        return self.articles.__str__()
 
 class ProjectDailyReport(models.Model):
     projectsite = models.ForeignKey(ProjectSite, on_delete=models.CASCADE, null=True)

@@ -1195,7 +1195,7 @@ class JobOrderCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
                 data4.status = "Currently Assigned"
                 data4.projectsite = data2.projectsite
                 data4.date = i.date
-                data4.dat2 = i.date2
+                data4.date2 = i.date2
                 data4.save()
             return super(JobOrderCreateView, self).form_valid(form)
 
@@ -1342,6 +1342,7 @@ def JobOrderDeleteView(request,pk):
         for i in data2:
             data3 = Personnel.objects.get(id=i.personnel.id)
             data3.status = "Available"
+            data3.projectsite = None
             data3.date = None
             data3.date2 = None
             data3.save()

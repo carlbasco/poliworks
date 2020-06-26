@@ -534,5 +534,15 @@ DailyReportFormSet = inlineformset_factory(ProjectDailyReport, ProjectDailyRepor
     }  
 )
 
+class InventoryAdminForm(forms.ModelForm):
+    class Meta:
+        model=ProjectInventory
+        fields='__all__'
+
 class WeeklyReportForm(forms.Form):
     projectsite = forms.ModelChoiceField(queryset=ProjectSite.objects.all(), label="Project Site")
+
+class ExternalInventoryAdminForm(forms.ModelForm):
+    class Meta:
+        model = ExternalProjectInventory
+        fields ='__all__'

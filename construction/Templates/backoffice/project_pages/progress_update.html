@@ -4,61 +4,64 @@
 {% load humanize %}
 {% block content %}
 
-<div class="col col-md-10 " style="margin:auto;" >
-    <div class="card-header" id="headingOverview">
-        <h2 class="mb-0">Project Progress 
-            <a style="float:right; color:white;"title="Edit Project Progress"><i class="fa fa-edit"></i></a>
-        </h2>
-    </div>
-    <form action="" method="post">
-        {% csrf_token %}
-        <div class="card-body">
-            <div class="row">
-                <div class="chartjs-wrapper col-md-12">
-                    <h4>Project Site: </h4><h3>{{data.projectsite}}</h3>
-                </div>
-                <div class="col-md-12 table-responsive-xl">
-                    <table class="table table-bordered table-responsive-xl" id="table_progress">
-                        <thead>
-                            <th>Scope of Work</th>
-                            <th style="min-width: 150px;">Level</th>
-                            <th style="min-width: 150px;">Status</th>
-                        </thead>
-                        {{ formset.management_form}}
-                        {% for form in formset.forms %}
-                        {{ form.id }}
-                        <tr class="">
-                            <td>{{form.instance.scope_of_work}}</td>
-                            <td>{{form.level}}</td>
-                            <td>{{form.status}}</td>
-                        </tr>
-                        {% endfor %}
-                    </table>
-                    <button type="button" id="sbmt-modal" class="btn btn-outline-primary btn-rounded" style="float:right" data-toggle="modal" data-target="#exampleModal-2">Update</button>
-                    <a href="{% url 'progress_delete' data.id%}" class="btn btn-outline-danger edit-delete-btn">Delete</a>
-                </div>
-                <div class="modal fade" id="exampleModal-2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-2" style="display: none;" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="modal-title" id="exampleModalLabel-2">Confirmation</h4>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">×</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <p>Are you sure you want to update?</p>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-outline-primary" >Submit</button>
-                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+<div class="col-md-10 mx-auto">
+    <div class="card">
+        <div class="card-header" id="headingOverview">
+            <h2 class="mb-0">Project Progress 
+                <a style="float:right; color:white;"title="Edit Project Progress"><i class="fa fa-edit"></i></a>
+            </h2>
+        </div>
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="card-body">
+                <div class="row">
+                    <div class="chartjs-wrapper col-md-12">
+                        <h4>Project Site: </h4><h3>{{data.projectsite}}</h3>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="table_progress">
+                            <thead>
+                                <th>Scope of Work</th>
+                                <th style="min-width: 150px;">Level</th>
+                                <th style="min-width: 150px;">Status</th>
+                            </thead>
+                            {{ formset.management_form}}
+                            {% for form in formset.forms %}
+                            {{ form.id }}
+                            <tr class="">
+                                <td>{{form.instance.scope_of_work}}</td>
+                                <td>{{form.level}}</td>
+                                <td>{{form.status}}</td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                        <button type="button" id="sbmt-modal" class="btn btn-outline-primary float-right mt-3 ml-3" data-toggle="modal" data-target="#exampleModal-2">Update</button>
+                        <a href="{% url 'progress_delete' data.id%}" class="btn btn-outline-danger float-right mt-3 ml-3">Delete</a>
+                    </div>
+                    <div class="modal fade" id="exampleModal-2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-2" style="display: none;" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="exampleModalLabel-2">Confirmation</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Are you sure you want to update?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-outline-primary" >Submit</button>
+                                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
+    
 </div>
 
 {% endblock %}
