@@ -1,0 +1,46 @@
+{%extends 'backoffice/index.html'%}
+{%load static%}
+{%load crispy% }
+{%load crispy_forms_tags%}
+{% block content %}
+<span class="text-uppercase page-subtitle">Report</span>
+<div class="col-md-8 m-auto">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">ProjectSite ReportX</h4>
+            <form action="{% url 'projectreportPDF'%}" method="GET">
+                <div class="row">
+                    <div class="col-md-12">
+                        {{form|crispy}}
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="datefrom">From</label>
+                            <input type="text"  class="form-control dateinput" name="date_from" aria-describedby="helpId" placeholder="" required>
+                            <small id="helpId" class="form-text text-muted">Format: YYYY-MM-DD</small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="dateto">To</label>
+                            <input type="text" class="form-control dateinput" name="date_to" aria-describedby="helpId" placeholder="" required>
+                            <small id="helpId" class="form-text text-muted">Format: YYYY-MM-DD</small>
+                        </div>
+                    </div>
+                    <div class="col-md-12 ">
+                        <div class="form-group float-right">
+                            <button type="submit" class="btn btn-outline-primary mt-4">Generate</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{%endblock%}
+{% block javascript %}
+<script>
+    $('#id_projectsite').select2()
+</script>
+<style>span.select2-selection.select2-selection--single {height: 30px;}</style>
+{% endblock %}

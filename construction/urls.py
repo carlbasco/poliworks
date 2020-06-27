@@ -1,6 +1,6 @@
 from django.contrib.auth import views as auth_views
 from django.conf.urls import *
-from django.urls import path
+from django.urls import path, re_path
 from . import views
 from .models import *
 
@@ -87,7 +87,8 @@ urlpatterns = [
     path('reports/sitephotos/<int:pk>', views.dailysitephotosDetailView, name="sitephotos_detail"),
     path('reports/sitephotos/<int:pk>/update', views.dailysitephotosUpdateView, name="sitephotos_update"),
     path('reports/sitephotos/<int:pk>/delete', views.dailysitephotosDeleteView, name="sitephotos_delete"),
-    path('reports/weeklyreport/search', views.WeeklyReport, name="weeklyreport"),
+    path('reports/projectsite', views.ProjectReport.as_view(), name="projectreport"),
+    path('reports/projectsite/results', views.ProjectReportPDF.as_view(), name="projectreportPDF"),
 
     # path('reports/issues', views.projectissues, name="issues"),
     path('reports/issues', views.ProjectIssuesCreateView.as_view(), name="issues"),

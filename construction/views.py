@@ -1,29 +1,27 @@
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.forms import PasswordResetForm
-from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.decorators import login_required
-
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.forms import *
+from django.contrib.auth.models import User
+from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
+from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.decorators import method_decorator
 from Poliworks.settings import EMAIL_HOST_USER
-from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.urls import reverse_lazy
 from django.http import HttpResponse
-from django.contrib import messages
 from django.db.models import Q
-from django.contrib.auth.forms import *
 from django.views.generic import *
 from .decorators import *
 from .forms import *
 from .models import *
 import json
 
-import datetime
 from datetime import datetime
+import datetime
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -1824,43 +1822,6 @@ def ExternalOrderReportDeleteView(request, pk):
     context={'data':data, 'data2':data2}
     return render(request, 'backoffice/report_pages/external_report_delete.html', context)
 
-
-def WeeklyReport(request):
-    form = WeeklyReportForm
-    if request.method == 'POST':
-        projectsite = request.POST.get('projectsite')
-        datefrom = request.POST.get('datefrom')
-        datefrom = datetime.datetime.strptime(datefrom, "%Y-%m-%d")
-        dateto = request.POST.get('dateto')
-        dateto = datetime.datetime.strptime(dateto, "%Y-%m-%d")
-        data = ProjectSite.objects.get(id=projectsite)
-        try:
-            requisition = Requisition.objects.filter(projectsite_id=data.id, date__range=[datefrom, dateto])
-            requisitiondetails = RequisitionDetails.objects.filter(requisition__in=requisition)
-            externalorder = ExternalOrder.objects.filter(projectsite_id=data.id, date__range=[datefrom, dateto])
-            externalorder_details = ExternalOrderDetails.objects.filter(externalorder__in=externalorder)
-            joborder = JobOrder.objects.filter(projectsite_id=data.id, date__range=[datefrom, dateto])
-            jobordertask = JobOrderTask.objects.filter(joborder__in=joborder)
-            rework = Rework.objects.filter(projectsite_id=data.id, date__range=[datefrom, dateto])
-            sitephotos = SitePhotos.objects.filter(projectsite_id=data.id, date__range=[datefrom, dateto])
-            sitephotosdetails = SitePhotosDetails.objects.filter(sitephotos__in=sitephotos)
-            projectissues = ProjectIssues.objects.filter(projectsite_id=data.id, date__range=[datefrom, dateto])
-            context={
-            'data':data, 'datefrom':datefrom, 'dateto':dateto,
-            'requisition':requisition, 'requisitiondetails':requisitiondetails, 
-            'externalorder':externalorder, 'externalorder_details':externalorder_details,
-            'joborder':joborder, 'jobordertask':jobordertask,
-            'rework':rework, 'projectissues':projectissues,
-            'sitephotos':sitephotos, 'sitephotosdetails':sitephotosdetails,
-            }
-            return render(request, 'backoffice/report_pages/weeklyreport_result.html', context)
-        except ObjectDoesNotExist:
-            messages.error(request, "Dates Does not exist on data")
-            return redirect('weeklyreport')
-    context={'form':form}
-    return render(request, 'backoffice/report_pages/weeklyreport_search.html', context)
-
-
 #################################################################################################################################
 #################################################################################################################################
 @login_required(login_url = 'signin')
@@ -1981,3 +1942,111 @@ def City_api(request,pk):
     city = City.objects.filter(province=pk)
     serializers = CitySerializers(city, many=True)
     return Response(serializers.data)
+
+#################################################################################################################################
+#################################################################################################################################
+import os
+from io import BytesIO
+from django.conf import settings
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+from django.contrib.staticfiles import finders
+
+
+def link_callback(uri, rel):
+    result = finders.find(uri)
+    if result:
+            if not isinstance(result, (list, tuple)):
+                    result = [result]
+            result = list(os.path.realpath(path) for path in result)
+            path=result[0]
+    else:
+            sUrl = settings.STATIC_URL        # Typically /static/
+            sRoot = settings.STATIC_ROOT      # Typically /home/userX/project_static/
+            mUrl = settings.MEDIA_URL         # Typically /media/
+            mRoot = settings.MEDIA_ROOT       # Typically /home/userX/project_static/media/
+
+            if uri.startswith(mUrl):
+                    path = os.path.join(mRoot, uri.replace(mUrl, ""))
+            elif uri.startswith(sUrl):
+                    path = os.path.join(sRoot, uri.replace(sUrl, ""))
+            else:
+                    return uri
+
+    if not os.path.isfile(path):
+            raise Exception(
+                    'media URI must start with %s or %s' % (sUrl, mUrl)
+            )
+    return path
+
+def render_to_pdf(template_src, context_dict={}):
+	template = get_template(template_src)
+	html  = template.render(context_dict)
+	result = BytesIO()
+	pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result, link_callback=link_callback)
+	if not pdf.err:
+		return HttpResponse(result.getvalue(), content_type='application/pdf')
+	return None
+
+
+
+class ProjectReport(FormView, LoginRequiredMixin):
+    form_class = WeeklyReportForm
+    template_name='backoffice/report_pages/projectreport_search.html'
+
+    @method_decorator(no_whm, name='dispatch')
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'user': self.request.user})
+        return kwargs
+    
+
+class ProjectReportPDF(TemplateView, LoginRequiredMixin):
+    login_url ="signin"
+    redirect_field_name="redirect_to"
+    
+    def get(self, request, *args, **kwargs):
+        projectsite = self.request.GET.get('projectsite')
+        datefrom = self.request.GET.get('date_from')
+        datefrom = datetime.datetime.strptime(datefrom, "%Y-%m-%d")
+        dateto =  self.request.GET.get('date_to')
+        dateto = datetime.datetime.strptime(dateto, "%Y-%m-%d")
+        project = ProjectSite.objects.get(id=projectsite)
+        try:
+            requisition = Requisition.objects.filter(projectsite_id=project.id, date__range=[datefrom, dateto])
+            requisitiondetails = RequisitionDetails.objects.filter(requisition__in=requisition)
+            externalorder = ExternalOrder.objects.filter(projectsite_id=project.id, date__range=[datefrom, dateto])
+            externalorder_details = ExternalOrderDetails.objects.filter(externalorder__in=externalorder)
+            joborder = JobOrder.objects.filter(projectsite_id=project.id, date__range=[datefrom, dateto])
+            jobordertask = JobOrderTask.objects.filter(joborder__in=joborder)
+            rework = Rework.objects.filter(projectsite_id=project.id, date__range=[datefrom, dateto])
+            sitephotos = SitePhotos.objects.filter(projectsite_id=project.id, date__range=[datefrom, dateto])
+            sitephotosdetails = SitePhotosDetails.objects.filter(sitephotos__in=sitephotos)
+            projectissues = ProjectIssues.objects.filter(projectsite_id=project.id, date__range=[datefrom, dateto])
+            data={
+                'project':project, 'datefrom':datefrom, 'dateto':dateto,
+                'requisition':requisition, 'requisitiondetails':requisitiondetails, 
+                'externalorder':externalorder, 'externalorder_details':externalorder_details,
+                'joborder':joborder, 'jobordertask':jobordertask,
+                'rework':rework, 'projectissues':projectissues,
+                'sitephotos':sitephotos, 'sitephotosdetails':sitephotosdetails,
+            }
+            pdf = render_to_pdf('pdf_template.html', data)
+            return HttpResponse(pdf, content_type='application/pdf')
+        except ObjectDoesNotExist:
+            messages.error(request, "Dates Does not exist on data")
+            return redirect('weeklyreport')
+		
+
+# class DownloadPDF(View):
+# 	def get(self, request, *args, **kwargs):
+# 		pdf = render_to_pdf('pdf_template.html', data)
+# 		response = HttpResponse(pdf, content_type='application/pdf')
+# 		filename = "poliworks_%s.pdf" %("12341231")
+# 		content = "attachment; filename='%s'" %(filename)
+# 		response['Content-Disposition'] = content
+# 		return response

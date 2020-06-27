@@ -219,7 +219,7 @@
                     </li>
                     {% if request.user.groups.all.0.name != "Warehouseman"%}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'weeklyreport'%}">Generate Report</a>
+                            <a class="nav-link" href="{% url 'projectreport'%}">Generate Report</a>
                         </li>
                     {% endif %}
                 </ul>

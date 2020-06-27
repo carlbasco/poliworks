@@ -540,7 +540,19 @@ class InventoryAdminForm(forms.ModelForm):
         fields='__all__'
 
 class WeeklyReportForm(forms.Form):
-    projectsite = forms.ModelChoiceField(queryset=ProjectSite.objects.all(), label="Project Site")
+    projectsite = forms.ModelChoiceField(ProjectSite.objects.none(), label="Project Site")
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        
+        if user.groups.all()[0].name == "Admin":
+            self.fields['projectsite'].queryset = ProjectSite.objects.all()
+        elif user.groups.all()[0].name == "Project Manager":
+            self.fields['projectsite'].queryset = ProjectSite.objects.filter(pm=user)
+        elif user.groups.all()[0].name == "Person In-Charge":
+            self.fields['projectsite'].queryset = ProjectSite.objects.filter(pic=user)
+           
 
 class ExternalInventoryAdminForm(forms.ModelForm):
     class Meta:

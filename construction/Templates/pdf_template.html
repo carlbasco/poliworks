@@ -1,0 +1,211 @@
+<head>
+    <title>ProjectSite Report</title>
+    <style>
+        @page {
+            size: a4 portrait;
+            @frame header_frame {           /* Static Frame */
+                -pdf-frame-content: header_content;
+                left: 50pt; width: 512pt; top: 40pt; height: 40pt;
+            }
+            @frame content_frame {          /* Content Frame */
+                left: 50pt; width: 512pt; top: 90pt; height: 632pt;
+            }
+            @frame footer_frame {           /* Another static Frame */
+                -pdf-frame-content: footer_content;
+                left: 50pt; width: 512pt; top: 772pt; height: 20pt;
+            }
+        }
+        .text-center{
+            text-align: center;
+        }
+        .mx-auto{
+            text-align:center;
+        }
+        table, th, td {
+            border: 1px solid black;
+            padding-top:5px;
+            padding-left:5px;
+            padding-right:5px;
+        }
+        table, th, td.image{
+            border: none;
+        }
+        td{
+            text-transform: uppercase;
+            font-size: 1rem;
+        }
+        h1{
+            font-size: 2.5rem
+        }
+        h3{
+            font-size: 1.5rem;
+        }
+        .blue{
+            background-color: 	#9cc2e5;
+        }
+        .green{
+            background-color: 	#a8d08d;
+        }
+        .font-weight-bold{
+            font-weight: bold;
+        }
+       
+    </style>
+   
+    </head>
+    
+    <body>
+    
+        <!-- Content for Static Frame 'header_frame' -->
+        <div id="header_content" class="mx-auto text-center">
+            <h1 class="text-center">
+                <img src="static/images-poli/logo-poliworks.png" width="80px" height="45px">
+                <strong>POLIWORKS INC</strong>
+            </h1>
+        </div>
+    
+        <!-- Content for Static Frame 'footer_frame' -->
+        <div id="footer_content">(c) - page <pdf:pagenumber>
+            of <pdf:pagecount>
+        </div>
+    
+        <!-- HTML Content -->
+
+        
+        <table>
+            <tr>
+                <td style="width: 150px;">PERIOD</td>
+                <td> {{datefrom|date:"F d"}} - {{dateto|date:"d, Y"}}</td>
+            </tr>
+            <tr>
+                <td>PROJECT NAME</td>
+                <td>{{project.projectsite}}</td>
+            </tr>
+        </table>
+        <br>
+        
+        <table>
+            <tr>
+                <td class="text-center blue"><h3>PROJECT STATUS REPORT</h3></td>
+            </tr>
+        </table>
+
+        <table>
+            <tr>
+                <td class="text-center blue font-weight-bold"><h3>SITE PHOTOS</h3></td>
+                <br>
+            </tr>
+                {% if sitephotosdetails%}
+                    {% for i in sitephotosdetails%}
+                    <tr>
+                        <td class="image mx-auto">
+                            <img class="mx-auto" src="{{i.image.path}}" style="width: 100%">
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% else %}
+                    <tr>
+                        <td class="text-center">NO RECORDS AVAILABLE</td>
+                    </tr>
+                {% endif %}
+        </table>
+        <br>
+        <table>
+            <tr>
+                <td colspan="2" class="green text-center"> <h3>ISSUES ON SITE</h3></td>
+            </tr>
+            <tr>
+                <td class="text-center font-weight-bold">DATE</td>
+                <td class="text-center font-weight-bold">PROBLEM</td>
+            </tr>
+            {% if projectissues %}
+                {% for i in projectissues %}
+                    <tr>
+                        <td class="text-center">{{i.date|date:"n/j/Y"}}</td>
+                        <td class="text-center">{{i.description}}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="2" class="text-center">NO RECORDS AVAILABLE</td>
+            </tr>
+            {% endif %}
+        
+        </table>
+        <br>
+
+        <br>
+        <table>
+            <tr>
+                <td colspan="7" class="text-center green"><h3>JOB ORDER</h3></td>
+            </tr>
+            <tr>
+                <td class="text-center font-weight-bold">PERSONNEL</th>
+                <td class="text-center font-weight-bold">ACTIVITY</th>
+                <td class="text-center font-weight-bold">REMARKS</th>
+                <td class="text-center font-weight-bold" style="width: 60px;">FROM</th>
+                <td class="text-center font-weight-bold" style="width: 60px;">TO</th>
+                <td class="text-center font-weight-bold" style="width: 80px;">STATUS</th>
+                <td class="text-center font-weight-bold" style="width: 70px;">COMPLETION DATE</th>
+            </tr>
+            {% if jobordertask%}
+                {% for i in jobordertask %}
+                    <tr>
+                        <td class="text-center">{{i.personnel}}</td>
+                        <td class="text-center">{{i.activity}}</td>
+                        <td class="text-center">{{i.remarks}}</td>
+                        <td class="text-center">{{i.date|date:"n/j/Y"}}</td>
+                        <td class="text-center">{{i.date|date:"n/j/Y"}}</td>
+                        <td class="text-center" style="width: 80px;">{{i.status}}</td>
+                        {% if i.completion_date%}
+                        <td class="text-center">{{i.completion_date|date:"n/j/Y"}}</td>
+                        {% else %}
+                        <td class="text-center">None</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            {% else %}
+            <tr>
+                <td class="text-center" colspan="7">NO RECORDS AVAILABLE</td>
+            </tr>
+            {% endif %}
+        </table>
+        <br>
+
+        <br>
+        <table>
+            <tr>
+                <td colspan="5" class="text-center green"><h3>REQUISITION</h3></td>
+            </tr>
+            <tr>
+                <td class="text-center font-weight-bold" style="width: 60px;">DATE</td>
+                <td class="text-center font-weight-bold" style="width: 70px;">QUANTITY</td>
+                <td class="text-center font-weight-bold" style="width: 80px;" >UNIT</td>
+                <td class="text-center font-weight-bold">Articles</td>
+                <td class="text-center font-weight-bold" style="width: 80px;">STATUS</td>
+            </tr>
+                {% if requisitiondetails%}
+                    {% for i in requisitiondetails %}
+                    <tr>
+                        <td class="text-center">{{i.requisition.date|date:"n/j/Y"}}</td>
+                        <td class="text-center">{{i.quantity}}</td>
+                        <td class="text-center">{{i.articles.unit}}</td>
+                        <td class="text-center">{{i.articles}}</td>
+                        {% if i.status2 != None %}
+                        <td class="text-center">{{i.status2}}</td>
+                        {% else %}
+                        <td class="text-center">{{i.status}}</td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center">NO RECORDS AVAILABLE</td>
+                </tr>
+                {% endif %}
+            </table>
+            
+    
+        
+    </body>
+    </html>
