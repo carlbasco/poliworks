@@ -187,7 +187,10 @@ class Quotation(models.Model):
     class Meta:
         verbose_name = 'Quotation'
         verbose_name_plural = 'Quotations'
-    
+
+    def get_grandtotal(self):
+        grandtotal = amount + (amount*.12)
+
     def __str__(self):
         return "{0}".format(self.projectsite)
 
@@ -328,9 +331,9 @@ class RequisitionDetails(models.Model):
     articles = models.ForeignKey(Inventory, on_delete=models.CASCADE, verbose_name="Articles")
     quantity = models.IntegerField(('Quantity'),default=1)
     status = models.CharField(('Status'),max_length=255, choices=status, null=True,)
-    status2 ={('Incomplete', 'Incomplete'), ('Not Recieved','Not Recieved'), ('Complete','Complete')}
+    status2 ={('Incomplete', 'Incomplete'), ('Not Received','Not Received'), ('Complete','Complete')}
     status2 = models.CharField(('Action'), max_length=255, choices=status2, null=True, blank=True)
-    quantity2 = models.IntegerField(('Quantity Recieve'), null=True, blank=True, default=0)
+    quantity2 = models.IntegerField(('Quantity Receive'), null=True, blank=True, default=0)
     class Meta:
         verbose_name_plural='Requisition Form Details'
         verbose_name='Requisition Form Detail'

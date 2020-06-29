@@ -418,9 +418,19 @@ class JobOrderTasksForm(forms.ModelForm):
         model=JobOrderTask
         fields='__all__'
 
+class JobOrderReportForm(forms.ModelForm):
+    class Meta:
+        model = JobOrder
+        fields = '__all__'
+
+    # def __init__(self, *args, **kwargs):
+    #     new_choices = kwargs.pop('new_choices')
+    #     super().__init__(*args, **kwargs)
+    #     self.fields['status'].choices = new_choices
+
 JobOrderReportFormSet = inlineformset_factory(JobOrder, JobOrderTask,
-    form=JobOrderUpdateForm,
-    exclude=('activity', 'date','date2','personnel','completion_date', 'remarks'),
+    form=JobOrderReportForm,
+    exclude=('activity', 'date','date2','personnel','completion_date'),
     extra=0,
     can_delete=False,
     widgets={

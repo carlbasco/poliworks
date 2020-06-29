@@ -550,7 +550,7 @@ class RequisitionUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView)
         self.object = form.save()
         if formset.is_valid():
             formset.instance = self.object
-            formset.save
+            formset.save()
             return super(RequisitionUpdateView, self).form_valid(form)
 
     def get_success_url(self):
@@ -748,7 +748,7 @@ def RequisitionActionView_WHM(request,pk):
                     data.status = "Closed"
                     data.save()
                     for l in data2:
-                        if l.status2 == "Not Recieved" or l.status == "Incomplete":
+                        if l.status2 == "Not Received" or l.status == "Incomplete":
                             data.status = "Incomplete Order (Closed)"
                             data.save()
                     messages.success(request, "Delivered Items has been added to Inventory.")
@@ -769,7 +769,7 @@ def RequisitionActionView_WHM(request,pk):
                     data.status = "Closed"
                     data.save()
                     for l in data2:
-                        if l.status2 == "Not Recieved" or l.status == "Incomplete":
+                        if l.status2 == "Not Received" or l.status == "Incomplete":
                             data.status = "Incomplete Order (Closed)"
                             data.save()
                     messages.success(request, "Delivered Items has been added to Inventory.")
@@ -1041,7 +1041,7 @@ class ExternalOrderUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateVie
     login_url ="signin"
     redirect_field_name = "redirect_to"
     model = ExternalOrder
-    fields = ('projectsite','supplier','date','whm')
+    fields = ('projectsite','supplier','date','whm','remarks')
     exclude = ['totalprice']
     template_name ='backoffice/externalorder_pages/externalorder_update.html'
     success_message = "External Order has been updated."
@@ -1285,6 +1285,7 @@ def JobOrderListView_WHM(request):
 @whm_only
 def JobOrderReportView(request,pk):
     data = JobOrder.objects.get(id=pk)
+    data2 = JobOrderTask.objects.exclude(Q(status__contains="Done"))
     if request.method == 'POST':
         formset = JobOrderReportFormSet(request.POST, instance=data)
         if formset.is_valid():
@@ -1318,7 +1319,7 @@ def JobOrderReportView(request,pk):
             messages.warning(request, "Failed")
             return redirect('joborder_detail', pk=data.id)
     else:
-        formset = JobOrderReportFormSet(instance=data)
+        formset = JobOrderReportFormSet(instance=data, queryset=data2)
     context = {'formset': formset, 'data':data}
     return render(request, 'backoffice/joborder_pages/joborder_report.html', context)
 
@@ -1957,27 +1958,27 @@ from django.contrib.staticfiles import finders
 def link_callback(uri, rel):
     result = finders.find(uri)
     if result:
-            if not isinstance(result, (list, tuple)):
-                    result = [result]
-            result = list(os.path.realpath(path) for path in result)
-            path=result[0]
+        if not isinstance(result, (list, tuple)):
+                result = [result]
+        result = list(os.path.realpath(path) for path in result)
+        path=result[0]
     else:
-            sUrl = settings.STATIC_URL        # Typically /static/
-            sRoot = settings.STATIC_ROOT      # Typically /home/userX/project_static/
-            mUrl = settings.MEDIA_URL         # Typically /media/
-            mRoot = settings.MEDIA_ROOT       # Typically /home/userX/project_static/media/
+        sUrl = settings.STATIC_URL        # Typically /static/
+        sRoot = settings.STATIC_ROOT      # Typically /home/userX/project_static/
+        mUrl = settings.MEDIA_URL         # Typically /media/
+        mRoot = settings.MEDIA_ROOT       # Typically /home/userX/project_static/media/
 
-            if uri.startswith(mUrl):
-                    path = os.path.join(mRoot, uri.replace(mUrl, ""))
-            elif uri.startswith(sUrl):
-                    path = os.path.join(sRoot, uri.replace(sUrl, ""))
-            else:
-                    return uri
+        if uri.startswith(sUrl):
+            path = os.path.join(sRoot, uri.replace(sUrl, ""))
+        elif uri.startswith(mUrl):
+            path = os.path.join(mRoot, uri.replace(mUrl, ""))
+        else:
+            return uri
 
     if not os.path.isfile(path):
-            raise Exception(
-                    'media URI must start with %s or %s' % (sUrl, mUrl)
-            )
+        raise Exception(
+                'media URI must start with %s or %s' % (sUrl, mUrl)
+        )
     return path
 
 def render_to_pdf(template_src, context_dict={}):

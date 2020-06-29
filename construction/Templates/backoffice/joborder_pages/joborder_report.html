@@ -32,9 +32,9 @@
                             <thead>
                                 <th style="min-width: 150px;" class="font-weight-bold">Personnel</th>
                                 <th style="min-width: 150px;" class="font-weight-bold">Activity</th>
-                                <th style="min-width: 150px;" class="font-weight-bold">Duration</th>
+                                <th style="min-width: 150px;" class="font-weight-bold">Remarks</th>
+                                <th colspan="2" style="min-width: 150px;" class="font-weight-bold">Duration</th>
                                 <th style="min-width: 150px;" class="font-weight-bold">Status</th>
-                                <th style="min-width: 150px;" class="font-weight-bold text-center">Action</th>
                             </thead>
                             {{ formset.management_form }}
                             {% for form in formset.forms %}
@@ -42,6 +42,7 @@
                             <tr class="formset_row">
                                 <td >{{form.instance.personnel}}</td>
                                 <td>{{form.instance.activity}}</td>
+                                <td>{{form.instance.remarks}}</td>
                                 <td>
                                     <label>From:</label>
                                     {{form.instance.date}}
@@ -68,6 +69,7 @@
                                 </div>
                                 <div class="modal-body">
                                     <p>Are you sure you want to update this report?</p>
+                                    <p class="text-muted" style="font-size: 12px;"><i>Once you change its status into "Done", you cannot edit it anymore.</i></p>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="submit" class="btn btn-outline-primary" >Update Report</button>

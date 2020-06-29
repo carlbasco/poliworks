@@ -1,3 +1,4 @@
+{% load static %}
 <head>
     <title>ProjectSite Report</title>
     <style>
@@ -59,7 +60,7 @@
         <!-- Content for Static Frame 'header_frame' -->
         <div id="header_content" class="mx-auto text-center">
             <h1 class="text-center">
-                <img src="static/images-poli/logo-poliworks.png" width="80px" height="45px">
+                <img src="images-poli/logo-poliworks.png" width="80px" height="45px">
                 <strong>POLIWORKS INC</strong>
             </h1>
         </div>
@@ -75,7 +76,7 @@
         <table>
             <tr>
                 <td style="width: 150px;">PERIOD</td>
-                <td> {{datefrom|date:"F d"}} - {{dateto|date:"d, Y"}}</td>
+                <td> {{datefrom|date:"F d"}} - {{dateto|date:"F d, Y"}}</td>
             </tr>
             <tr>
                 <td>PROJECT NAME</td>
@@ -140,27 +141,27 @@
                 <td colspan="7" class="text-center green"><h3>JOB ORDER</h3></td>
             </tr>
             <tr>
+                <td class="text-center font-weight-bold" style="width: 60px;">FROM</th>
+                <td class="text-center font-weight-bold" style="width: 60px;">TO</th>
                 <td class="text-center font-weight-bold">PERSONNEL</th>
                 <td class="text-center font-weight-bold">ACTIVITY</th>
                 <td class="text-center font-weight-bold">REMARKS</th>
-                <td class="text-center font-weight-bold" style="width: 60px;">FROM</th>
-                <td class="text-center font-weight-bold" style="width: 60px;">TO</th>
                 <td class="text-center font-weight-bold" style="width: 80px;">STATUS</th>
                 <td class="text-center font-weight-bold" style="width: 70px;">COMPLETION DATE</th>
             </tr>
             {% if jobordertask%}
                 {% for i in jobordertask %}
                     <tr>
+                        <td class="text-center">{{i.date|date:"n/j/Y"}}</td>
+                        <td class="text-center">{{i.date|date:"n/j/Y"}}</td>
                         <td class="text-center">{{i.personnel}}</td>
                         <td class="text-center">{{i.activity}}</td>
                         <td class="text-center">{{i.remarks}}</td>
-                        <td class="text-center">{{i.date|date:"n/j/Y"}}</td>
-                        <td class="text-center">{{i.date|date:"n/j/Y"}}</td>
                         <td class="text-center" style="width: 80px;">{{i.status}}</td>
                         {% if i.completion_date%}
                         <td class="text-center">{{i.completion_date|date:"n/j/Y"}}</td>
                         {% else %}
-                        <td class="text-center">None</td>
+                        <td class="text-center">N/A</td>
                         {% endif %}
                     </tr>
                 {% endfor %}
@@ -180,8 +181,8 @@
             <tr>
                 <td class="text-center font-weight-bold" style="width: 60px;">DATE</td>
                 <td class="text-center font-weight-bold" style="width: 70px;">QUANTITY</td>
-                <td class="text-center font-weight-bold" style="width: 80px;" >UNIT</td>
                 <td class="text-center font-weight-bold">Articles</td>
+                <td class="text-center font-weight-bold" style="width: 60px;">UNIT</td>
                 <td class="text-center font-weight-bold" style="width: 80px;">STATUS</td>
             </tr>
                 {% if requisitiondetails%}
@@ -189,8 +190,8 @@
                     <tr>
                         <td class="text-center">{{i.requisition.date|date:"n/j/Y"}}</td>
                         <td class="text-center">{{i.quantity}}</td>
-                        <td class="text-center">{{i.articles.unit}}</td>
                         <td class="text-center">{{i.articles}}</td>
+                        <td class="text-center">{{i.articles.unit}}</td>
                         {% if i.status2 != None %}
                         <td class="text-center">{{i.status2}}</td>
                         {% else %}
@@ -204,8 +205,5 @@
                 </tr>
                 {% endif %}
             </table>
-            
-    
-        
     </body>
     </html>
