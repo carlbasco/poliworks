@@ -151,8 +151,8 @@
                                 {% else %}
                                     <td class="text-center">N/A</td>
                                 {% endif %}
-                                <td>{{i.date}}</td>
-                                <td>{{i.date2}}</td>
+                                <td class="text-center">{{i.date}}</td>
+                                <td class="text-center">{{i.date2}}</td>
                                 <td class="text-center"><a class="btn btn-outline-primary" href="{% url 'personnel_detail' i.id %}">View</a></td>
                             </tr>
                             {% endfor %}

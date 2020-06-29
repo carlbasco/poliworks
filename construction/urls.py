@@ -77,7 +77,7 @@ urlpatterns = [
 
     #Inventory
     path('materials/inventory_list', views.ProjectInventoryListView, name="inventory_list"),
-    path('materials/inventory_list/external', views.ExternalProjectInventoryListView, name="external_inventory_list"),
+    path('materials/inventory_list/external_inventory', views.ExternalProjectInventoryListView, name="external_inventory_list"),
     path('materials/inventory/<int:pk>', views.ProjectInventoryDetailView, name="inventory_detail"),
     path('materials/inventory/external/<int:pk>', views.ExternalProjectInventoryDetailView, name="external_inventory_detail"),
 

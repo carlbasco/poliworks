@@ -18,6 +18,7 @@ delete from sqlite_sequence where name='`construction_jobordertask`';
 
 delete from `construction_rework`;    
 delete from sqlite_sequence where name='`construction_rework`';
+
 delete from `construction_projectinventory`;    
 delete from sqlite_sequence where name='`construction_projectinventory`';
 
@@ -26,10 +27,6 @@ delete from sqlite_sequence where name='`construction_projectinventorydetails`';
 
 delete from `construction_projectdailyreport`;    
 delete from sqlite_sequence where name='`construction_projectdailyreport`';
-
-delete from `construction_projectdailyreport`;    
-delete from sqlite_sequence where name='`construction_projectdailyreport`';
-
 
 delete from `construction_sitephotos`;    
 delete from sqlite_sequence where name='`construction_sitephotos`';
@@ -70,3 +67,4 @@ delete from sqlite_sequence where name='`construction_projectsite`';
 delete from `construction_projectdailyreportdetails`;    
 delete from sqlite_sequence where name='`construction_projectdailyreportdetails`';
 
+Update 'construction_personnel' SET projectsite_id=NULL, date=NULL, date2=NULL, status="Available" WHERE status = "Currently Assigned"
