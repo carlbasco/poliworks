@@ -120,10 +120,9 @@ urlpatterns = [
 
 
     #api get method
-    path('backoffice/api/scope', views.ScopeOfWorks_api, name="ScopeOfWorks_api"),
-    path('backoffice/api/scope/<int:pk>', views.ScopeOfWork_api, name="ScopeOfWork_api"),
-    path('backoffice/api/materials/<int:pk>/', views.Inventory_api, name="Inventory_api"),
-    path('backoffice/api/city/<int:pk>', views.City_api, name="Inventory_api"),
+    path('backoffice/api/scope/<int:pk>', views.ScopeOfWork_api, name="scopeofworks_api"),
+    path('backoffice/api/materials/<int:pk>/', views.Inventory_api, name="inventory_api"),
+    path('backoffice/api/city/<int:pk>', views.City_api, name="city_api"),
     
     #PM's page
     path('pm/project_list', views.ProjectListView_PM, name="project_list_pm"),

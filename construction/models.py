@@ -452,7 +452,9 @@ class ProjectDailyReport(models.Model):
     whm = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True,blank=True,
         related_name='dailyreport_whm', verbose_name='Warehouseman',limit_choices_to={'groups__name': "Warehouseman"})
     date = models.DateField(default=datetime.date.today)
-
+    class Meta:
+        verbose_name = 'ProjectSite - Material Report(Inventory - onsite)'
+        verbose_name_plural = 'ProjectSite - Material Report(Inventory - onsite)'
 
 class ProjectDailyReportDetails(models.Model):
     report = models.ForeignKey(ProjectDailyReport, on_delete=models.CASCADE, null=True)
@@ -465,8 +467,8 @@ class ExternalProjectInventory(models.Model):
     projectsite = models.OneToOneField(ProjectSite, on_delete=models.CASCADE, verbose_name='Project Site')
     last_update = models.DateField(auto_now=True)
     class Meta:
-        verbose_name_plural='ProjectSite - External Inventory'
-        verbose_name='ProjectSite - External Inventory'
+        verbose_name_plural='ProjectSite - External Inventory(onsite)'
+        verbose_name='ProjectSite - External Inventory(onsite)'
     
 
 class ExternalProjectInventoryDetails(models.Model):
@@ -484,7 +486,9 @@ class ExternalOrderReport(models.Model):
     whm = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True,blank=True,
         verbose_name='Warehouseman',limit_choices_to={'groups__name': "Warehouseman"})
     date = models.DateField(default=datetime.date.today)
-
+    class Meta:
+        verbose_name = 'ProjectSite - Material Report(External Inventory - onsite)'
+        verbose_name_plural = 'ProjectSite - Material Report(External Inventory - onsite)'
 
 class ExternalOrderDetailsReport(models.Model):
     report = models.ForeignKey(ExternalOrderReport, on_delete=models.CASCADE, null=True)

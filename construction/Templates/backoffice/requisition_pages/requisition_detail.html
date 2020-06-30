@@ -119,12 +119,14 @@
                             <a href="{% url 'requisition_action' data.id%}" class="btn btn-outline-primary float-right mr-3">Comply Request</a>
                         {% endif%}
                     {% else %}
+                    {% if request.user.groups.all.0.name == "Warehouseman"%}
                         {% if data.status == "Pending" %}
                             <a href="{% url 'requisition_delete' data.id%}" class="btn btn-outline-danger float-right mr-5">Delete</a>
                             <a href="{% url 'requisition_update' data.id%}" class="btn btn-outline-primary float-right mr-3">Edit</a>
                         {% elif data.status == "To be Delivered" %}
                             <a href="{% url 'requisition_action_whm' data.id%}" class="btn btn-outline-primary float-right mr-5">Update Delivery</a>
                         {% endif %}
+                    {% endif %}
                     {% endif %}
                 </div>
             </div>

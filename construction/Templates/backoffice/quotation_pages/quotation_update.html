@@ -4,6 +4,22 @@
 {% load humanize %}
 {% block content %}
 <span class="text-uppercase page-subtitle">Project</span>
+{% if request.user.groups.all.0.name == "Project Manager"%}   
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-inverse-primary">
+        <li class="breadcrumb-item">
+            <a href="{% url 'quotation_create'%}">Quotation Form</a>
+        </li>
+        <li class="breadcrumb-item">
+            {% if request.user.groups.all.0.name == "Admin"%}    
+                <a href="{% url 'quotation_list'%}">Quotation List</a>
+            {% else %}
+                <a href="{% url 'quotation_list_pm'%}">Quotation List</a>
+            {% endif %}
+        </li>
+    </ol>
+</nav>
+{% endif %}
 <form action="" method="POST">
 {% csrf_token%}
     <div class="card card-form">
@@ -11,45 +27,49 @@
             <h3 style="text-align: center;">Quotation Update Form</h3>
         </div>
         <div class="card-body">
-            <div class="col-lg-12">
-                <div class="row justify-content-center">
-                    <div class="form-group col-md-8">
-                        <label>Project Site:</label>
-                        <input type="text" class="form-control" value="{{form.instance.projectsite}}" disabled>
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label>Date:</label>
-                        <input type="text" class="form-control" value="{{form.instance.date}}" disabled>
-                    </div>
-                    <div class="form-group col-md-8">
-                        {{form.subject|as_crispy_field}}
-                    </div>
-                    <div class="form-group col-md-4">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row justify-content-center">
+                        <div class="form-group col-md-8">
+                            <label>Project Site:</label>
+                            <input type="text" class="form-control" value="{{form.instance.projectsite}}" disabled>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>Date:</label>
+                            <input type="text" class="form-control" value="{{form.instance.date}}" disabled>
+                        </div>
+                        <div class="form-group col-md-8">
+                            {{form.subject|as_crispy_field}}
+                        </div>
+                        <div class="form-group col-md-4">
+                        </div>
                     </div>
                 </div>
+                <div class="col-md-12 table-responsive">
+                    <table id="tbl_quotation" class="table">
+                        <thead>
+                            <th style="min-width:300px;">Scope of Work</th>
+                            <th style="min-width: 100px;">Unit</th>
+                            <th style="min-width: 100px;">Quantity</th>
+                            <th>Delete</th>
+                        </thead>
+                        {{ formset.management_form }}
+                        {% for i in formset.forms %}
+                        {{i.id}}
+                        <tr class="formset_row">
+                            <td style="min-width:250px;">{{i.scope_of_work}}</td>
+                            <td>{{i.unit}}</td>
+                            <td>{{i.quantity}}</td>
+                            <td>
+                                {% if formset.can_delete %}
+                                    {{ i.DELETE }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
             </div>
-            <table id="tbl_quotation" class="table table-responsive-sm">
-                <thead>
-                    <th style="min-width:250px;">Scope of Work</th>
-                    <th style="min-width: 100px;">Unit</th>
-                    <th style="min-width: 100px;">Quantity</th>
-                    <th>Delete</th>
-                </thead>
-                {{ formset.management_form }}
-                {% for i in formset.forms %}
-                {{i.id}}
-                <tr class="formset_row">
-                    <td style="min-width:250px;">{{i.scope_of_work}}</td>
-                    <td>{{i.unit}}</td>
-                    <td>{{i.quantity}}</td>
-                    <td>
-                        {% if formset.can_delete %}
-                            {{ i.DELETE }}
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </table>
             <div class="row">
                 <div class="form-group col-md-8">
                 </div>
@@ -98,5 +118,4 @@
         $('.sow').select2();
     })
 </script>
-<script src="{% static 'assets/js/custom/quotation_update.js'%}"></script>
 {%endblock%}

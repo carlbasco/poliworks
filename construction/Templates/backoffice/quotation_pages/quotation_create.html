@@ -7,7 +7,7 @@
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb bg-inverse-primary">
         <li class="breadcrumb-item active" aria-current="page">
-        Quotation Form
+            Quotation Form
         </li>
         <li class="breadcrumb-item">
             {% if request.user.groups.all.0.name == "Admin"%}    
@@ -110,9 +110,48 @@
         deleteText: 'Remove',
         prefix: '{{ formset.prefix }}'
     })
+///////////////////////////////////////////////////////////////////////////
+    loadstart();
+///////////////////////////////////////////////////////////////////////////
+    function loadstart(){
+        $('.sow').select2();
+        $('#id_projectsite').select2()
+        var url = "{% url 'scopeofworks_api' 123%}"
+        $('.qty').change(function(){
+            var quantity = $(this).val()
+            var scope = $(this).closest('tr').find('.sow').val()
+            var amount =$(this).closest('tr').find('.tcost')
+            if(scope != ""){
+                $.ajax({
+                    method: 'GET',
+                    url:url.replace(123,scope),
+                    success:function(data){
+                        var unit_cost = parseFloat(data[0].materialcost+data[0].laborcost+data[0].subbid)
+                        var tcost = parseFloat(unit_cost * quantity)
+                        amount.val(tcost)
+                        calculate()
+                    }
+                }); 
+            }
+        });
+        
+    };
+///////////////////////////////////////////////////////////////////////////
+    function calculate(){
+        var sum = 0;
+        $('.tcost').each(function() {
+            var value = $(this).val();
+            if(!isNaN(value) && value.length != 0 && value != 0) {
+                sum += parseFloat(value);
+            }
+            $('#total_amount').val(sum)
+        });
+    };
+///////////////////////////////////////////////////////////////////////////
+    $('.add-row').click(function(){
+        loadstart();
+    })
 </script>
-<script src="{% static 'assets/js/custom/quotation.js'%}"></script>
-<script>$('#id_projectsite').select2()</script>
 <style>span.select2-selection.select2-selection--single {height: 30px;}</style>
 {%endblock%}
 

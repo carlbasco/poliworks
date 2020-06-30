@@ -188,7 +188,7 @@ QuotationFormSet = inlineformset_factory(Quotation, QuotationDetails,
     extra=1,
     can_delete=True,
     widgets={
-        'scope_of_work':forms.Select(attrs={'class':'sow', }),
+        'scope_of_work':forms.Select(attrs={'class':'sow', 'required': 'true'}),
         'unit':forms.TextInput(attrs={'class':'form-control',}),
         'quantity':forms.NumberInput( attrs={'class':'form-control qty','required': 'true'}),
     }
@@ -269,6 +269,10 @@ RequisitionFormSet = inlineformset_factory(Requisition, RequisitionDetails,
         'articles':forms.Select(attrs={'class':'form-control art'})
     }
 )
+class RequisitionUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Requisition
+        fields = '__all__'
 
 RequisitionUpdateFormSet = inlineformset_factory(Requisition, RequisitionDetails, 
     form=RequisitionNewForm, 
@@ -444,11 +448,11 @@ class JobOrderReportForm(forms.ModelForm):
 
 JobOrderReportFormSet = inlineformset_factory(JobOrder, JobOrderTask,
     form=JobOrderReportForm,
-    exclude=('activity', 'date','date2','personnel','completion_date'),
+    exclude=('activity', 'date','date2','personnel','completion_date','remarks'),
     extra=0,
     can_delete=False,
     widgets={
-        'remarks':forms.TextInput(attrs={'class':'form-control'}),
+        # 'remarks':forms.TextInput(attrs={'class':'form-control'}),
         'status':forms.Select(attrs={'class':'form-control'}),
     }  
 )

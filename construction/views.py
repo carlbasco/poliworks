@@ -292,7 +292,7 @@ class QuotationCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
             quotation.amount = 0
             quotation_list = formset.save()
             for i in quotation_list:
-                quotation.amount += i.unitcost()
+                quotation.amount += i.q_amount()
             quotation.save()
             return super(QuotationCreateView, self).form_valid(form)
         
@@ -332,7 +332,7 @@ class QuotationUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
             data3 = QuotationDetails.objects.filter(quotation=data2.id)
             data2.amount = 0
             for i in data3:
-                data2.amount +=i.unitcost()
+                data2.amount +=i.q_amount()
             data2.save()
             return super(QuotationUpdateView, self).form_valid(form)
         
@@ -1305,9 +1305,8 @@ def JobOrderReportView(request,pk):
     if request.method == 'POST':
         formset = JobOrderReportFormSet(request.POST, instance=data)
         if formset.is_valid():
-            formset.save()
-            data2 = JobOrderTask.objects.filter(joborder=data.id)
-            for i in data2:
+            task = formset.save(False)
+            for i in task:
                 if i.status == "Done":
                     i.completion_date = datetime.date.today()
                     i.save()
@@ -1320,6 +1319,8 @@ def JobOrderReportView(request,pk):
                     data3.date = None
                     data3.date2 = None
                     data3.save()
+                elif i.status == "Done (Overdue)":
+                    i.save()
                 else:
                     data3 = Personnel.objects.get(id=i.personnel.id)
                     data3.projectsite=data.projectsite
@@ -1329,6 +1330,7 @@ def JobOrderReportView(request,pk):
                     data3.save()
                     i.completion_date = None
                     i.save()
+            formset.save()        
             messages.success(request, "Job Order status has been updated.")
             return redirect('joborder_detail', pk=data.id)
         else:

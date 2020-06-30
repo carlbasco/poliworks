@@ -123,8 +123,33 @@
     $('form').bind('submit', function () {
         $(this).find('#id_whm').prop('disabled', false);
     });
+///////////////////////////////////////////////////////////////////////////
+    loadstart();
+///////////////////////////////////////////////////////////////////////////
+    function loadstart(){
+        var url = "{% url 'inventory_api' 123%}"
+        $('.art').select2();
+
+        $('.art').change(function(){
+            var article = $(this).val()
+            var next_td = $(this).closest('tr').find('.unit')
+            if(article != ""){
+                $.ajax({
+                    method: 'GET',
+                    url:url.replace(123,article),
+                    success:function(data){
+                        var unit = data[0].unit
+                        next_td.val(unit)
+                    }
+                }); 
+            }
+        });
+        
+    };
+///////////////////////////////////////////////////////////////////////////
+    $('.add-row').click(function(){
+        loadstart();
+    })
 </script>
-<script src="{% static 'assets/js/custom/requisition.js'%}"></script>
-<script>$('#id_projectsite').select2()</script>
 <style>span.select2-selection.select2-selection--single {height: 30px;}</style>
 {%endblock%}
