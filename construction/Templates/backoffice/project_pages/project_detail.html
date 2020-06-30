@@ -65,11 +65,15 @@
                 </div>
                 <div id="blueprint" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
                     <div class="card-body">
-                        {% if data.design %}
-                        <img src="{{data.design.url}}" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="">
-                        {% else %}
-                        <p>No Data Available</p>
-                        {% endif %}
+                        <div class="row">
+                            <div class="mx-auto">
+                                {% if data.design %}
+                                    <img src="{{data.design.url}}" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="">
+                                {% else %}
+                                    <p>No Data Available</p>
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -90,11 +94,11 @@
                         <table class="table table-borderless">
                             <thead>
                                 <tr>
-                                <th>Subject</th>
-                                <th>Date</th>
-                                <th>Total Amount</th>
-                                <th>Status</th>
-                                <th>Action</th>
+                                <th class="text-center">Subject</th>
+                                <th class="text-center">Date</th>
+                                <th class="text-center">Total Amount</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Action</th>
                                 </tr>
                             </thead>
                         <tbody>

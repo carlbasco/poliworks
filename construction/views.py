@@ -629,7 +629,8 @@ def RequisitionListView_WHM(request):
 def RequisitionDetailView(request, pk):
     data = Requisition.objects.get(id=pk)
     data2 = RequisitionDetails.objects.filter(requisition=data.id)
-    context= {'data':data, 'data2':data2,}
+    data3 = RequisitionImage.objects.filter(requisition=data.id)
+    context= {'data':data, 'data2':data2, 'data3':data3}
     return render(request, 'backoffice/requisition_pages/requisition_detail.html', context)
 
 @login_required(login_url='signin')
@@ -650,7 +651,7 @@ def RequisitionDeleteView(request, pk):
         elif group == "Admin":
             return redirect("requisition_list")
 
-    context= {'data':data, 'data2':data2,}
+    context= {'data':data, 'data2':data2, }
     return render(request, 'backoffice/requisition_pages/requisition_delete.html', context)
 
 @login_required(login_url='signin')
@@ -703,9 +704,11 @@ def RequisitionActionView_WHM(request,pk):
     data2 = RequisitionDetails.objects.filter(requisition=data.id)
     queryset = RequisitionDetails.objects.exclude(Q(status="Pending")| Q(status="Canceled"))
     if request.method == 'POST':
+        form = RequisitionImageForm(request.POST, request.FILES)
         formset = RequisitionActionFormSet_whm(request.POST, instance=data, queryset=queryset)
+        files = request.FILES.getlist('image')
         if data.status != "Completed":
-            if formset.is_valid():
+            if form.is_valid() and formset.is_valid():
                 formset.save()
                 for i in data2:
                     if i.status2 == "Complete":
@@ -739,9 +742,11 @@ def RequisitionActionView_WHM(request,pk):
                             try:
                                 data4 = ProjectInventoryDetails.objects.get(inventory=data3,articles=k.articles)
                                 data4.quantity += k.quantity2
+                                k.save()
                                 data4.save()
                             except ObjectDoesNotExist:
                                 data4 = ProjectInventoryDetails.objects.create(inventory=data3, articles=k.articles, quantity=k.quantity2)
+                                k.save()
                                 data4.save()
                     data3.last_update = datetime.date.today()
                     data3.save()
@@ -751,6 +756,10 @@ def RequisitionActionView_WHM(request,pk):
                         if l.status2 == "Not Received" or l.status == "Incomplete":
                             data.status = "Incomplete Order (Closed)"
                             data.save()
+                    form.save(False)
+                    for f in files:
+                        image = RequisitionImage(requisition=data, image=f)
+                        image.save()
                     messages.success(request, "Delivered Items has been added to Inventory.")
                     return redirect('requisition_detail',pk=data.id)
                 except ObjectDoesNotExist:
@@ -760,9 +769,11 @@ def RequisitionActionView_WHM(request,pk):
                             try:
                                 data4 = ProjectInventoryDetails.objects.get(inventory=data3, articles=k.articles)
                                 data4.quantity += k.quantity2
+                                k.save()
                                 data4.save()
                             except ObjectDoesNotExist:
                                 data4 = ProjectInventoryDetails.objects.create(inventory=data3, articles=k.articles, quantity=k.quantity2)
+                                k.save()
                                 data4.save()
                     data3.last_update = datetime.date.today()
                     data3.save()
@@ -772,6 +783,10 @@ def RequisitionActionView_WHM(request,pk):
                         if l.status2 == "Not Received" or l.status == "Incomplete":
                             data.status = "Incomplete Order (Closed)"
                             data.save()
+                    form.save(False)
+                    for f in files:
+                        image = RequisitionImage(requisition=data, image=f)
+                        image.save()
                     messages.success(request, "Delivered Items has been added to Inventory.")
                     return redirect('requisition_detail',pk=data.id)    
             else:
@@ -781,8 +796,9 @@ def RequisitionActionView_WHM(request,pk):
             messages.error(request, "This Requisition has been already added to inventory")
             return redirect('requisition_detail', pk=data.id)
     else:
+        form = RequisitionImageForm()
         formset = RequisitionActionFormSet_whm(instance=data, queryset=queryset)
-    context={'formset':formset, 'data':data, 'data2':data2}
+    context={'form':form, 'formset':formset, 'data':data, 'data2':data2, }
     return render(request, 'backoffice/requisition_pages/requisition_action_whm.html', context)
 
 

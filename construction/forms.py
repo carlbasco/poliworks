@@ -241,13 +241,17 @@ class RequisitionForm(forms.ModelForm):
         model=Requisition
         fields = '__all__'
         exclude = ('status',)
-        
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super(RequisitionForm, self).__init__(*args, **kwargs)
         if user:
             self.fields['projectsite'].queryset = ProjectSite.objects.filter(whm=user)
+
+class RequisitionAdminForm(forms.ModelForm):
+    class Meta:
+        model = Requisition
+        fields = '__all__'
 
 class RequisitionNewForm(forms.ModelForm):
     unit = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control unit','readonly':'true', 'required':'false'}))
@@ -281,12 +285,22 @@ class RequisitionActionForm(forms.ModelForm):
     class Meta:
         model=Requisition
         fields='__all__'
+
+class RequisitionImageForm(forms.ModelForm):
+    class Meta:
+        model = RequisitionImage
+        fields = ('image',)
+        widgets={
+            'image':forms.FileInput(attrs={'class':'custom-file-input','multiple': True, })
+        }
         
 RequisitionActionFormSet = inlineformset_factory(Requisition, RequisitionDetails, 
     form=RequisitionActionForm, 
     exclude=('requisition','quantity','articles','quantity2'),
     extra=0,
-    widgets={'status':forms.Select(attrs={'class':'form-control', 'required':True})}
+    widgets={
+        'status':forms.Select(attrs={'class':'form-control ', 'required':True})
+    }
 )
 
 RequisitionActionFormSet_whm = inlineformset_factory(Requisition, RequisitionDetails, 
@@ -294,7 +308,7 @@ RequisitionActionFormSet_whm = inlineformset_factory(Requisition, RequisitionDet
     exclude=('requisition','quantity','articles','status'),
     extra=0,
     widgets={
-        'status2':forms.Select(attrs={'class':'form-control', 'required':True}),
+        'status2':forms.Select(attrs={'class':'form-control mb-2', 'required':True}),
         'quantity2':forms.NumberInput(attrs={'class':'form-control','placeholder':'leave it blank if complete or not recieved'}),
     }
 )

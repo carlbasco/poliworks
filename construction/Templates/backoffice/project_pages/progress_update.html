@@ -18,7 +18,7 @@
                     <div class="chartjs-wrapper col-md-12">
                         <h4>Project Site: </h4><h3>{{data.projectsite}}</h3>
                     </div>
-                    <div class="table-responsive">
+                    <div class="col-md-12 table-responsive">
                         <table class="table table-bordered" id="table_progress">
                             <thead>
                                 <th>Scope of Work</th>
@@ -35,6 +35,8 @@
                             </tr>
                             {% endfor %}
                         </table>
+                    </div>
+                    <div class="col-md-12">
                         <button type="button" id="sbmt-modal" class="btn btn-outline-primary float-right mt-3 ml-3" data-toggle="modal" data-target="#exampleModal-2">Update</button>
                         <a href="{% url 'progress_delete' data.id%}" class="btn btn-outline-danger float-right mt-3 ml-3">Delete</a>
                     </div>

@@ -47,20 +47,20 @@
                     <h2 class="mb-0">Requisition</h2>
                 </div>
                 <div class="card-body">
-                    <div class="row"> 
-                        <div class = "col-md-8">
-                            <h6 class="sub">Project Site: <span class="txt">{{data.projectsite}}</span></h6>
+                    <form action="" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row"> 
+                            <div class = "col-md-8">
+                                <h6 class="sub">Project Site: <span class="txt">{{data.projectsite}}</span></h6>
+                            </div>
+                            <div class="col-md-4 ">
+                                <h6 class="sub">Date Created: <span class="txt">{{data.date}}</span></h6>
+                            </div>
+                            <div class="col-md-4">
+                                <h6 class="sub">Prepared by: <span class="txt">{{data.whm}}</span></h6>
+                            </div>
                         </div>
-                        <div class="col-md-4 ">
-                            <h6 class="sub">Date Created: <span class="txt">{{data.date}}</span></h6>
-                        </div>
-                        <div class="col-md-4">
-                            <h6 class="sub">Prepared by: <span class="txt">{{data.whm}}</span></h6>
-                        </div>
-                    </div>
-                    <form action="" method="post">
                         <div class="table-responsive-lg col-lg-12">
-                            {% csrf_token %}
                             <table class="table">
                                 <thead class="thead" id="head_tbl">
                                     <tr>
@@ -80,11 +80,21 @@
                                                 <td class="text-center">{{i.instance.articles.unit}}</td>
                                                 <td class="text-center">{{i.instance.quantity}}</td>
                                                 <td class="text-center">{{i.status2}}</td>
-                                                <td class="text-center">{{i.quantity2}}
+                                                <td class="text-center">{{i.quantity2}} <small class="text-muted">leave it blank if complete or not received</small></td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
                             </table>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group mt-4">
+                                <label for="">Image (receipt/ materials)<!--<span class="asteriskField">*</span>--> </label>
+                                <div class="custom-file">
+                                    {{form.image}}
+                                    <label class="custom-file-label" for="customFile">Choose file</label>
+                                </div>
+                                <div id="preview"></div>
+                            </div>
                         </div>
                         <button type="button" id="sbmt-modal" class="btn btn-outline-primary btn-rounded" style="float:right" data-toggle="modal" data-target="#exampleModal-2">Submit</button>
                             <div class="modal fade" id="exampleModal-2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-2" style="display: none;" aria-hidden="true">
@@ -112,4 +122,25 @@
         </div>
     </div>
 </div>
+{% endblock %}
+{% block javascript %}
+<script>
+    function previewImages() {  
+        var $preview = $('#preview').empty();
+        if (this.files) $.each(this.files, readAndPreview);
+
+        function readAndPreview(i, file) {
+            if (!/\.(jpe?g|png|gif)$/i.test(file.name)){
+                return alert(file.name +" is not an image");
+            } // else...
+            var reader = new FileReader();
+
+            $(reader).on("load", function() {
+                $preview.append($("<img/>", {src:this.result, height:100}));
+            });
+            reader.readAsDataURL(file);
+        }
+    }
+    $('#id_image').on("change", previewImages);
+</script>
 {% endblock %}

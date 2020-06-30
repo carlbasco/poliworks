@@ -61,6 +61,84 @@ class projectdetails(ImportExportModelAdmin):
         'pm', 'client','projectsite','typeofproject','startdate','status'
     )
 
+############################################################################################
+class QuotationDetailsAdmin(admin.TabularInline):
+    model=QuotationDetails
+
+class QuotationAdmin(admin.ModelAdmin):
+    inlines = [QuotationDetailsAdmin]
+    form = QuotationFormAdmin
+    list_display = ('projectsite','subject','date','amount','status' )
+    search_fields = ('projectsite', 'subject')
+    ordering = ('date',)
+
+admin.site.register(Quotation, QuotationAdmin)
+############################################################################################
+class RequisitionDetailsAdmin(admin.TabularInline):
+    model = RequisitionDetails
+
+class RequisitionAdmin(admin.ModelAdmin):
+    inlines = [RequisitionDetailsAdmin]
+    form = RequisitionAdminForm
+    list_display = ('projectsite', 'date', 'whm', 'status')
+    search_fields = ('projectsite','date',)
+    ordering = ('date',)
+
+admin.site.register(Requisition, RequisitionAdmin)
+############################################################################################
+class JobOrderAdminTask(admin.TabularInline):
+    model = JobOrderTask
+
+class JobOrderAdmin(admin.ModelAdmin):
+    inlines = [JobOrderAdminTask]
+    form = JobOrderUpdateForm
+    list_display = ('projectsite', 'date',)
+    search_fields = ('projectsite', 'date',)
+    ordering = ('date',)
+
+admin.site.register(JobOrder, JobOrderAdmin)
+############################################################################################
+class ExternalOrderDetailsAdmin(admin.TabularInline):
+    model = ExternalOrderDetails
+
+class ExternalOrderAdmin(admin.ModelAdmin):
+    inlines = [ExternalOrderDetailsAdmin]
+    form = ExternalOrderUpdateForm
+    list_display = ('projectsite', 'date', 'whm')
+    search_fields = ('projectsite', 'date')
+    ordering = ('date',)
+
+admin.site.register(ExternalOrder, ExternalOrderAdmin)
+############################################################################################
+class spdetailsadmin(admin.TabularInline):
+    model = SitePhotosDetails
+
+class SitePhotosAdmin(admin.ModelAdmin):
+    inlines = [spdetailsadmin]
+    form = SitePhotostNewForm
+    list_display = ('projectsite', 'date',)
+    search_fields = ('projectsite', 'date',)
+    ordering = ('date',)
+
+admin.site.register(SitePhotos, SitePhotosAdmin)
+############################################################################################
+@admin.register(ProjectIssues)
+class ProjectIssueAdmin(admin.ModelAdmin):
+    model = ProjectIssues
+    form = ProjectIssuesNewForm
+    list_display = ('projectsite', 'date',)
+    search_fields = ('projectsite', 'date',)
+    ordering = ('date',)
+############################################################################################
+@admin.register(Rework)
+class ReworkAdmin(admin.ModelAdmin):
+    model = Rework
+    form = ReworkForm
+    list_display = ('projectsite', 'date', 'pm',)
+    search_fields = ('projectsite', 'date', 'pm',)
+    ordering = ('date',)
+############################################################################################
+
 @admin.register(PersonnelSkill)
 class personnel_skill(ImportExportModelAdmin):
     exclude=('id', )
@@ -89,14 +167,6 @@ class Inventory(ImportExportModelAdmin):
     list_per_page = 20
     ordering = ('pk',)
 
-class QuotationDetailsAdmin(admin.TabularInline):
-    model=QuotationDetails
-class QuotationAdmin(admin.ModelAdmin):
-    inlines = [QuotationDetailsAdmin]
-    form = QuotationFormAdmin
-    list_display = ('projectsite','subject','date','amount','status' )
-    search_fields = ('projectsite', 'subject')
-    ordering = ('date',)
 
 class ExternalInventoryDetailsAdmin(admin.TabularInline):
     model = ExternalProjectInventoryDetails
@@ -121,4 +191,3 @@ class ProjectInventoryAdmin(admin.ModelAdmin):
 
 admin.site.register(ProjectInventory, ProjectInventoryAdmin)
 
-admin.site.register(Quotation, QuotationAdmin)

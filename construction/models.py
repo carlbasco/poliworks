@@ -24,12 +24,17 @@ def project_sitephotos_path(instance, filename):
 def or_upload_path(instance, filename):
     return 'Projects/{0}/or image/{1}'.format(instance.projectsite, filename)
 
+def requisition_upload_path(instance, filename):
+    return 'Projects/{0}/requisition image/{1}'.format(instance.requisition.projectsite, filename)
+
 class Province(models.Model):
     name = models.CharField(max_length=255, null=True, blank=True)
     def __str__(self):
         name ='%s' % (self.name)
         return name.strip()
-    verbose_name_plural="Province"
+    class Meta:    
+        verbose_name_plural="Admin - Province"
+        verbose_name = "Admin - Province"
 
 class City(models.Model):
     province = models.ForeignKey(Province, on_delete=models.CASCADE)
@@ -38,7 +43,7 @@ class City(models.Model):
         name ='%s' % (self.name)
         return name.strip()
     class Meta:
-        verbose_name_plural="Cities"
+        verbose_name_plural="Admin - City"
         
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(verbose_name='email address',max_length=255,unique=True,)
@@ -92,6 +97,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     def active(self):
         "Is the user active?"
         return self.is_active
+    
+    class Meta:
+        verbose_name_plural = 'Admin - User'
+        verbose_name = 'Admin - User'
 
 class Profile(models.Model):
     choices = (('Male', 'Male'),('Female', 'Female'),)
@@ -141,19 +150,18 @@ class ProjectSite(models.Model):
     startdate = models.DateField(('Start Project Date'),  help_text='Format: YYYY-MM-DD', blank=True,null=True)
     comdate = models.DateField(('Project Completion Date'), help_text='Format: YYYY-MM-DD', blank=True, null=True)
     mpd = models.DateField(('Maintenance Period End Date'), help_text='Format: YYYY-MM-DD', blank=True, null=True)
-    # 
     design=models.ImageField(('Blueprint'),upload_to=project_upload_path, blank=True, null=True)
     class Meta:
-        verbose_name='Projects'
-        verbose_name_plural='Projects'
+        verbose_name='ProjectSite'
+        verbose_name_plural='ProjectSite'
     def __str__(self):
         return self.projectsite
 
 class ScopeOfWorkCategory(models.Model):
     category = models.CharField(('Category'), max_length=255)
     class Meta:
-        verbose_name_plural='Scope Of Work Categories'
-        verbose_name='Scope Of Work'
+        verbose_name_plural='Admin - Category(Scope of Work)'
+        verbose_name='Admin - Category(Scope of Work)'
     def __str__(self):
         return self.category
 
@@ -164,8 +172,8 @@ class ScopeOfWork(models.Model):
     laborcost = models.FloatField(('Labor Cost'), blank=True)
     subbid = models.FloatField(('Sub bid'), blank=True)
     class Meta:
-        verbose_name_plural='Scope Of Works'
-        verbose_name='Scope Of Work'
+        verbose_name_plural='Admin - Scope Of Work'
+        verbose_name='Admin - Scope Of Work'
     
     def get_cost(self):
         return self.materialcost+self.laborcost+self.subbid
@@ -185,11 +193,16 @@ class Quotation(models.Model):
     amount = models.FloatField(('Total Amount'), default=0)
     status = models.CharField(('Status'), max_length=255, default='Pending',choices=status_choice)
     class Meta:
-        verbose_name = 'Quotation'
-        verbose_name_plural = 'Quotations'
+        verbose_name = 'ProjectSite - Quotation'
+        verbose_name_plural = 'ProjectSite - Quotation'
+
+    def get_vat(self):
+        vat = self.amount *.12
+        return vat
 
     def get_grandtotal(self):
-        grandtotal = amount + (amount*.12)
+        grandtotal = self.amount + (self.amount*.12)
+        return grandtotal
 
     def __str__(self):
         return "{0}".format(self.projectsite)
@@ -200,7 +213,7 @@ class QuotationDetails(models.Model):
     unit = models.CharField(max_length=255, blank=True)
     quantity = models.IntegerField(('Quantity'))
 
-    def unitcost(self):
+    def q_amount(self):
         return self.quantity*self.scope_of_work.get_cost()
 
 class ProjectProgress(models.Model):
@@ -220,8 +233,8 @@ class ProjectProgressDetails(models.Model):
 class PersonnelSkill(models.Model):
     skill = models.CharField(('Skill'), max_length=255)
     class Meta:
-        verbose_name_plural = 'Personnel Skills'
-        verbose_name = 'Personnel Skills'
+        verbose_name_plural = 'Admin - Personnel Skills'
+        verbose_name = 'Admin - Personnel Skills'
         
     def __str__(self):
         return self.skill
@@ -267,11 +280,11 @@ class JobOrder(models.Model):
     pic = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='joborder_pic', verbose_name='Prepared by', 
         limit_choices_to={'groups__name': "Person In-Charge"})
     class Meta:
-        verbose_name = 'Job Order'
-        verbose_name_plural = 'Job Orders'
+        verbose_name = 'ProjectSite - Job Order'
+        verbose_name_plural = 'ProjectSite - Job Order'
 
     def __str__(self):
-        return self.projectsite
+        return self.projectsite.__str__()
 
 class JobOrderTask(models.Model):
     joborder = models.ForeignKey(JobOrder, on_delete=models.CASCADE, related_name='jobordertask', verbose_name='Joborder')
@@ -286,7 +299,9 @@ class JobOrderTask(models.Model):
     class Meta:
         verbose_name = 'Job Order Task'
         verbose_name_plural = 'Job Order Tasks'
-
+    
+    def __str__(self):
+        return self.activity
 
 class Rework(models.Model):
     projectsite=models.ForeignKey(ProjectSite, on_delete=models.CASCADE, related_name='reworkform', verbose_name='Project Site')
@@ -296,8 +311,8 @@ class Rework(models.Model):
     pm=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='rework_pm', verbose_name='Prepared by', 
         limit_choices_to={'groups__name': "Project Manager"})
     class Meta:
-        verbose_name_plural='Rework Form'
-        verbose_name='Rework Form'
+        verbose_name_plural='ProjectSite - Rework'
+        verbose_name='ProjectSite - Rework'
 
 
 class Inventory(models.Model):
@@ -309,7 +324,7 @@ class Inventory(models.Model):
     unit_price = models.FloatField(verbose_name="Unit Price", null=True, blank=True)
 
     class Meta:
-        verbose_name_plural = 'Inventory Office'
+        verbose_name_plural = 'Admin - Material Inventory Office'
 
     def __str__(self):
         return self.description 
@@ -322,9 +337,10 @@ class Requisition(models.Model):
     status = {('Pending', 'Pending'), ('To be Delivered', 'To be Delivered'),('Closed', 'Closed')}
     status = models.CharField( max_length=255, choices=status, default="Pending")
     class Meta:
-        verbose_name_plural = 'Requisition Form'
-        verbose_name = 'Requisition Form'
-    
+        verbose_name_plural = 'ProjectSite - Requisition'
+        verbose_name = 'ProjectSite - Requisition'
+
+
 class RequisitionDetails(models.Model):
     status=(('Canceled', 'Canceled'),('To be Delivered', 'To be Delivered'))
     requisition = models.ForeignKey(Requisition, on_delete=models.CASCADE, related_name='requisitiondetail', verbose_name='Requesition')
@@ -335,8 +351,16 @@ class RequisitionDetails(models.Model):
     status2 = models.CharField(('Action'), max_length=255, choices=status2, null=True, blank=True)
     quantity2 = models.IntegerField(('Quantity Receive'), null=True, blank=True, default=0)
     class Meta:
-        verbose_name_plural='Requisition Form Details'
-        verbose_name='Requisition Form Detail'
+        verbose_name_plural = 'Requisition Details'
+        verbose_name = 'Requisition Detail'
+
+
+class RequisitionImage(models.Model):
+    requisition = models.ForeignKey(Requisition, on_delete=models.CASCADE)
+    image=models.FileField(upload_to=requisition_upload_path, verbose_name='Image', null=True)
+    class Meta:
+        verbose_name_plural= "Requisition Image(dr/image proof)"
+        verbose_name = "Requisition Image(dr/image proof)"
 
 
 class ExternalOrder(models.Model):
@@ -348,8 +372,9 @@ class ExternalOrder(models.Model):
     amount = models.FloatField(verbose_name='Amount', default=0)
     image = models.ImageField(upload_to=or_upload_path, null=True, blank=True, verbose_name="OR Image")
     class Meta:
-        verbose_name_plural = 'Outside Purchases'
-        verbose_name = 'Outside Purchase'
+        verbose_name_plural = 'ProjectSite - External Order'
+        verbose_name = 'ProjectSite - External Order'
+
 
 class ExternalOrderDetails(models.Model):
     externalorder = models.ForeignKey(ExternalOrder, on_delete=models.CASCADE, related_name='externalorderdetails', verbose_name='Outside Purchase') 
@@ -364,6 +389,7 @@ class ExternalOrderDetails(models.Model):
     def get_total(self):
         return self.quantity * self.unitprice
     
+
 class ProjectIssues(models.Model):
     projectsite = models.ForeignKey(ProjectSite, on_delete=models.CASCADE, related_name='projectissue')
     date = models.DateField(default=datetime.date.today)
@@ -379,13 +405,20 @@ class ProjectIssues(models.Model):
         return self.problem
     def get_projectsite(self):
         return self.projectsite
+    class Meta:
+        verbose_name = "Admin - Project Issues"
+        verbose_name_plural = "Admin - Project Issues"
     
+
 class SitePhotos(models.Model):
     projectsite=models.ForeignKey(ProjectSite, on_delete=models.CASCADE, null=True)
     date=models.DateField(default=datetime.date.today)
-
+    class Meta:
+        verbose_name = 'ProjectSite - SitePhotos'
+        verbose_name_plural = 'ProjectSite - SitePhotos'
     def __str__(self):
         return self.projectsite
+
 
 class SitePhotosDetails(models.Model):
     sitephotos = models.ForeignKey(SitePhotos, on_delete=models.CASCADE, null=True)
@@ -396,13 +429,15 @@ class SitePhotosDetails(models.Model):
         verbose_name_plural='Site Photos'
         verbose_name='Site Photos'
 
+
 class ProjectInventory(models.Model):
     projectsite = models.OneToOneField(ProjectSite, on_delete=models.CASCADE,verbose_name='Project Site')
     last_update = models.DateField(auto_now=True)
     class Meta:
-        verbose_name_plural='ProjectSite Inventory'
-        verbose_name='ProjectSite Inventory'
+        verbose_name_plural='ProjectSite - Inventory(onsite)'
+        verbose_name='ProjectSite - Inventory(onsite)'
     
+
 class ProjectInventoryDetails(models.Model):
     inventory = models.ForeignKey(ProjectInventory, on_delete=models.CASCADE, verbose_name='Project Site Inventory')
     articles = models.ForeignKey(Inventory, on_delete=models.CASCADE, verbose_name="Articles")
@@ -411,11 +446,13 @@ class ProjectInventoryDetails(models.Model):
     def __str__(self):
         return self.articles.__str__()
 
+
 class ProjectDailyReport(models.Model):
     projectsite = models.ForeignKey(ProjectSite, on_delete=models.CASCADE, null=True)
     whm = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True,blank=True,
         related_name='dailyreport_whm', verbose_name='Warehouseman',limit_choices_to={'groups__name': "Warehouseman"})
     date = models.DateField(default=datetime.date.today)
+
 
 class ProjectDailyReportDetails(models.Model):
     report = models.ForeignKey(ProjectDailyReport, on_delete=models.CASCADE, null=True)
@@ -423,13 +460,15 @@ class ProjectDailyReportDetails(models.Model):
     quantity = models.IntegerField(null=True)
     remarks = models.CharField(max_length=255, null=True, blank=True)
 
+
 class ExternalProjectInventory(models.Model):
     projectsite = models.OneToOneField(ProjectSite, on_delete=models.CASCADE, verbose_name='Project Site')
     last_update = models.DateField(auto_now=True)
     class Meta:
-        verbose_name_plural='External ProjectSite Inventory'
-        verbose_name='External ProjectSite Inventory'
+        verbose_name_plural='ProjectSite - External Inventory'
+        verbose_name='ProjectSite - External Inventory'
     
+
 class ExternalProjectInventoryDetails(models.Model):
     inventory = models.ForeignKey(ExternalProjectInventory, on_delete=models.CASCADE, verbose_name='Project Site Inventory')
     articles = models.CharField(max_length=255, null=True, blank=True)
@@ -439,11 +478,13 @@ class ExternalProjectInventoryDetails(models.Model):
     def __str__(self):
         return self.articles
 
+
 class ExternalOrderReport(models.Model):
     projectsite = models.ForeignKey(ProjectSite, on_delete=models.CASCADE, null=True)
     whm = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True,blank=True,
         verbose_name='Warehouseman',limit_choices_to={'groups__name': "Warehouseman"})
     date = models.DateField(default=datetime.date.today)
+
 
 class ExternalOrderDetailsReport(models.Model):
     report = models.ForeignKey(ExternalOrderReport, on_delete=models.CASCADE, null=True)
