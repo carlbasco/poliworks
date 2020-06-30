@@ -9,7 +9,7 @@ from .models import*
 
 admin.site.site_header='Poliworks Inc'
 admin.site.site_title='Poliworks Superuser'
-admin.site.unregister(Group)
+# admin.site.unregister(Group)
 admin.site.site_url ='/sign-in'
 
 class Profile(admin.TabularInline):
@@ -61,6 +61,33 @@ class projectdetails(ImportExportModelAdmin):
         'pm', 'client','projectsite','typeofproject','startdate','status'
     )
 
+@admin.register(Gender)
+class GenderAdmin(admin.ModelAdmin):
+    model = Gender
+    list_display = ('gender',)
+    search_fields = ('gender',)
+    ordering = ('gender',)
+
+@admin.register(ProjectType)
+class ProjectTypeAdmin(ImportExportModelAdmin):
+    model = ProjectType
+    list_display = ('projecttype',)    
+    search_fields = ('projecttype',)    
+    ordering = ('projecttype',)    
+
+@admin.register(PersonnelType)
+class PersonnelType(admin.ModelAdmin):
+    model = PersonnelType
+    list_display = ('personneltype', )
+    search_fields = ('personneltype', )
+    ordering = ('personneltype', )
+
+@admin.register(RequisitionStatus)
+class RequisitionStatusAdmin(admin.ModelAdmin):
+    model = RequisitionStatus
+    list_display = ('status', )
+    search_fields = ('status', )
+    ordering = ('status', )
 ############################################################################################
 class QuotationDetailsAdmin(admin.TabularInline):
     model=QuotationDetails

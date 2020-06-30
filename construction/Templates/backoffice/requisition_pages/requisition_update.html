@@ -149,10 +149,11 @@
     };
 ///////////////////////////////////////////////////////////////////////////
     function populate(i){
+        var url = "{% url 'inventory_api' 123%}"
         var article =  $('#id_requisitiondetail-'+i+'-articles').val()
         $.ajax({
             method: 'GET',
-            url:'http://127.0.0.1:8000/backoffice/api/materials/'+article,
+            url:url.replace(123,article),
             success:function(data){
                 var unit = data[0].unit
                 $('#id_requisitiondetail-'+i+'-unit').val(unit);

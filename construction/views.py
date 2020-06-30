@@ -82,13 +82,14 @@ def SignupView(request):
             profile = profile.save(False)
             profile.user = user
             profile.save()
-            group = Group.objects.get(name=role)
+            group = Group.objects.get(id=role)
             group.user_set.add(user) 
             account = User.objects.get(id = profile.user.id)
             password_form = PasswordResetForm({'email':account.email})
             if password_form.is_valid():
                 password_form.save(request= request, email_template_name='email/welcome.html', subject_template_name='email/welcome_subject.txt')
-                messages.success(request, f'{role} account has been created.')
+                group = Group.objects.get(id=role)
+                messages.success(request, f'{group.name} account has been created.')
                 return redirect('signup')
     else:
         user = SignupForm()
@@ -407,7 +408,7 @@ def QuotationDeleteView(request,pk):
     data2 = QuotationDetails.objects.filter(quotation=data.id)
     if request.method == 'POST':
         data.delete()
-        messages.success(request, 'Quotion has been deleted.')
+        messages.success(request, 'Quotation has been deleted.')
         # if request.user.groups.all()[0].name=="Project Manager":
         return redirect('project_detail', pk=data.projectsite.id)
         # else:
@@ -686,7 +687,7 @@ def RequisitionActionView(request,pk):
                         elif total == to_be_delivered:
                             data.save()
                             data.status = "To be Delivered"
-                messages.success(request, "Requistion has been complied.")
+                messages.success(request, "Requisition has been complied.")
                 return redirect('requisition_detail',pk=data.id)
             else:
                 print(formset.errors)
@@ -1887,7 +1888,7 @@ def ClientQuotationView(request,pk):
         data.status = request.POST.get("status")
         data.save()
         if data.status == "Accepted":
-            messages.success(request, "Quotation has been accpeted.")
+            messages.success(request, "Quotation has been accepted.")
         else:
             messages.success(request, "Quotation has been rejected.")
         return redirect('client_home')

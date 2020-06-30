@@ -102,11 +102,19 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = 'Admin - User'
         verbose_name = 'Admin - User'
 
+class Gender(models.Model):
+    gender = models.CharField(max_length=255)
+    class Meta:
+        verbose_name_plural = 'Admin - Gender'
+
+    def __str__(self):
+        return self.gender
+
 class Profile(models.Model):
-    choices = (('Male', 'Male'),('Female', 'Female'),)
+    # choices = (('Male', 'Male'),('Female', 'Female'),)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
     image = models.ImageField(default="user.png", upload_to=profile_upload_path)
-    sex = models.CharField(('Sex'),max_length=10, choices=choices)
+    gender = models.ForeignKey(Gender, on_delete=models.SET_NULL, null=True)
     birthdate = models.DateField(('Birth date'), help_text='Format: yyyy-mm-dd', null=True) 
     phone = models.CharField(('Phone'),blank=True, help_text='Contact phone number', max_length=15)
     address = models.CharField(max_length=255, help_text='Apartment, suite, unit, building, floor, street, barangay')
@@ -124,6 +132,13 @@ class Profile(models.Model):
     def __str__(self):
         return str(self.user)
 
+class ProjectType(models.Model):
+    projecttype = models.CharField(max_length=255, null=True)
+    class Meta:
+        verbose_name_plural='Admin - Project Type'
+    def __str__(self):
+        return self.projecttype
+
 class ProjectSite(models.Model):
     projectsite = models.CharField(('Project Name'),max_length=255, null=True)
     address = models.CharField(('Address'), max_length=255, null=True, help_text='Apartment, suite, unit, building, floor, street, barangay')
@@ -139,12 +154,13 @@ class ProjectSite(models.Model):
         related_name='projectsite_client', verbose_name='Client',limit_choices_to={'groups__name': "Client"})
     status = {('Pending','Pending'),('On-going','On-going'),('Completed','Completed'),('Completed (Overdue)','Completed (Overdue)')}
     status = models.CharField(max_length=255, choices=status, blank=True ,default='Pending')
-    projecttype={
-        ('General Construction','General Construction'),('Interior Fit-out Works','Interior Fit-outWorks'),
-        ('Self-Leveling Floor Applcation','Self-Leveling Floor Applcation'),('Concrete Countertops', 'Concrete Countertops'),
-        ('Industrial Cement Flooring Finish', 'Industrial Cement Flooring Finish'),
-    }
-    typeofproject = models.CharField(max_length=255, choices=projecttype, null=True, verbose_name='Project Type')
+    # projecttype={
+    #     ('General Construction','General Construction'),('Interior Fit-out Works','Interior Fit-outWorks'),
+    #     ('Self-Leveling Floor Applcation','Self-Leveling Floor Applcation'),('Concrete Countertops', 'Concrete Countertops'),
+    #     ('Industrial Cement Flooring Finish', 'Industrial Cement Flooring Finish'),
+    # }
+    # typeofproject = models.CharField(max_length=255, choices=projecttype, null=True, verbose_name='Project Type')
+    typeofproject = models.ForeignKey(ProjectType, on_delete=models.SET_NULL, null=True, verbose_name='Project Type')
     lotarea = models.CharField(max_length=255, blank=True, verbose_name='Lot Area', 
         help_text="Please indicate if square meter, square kilometer, square mile, hectare, acre")
     startdate = models.DateField(('Start Project Date'),  help_text='Format: YYYY-MM-DD', blank=True,null=True)
@@ -184,7 +200,7 @@ class ScopeOfWork(models.Model):
     def __str__(self):
         scope = '%s %s %s' % (self.scope," - ",self.materialcost+self.laborcost+self.subbid)
         return scope.strip()
-        
+
 class Quotation(models.Model):
     status_choice = {('Pending','Pending'),('Accepted','Accepted'),('Rejected','Rejected')}
     projectsite = models.ForeignKey(ProjectSite, on_delete=models.CASCADE, related_name='quotation', verbose_name='Project Site')
@@ -242,16 +258,23 @@ class PersonnelSkill(models.Model):
     def __unicode__(self):
         return self.skill
 
+class PersonnelType(models.Model):
+    personneltype = models.CharField(max_length=255, null=True, verbose_name="Type of Personnel")
+    class Meta:
+        verbose_name='Admin - Personnel Type'
+        verbose_name_plural = 'Admin - Personnel Type'
+    def __str__(self):
+        return self.personneltype
+
 class Personnel(models.Model):
     first_name = models.CharField(('First Name'), max_length=255)
     middle_name = models.CharField(('Middle Name'), max_length=255, blank=True)
     last_name = models.CharField(('Last Name'), max_length=255)
     suffix = models.CharField(('Suffix'), max_length=50, blank=True)
-    sex = {('Male','Male'),('Female', 'Female')}
-    sex = models.CharField(('Sex'),max_length=10, choices=sex)
+    gender = models.ForeignKey(Gender, on_delete=models.SET_NULL, null=True)
     contact = models.CharField(('Contact Number'), max_length=20)
     choice={('Company Worker', 'Company Worker'), ('Subcontractor','Subcontractor')}
-    personnel_type = models.CharField(('Type of Personnel'),max_length=255, choices=choice)
+    personnel_type = models.ForeignKey(PersonnelType, on_delete=models.SET_NULL, null=True)
     skill = models.ManyToManyField(PersonnelSkill, related_name='personnel')
     address = models.CharField(max_length=255, null=True, help_text='Apartment, suite, unit, building, floor, street, barangay')
     city = models.ForeignKey(City, on_delete=models.SET_NULL, verbose_name='City', null=True)
@@ -342,18 +365,35 @@ class Requisition(models.Model):
 
 
 class RequisitionDetails(models.Model):
-    status=(('Canceled', 'Canceled'),('To be Delivered', 'To be Delivered'))
+    # status=(('Canceled', 'Canceled'),('To be Delivered', 'To be Delivered'))
     requisition = models.ForeignKey(Requisition, on_delete=models.CASCADE, related_name='requisitiondetail', verbose_name='Requesition')
     articles = models.ForeignKey(Inventory, on_delete=models.CASCADE, verbose_name="Articles")
-    quantity = models.IntegerField(('Quantity'),default=1)
-    status = models.CharField(('Status'),max_length=255, choices=status, null=True,)
-    status2 ={('Incomplete', 'Incomplete'), ('Not Received','Not Received'), ('Complete','Complete')}
-    status2 = models.CharField(('Action'), max_length=255, choices=status2, null=True, blank=True)
-    quantity2 = models.IntegerField(('Quantity Receive'), null=True, blank=True, default=0)
+    quantity = models.IntegerField(('Request Quantity'),default=1)
+    # status = models.CharField(('Status'),max_length=255, choices=status, null=True,)
+    # status2 ={('Incomplete', 'Incomplete'), ('Not Received','Not Received'), ('Complete','Complete')}
+    # status2 = models.CharField(('Action'), max_length=255, choices=status2, null=True, blank=True)
+    # quantity2 = models.IntegerField(('Quantity Receive'), null=True, blank=True, default=0)
     class Meta:
         verbose_name_plural = 'Requisition Details'
         verbose_name = 'Requisition Detail'
 
+class RequisitionStatus(models.Model):
+    status = models.CharField(('Status'), max_length=255)
+    class Meta:
+        verbose_name = 'Admin - Requisition Status'
+        verbose_name_plural = 'Admin - Requisition Status'
+
+    def __str__(self):
+        return self.name
+
+class RequisitionDelivery(models.Model):
+    requisition = models.ForeignKey(Requisition, on_delete=models.CASCADE, verbose_name='Requesition')
+    articles = models.ForeignKey(Inventory, on_delete=models.CASCADE, verbose_name="Articles")
+    quantity = models.IntegerField(('Delivered Quantity'),default=1, null=True)
+    remarks = models.CharField(max_length=255, null=True, blank=True)
+    # status2 ={('Incomplete', 'Incomplete'), ('Not Received','Not Received'), ('Complete','Complete')}
+    status2 = models.CharField(('Action'), max_length=255, null=True, blank=True)
+    quantity2 = models.IntegerField(('Received Quantity'))
 
 class RequisitionImage(models.Model):
     requisition = models.ForeignKey(Requisition, on_delete=models.CASCADE)
@@ -406,8 +446,8 @@ class ProjectIssues(models.Model):
     def get_projectsite(self):
         return self.projectsite
     class Meta:
-        verbose_name = "Admin - Project Issues"
-        verbose_name_plural = "Admin - Project Issues"
+        verbose_name = "ProjectSite - Project Issues"
+        verbose_name_plural = "ProjectSite - Project Issues"
     
 
 class SitePhotos(models.Model):

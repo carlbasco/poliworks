@@ -44,13 +44,16 @@ class UserAdminChangeForm(forms.ModelForm):
         return self.initial["password"]
 
 class SignupForm(forms.ModelForm):
-    choice = {('Project Manager', 'Project Manager'), ('Person In-Charge', 'Person In-Charge'), ('Warehouseman', 'Warehouseman'), ('Client', 'Client')}
-    account = forms.ChoiceField(label="Account Type", choices=choice)
+    # choice = {('Project Manager', 'Project Manager'), ('Person In-Charge', 'Person In-Charge'), ('Warehouseman', 'Warehouseman'), ('Client', 'Client')}
+    account = forms.ModelChoiceField(label="Account Type", queryset=Group.objects.all())
     password = forms.CharField(label='Password', widget=forms.PasswordInput)
     cpassword = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
     class Meta:
         model = User
         fields = ['email','first_name','middle_name','last_name','suffix']
+
+    def clean(self):
+        account = self.cleaned_data.get('account')
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
