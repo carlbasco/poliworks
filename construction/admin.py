@@ -57,9 +57,7 @@ class CityAdmin(ImportExportModelAdmin):
 @admin.register(ProjectSite)
 class projectdetails(ImportExportModelAdmin):
     exclude=('id',)
-    list_display=(
-        'pm', 'client','projectsite','typeofproject','startdate','status'
-    )
+    list_display=('pm', 'client','projectsite','typeofproject','startdate','status')
 
 @admin.register(Gender)
 class GenderAdmin(admin.ModelAdmin):
@@ -81,13 +79,6 @@ class PersonnelType(admin.ModelAdmin):
     list_display = ('personneltype', )
     search_fields = ('personneltype', )
     ordering = ('personneltype', )
-
-@admin.register(RequisitionStatus)
-class RequisitionStatusAdmin(admin.ModelAdmin):
-    model = RequisitionStatus
-    list_display = ('status', )
-    search_fields = ('status', )
-    ordering = ('status', )
 ############################################################################################
 class QuotationDetailsAdmin(admin.TabularInline):
     model=QuotationDetails
@@ -101,11 +92,11 @@ class QuotationAdmin(admin.ModelAdmin):
 
 admin.site.register(Quotation, QuotationAdmin)
 ############################################################################################
-class RequisitionDetailsAdmin(admin.TabularInline):
-    model = RequisitionDetails
+class RequisitionDeliveryAdmin(admin.TabularInline):
+    model = RequisitionDelivery
 
 class RequisitionAdmin(admin.ModelAdmin):
-    inlines = [RequisitionDetailsAdmin]
+    inlines = [RequisitionDeliveryAdmin]
     form = RequisitionAdminForm
     list_display = ('projectsite', 'date', 'whm', 'status')
     search_fields = ('projectsite','date',)

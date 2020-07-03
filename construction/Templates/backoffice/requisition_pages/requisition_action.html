@@ -41,10 +41,10 @@
 </div>
 <div class="container-fluid">
     <div class="row justify-content-center">
-        <div class="col col-md-10">
-            <div class="card">
+        <div class="col col-md-12">
+            <div class="card mb-3">
                 <div class="card-header" id="quotation_view">
-                    <h2 class="mb-0">Requisition</h2>
+                    <h3 class="text-center">Requisition</h3>
                 </div>
                 <div class="card-body">
                     <div class="row"> 
@@ -54,61 +54,94 @@
                         <div class="col-md-4 ">
                             <h6 class="sub">Date Created: <span class="txt">{{data.date}}</span></h6>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-8">
                             <h6 class="sub">Prepared by: <span class="txt">{{data.whm}}</span></h6>
                         </div>
+                        <div class="col-md-4">
+                            <h6 class="sub">Status: <span class="txt">{{data.status}}</span></h6>
+                        </div>
                     </div>
-                    <div class="table-responsive-lg col-lg-12">
+                    <div class="table-responsive col-lg-12">
+                        <table class="table">
+                            <thead class="thead" id="head_tbl">
+                                <tr>
+                                    <th class="text-center">Articles</th>
+                                    <th class="text-center">Unit</th>
+                                    <th class="text-center">Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in data2 %}
+                                <tr>
+                                    <td>{{i.articles}}</td>
+                                    <td class="text-center">{{i.articles.unit}}</td>
+                                    <td class="text-center">{{i.quantity}}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="col-md-12">
                         <form action="" method="post">
                             {% csrf_token %}
-                            <table class="table">
-                                <thead class="thead" id="head_tbl">
-                                    <tr>
-                                        <th class="text-center">Articles</th>
-                                        <th class="text-center">Unit</th>
-                                        <th class="text-center">Quantity</th>
-                                        <th class="text-center">Status</th>
-                                    </tr>
-                                </thead>
-                                    <tbody>
-                                        {{ formset.management_form }}
-                                        {% for i in formset.forms %}
-                                            <tr>
-                                                {{i.id}}
-                                                <td>{{i.instance.articles}}</td>
-                                                <td class="text-center">{{i.instance.articles.unit}}</td>
-                                                <td class="text-center">{{i.instance.quantity}}</td>
-                                                <td class="text-center">{{i.status}}</td>
-                                            </tr>
-                                        {% endfor %}
-                                    </tbody>
-                            </table>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead class="thead">
+                                        <tr>
+                                            <th class="text-center">Articles</th>
+                                            <th class="text-center">Status<span class="asteriskField">*</span></th>
+                                            <th class="text-center">Remarks</th>
+                                            <th class="text-center" style="width: 80px;">Quantity to be Delivered</th>
+                                        </tr>
+                                    </thead>
+                                        <tbody>
+                                            {{ formset.management_form }}
+                                            {% for i in formset.forms %}
+                                                <tr>
+                                                    {{i.id}}
+                                                    <td>{{i.instance.articles}}</td>
+                                                    <td style="min-width: 170px;">{{i.status}}</td>
+                                                    <td style="width: 300px;">{{i.remarks}}</td>
+                                                    <td style="width: 80px;">{{i.quantity}}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                </table>
+                            </div>
                             <button type="button" id="sbmt-modal" class="btn btn-outline-primary btn-rounded" style="float:right" data-toggle="modal" data-target="#exampleModal-2">Submit</button>
-                            <div class="modal fade" id="exampleModal-2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-2" style="display: none;" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h4 class="modal-title" id="exampleModalLabel-2">Confirmation</h4>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">×</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p>Are you sure you want to submit this form?</p>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="submit" class="btn btn-outline-primary" >Submit</button>
-                                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                                <div class="modal fade" id="exampleModal-2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-2" style="display: none;" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title" id="exampleModalLabel-2">Confirmation</h4>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Are you sure you want to submit this form?</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-outline-primary" >Submit</button>
+                                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
                         </form>
                     </div>
                 </div>
             </div>
-            
         </div>
     </div>
 </div>
+{% endblock %}
+{% block javascript %}
+
 {% endblock %}

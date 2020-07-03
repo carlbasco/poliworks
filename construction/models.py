@@ -154,12 +154,6 @@ class ProjectSite(models.Model):
         related_name='projectsite_client', verbose_name='Client',limit_choices_to={'groups__name': "Client"})
     status = {('Pending','Pending'),('On-going','On-going'),('Completed','Completed'),('Completed (Overdue)','Completed (Overdue)')}
     status = models.CharField(max_length=255, choices=status, blank=True ,default='Pending')
-    # projecttype={
-    #     ('General Construction','General Construction'),('Interior Fit-out Works','Interior Fit-outWorks'),
-    #     ('Self-Leveling Floor Applcation','Self-Leveling Floor Applcation'),('Concrete Countertops', 'Concrete Countertops'),
-    #     ('Industrial Cement Flooring Finish', 'Industrial Cement Flooring Finish'),
-    # }
-    # typeofproject = models.CharField(max_length=255, choices=projecttype, null=True, verbose_name='Project Type')
     typeofproject = models.ForeignKey(ProjectType, on_delete=models.SET_NULL, null=True, verbose_name='Project Type')
     lotarea = models.CharField(max_length=255, blank=True, verbose_name='Lot Area', 
         help_text="Please indicate if square meter, square kilometer, square mile, hectare, acre")
@@ -377,27 +371,20 @@ class RequisitionDetails(models.Model):
         verbose_name_plural = 'Requisition Details'
         verbose_name = 'Requisition Detail'
 
-class RequisitionStatus(models.Model):
-    status = models.CharField(('Status'), max_length=255)
-    class Meta:
-        verbose_name = 'Admin - Requisition Status'
-        verbose_name_plural = 'Admin - Requisition Status'
-
-    def __str__(self):
-        return self.name
-
 class RequisitionDelivery(models.Model):
     requisition = models.ForeignKey(Requisition, on_delete=models.CASCADE, verbose_name='Requesition')
     articles = models.ForeignKey(Inventory, on_delete=models.CASCADE, verbose_name="Articles")
-    quantity = models.IntegerField(('Delivered Quantity'),default=1, null=True)
+    quantity = models.IntegerField(('Delivered Quantity'),default=0, null=True)
     remarks = models.CharField(max_length=255, null=True, blank=True)
-    # status2 ={('Incomplete', 'Incomplete'), ('Not Received','Not Received'), ('Complete','Complete')}
-    status2 = models.CharField(('Action'), max_length=255, null=True, blank=True)
-    quantity2 = models.IntegerField(('Received Quantity'))
+    status=(('Canceled', 'Canceled'),('To be delivered', 'To be delivered'))
+    status = models.CharField(('Status'),max_length=255, choices=status, null=True,)
+    status2 ={('Incomplete', 'Incomplete'), ('Not Received','Not Received'), ('Complete','Complete')}
+    status2 = models.CharField(('Action'), max_length=255, choices=status2, null=True, blank=True)
+    quantity2 = models.IntegerField(('Received Quantity'), null=True, blank=True, default=0)
 
 class RequisitionImage(models.Model):
     requisition = models.ForeignKey(Requisition, on_delete=models.CASCADE)
-    image=models.FileField(upload_to=requisition_upload_path, verbose_name='Image', null=True)
+    image=models.FileField(upload_to=requisition_upload_path, verbose_name='Image', null=True, blank=True)
     class Meta:
         verbose_name_plural= "Requisition Image(dr/image proof)"
         verbose_name = "Requisition Image(dr/image proof)"

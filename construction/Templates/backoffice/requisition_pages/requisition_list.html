@@ -128,9 +128,7 @@
                                             <td><label class="badge badge-success">{{i.status}}</label></td>
                                         {% endif %}
                                         <td>
-                                            <form action="{% url 'requisition_detail' i.id%}">
-                                                <button class="btn btn-outline-primary view-btn">View</button>
-                                            </form>
+                                            <a href="{% url 'requisition_detail' i.id%}" class="btn btn-outline-primary view-btn">View</a>
                                         </td>
                                     </tr>
                                     {% endfor %}

@@ -44,7 +44,6 @@ class UserAdminChangeForm(forms.ModelForm):
         return self.initial["password"]
 
 class SignupForm(forms.ModelForm):
-    # choice = {('Project Manager', 'Project Manager'), ('Person In-Charge', 'Person In-Charge'), ('Warehouseman', 'Warehouseman'), ('Client', 'Client')}
     account = forms.ModelChoiceField(label="Account Type", queryset=Group.objects.all())
     password = forms.CharField(label='Password', widget=forms.PasswordInput)
     cpassword = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
@@ -298,25 +297,27 @@ class RequisitionImageForm(forms.ModelForm):
         model = RequisitionImage
         fields = ('image',)
         widgets={
-            'image':forms.FileInput(attrs={'class':'custom-file-input','multiple': True, })
+            'image':forms.FileInput(attrs={'class':'custom-file-input','multiple': True,})
         }
         
-RequisitionActionFormSet = inlineformset_factory(Requisition, RequisitionDetails, 
+RequisitionActionFormSet = inlineformset_factory(Requisition, RequisitionDelivery, 
     form=RequisitionActionForm, 
-    exclude=('requisition','quantity','articles','quantity2'),
+    exclude=('requisition','articles','quantity2'),
     extra=0,
     widgets={
-        'status':forms.Select(attrs={'class':'form-control ', 'required':True})
+        'remarks':forms.TextInput(attrs={'class':'form-control '}),
+        'quantity':forms.TextInput(attrs={'class':'form-control'}),
+        'status':forms.Select(attrs={'class':'form-control', 'required':True}),
     }
 )
 
-RequisitionActionFormSet_whm = inlineformset_factory(Requisition, RequisitionDetails, 
+RequisitionActionFormSet_whm = inlineformset_factory(Requisition, RequisitionDelivery, 
     form=RequisitionActionForm, 
     exclude=('requisition','quantity','articles','status'),
     extra=0,
     widgets={
-        'status2':forms.Select(attrs={'class':'form-control mb-2', 'required':True}),
-        'quantity2':forms.NumberInput(attrs={'class':'form-control','placeholder':'leave it blank if complete or not recieved'}),
+        'status2':forms.Select(attrs={'class':'form-control status2', 'required':True}),
+        'quantity2':forms.NumberInput(attrs={'class':'form-control qty2'}),
     }
 )
 #################################################################################################################################

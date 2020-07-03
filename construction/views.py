@@ -519,6 +519,10 @@ class RequisitionCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView)
         self.object = form.save()
         if formset.is_valid():
             formset.instance = self.object
+            requisitiondetails = formset.save(False)
+            for i in requisitiondetails:
+                data2 = RequisitionDelivery.objects.create(requisition=i.requisition,articles=i.articles)
+                data2.save()
             formset.save()
             return super(RequisitionCreateView, self).form_valid(form)
 
@@ -551,8 +555,12 @@ class RequisitionUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView)
         self.object = form.save()
         if formset.is_valid():
             formset.instance = self.object
+            requisitiondetails = formset.save(False)
+            for i in requisitiondetails:
+                data2 = RequisitionDelivery.objects.create(requisition=i.requisition,articles=i.articles)
+                data2.save()
             formset.save()
-            return super(RequisitionUpdateView, self).form_valid(form)
+            return super().form_valid(form)
 
     def get_success_url(self):
         data=self.kwargs['pk']
@@ -631,7 +639,8 @@ def RequisitionDetailView(request, pk):
     data = Requisition.objects.get(id=pk)
     data2 = RequisitionDetails.objects.filter(requisition=data.id)
     data3 = RequisitionImage.objects.filter(requisition=data.id)
-    context= {'data':data, 'data2':data2, 'data3':data3}
+    data4 = RequisitionDelivery.objects.filter(requisition=data.id)
+    context= {'data':data, 'data2':data2, 'data3':data3, 'data4':data4,}
     return render(request, 'backoffice/requisition_pages/requisition_detail.html', context)
 
 @login_required(login_url='signin')
@@ -660,6 +669,7 @@ def RequisitionDeleteView(request, pk):
 def RequisitionActionView(request,pk):
     data = Requisition.objects.get(id=pk)
     data2 = RequisitionDetails.objects.filter(requisition=data.id)
+    data3 = RequisitionDelivery.objects.filter(requisition=data.id)
     formset = RequisitionActionFormSet(instance=data)
     if data.status != "Closed":
         if request.method == 'POST':
@@ -669,28 +679,24 @@ def RequisitionActionView(request,pk):
                 total=0
                 canceled=0
                 to_be_delivered=0 
-                for i in data2:
+                for i in data3:
                     total+=1
-                for j in data2:
-                    if j.status =="To be Delivered":
+                for j in data3:
+                    if j.status == "To be delivered":
                         to_be_delivered+=1
-                    elif j.status =="Canceled":
+                    elif j.status == "Canceled":
+                        j.quantity = 0
+                        j.save()
                         canceled+=1
-                for k in data2:
-                    if k.status == "To be Delivered":
-                        data.status = "To be Delivered"
-                        data.save()
-                    else:
-                        if total == canceled:
-                            data.status == "Closed"
-                            data.save()
-                        elif total == to_be_delivered:
-                            data.save()
-                            data.status = "To be Delivered"
+                if total == canceled:
+                    data.status == "Closed (canceled)"
+                    data.save()
+                else:
+                    data.status = "To be Delivered"
+                    data.save()
                 messages.success(request, "Requisition has been complied.")
                 return redirect('requisition_detail',pk=data.id)
             else:
-                print(formset.errors)
                 return redirect('requisition_detail',pk=data.id)
         context={'formset':formset, 'data':data, 'data2':data2}
         return render(request, 'backoffice/requisition_pages/requisition_action.html', context)
@@ -702,8 +708,8 @@ def RequisitionActionView(request,pk):
 @whm_only    
 def RequisitionActionView_WHM(request,pk):
     data = Requisition.objects.get(id=pk)
-    data2 = RequisitionDetails.objects.filter(requisition=data.id)
-    queryset = RequisitionDetails.objects.exclude(Q(status="Pending")| Q(status="Canceled"))
+    data2 = RequisitionDelivery.objects.filter(requisition=data.id)
+    queryset = RequisitionDelivery.objects.exclude(Q(status="Canceled"))
     if request.method == 'POST':
         form = RequisitionImageForm(request.POST, request.FILES)
         formset = RequisitionActionFormSet_whm(request.POST, instance=data, queryset=queryset)
@@ -720,14 +726,14 @@ def RequisitionActionView_WHM(request,pk):
                                 j.status2 = None
                                 j.quantity2 = None
                                 j.save()
-                            messages.error(request,"Invalid Input. Quantity Received cannot be higher than Quantity Requested")
+                            messages.error(request,"Invalid Input. Received Quantity cannot be higher than Delivered Quantity ")
                             return redirect("requisition_action_whm", pk=data.id)
                         elif i.quantity == i.quantity2:
                             for j in data2:
                                 j.status2 = None
                                 j.quantity2 = None
                                 j.save()
-                            messages.error(request,'Invalid Input. Quantity Received cannot be equal to the Quantity Requested when selected in action is "Incomplete"')
+                            messages.error(request,'Invalid Input. Received Quantity cannot be equal to the Delivered Quantity when selected in action is "Incomplete"')
                             return redirect("requisition_action_whm", pk=data.id)
                         elif i.quantity2 == 0:
                             for j in data2:
@@ -736,6 +742,9 @@ def RequisitionActionView_WHM(request,pk):
                                 j.save()
                             messages.error(request,'Invalid Input. Please check your fields before you submit it"')
                             return redirect("requisition_action_whm", pk=data.id)
+                    else:
+                        i.quantity2=None
+                        i.save()
                 try:
                     data3 =  ProjectInventory.objects.get(projectsite=data.projectsite)
                     for k in data2:

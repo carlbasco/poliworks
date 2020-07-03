@@ -44,7 +44,7 @@
         <div class="col col-md-12">
             <div class="card">
                 <div class="card-header" id="quotation_view">
-                    <h2 class="mb-0">Requisition</h2>
+                    <h3 class="text-center">Requisition</h3>
                 </div>
                 <div class="card-body">
                     <form action="" method="post" enctype="multipart/form-data">
@@ -56,8 +56,11 @@
                             <div class="col-md-4 ">
                                 <h6 class="sub">Date Created: <span class="txt">{{data.date}}</span></h6>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-8">
                                 <h6 class="sub">Prepared by: <span class="txt">{{data.whm}}</span></h6>
+                            </div>
+                            <div class="col-md-4">
+                                <h6 class="sub">Status: <span class="txt">{{data.status}}</span></h6>
                             </div>
                         </div>
                         <div class="table-responsive-lg col-lg-12">
@@ -65,8 +68,7 @@
                                 <thead class="thead" id="head_tbl">
                                     <tr>
                                         <th class="text-center">Articles</th>
-                                        <th class="text-center">Unit</th>
-                                        <th class="text-center">Quantity Requested</th>
+                                        <th class="text-center">Delivered Quantity</th>
                                         <th class="text-center">Action <span class="asteriskField">*</span></th>
                                         <th class="text-center">Quantity Receive</th>
                                     </tr>
@@ -77,10 +79,12 @@
                                             <tr>
                                                 {{i.id}}
                                                 <td>{{i.instance.articles}}</td>
-                                                <td class="text-center">{{i.instance.articles.unit}}</td>
-                                                <td class="text-center">{{i.instance.quantity}}</td>
+                                                <td class="text-center qty">{{i.instance.quantity}}</td>
                                                 <td class="text-center">{{i.status2}}</td>
-                                                <td class="text-center">{{i.quantity2}} <small class="text-muted">leave it blank if complete or not received</small></td>
+                                                <td class="text-center qty2_valid">
+                                                    {{i.quantity2}}
+                                                    <small class="text-center qty_valid" style="color:red"></small>
+                                                </td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
@@ -88,7 +92,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-group mt-4">
-                                <label for="">Image (receipt/ materials)<!--<span class="asteriskField">*</span>--> </label>
+                                <p class="font-weight-bold">Image (receipt/ materials)<p>
                                 <div class="custom-file">
                                     {{form.image}}
                                     <label class="custom-file-label" for="customFile">Choose file</label>
@@ -128,19 +132,47 @@
     function previewImages() {  
         var $preview = $('#preview').empty();
         if (this.files) $.each(this.files, readAndPreview);
-
         function readAndPreview(i, file) {
             if (!/\.(jpe?g|png|gif)$/i.test(file.name)){
                 return alert(file.name +" is not an image");
-            } // else...
+            }
             var reader = new FileReader();
-
             $(reader).on("load", function() {
                 $preview.append($("<img/>", {src:this.result, height:100}));
             });
             reader.readAsDataURL(file);
         }
     }
+    $('.qty2').prop('readonly', true);
+
     $('#id_image').on("change", previewImages);
+    $('.status2').change(function(){
+        var status2 = $(this).val()
+        var quantity_receive = $(this).closest('tr').find('.qty2')
+        if(status2 == "Incomplete"){
+            $(this).closest('tr').find('.qty2').prop('readonly', false);
+        }
+        else if(status2 =="Complete" || status2=="Not Received"){
+            $(this).closest('tr').find('.qty2').val(0);
+            $(this).closest('tr').find('.qty2').prop('readonly', true);
+            $(this).closest('tr').find('.qty2').css('border-color', '');
+            $(this).closest('tr').find('.qty_valid').empty();
+        }
+    })
+    
+    $('.qty2').change(function(){
+        var quantity = parseFloat($(this).closest('tr').find('.qty').text());
+        var quantity2 = parseFloat($(this).val());
+        var x = $(this);
+        if(quantity <= quantity2){
+            x.css('border-color', 'red');
+            $(this).closest('td').find('.qty_valid').text("Invalid Input");
+            $(this).prop('readonly', false)
+        }
+        else{
+            x.css('border-color', '');
+            $(this).closest('td').find('.qty_valid').empty();
+        }
+    })
 </script>
 {% endblock %}
