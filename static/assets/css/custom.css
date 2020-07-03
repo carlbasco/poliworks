@@ -31,10 +31,6 @@
     
 }
 
-/* #account_menu{
-    padding: 0 0 0 0!important;
-} */
-
 .card-title {
     font-weight: bolder;
     color: #404852;
@@ -58,14 +54,12 @@
         width: 100%;
         visibility: visible;
     }
-    .btn-add-responsive{
-        visibility: visible;
-        float:right;
+    label.btn-add-responsive{
+        display: none;
     }
-    .btn-add{
-        visibility: hidden;
-        float:none;
-    }
+}
+label.btn-add-responsive{
+    margin-bottom: 0;
 }
 ul#usernav{
     visibility: hidden!important;
@@ -73,14 +67,6 @@ ul#usernav{
 @media only screen and (min-width: 992px){
     ul#usernav {
        visibility: visible!important;
-    }
-    .btn-add-responsive{
-        visibility: hidden;
-        float:none;
-    }
-    .btn-add{
-        visibility: visible;
-        float:right;
     }
 }
 #bt-account{

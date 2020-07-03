@@ -138,7 +138,7 @@ def ChangePasswordView(request):
 #################################################################################################################################
 #################################################################################################################################
 @login_required(login_url='signin')
-@allowed_users(allowed_roles=['Admin','Project Manager'])
+@admin_only
 def ProjectCreateView(request):
     form = ProjectForm
     if request.method == 'POST':
@@ -1941,6 +1941,19 @@ def ClientChangePasswordView(request):
         return redirect('client_profile')
     context={'form':form,}
     return render(request, 'client/client-change_password.html', context)
+
+@login_required(login_url='signin')
+@client_only
+def ClientProjectCreateView(request):
+    form = ProjectForm
+    if request.method == 'POST':
+        form = ProjectForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Project has been created.')
+            return redirect('client_home')
+    context = {'form':form}
+    return render(request, 'client/client-new_project.html', context)
 
 #################################################################################################################################
 #################################################################################################################################

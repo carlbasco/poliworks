@@ -15,6 +15,9 @@ import datetime
 def profile_upload_path(instance, filename):
     return 'profile_image/{0}/{1}'.format(instance.user, filename)
 
+def estimate_upload_path(instance, filename):
+    return 'Estimate/{}/{}'.format(instance.name, filename)
+
 def project_upload_path(instance, filename):
     return 'Projects/{0}/blueprint~design/{1}'.format(instance.projectsite, filename)
 
@@ -111,7 +114,6 @@ class Gender(models.Model):
         return self.gender
 
 class Profile(models.Model):
-    # choices = (('Male', 'Male'),('Female', 'Female'),)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
     image = models.ImageField(default="user.png", upload_to=profile_upload_path)
     gender = models.ForeignKey(Gender, on_delete=models.SET_NULL, null=True)
@@ -138,6 +140,32 @@ class ProjectType(models.Model):
         verbose_name_plural='Admin - Project Type'
     def __str__(self):
         return self.projecttype
+
+class Inquiry(models.Model):
+    name = models.CharField(('Name'),max_length=255)
+    phone = models.CharField(('Contact Number'), max_length=20)
+    email = models.CharField(('Email'), max_length=255)
+    message = models.CharField(('Message'), max_length=255)
+    date_created = models.DateTimeField(('Date Created'), auto_now=True)
+
+class Estimate(models.Model):
+    name = models.CharField(('Name'),max_length=255)
+    phone = models.CharField(('Contact Number'), max_length=20)
+    email = models.CharField(('Email'), max_length=255)
+    call_time = models.CharField(('Best time to call'), max_length=255)
+    typeofproject = models.ForeignKey(ProjectType, on_delete=models.SET_NULL, null=True, verbose_name='Project Type')
+    address = models.CharField(max_length=255, null=True)
+    province = models.ForeignKey(Province, on_delete=models.SET_NULL, verbose_name='Province', null=True)
+    city = models.ForeignKey(City, on_delete=models.SET_NULL, verbose_name='City', null=True)
+    lotarea = models.CharField(max_length=255, blank=True, verbose_name='Lot Area', 
+        help_text="Please indicate if square meter, square kilometer, square mile, hectare, acre")
+    budget = models.FloatField(('Estimated Budget'), max_length=255)
+    date_start = models.DateField(('Estimated Date Start'), null=True)
+    date_created = models.DateTimeField(('Date Created'), auto_now=True)
+
+class EstimateImage(models.Model):
+    estimate = models.ForeignKey(Estimate, on_delete=models.CASCADE)
+    image = models.FileField(verbose_name='Image/Design/Reference', upload_to=estimate_upload_path)
 
 class ProjectSite(models.Model):
     projectsite = models.CharField(('Project Name'),max_length=255, null=True)
@@ -359,14 +387,9 @@ class Requisition(models.Model):
 
 
 class RequisitionDetails(models.Model):
-    # status=(('Canceled', 'Canceled'),('To be Delivered', 'To be Delivered'))
     requisition = models.ForeignKey(Requisition, on_delete=models.CASCADE, related_name='requisitiondetail', verbose_name='Requesition')
     articles = models.ForeignKey(Inventory, on_delete=models.CASCADE, verbose_name="Articles")
     quantity = models.IntegerField(('Request Quantity'),default=1)
-    # status = models.CharField(('Status'),max_length=255, choices=status, null=True,)
-    # status2 ={('Incomplete', 'Incomplete'), ('Not Received','Not Received'), ('Complete','Complete')}
-    # status2 = models.CharField(('Action'), max_length=255, choices=status2, null=True, blank=True)
-    # quantity2 = models.IntegerField(('Quantity Receive'), null=True, blank=True, default=0)
     class Meta:
         verbose_name_plural = 'Requisition Details'
         verbose_name = 'Requisition Detail'

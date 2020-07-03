@@ -164,6 +164,5 @@ urlpatterns = [
     path('whm/materials/externalorder_list', views.ExternalOrderListView_WHM, name="externalorder_list_whm"),
     path('whm/reports/dailyreport_list', views. ProjectDailyReportListView_WHM, name="dailyreport_list_whm"),
     path('whm/reports/sitephotos_list', views.dailysitephotosListView_WHM, name="sitephotos_list_whm"),
-    # path('whm/dailyreport', views.DailyReportCreateView, name="daily_report"),
 
 ]

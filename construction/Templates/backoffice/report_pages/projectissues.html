@@ -19,64 +19,65 @@
         </div>
     {% endfor %}
 </div>
-<div class="card">
-    <div class="card-header card-list">
-        <button type="button" class="btn btn-outline-primary btn-add" data-toggle="modal" data-target="#issuemodal">
-            <i class="mdi mdi-file-document"></i>New Project Issues Form
-        </button>
-        <h4 class="card-title">Project Issues List
-            <button type="button" class="btn btn-outline-primary btn-add-responsive " title="New Project Issues Form" data-toggle="modal" data-target="#issuemodal" >
-                <i class="mdi mdi-file-document"></i>
-            </button>
-        </h4>
-    </div>
-    <div class="card-body">
-        <div class="table-responsive">
-            <div class="row">
-            <div class="col-12">
-                <div id="order-listing_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-header card-list">
+                <button type="button" class="btn btn-primary float-right btn-add" data-toggle="modal" data-target="#issuemodal">
+                    <i class="mdi mdi-file-document"></i><label class="btn-add-responsive">New Form</label> 
+                </button>
+                <h3 class="text-center">Project Issues List</h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
                     <div class="row">
-                        <div class="col-sm-12">
-                            <table id="order-listing" class="table dataTable no-footer" role="grid" aria-describedby="order-listing_info">
-                                <thead>
-                                    <tr role="row">
-                                        <th class="sorting font-weight-bold" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                            aria-label="Project: activate to sort column ascending" style="width: 100px;">
-                                            Project Site
-                                        </th>
-                                        <th class="sorting font-weight-bold"" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                            aria-label="Client: activate to sort column ascending" style="width: 50px;">
-                                            Date
-                                        </th>
-                                        <th class="sorting font-weight-bold"" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                            aria-label="Client: activate to sort column ascending" style="width: 50px;">
-                                            Prepared By
-                                        </th>
-                                        <th class="sorting font-weight-bold"" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                        aria-label="Actions: activate to sort column ascending" style="width: 50px;">
-                                            Actions
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for i in view.data2%}
-                                    <tr role="row" class="odd">
-                                        <td>{{i.projectsite}}</td>
-                                        <td>{{i.date}}</td>
-                                        <td>{{i.whm}}</td>
-                                        <td><a href="{% url 'issues_detail' i.id%}" class="btn btn-outline-primary">view</a></td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
+                    <div class="col-12">
+                        <div id="order-listing_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table id="order-listing" class="table dataTable no-footer" role="grid" aria-describedby="order-listing_info">
+                                        <thead>
+                                            <tr role="row">
+                                                <th class="sorting font-weight-bold" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                                    aria-label="Project: activate to sort column ascending" style="width: 100px;">
+                                                    Project Site
+                                                </th>
+                                                <th class="sorting font-weight-bold"" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                                    aria-label="Client: activate to sort column ascending" style="width: 50px;">
+                                                    Date
+                                                </th>
+                                                <th class="sorting font-weight-bold"" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                                    aria-label="Client: activate to sort column ascending" style="width: 50px;">
+                                                    Prepared By
+                                                </th>
+                                                <th class="sorting font-weight-bold"" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                                aria-label="Actions: activate to sort column ascending" style="width: 50px;">
+                                                    Actions
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for i in view.data2%}
+                                            <tr role="row" class="odd">
+                                                <td>{{i.projectsite}}</td>
+                                                <td>{{i.date}}</td>
+                                                <td>{{i.whm}}</td>
+                                                <td><a href="{% url 'issues_detail' i.id%}" class="btn btn-outline-primary">view</a></td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    </div>
                 </div>
-            </div>
             </div>
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="issuemodal" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content form-modal-content">
