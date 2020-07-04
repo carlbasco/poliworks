@@ -70,4 +70,13 @@ delete from sqlite_sequence where name='`construction_projectdailyreportdetails`
 delete from `construction_personneltype`; 
 delete from sqlite_sequence where name='`construction_personneltype`';
 
+delete from `construction_inquiry`; 
+delete from sqlite_sequence where name='`construction_inquiry`';
+
+delete from `construction_estimate`; 
+delete from sqlite_sequence where name='`construction_estimate`';
+
+delete from `construction_estimate_image`; 
+delete from sqlite_sequence where name='`construction_estimate_image`';
+
 Update 'construction_personnel' SET projectsite_id=NULL, date=NULL, date2=NULL, status="Available" WHERE status = "Currently Assigned"

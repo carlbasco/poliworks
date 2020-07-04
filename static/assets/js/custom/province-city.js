@@ -1,5 +1,5 @@
 $('#id_province').select2();
-
+// $('#id_city').hide();
 $('#div_id_city').hide();
 
 $('#id_province').change(function(){
@@ -18,7 +18,6 @@ var province = $(this).val()
                 select.empty();
                 select.append("<option value=''>---Select City---</option>");
                 for (var j = 0; j < data.length; j++){
-                        console.log(data[j].name + "--" + data[j].id);
                         $("#id_city").append("<option value='" +data[j].id+ "'>" +data[j].name+ "     </option>");
                 }
                 $('#id_city').select2();

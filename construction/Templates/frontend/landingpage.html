@@ -1,5 +1,6 @@
 {% extends 'frontend/base.html'%}
 {% load static %}
+{% load crispy_forms_tags%}
 {% block content %}
 <header class="header">
     <nav class="navbar navbar-expand-lg fixed-top"><a href="index.html" class="navbar-brand"></a>
@@ -13,12 +14,10 @@
 				<li class="nav-item"><a href="#about-us" class="nav-link link-scroll">About Us</a></li>
 				<li class="nav-item"><a href="#services" class="nav-link link-scroll">Services</a></li>
 				<li class="nav-item"><a href="#projects" class="nav-link link-scroll">Projects</a></li>
+				<li class="nav-item"><a href="{% url 'estimate_create'%}" class="nav-link link-scroll">Estimate</a></li>
 				<li class="nav-item"><a href="{% url 'signin' %}" class="nav-link link-scroll">Sign in</a></li>
-				<!-- <li class="nav-item"><a href="#testimonials" class="nav-link link-scroll">Testimonials</a></li> -->
 			</ul>
-			<div class="navbar-text">   
-				
-			</div>
+			<div class="navbar-text"></div>
 		</div>
     </nav>
 </header>
@@ -31,7 +30,7 @@
 				Poliworks Inc. is a provider of solutions for every client's construction and facilities maintenance requirements,
 				while also valuing each customer's specific needs and wants for their project.
 				</p>
-				<a href="#footer" class="btn btn-primary">Contact Us</a>
+				<a href="#footer" class="btn btn-primary btn-rounded">Contact Us</a>
 			</div>
 		</div>
 	</div>
@@ -51,7 +50,7 @@
 				Being able to cater several industries; from commercial units, warehouses, medical laboratories and clinics, residential condo units and houses.
 			</p>
 		</div>
-		<a href="{%url 'about'%}" class="btn btn-primary ">Discover More</a>
+		<a href="{%url 'about'%}" class="btn btn-primary btn-rounded">Discover More</a>
 	</div>
 </section>
 

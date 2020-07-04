@@ -8,7 +8,8 @@ from .models import *
 urlpatterns = [
     path('', views.home, name="home"),
     path('about/', views.about, name="about"),
-
+    path('estimate', views.EstimateCreateView, name="estimate_create"),
+    
     #Sign in/ Sign Out
     path('sign-in', views.signin, name="signin"),
     path('sign-out/', views.signout, name="signout"),
@@ -118,12 +119,6 @@ urlpatterns = [
     path('accounts/password/reset/<uidb64>/<token>',auth_views.PasswordResetConfirmView.as_view(template_name="frontend/password_reset_confirm.html"), name="password_reset_confirm"),
     path('accounts/password/reset/complete', auth_views.PasswordResetCompleteView.as_view(template_name="frontend/password_reset_complete.html"), name="password_reset_complete"),
 
-
-    #api get method
-    path('backoffice/api/scope/<int:pk>', views.ScopeOfWork_api, name="scopeofworks_api"),
-    path('backoffice/api/materials/<int:pk>/', views.Inventory_api, name="inventory_api"),
-    path('backoffice/api/city/<int:pk>', views.City_api, name="city_api"),
-    
     #PM's page
     path('pm/project_list', views.ProjectListView_PM, name="project_list_pm"),
     path('pm/project/quotation_list', views.QuotationListView_PM, name="quotation_list_pm"),
@@ -165,4 +160,9 @@ urlpatterns = [
     path('whm/reports/dailyreport_list', views. ProjectDailyReportListView_WHM, name="dailyreport_list_whm"),
     path('whm/reports/sitephotos_list', views.dailysitephotosListView_WHM, name="sitephotos_list_whm"),
 
+#api method
+    path('backoffice/api/scope/<int:pk>', views.ScopeOfWork_api, name="scopeofworks_api"),
+    path('backoffice/api/materials/<int:pk>/', views.Inventory_api, name="inventory_api"),
+    path('backoffice/api/city/<int:pk>', views.City_api, name="city_api"),
+    path('backoffice/api/inquiry', views.InquiryCreate_api, name="inquiry_create_api")
 ]

@@ -80,6 +80,30 @@ class InquiryForm(forms.ModelForm):
         model = Inquiry
         exclude = ('datetime',)
         
+class EstimateForm(forms.ModelForm):
+    class Meta:
+        model = Estimate
+        exclude =('datetime',)
+        widgets={
+            'name' : forms.TextInput(attrs={'class':'form-control', 'placeholder':'Full Name'}),
+            'phone' : forms.TextInput(attrs={'class':'form-control', 'placeholder':'Contact Number'}),
+            'email' : forms.EmailInput(attrs={'class':'form-control', 'placeholder':'Email'}),
+            'call_time' : forms.TextInput(attrs={'class':'form-control', 'placeholder':'Best time to call'}),
+            'typeofproject' : forms.Select(attrs={'class':'form-control', 'placeholder':'Type of Project'}),
+            'address' : forms.TextInput(attrs={'class':'form-control', 'placeholder':'Location of Property'}),
+            'lotarea' : forms.TextInput(attrs={'class':'form-control', 'placeholder':'Lot Area'}),
+            'date_start':forms.DateInput( attrs={'class':'form-control dateinput', 'placeholder':'Estimated Date Start'}),
+            'budget' : forms.NumberInput(attrs={'class':'form-control', 'placeholder':'Estimate Budget (php)'}),
+            'message' : forms.Textarea(attrs={'class':'form-control', 'placeholder':'Message', 'style':'resize: none;'}),
+        }
+class EstimateImageForm(forms.ModelForm):
+    class Meta:
+        model = EstimateImage
+        exclude = ('estimate',)
+        widgets={
+            'image' : forms.FileInput(attrs={'class':'custom-file-input', 'multiple': True})
+        }
+
 class ProfileForm(forms.ModelForm):
     class Meta:
         model=Profile

@@ -16,3 +16,7 @@ class CitySerializers(serializers.ModelSerializer):
 		model = City
 		fields ='__all__'
 		
+class InquirySerializers(serializers.ModelSerializer):
+	class Meta:
+		model = Inquiry
+		fields = ('name', 'phone', 'email', 'message')

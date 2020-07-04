@@ -101,25 +101,6 @@ strong {
   box-shadow: -5.665px 9.429px 35px 0px rgba(0, 0, 0, 0.2);
 }
 
-.owl-theme .owl-nav {
-  margin-top: 0;
-}
-
-.owl-theme .owl-nav [class*='owl-'] {
-  background: none;
-  color: #222;
-  font-size: 2rem;
-  margin: 0 20px;
-}
-
-.owl-theme .owl-nav [class*='owl-'].disabled {
-  color: #aaa;
-}
-
-.owl-theme .owl-nav [class*='owl-']:hover {
-  background: none;
-  color: #333;
-}
 
 section header {
   margin-bottom: 70px;
@@ -149,10 +130,7 @@ section header {
   margin-bottom: 50px;
 }
 
-/* Browser mockup code
- * Contribute: https://gist.github.com/jarthod/8719db9fef8deb937f4f
- * Live example: https://updown.io
- */
+
 .browser-mockup {
   border-top: 50px solid #f7f7f7;
   position: relative;
@@ -257,43 +235,6 @@ section header {
   padding-left: 10px;
   color: #656565;
   font-family: "Open Sans", sans-serif;
-}
-
-#signupform input {
-  width: 100%;
-  display: block;
-  padding: 10px 20px;
-  border-radius: 50px;
-  border: 1px solid #eee;
-  outline: none;
-}
-
-#signupform input:focus {
-  border-color: #5989e5;
-}
-
-#signupform input::-moz-placeholder {
-  font-family: "Open Sans", sans-serif;
-  font-weight: 300;
-  color: #aaa;
-  font-style: italic;
-  font-size: 0.9em;
-}
-
-#signupform input::-webkit-input-placeholder {
-  font-family: "Open Sans", sans-serif;
-  font-weight: 300;
-  color: #aaa;
-  font-style: italic;
-  font-size: 0.9em;
-}
-
-#signupform input:-ms-input-placeholder {
-  font-family: "Open Sans", sans-serif;
-  font-weight: 300;
-  color: #aaa;
-  font-style: italic;
-  font-size: 0.9em;
 }
 
 /* General Media Query ---------------------------------- */
@@ -957,7 +898,6 @@ STYLE SWITCHER FOR DEMO
   padding: 0.6rem 3rem;
   font-size: 1rem;
   line-height: 1.5;
-  border-radius: 50px;
   -webkit-transition: all 0.15s ease-in-out;
   transition: all 0.15s ease-in-out;
 }
@@ -972,8 +912,8 @@ STYLE SWITCHER FOR DEMO
 
 .btn-primary {
   color: #fff;
-  background-color: #5989e5;
-  border-color: #5989e5;
+  background-color: rgba(38,108,170,1);
+  border-color: rgba(38,108,170,1);
 }
 
 .btn-primary:hover {
@@ -987,10 +927,7 @@ STYLE SWITCHER FOR DEMO
   box-shadow: 0 0 0 3px rgba(89, 137, 229, 0.5);
 }
 
-.btn-primary.disabled, .btn-primary:disabled {
-  background-color: #5989e5;
-  border-color: #5989e5;
-}
+
 
 .btn-primary:active, .btn-primary.active,
 .show > .btn-primary.dropdown-toggle {
@@ -1442,19 +1379,7 @@ STYLE SWITCHER FOR DEMO
   border-color: #343a40;
 }
 
-.btn-lg {
-  padding: 0.8rem 3.5rem;
-  font-size: 1.25rem;
-  line-height: 1.5;
-  border-radius: 50px;
-}
 
-.btn-sm {
-  padding: 0.4rem 1.5rem;
-  font-size: 0.875rem;
-  line-height: 1.5;
-  border-radius: 50px;
-}
 
 /*
  * 3. TYPE

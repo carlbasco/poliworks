@@ -1,0 +1,150 @@
+{% extends 'frontend/base.html'%}
+{% load static %}
+{% load crispy_forms_tags%}
+{% block content %}
+<header class="header">
+    <nav class="navbar navbar-expand-lg fixed-top"><a href="index.html" class="navbar-brand"></a>
+		<a class="navbar-brand" href="{%url 'home'%}">
+			<img src="{% static 'images-poli/logo-poliworks.png' %}" width="70" height="35" class="d-inline-block align-top" alt="">
+			Poliworks
+		</a>
+        <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler navbar-toggler-right"><span></span><span></span><span></span></button>
+        <div id="navbarSupportedContent" class="collapse navbar-collapse">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a href="{% url 'home'%}" class="nav-link link-scroll">Home </a></li>
+                <li class="nav-item"><a href="{% url 'signin'%}" class="nav-link link-scroll">Sign In</a></li>
+            </ul>
+        </div>
+    </nav>
+</header>
+<div class="col-lg-6 mx-auto mb-5 mt-5 ">
+    <div class="col-md-12 mx-auto">
+        {% for message in messages %}
+            <div class="alert alert-{{message.level_tag}} alert-dismissible fade show" role="alert">
+                {% if message.level_tag  == "success" %}
+                    <strong>Success! </strong>
+                {% else %}
+                    <strong>Error! </strong>
+                {% endif %}
+                {{message}}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="card">
+        <div class="card-header c-custom">
+            <h3 class="c-white text-center">Estimate Form</h3>
+        </div>
+        <div class="card-body">
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row justify-content-center">
+                    <div class="col-lg-11">
+                        <h5 class="c-black">Personal Informations: </h5>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="form-group">
+                            {{form.name}}
+                          </div>
+                          <div class="form-group">
+                              {{form.phone}}
+                          </div>
+                          <div class="form-group">
+                              {{form.email}}
+                          </div>
+                          <div class="form-group">
+                              {{form.call_time}} 
+                          </div>
+                    </div>
+                    <div class="col-lg-11">
+                        <h5 class="c-black">Property Informations: </h5>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="form-group">
+                            {{form.address}}
+                            <small class="text-muted">House/Unit no / Building / Street, Barangay</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Province</label>
+                            {{form.province}}
+                        </div>
+                        <div class="form-group">
+                            <div id="div_id_city">
+                                <label for="">City</label>
+                                {{form.city}}
+                            </div>
+                        </div>
+                        <div class="form-group mt-3">
+                            {{form.lotarea}}
+                            <small class="text-muted">Please indicate if square meter, hectare, acre</small>
+                        </div>
+                        <label for="">Image Design/Reference (Optional)</label>
+                        <div class="custom-file" class="mb-3">
+                            {{form2.image}}
+                            <label class="custom-file-label mb-3" for="customFile">Choose file</label>
+                        </div>
+                        <div id="preview" class="mb-3"></div>
+                    </div>
+                    <div class="col-lg-11">
+                        <h5 class="c-black">Other Informations: </h5>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="form-group">
+                            <label for="">Type of Project</label>
+                            {{form.typeofproject}} 
+                        </div>
+                        
+                        <div class="form-group">
+                            {{form.date_start}}
+                        </div>
+                        <div class="form-group">
+                            {{form.budget}}
+                        </div>
+                        <div class="form-group">
+                            {{form.message}}
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Send Estimate Form</button>
+                    </div>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascript %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/1.0.9/datepicker.min.js"></script>
+<script src="{% static 'assets/js/custom/province-city.js'%}"></script>
+<style>
+    span.select2-selection.select2-selection--single {height: 35px;}
+    span.selection {width: 100%;}
+</style>
+<script>
+    function previewImages() {  
+        var $preview = $('#preview').empty();
+        if (this.files) $.each(this.files, readAndPreview);
+
+        function readAndPreview(i, file) {
+            if (!/\.(jpe?g|png|gif)$/i.test(file.name)){
+                return alert(file.name +" is not an image");
+            } // else...
+            var reader = new FileReader();
+
+            $(reader).on("load", function() {
+                $preview.append($("<img/>", {src:this.result, height:100}));
+            });
+            reader.readAsDataURL(file);
+        }
+    }
+    $('#id_image').on("change", previewImages);
+    $(".dateinput").datepicker({
+    format:'yyyy-mm-dd',
+    });
+</script>
+{% endblock%}

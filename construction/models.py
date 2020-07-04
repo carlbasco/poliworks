@@ -16,7 +16,7 @@ def profile_upload_path(instance, filename):
     return 'profile_image/{0}/{1}'.format(instance.user, filename)
 
 def estimate_upload_path(instance, filename):
-    return 'Estimate/{}/{}'.format(instance.name, filename)
+    return 'Estimate/{}/{}'.format(instance.estimate.name, filename)
 
 def project_upload_path(instance, filename):
     return 'Projects/{0}/blueprint~design/{1}'.format(instance.projectsite, filename)
@@ -145,7 +145,7 @@ class Inquiry(models.Model):
     name = models.CharField(('Name'),max_length=255)
     phone = models.CharField(('Contact Number'), max_length=20)
     email = models.CharField(('Email'), max_length=255)
-    message = models.CharField(('Message'), max_length=255)
+    message = models.TextField(('Message'), null=True)
     date_created = models.DateTimeField(('Date Created'), auto_now=True)
 
 class Estimate(models.Model):
@@ -157,10 +157,10 @@ class Estimate(models.Model):
     address = models.CharField(max_length=255, null=True)
     province = models.ForeignKey(Province, on_delete=models.SET_NULL, verbose_name='Province', null=True)
     city = models.ForeignKey(City, on_delete=models.SET_NULL, verbose_name='City', null=True)
-    lotarea = models.CharField(max_length=255, blank=True, verbose_name='Lot Area', 
-        help_text="Please indicate if square meter, square kilometer, square mile, hectare, acre")
+    lotarea = models.CharField(max_length=255, blank=True, verbose_name='Lot Area', help_text="Please indicate if square meter, hectare, acre")
     budget = models.FloatField(('Estimated Budget'), max_length=255)
-    date_start = models.DateField(('Estimated Date Start'), null=True)
+    date_start = models.DateField(('Estimated Date Start'), null=True,)
+    message = models.TextField(('Message'), null=True, blank=True)
     date_created = models.DateTimeField(('Date Created'), auto_now=True)
 
 class EstimateImage(models.Model):
@@ -184,7 +184,7 @@ class ProjectSite(models.Model):
     status = models.CharField(max_length=255, choices=status, blank=True ,default='Pending')
     typeofproject = models.ForeignKey(ProjectType, on_delete=models.SET_NULL, null=True, verbose_name='Project Type')
     lotarea = models.CharField(max_length=255, blank=True, verbose_name='Lot Area', 
-        help_text="Please indicate if square meter, square kilometer, square mile, hectare, acre")
+        help_text="Please indicate if square meter, hectare, acre")
     startdate = models.DateField(('Start Project Date'),  help_text='Format: YYYY-MM-DD', blank=True,null=True)
     comdate = models.DateField(('Project Completion Date'), help_text='Format: YYYY-MM-DD', blank=True, null=True)
     mpd = models.DateField(('Maintenance Period End Date'), help_text='Format: YYYY-MM-DD', blank=True, null=True)

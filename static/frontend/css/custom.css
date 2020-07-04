@@ -23,8 +23,9 @@ a#bullet-sm.navbar-brand{
     margin:auto;
 }
 .footer-top {
+    margin-top: 5rem;
     padding-bottom: 1rem;
-    padding-top: 1rem;
+    padding-top: 2rem;
     box-shadow: 1px 9px 35px -1px rgba(0,0,0,0.75);
     background-color: #f5f5f5;
 }
@@ -92,4 +93,24 @@ li.li-contact {
         display: block;
         text-align: center;
     }
+}
+
+.c-black{
+    color:black;
+}
+
+.c-white{
+    color:white;
+}
+.c-custom{
+    background-color: rgba(38,108,170,1);
+}
+.select2 {
+    width:100%!important;
+}
+img#design_img {
+    width: 100%;
+}
+.btn-rounded{
+    border-radius: 50px;
 }

@@ -35,6 +35,25 @@ def home(request):
 def about(request):
     return render(request, 'frontend/about.html')
 
+def EstimateCreateView(request):
+    if request.method == 'POST':
+        form = EstimateForm(request.POST)
+        form2 = EstimateForm(request.POST, request.FILES)
+        files = request.FILES.getlist('image')
+        if form.is_valid() and form2.is_valid():
+            estimate = form.save()
+            form2 = form2.save(False)
+            for f in files:
+                image = EstimateImage(estimate=estimate, image=f)
+                image.save()
+            messages.success(request, "Your form has been submitted. We'll be in touch soon")
+            return redirect('estimate_create')
+    else:
+        form = EstimateForm()
+        form2 = EstimateImageForm()
+    context = {'form':form, 'form2':form2}
+    return render(request, 'frontend/estimate.html', context)
+
 def my_custom_page_not_found_view(request, exception):
     return render(request, "404.html")
 
@@ -1957,6 +1976,14 @@ def ClientProjectCreateView(request):
 
 #################################################################################################################################
 #################################################################################################################################
+@api_view(['POST'])
+def InquiryCreate_api(request):
+    serializer = InquirySerializers(data=request.data)
+    if serializer.is_valid():
+	    serializer.save()
+    return Response(serializer.data) 
+
+
 @login_required(login_url = 'signin')
 @api_view(['GET'])
 def ScopeOfWorks_api(request):

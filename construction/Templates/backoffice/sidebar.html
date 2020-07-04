@@ -58,6 +58,14 @@
                         {% endif %}
                     </li>
                     {% endif %}
+                    {% if request.user.groups.all.0.name == "Admin" %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="">Inquiry</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="">Estimate</a>
+                    </li>
+                    {% endif %}
                 </ul>
             </div>
         </li>
