@@ -199,8 +199,8 @@ class ScopeOfWork(ImportExportModelAdmin):
     ordering=('pk',)
 
 @admin.register(Personnel)
-class PersonnelAdmin(admin.ModelAdmin):
-    list_display = ('full_name','personnel_type')
+class PersonnelAdmin(ImportExportModelAdmin):
+    list_display = ('short_name','personnel_type')
 
 @admin.register(Inventory)
 class Inventory(ImportExportModelAdmin):

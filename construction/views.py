@@ -530,6 +530,8 @@ def InquiryDeleteView(request, pk):
     data = Inquiry.objects.get(id=pk)
     if request.method == "POST":
         data.delete()
+        messages.success(request, "Inquiry has been deleted")
+        return redirect('inquiry_list')
     context = {'data':data}
     return render(request, 'backoffice/project_pages/inquiry_delete.html', context)
 
@@ -540,7 +542,7 @@ def EstimateListView(request):
 
 def EstimateDetailView(request, pk):
     data = Estimate.objects.get(id=pk)
-    data2 = Estimate.image.objects.get(estimate=data)
+    data2 = EstimateImage.objects.filter(estimate=data)
     if request.method == "POST":
         status = request.POST.get("status")
         if status == "read":
@@ -554,10 +556,13 @@ def EstimateDetailView(request, pk):
     context = {'data':data , 'data2':data2}
     return render(request, 'backoffice/project_pages/estimate_detail.html', context)
 
-def EstimateDeleteView(request):
-    data = Estimate.objects.all().order_by('-date_created')
+def EstimateDeleteView(request, pk):
+    data = Estimate.objects.get(id=pk)
+    data2 = EstimateImage.objects.filter(estimate=data)
     if request.method == "POST":
         data.delete()
+        messages.success(request, "Estimate Form has been deleted")
+        return redirect('estimate_list')
     context = {'data':data}
     return render(request, 'backoffice/project_pages/estimate_delete.html', context)
 

@@ -2,7 +2,7 @@
 {% load static %}
 {% load crispy_forms_tags%}
 {% block content %}
-<span class="text-uppercase page-subtitle">Materials</span>
+<span class="text-uppercase page-subtitle">Project</span>
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb bg-inverse-primary">
         <li class="breadcrumb-item active" aria-current="page">
@@ -56,26 +56,25 @@
                         </thead>
                         <tbody>
                             {% for i in data%}
-                            {% if i.status == False %}
-                            <tr role="row" class="odd">
-                                <td><strong>{{i.date_created}}</strong></td>
-                                <td><strong>{{i.name}}</strong></td>
-                                <td><strong>{{i.phone}}</strong></td>
-                                <td><strong>{{i.email}}</strong></td>
-                                <td><label class="badge badge-warning">Unread</label></td>
-                                <td><a href="{% url 'inquiry_detail' i.id%}" class="btn btn-outline-primary">View</a></td>
-                            </tr>
-                            {% else %}
-                            <tr role="row" class="odd">
-                                <td>{{i.date_created}}</td>
-                                <td>{{i.name}}</td>
-                                <td>{{i.phone}}</td>
-                                <td>{{i.email}}</td>
-                                <td><label class="badge badge-primary">Read</label></td>
-                                <td><a href="{% url 'estimate_detail' data.id%}" class="btn btn-outline-primary">View</a></td>
-                            </tr>
-                            {% endif %}
-                            
+                                {% if i.status == False %}
+                                <tr role="row" class="odd">
+                                    <td><strong>{{i.date_created}}</strong></td>
+                                    <td><strong>{{i.name}}</strong></td>
+                                    <td><strong>{{i.phone}}</strong></td>
+                                    <td><strong>{{i.email}}</strong></td>
+                                    <td><label class="badge badge-warning">Unread</label></td>
+                                    <td><a href="{% url 'estimate_detail' i.id%}" class="btn btn-outline-primary">View</a></td>
+                                </tr>
+                                {% else %}
+                                <tr role="row" class="odd">
+                                    <td>{{i.date_created}}</td>
+                                    <td>{{i.name}}</td>
+                                    <td>{{i.phone}}</td>
+                                    <td>{{i.email}}</td>
+                                    <td><label class="badge badge-primary">Read</label></td>
+                                    <td><a href="{% url 'estimate_detail' i.id%}" class="btn btn-outline-primary">View</a></td>
+                                </tr>
+                                {% endif %}
                             {% endfor %}
                         </tbody>
                     </table>

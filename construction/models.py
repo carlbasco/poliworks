@@ -146,7 +146,7 @@ class Inquiry(models.Model):
     phone = models.CharField(('Contact Number'), max_length=20)
     email = models.CharField(('Email'), max_length=255)
     message = models.TextField(('Message'), null=True)
-    date_created = models.DateTimeField(('Date Created'), auto_now=True)
+    date_created = models.DateTimeField(('Date Created'), auto_now_add=True)
     status = models.BooleanField(default=False)
 
 class Estimate(models.Model):
@@ -162,7 +162,7 @@ class Estimate(models.Model):
     budget = models.FloatField(('Estimated Budget'), max_length=255)
     date_start = models.DateField(('Estimated Date Start'), null=True,)
     message = models.TextField(('Message'), null=True, blank=True)
-    date_created = models.DateTimeField(('Date Created'), auto_now=True)
+    date_created = models.DateTimeField(('Date Created'), auto_now_add=True)
     status = models.BooleanField(default=False)
 
 class EstimateImage(models.Model):
@@ -292,13 +292,13 @@ class PersonnelType(models.Model):
 
 class Personnel(models.Model):
     first_name = models.CharField(('First Name'), max_length=255)
-    middle_name = models.CharField(('Middle Name'), max_length=255, blank=True)
+    middle_name = models.CharField(('Middle Name'), max_length=255, blank=True, null=True)
     last_name = models.CharField(('Last Name'), max_length=255)
-    suffix = models.CharField(('Suffix'), max_length=50, blank=True)
+    suffix = models.CharField(('Suffix'), max_length=50, null=True, blank=True)
     gender = models.ForeignKey(Gender, on_delete=models.SET_NULL, null=True)
     contact = models.CharField(('Contact Number'), max_length=20)
     choice={('Company Worker', 'Company Worker'), ('Subcontractor','Subcontractor')}
-    personnel_type = models.ForeignKey(PersonnelType, on_delete=models.SET_NULL, null=True)
+    personnel_type = models.ForeignKey(PersonnelType, on_delete=models.SET_NULL, null=True, blank=True)
     skill = models.ManyToManyField(PersonnelSkill, related_name='personnel')
     address = models.CharField(max_length=255, null=True, help_text='Apartment, suite, unit, building, floor, street, barangay')
     city = models.ForeignKey(City, on_delete=models.SET_NULL, verbose_name='City', null=True)
@@ -312,9 +312,9 @@ class Personnel(models.Model):
         verbose_name_plural = 'Personnel'
         verbose_name = 'Personnel'
 
-    def full_name(self):
-       full_name = '%s %s %s %s' % (self.first_name, self.middle_name, self.last_name, self.suffix)
-       return full_name.strip()
+    def short_name(self):
+       short_name = '%s %s' % (self.first_name, self.last_name)
+       return short_name.strip()
     
     def __str__(self):
         flname ='%s %s' % (self.first_name, self.last_name)
