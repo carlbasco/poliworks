@@ -34,54 +34,47 @@
     <div class="card-body">
     <h4 class="card-title">External Order List</h4>
         <div class="table-responsive">
-            <div class="row">
-                <div class="col-12">
-                    <div id="order-listing_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <table id="order-listing" class="table dataTable no-footer" role="grid" aria-describedby="order-listing_info">
-                                    <thead>
-                                        <tr role="row">
-                                            <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                                aria-label="Project: activate to sort column ascending" style="width: 100px;">Project Site
-                                            </th>
-                                            <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                                aria-label="Client: activate to sort column ascending" style="width: 71px;">
-                                                Supplier
-                                            </th>
-                                            <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                                aria-label="Project Manager: activate to sort column ascending" style="width: 51px;">
-                                                Date
-                                            </th>
-                                            <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                                aria-label="Person In-Charge: activate to sort column ascending" style="width: 73px;">
-                                                Prepared By
-                                            </th>
-                                            <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" aria-label="Actions: activate to sort column ascending" style="width: 53px;">
-                                                Actions
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for i in data%}
-                                        <tr role="row" class="odd">
-                                            <td>{{i.projectsite}}</td>
-                                            <td>{{i.supplier}}</td>
-                                            <td>{{i.date}}</td>
-                                            <td>{{i.whm}}</td>
-                                            <td>
-                                                <form action="{% url 'externalorder_detail' i.id%}">
-                                                    <button class="btn btn-outline-primary">View</button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div id="order-listing_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer col-lg-12">
+                <table id="order-listing" class="table dataTable no-footer" role="grid" aria-describedby="order-listing_info">
+                    <thead>
+                        <tr role="row">
+                            <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                style="width: 100px;">Project Site
+                            </th>
+                            <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                style="width: 71px;">
+                                Supplier
+                            </th>
+                            <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                style="width: 51px;">
+                                Date
+                            </th>
+                            <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                style="width: 73px;">
+                                Prepared By
+                            </th>
+                            <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                style="width: 53px;">
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in data%}
+                        <tr role="row" class="odd">
+                            <td>{{i.projectsite}}</td>
+                            <td>{{i.supplier}}</td>
+                            <td>{{i.date}}</td>
+                            <td>{{i.whm}}</td>
+                            <td>
+                                <form action="{% url 'externalorder_detail' i.id%}">
+                                    <button class="btn btn-outline-primary">View</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

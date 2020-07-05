@@ -39,6 +39,14 @@ urlpatterns = [
     path('project/progess/<int:pk>/edit', views.ProgressUpdateView, name="progress_update"),
     path('project/progess/<int:pk>/delete', views.ProgressDeleteView, name="progress_delete"),
 
+    #Inquiry and Estimate
+    path('project/inquiry_list', views.InquiryListView, name="inquiry_list"),
+    path('project/inquiry/<int:pk>', views.InquiryDetailView, name="inquiry_detail"),
+    path('project/inquiry/<int:pk>/delete', views.InquiryDeleteView, name="inquiry_delete"),
+    path('project/estimate_list', views.EstimateListView, name="estimate_list"),
+    path('project/estimate/<int:pk>', views.EstimateDetailView, name="estimate_detail"),
+    path('project/estimate/<int:pk>/delete', views.EstimateDeleteView, name="estimate_delete"),
+
     #JobOrder
     path('task/joborder', views.JobOrderCreateView.as_view(), name="joborder_create"),
     path('task/joborder_list', views.JobOrderListView, name="joborder_list"),

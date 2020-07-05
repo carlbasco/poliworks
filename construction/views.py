@@ -505,6 +505,64 @@ def ProgressDeleteView(request,pk):
 
 #################################################################################################################################
 #################################################################################################################################
+
+def InquiryListView(request):
+    data = Inquiry.objects.all().order_by('-date_created')
+    context = {'data':data}
+    return render(request, 'backoffice/project_pages/inquiry_list.html', context)
+
+def InquiryDetailView(request, pk):
+    data = Inquiry.objects.get(id=pk)
+    if request.method == "POST":
+        status = request.POST.get("status")
+        if status == "read":
+            data.status = True
+            data.save()
+            return redirect('inquiry_detail', pk=data.id)
+        elif status == "unread":
+            data.status = False
+            data.save()
+            return redirect('inquiry_detail', pk=data.id)
+    context = {'data':data}
+    return render(request, 'backoffice/project_pages/inquiry_detail.html', context)
+
+def InquiryDeleteView(request, pk):
+    data = Inquiry.objects.get(id=pk)
+    if request.method == "POST":
+        data.delete()
+    context = {'data':data}
+    return render(request, 'backoffice/project_pages/inquiry_delete.html', context)
+
+def EstimateListView(request):
+    data = Estimate.objects.all().order_by('-date_created')
+    context = {'data':data}
+    return render(request, 'backoffice/project_pages/estimate_list.html', context)
+
+def EstimateDetailView(request, pk):
+    data = Estimate.objects.get(id=pk)
+    data2 = Estimate.image.objects.get(estimate=data)
+    if request.method == "POST":
+        status = request.POST.get("status")
+        if status == "read":
+            data.status = True
+            data.save()
+            return redirect('estimate_detail', pk=data.id)
+        elif status == "unread":
+            data.status = False
+            data.save()
+            return redirect('estimate_detail', pk=data.id)
+    context = {'data':data , 'data2':data2}
+    return render(request, 'backoffice/project_pages/estimate_detail.html', context)
+
+def EstimateDeleteView(request):
+    data = Estimate.objects.all().order_by('-date_created')
+    if request.method == "POST":
+        data.delete()
+    context = {'data':data}
+    return render(request, 'backoffice/project_pages/estimate_delete.html', context)
+
+#################################################################################################################################
+#################################################################################################################################
 class RequisitionCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     login_url ="signin"
     redirect_field_name = "redirect_to"

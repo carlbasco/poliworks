@@ -78,12 +78,12 @@ class SignupForm(forms.ModelForm):
 class InquiryForm(forms.ModelForm):
     class Meta:
         model = Inquiry
-        exclude = ('datetime',)
+        exclude = ('datetime', 'status')
         
 class EstimateForm(forms.ModelForm):
     class Meta:
         model = Estimate
-        exclude =('datetime',)
+        exclude =('datetime', 'status')
         widgets={
             'name' : forms.TextInput(attrs={'class':'form-control', 'placeholder':'Full Name'}),
             'phone' : forms.TextInput(attrs={'class':'form-control', 'placeholder':'Contact Number'}),

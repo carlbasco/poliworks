@@ -69,62 +69,54 @@
     <div class="card-body">
     <h4 class="card-title">Quotation List</h4>
         <div class="table-responsive">
-            <div class="row">
-            <div class="col-12">
-                <div id="order-listing_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <table id="order-listing" class="table dataTable no-footer" role="grid" aria-describedby="order-listing_info">
-                                <thead>
-                                    <tr role="row">
-                                        <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                            aria-label="Project: activate to sort column ascending" style="width: 100px;">Project Site
-                                        </th>
-                                        <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                            aria-label="Client: activate to sort column ascending" style="width: 51px;">
-                                            Subject
-                                        </th>
-                                        <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                            aria-label="Project Manager: activate to sort column ascending" style="width: 51px;">
-                                            Date
-                                        </th>
-                                        <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                            aria-label="Person In-Charge: activate to sort column ascending" style="width: 73px;">
-                                            Total Amount
-                                        </th>
-                                        <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                            aria-label="Person In-Charge: activate to sort column ascending" style="width: 51px;">
-                                            Status
-                                        </th>
-                                        <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                            aria-label="Actions: activate to sort column ascending" style="width: 51px;">
-                                            Actions
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for i in data%}
-                                    <tr role="row" class="odd">
-                                        <td>{{i.projectsite}}</td>
-                                        <td>{{i.subject}}</td>
-                                        <td>{{i.date}}</td>
-                                        <td>{{i.amount|intcomma}}</td>
-                                        {% if i.status == "Pending" %}
-                                            <td><label class="badge badge-warning">{{i.status}}</label></td>
-                                        {% elif i.status == "Accepted"%}
-                                            <td><label class="badge badge-primary">{{i.status}}</label></td>
-                                        {% elif i.status == "Rejected" %}
-                                            <td><label class="badge badge-danger">{{i.status}}</label></td>
-                                        {% endif %}
-                                        <td><a class="btn btn-outline-primary" href="{% url 'quotation_detail' i.id%}">View</a></td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div id="order-listing_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer col-lg-12">
+                <table id="order-listing" class="table dataTable no-footer" role="grid" aria-describedby="order-listing_info">
+                    <thead>
+                        <tr role="row">
+                            <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                style="width: 100px;">Project Site
+                            </th>
+                            <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                style="width: 51px;">
+                                Subject
+                            </th>
+                            <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                style="width: 51px;">
+                                Date
+                            </th>
+                            <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                style="width: 73px;">
+                                Total Amount
+                            </th>
+                            <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                style="width: 51px;">
+                                Status
+                            </th>
+                            <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                style="width: 51px;">
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in data%}
+                        <tr role="row" class="odd">
+                            <td>{{i.projectsite}}</td>
+                            <td>{{i.subject}}</td>
+                            <td>{{i.date}}</td>
+                            <td>{{i.amount|intcomma}}</td>
+                            {% if i.status == "Pending" %}
+                                <td><label class="badge badge-warning">{{i.status}}</label></td>
+                            {% elif i.status == "Accepted"%}
+                                <td><label class="badge badge-primary">{{i.status}}</label></td>
+                            {% elif i.status == "Rejected" %}
+                                <td><label class="badge badge-danger">{{i.status}}</label></td>
+                            {% endif %}
+                            <td><a class="btn btn-outline-primary" href="{% url 'quotation_detail' i.id%}">View</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

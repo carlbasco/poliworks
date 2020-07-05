@@ -1,0 +1,101 @@
+{% extends 'backoffice/index.html' %}
+{% load static %}
+{% load crispy_forms_tags%}
+{% block content %}
+{% load humanize %}
+<span class="text-uppercase page-subtitle">Materials</span>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-inverse-primary">
+        <li class="breadcrumb-item">
+            <a href="{% url 'inquiry_list'%}">Inquiry List</a>
+        </li>
+    </ol>
+</nav> 
+<div class="col-md-12 mx-auto">
+    {% for message in messages %}
+        <div class="alert alert-{{message.level_tag}} alert-dismissible fade show" role="alert">
+            {% if message.level_tag  == "success" %}
+                <strong>Success! </strong>
+            {% else %}
+                <strong>Error! </strong>
+            {% endif %}
+            {{message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endfor %}
+</div>
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col col-md-10">
+            <div class="card">
+                <div class="card-header" id="quotation_view">
+                    <h3 class="text-center">Estimate</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-11">
+                            <h5 class="c-black">Personal Informations: </h5>
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="form-group">
+                                <h6 class="sub">Name: <span class="txt">{{data.name}}</span></h6>
+                            </div>
+                            <div class="form-group">
+                                <h6 class="sub">Email: <span class="txt">{{data.email}}</span></h6>
+                            </div>
+                            <div class="form-group">
+                                <h6 class="sub">Contact Number: <span class="txt">{{data.phone}}</span></h6>
+                            </div>
+                            <div class="form-group">
+                                <h6 class="sub">Best Time to call: <span class="txt">{{data.call_time}}</span></h6>
+                            </div>
+                        </div>
+                        <div class="col-lg-11">
+                            <h5 class="c-black">Property Informations: </h5>
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="form-group">
+                                <h6 class="sub">Location: <span class="txt">{{data.address}}</span></h6>
+                            </div>
+                            <div class="form-group">
+                                <h6 class="sub">City: <span class="txt">{{data.city}}</span></h6>
+                            </div>
+                            <div class="form-group">
+                                <h6 class="sub">Province: <span class="txt">{{data.province}}</span></h6>
+                            </div>
+                            <div class="form-group mt-3">
+                                <h6 class="sub">Lot Area: <span class="txt">{{data.lotarea}}</span></h6>
+                            </div>
+                            <div class="form-group">
+                                {% for i in data2 %}
+                                    <img src="{{i.image.url}}" class="img-fluid rounded mx-auto d-block mb-3" alt="Responsive image">
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="col-lg-11">
+                            <h5 class="c-black">Other Informations: </h5>
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="form-group">
+                                <h6 class="sub">Type of Project: <span class="txt">{{data.lotarea}}</span></h6>
+                            </div>
+                            <div class="form-group">
+                                <h6 class="sub">Estimated Date Start: <span class="txt">{{data.date_start}}</span></h6>
+                            </div>
+                            <div class="form-group">
+                                <h6 class="sub">Estimated Budget(php): <span class="txt">{{data.budget}}</span></h6>
+                            </div>
+                            <div class="form-group">
+                                Message:
+                                <textarea class="form-control" cols="50" rows="10" style="resize: none;" readonly>{{data.message}}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

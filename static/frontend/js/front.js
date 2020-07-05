@@ -1,68 +1,19 @@
 jQuery(document).ready(function($) {
-
-    // ------------------------------------------------------- //
-    // Testimonials Slider
-    // ------------------------------------------------------ //
-    $('.testimonials-slider').owlCarousel({
-        loop: true,
-        margin: 10,
-        dots: false,
-        nav: true,
-        smartSpeed: 700,
-        navText: [
-            "<i class='fa fa-angle-left'></i>",
-            "<i class='fa fa-angle-right'></i>"
-        ],
-        responsiveClass: true,
-        responsive: {
-            0: {
-                items: 1,
-                nav: false,
-                dots: true
-            },
-            600: {
-                items: 1,
-                nav: true
-            },
-            1000: {
-                items: 2,
-                nav: true,
-                loop: false
-            }
-        }
-    });
-
-
-    // ------------------------------------------------------- //
-    // Scroll Top Button
-    // ------------------------------------------------------- //
-    $('#scrollTop').on('click', function () {
-        $('html, body').animate({ scrollTop: 0}, 1000);
-    });
-
-    var c, currentScrollTop = 0,
-        navbar = $('.navbar');
-    $(window).on('scroll', function () {
-
-        // Navbar functionality
-        var a = $(window).scrollTop(), b = navbar.height();
-
-        currentScrollTop = a;
-        if (c < currentScrollTop && a > b + b) {
-            navbar.addClass("scrollUp");
-        } else if (c > currentScrollTop && !(a <= b)) {
-            navbar.removeClass("scrollUp");
-        }
-        c = currentScrollTop;
-
-
-        if ($(window).scrollTop() >= 2000) {
-            $('#scrollTop').addClass('active');
+    
+    $(window).scroll(function(){
+        if ($(this).scrollTop() > 100) {
+            $('.scrollToTop').fadeIn();
         } else {
-            $('#scrollTop').removeClass('active');
+            $('.scrollToTop').fadeOut();
         }
     });
-
+    $('.scrollToTop').click(function(){
+        $('html, body').animate({scrollTop : 0},1000);
+        return false;
+    });
+    $(".scrollToTop").click(function(){
+        $(this).toggleClass("scrollToTop").siblings().removeClass("scrollToTop");
+    });
 
     // ---------------------------------------------------------- //
     // Preventing URL update on navigation link click

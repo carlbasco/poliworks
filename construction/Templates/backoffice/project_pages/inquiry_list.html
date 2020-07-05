@@ -2,17 +2,11 @@
 {% load static %}
 {% load crispy_forms_tags%}
 {% block content %}
-
-<span class="text-uppercase page-subtitle">Project Task</span>
+<span class="text-uppercase page-subtitle">Materials</span>
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb bg-inverse-primary">
-        {% if request.user.groups.all.0.name == "Person In-Charge" %}
-            <li class="breadcrumb-item">
-                <a href="{% url 'joborder_create'%}">Job Order Form</a>
-            </li>
-        {% endif %}
         <li class="breadcrumb-item active" aria-current="page">
-        Job Order List
+        Inquiry List
         </li>
     </ol>
 </nav>
@@ -31,9 +25,9 @@
         </div>
     {% endfor %}
 </div>
-<div class="card">
+<div class="card ">
     <div class="card-body">
-    <h4 class="card-title">Job Order List</h4>
+    <h4 class="card-title">Inquiry List</h4>
         <div class="table-responsive">
             <div id="order-listing_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer col-lg-12">
                 <table id="order-listing" class="table dataTable no-footer" role="grid" aria-describedby="order-listing_info">
@@ -41,39 +35,50 @@
                         <tr role="row">
                             <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
                                 style="width: 100px;">
-                                Project Site
+                                Date Created
                             </th>
                             <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                style="width: 71px;">
-                                Date Given
+                                style="width: 73px;">
+                                Name
                             </th>
                             <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
                                 style="width: 51px;">
-                                Duration
+                                Email
                             </th>
-                            {% if request.user.groups.all.0.name != "Person In-Charge"%}
-                                <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                    style="width: 73px;">
-                                    Prepared By
-                                </th>
-                            {% endif %}
                             <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                style="width: 53px;">
+                                style="width: 71px;">
+                                Phone
+                            </th>
+                            <th class="sorting" tabindex="0" aria-controls="order-listing" style="width: 50px;">
+                                Status
+                            </th>
+                            <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                            style="width: 53px;">
                                 Actions
                             </th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for i in data%}
-                        <tr role="row" class="odd">
-                            <td>{{i.projectsite}}</td>
-                            <td>{{i.date}}</td>
-                            <td>{{i.duration}}</td>
-                            {% if request.user.groups.all.0.name != "Person In-Charge"%}
-                                <td>{{i.pic}}</td>
+                            {% if i.status == False %}
+                            <tr role="row" class="odd">
+                                <td><strong>{{i.date_created}}</strong></td>
+                                <td><strong>{{i.name}}</strong></td>
+                                <td><strong>{{i.phone}}</strong></td>
+                                <td><strong>{{i.email}}</strong></td>
+                                <td><label class="badge badge-warning">Unread</label></td>
+                                <td><a href="{% url 'inquiry_detail' i.id%}" class="btn btn-outline-primary">View</a></td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td>{{i.date_created}}</td>
+                                <td>{{i.name}}</td>
+                                <td>{{i.email}}</td>
+                                <td>{{i.phone}}</td>
+                                <td><label class="badge badge-primary">Read</label></td>
+                                <td><a href="{% url 'inquiry_detail' i.id%}" class="btn btn-outline-primary">View</a></td>
+                            </tr>
                             {% endif %}
-                            <td><a class="btn btn-outline-primary" href="{% url 'joborder_detail' i.id%}">View</a></td>
-                        </tr>
                         {% endfor %}
                     </tbody>
                 </table>
@@ -81,7 +86,4 @@
         </div>
     </div>
 </div>
-
-
-
 {% endblock %}

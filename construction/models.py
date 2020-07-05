@@ -147,6 +147,7 @@ class Inquiry(models.Model):
     email = models.CharField(('Email'), max_length=255)
     message = models.TextField(('Message'), null=True)
     date_created = models.DateTimeField(('Date Created'), auto_now=True)
+    status = models.BooleanField(default=False)
 
 class Estimate(models.Model):
     name = models.CharField(('Name'),max_length=255)
@@ -162,6 +163,7 @@ class Estimate(models.Model):
     date_start = models.DateField(('Estimated Date Start'), null=True,)
     message = models.TextField(('Message'), null=True, blank=True)
     date_created = models.DateTimeField(('Date Created'), auto_now=True)
+    status = models.BooleanField(default=False)
 
 class EstimateImage(models.Model):
     estimate = models.ForeignKey(Estimate, on_delete=models.CASCADE)

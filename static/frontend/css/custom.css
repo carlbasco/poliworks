@@ -114,3 +114,15 @@ img#design_img {
 .btn-rounded{
     border-radius: 50px;
 }
+#top-scroller a{
+    position: fixed; /* Position them relative to the browser window */
+    right: -90px; 
+    top:400px;
+    transition: 0.3s; /* Add transition on hover */
+    /* text-decoration: none; Remove underline */
+    font-size: 20px; /* Increase font size */
+    color: white; /* White text color */
+}
+#top-scroller a:hover{
+    right: -45px;
+}
