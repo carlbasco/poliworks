@@ -85,27 +85,27 @@
                     <thead>
                         <tr role="row">
                             <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                style="width: 50px;">
-                                Requisition No.
-                            </th>
-                            <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                style="width: 100px;">
+                                style="width:100px;">
                                 Project
                             </th>
                             <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                style="width: 71px;">
+                                style="width:50px;">
+                                Requisition No.
+                            </th>
+                            <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                style="width:71px;">
                                 Prepared by
                             </th>
                             <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                style="width: 73px;">
+                                style="width:73px;">
                                 Date
                             </th>
                             <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                style="width: 51px;">
+                                style="width:51px;">
                                 Status
                             </th>
                             <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                style="width: 53px;">
+                                style="width:53px;">
                                 Actions
                             </th>
                         </tr>
@@ -113,8 +113,8 @@
                     <tbody>
                         {% for i in data%}
                         <tr role="row" class="odd">
-                            <td>{{i.requisition_no}}</td>
                             <td>{{i.project}}</td>
+                            <td class="text-center" style="width:50px">{{i.requisition_no}}</td>
                             <td>{{i.whm}}</td>
                             <td>{{i.date}}</td>
                             {% if i.status == "Pending" %}

@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'crispy_forms',
     'import_export',
-    'django_cleanup'
+    'django_cleanup',
 ]
 
 

@@ -119,9 +119,10 @@
     });
     $('#id_project').select2();
     $('#id_whm').prop('disabled', true);
-    
+    $('#id_date').prop('disabled', true);
     $('form').bind('submit', function () {
         $(this).find('#id_whm').prop('disabled', false);
+        $(this).find('#id_date').prop('disabled', false);
     });
 ///////////////////////////////////////////////////////////////////////////
     loadstart();

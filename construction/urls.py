@@ -4,6 +4,8 @@ from django.urls import path, re_path
 from . import views
 from .models import *
 
+import notifications.urls
+
 
 urlpatterns = [
     path('', views.home, name="home"),

@@ -6,7 +6,7 @@ from django.conf import settings
 from django.db import models
 from django.db.models import F, Sum
 from decimal import Decimal
-
+from datetime import datetime
 import djfractions
 import datetime
 
@@ -362,7 +362,7 @@ class Inventory(models.Model):
 class Requisition(models.Model):
     requisition_no= models.IntegerField(unique=True, null=True, verbose_name="requisition number")
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='requisition_project',verbose_name='Project')
-    date = models.DateField(default=datetime.date.today, verbose_name='Date')
+    date = models.DateTimeField(default=datetime.datetime.now, verbose_name='Date', null=True)
     whm = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='requisition_whm', verbose_name='Prepared by', 
         help_text="Warehouseman" ,limit_choices_to={'groups__name': "Warehouseman"})
     status = {('Pending', 'Pending'), ('To be Delivered', 'To be Delivered'),('Closed', 'Closed')}
@@ -402,7 +402,7 @@ class RequisitionImage(models.Model):
 class ExternalOrder(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='externalorder_project', verbose_name='Project')
     supplier = models.CharField(max_length=255)
-    date = models.DateField(default=datetime.date.today, verbose_name='Date')
+    date = models.DateField(default=datetime.datetime.now, verbose_name='Date')
     whm = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='externalorder_whm', verbose_name='Prepared By', 
         limit_choices_to={'groups__name': "Warehouseman"}, help_text="Warehouseman")
     amount = models.FloatField(verbose_name='Amount', default=0)

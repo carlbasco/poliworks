@@ -267,7 +267,7 @@ RequisitionFormSet = inlineformset_factory(Requisition, RequisitionDetails,
     exclude = ('status', 'status2', 'quantity2', 'requisition_no'),
     widgets={
         'quantity':forms.NumberInput(attrs={'class':'form-control'}),
-        'articles':forms.Select(attrs={'class':'form-control art'})
+        'articles':forms.Select(attrs={'class':'form-control art'}),
     }
 )
 class RequisitionUpdateForm(forms.ModelForm):

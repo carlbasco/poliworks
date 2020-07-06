@@ -28,6 +28,7 @@ from rest_framework.response import Response
 from django.http import JsonResponse
 from .serializers import *
 
+from django.db.models import Max
 
 def home(request):
     return render(request, 'frontend/landingpage.html')
@@ -505,12 +506,13 @@ def ProgressDeleteView(request,pk):
 
 #################################################################################################################################
 #################################################################################################################################
-
+@admin_only
 def InquiryListView(request):
     data = Inquiry.objects.all().order_by('-date_created')
     context = {'data':data}
     return render(request, 'backoffice/project_pages/inquiry_list.html', context)
 
+@admin_only
 def InquiryDetailView(request, pk):
     data = Inquiry.objects.get(id=pk)
     if request.method == "POST":
@@ -526,6 +528,7 @@ def InquiryDetailView(request, pk):
     context = {'data':data}
     return render(request, 'backoffice/project_pages/inquiry_detail.html', context)
 
+@admin_only
 def InquiryDeleteView(request, pk):
     data = Inquiry.objects.get(id=pk)
     if request.method == "POST":
@@ -535,11 +538,13 @@ def InquiryDeleteView(request, pk):
     context = {'data':data}
     return render(request, 'backoffice/project_pages/inquiry_delete.html', context)
 
+@admin_only
 def EstimateListView(request):
     data = Estimate.objects.all().order_by('-date_created')
     context = {'data':data}
     return render(request, 'backoffice/project_pages/estimate_list.html', context)
-
+    
+@admin_only
 def EstimateDetailView(request, pk):
     data = Estimate.objects.get(id=pk)
     data2 = EstimateImage.objects.filter(estimate=data)
@@ -555,7 +560,8 @@ def EstimateDetailView(request, pk):
             return redirect('estimate_detail', pk=data.id)
     context = {'data':data , 'data2':data2}
     return render(request, 'backoffice/project_pages/estimate_detail.html', context)
-
+    
+@admin_only
 def EstimateDeleteView(request, pk):
     data = Estimate.objects.get(id=pk)
     data2 = EstimateImage.objects.filter(estimate=data)
@@ -600,9 +606,14 @@ class RequisitionCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView)
         formset = context["formset"]
         self.object = form.save()
         requisition = form.save()
-        count = Requisition.objects.filter(project=requisition.project).count()
-        requisition.requisition_no = count
-        requisition.save()
+        max_count = Requisition.objects.filter(project=requisition.project).aggregate(Max('requisition_no'))
+        val = max_count['requisition_no__max']
+        if val is None:
+            requisition.requisition_no = 1
+            requisition.save()
+        else:
+            requisition.requisition_no = val+1
+            requisition.save()
         if formset.is_valid():
             formset.instance = self.object
             requisitiondetails = formset.save(False)

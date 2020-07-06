@@ -52,7 +52,7 @@
                             <h6 class="sub">Project: <span class="txt">{{data.project}}</span></h6>
                         </div>
                         <div class="col-md-4 ">
-                            <h6 class="sub">Date Created: <span class="txt">{{data.date}}</span></h6>
+                            <h6 class="sub">Date Created: <span class="txt">{{data.date|date:"F d, Y"}}</span></h6>
                         </div>
                         <div class="col-md-8">
                             <h6 class="sub">Prepared by: <span class="txt">{{data.whm}}</span></h6>
@@ -148,7 +148,7 @@
                                                                 {% if i.quantity %}
                                                                     <td class="text-center">{{i.quantity}}</td>
                                                                 {% else %}
-                                                                    <td class="text-center">N/a</td>
+                                                                    <td class="text-center">N/A</td>
                                                                 {% endif %}
                                                                 {% if i.quantity2 %}
                                                                 <td class="text-center">{{i.quantity2}}</td>
