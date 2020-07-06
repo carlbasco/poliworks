@@ -36,6 +36,13 @@
                 <div class="card-body">
                     <div class="row justify-content-center">
                         <div class="col-lg-11">
+                            <h6 class="font-weight-bold">Status:
+                                {% if data.status == False%}
+                                <label class="badge badge-warning">Unread</label>
+                                {% else %}
+                                <label class="badge badge-primary">Read</label>
+                                {% endif %}
+                            </h6>
                             <h4 class="font-weight-bold">Personal Informations: </h4>
                         </div>
                         <div class="col-lg-8">
@@ -92,7 +99,7 @@
                         </div>
                         <div class="col-lg-8">
                             <div class="form-group">
-                                <label for="">Type of Project: </label>
+                                <label for="">Lot Area: </label>
                                 <input type="text" class="form-control" readonly value="{{data.lotarea}}">
                             </div>
                             <div class="form-group">
@@ -114,6 +121,7 @@
                                         <button type="submit" name="status" value="unread" class="btn btn-outline-secondary float-right mt-3">Mark as Unread</button>
                                     {% endif %}
                                 </form>
+                                <a href="{% url 'estimate_delete' data.id %}" class="btn btn-outline-danger float-right mt-3 mr-3">Delete</a>
                             </div>
                         </div>
                     </div>
@@ -127,9 +135,6 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Warning!</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
             </div>
             <div class="modal-body">
                 <p class="ptxt">Are you sure you want to delete it?</p> 

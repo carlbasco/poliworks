@@ -40,7 +40,7 @@
                                             <tr role="row">
                                                 <th class="sorting font-weight-bold" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
                                                     aria-label="Project: activate to sort column ascending" style="width: 100px;">
-                                                    Project Site
+                                                    Project
                                                 </th>
                                                 <th class="sorting font-weight-bold"" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
                                                     aria-label="Client: activate to sort column ascending" style="width: 50px;">
@@ -59,7 +59,7 @@
                                         <tbody>
                                             {% for i in view.data2%}
                                             <tr role="row" class="odd">
-                                                <td>{{i.projectsite}}</td>
+                                                <td>{{i.project}}</td>
                                                 <td>{{i.date}}</td>
                                                 <td>{{i.whm}}</td>
                                                 <td><a href="{% url 'issues_detail' i.id%}" class="btn btn-outline-primary">view</a></td>
@@ -92,7 +92,7 @@
                 <div class="modal-body">
                     <div class="row justify-content-center">
                         <div class="form-group col-md-8">
-                            {{form.projectsite|as_crispy_field}} 
+                            {{form.project|as_crispy_field}} 
                         </div>
                         <div class="form-group col-md-4">
                             {{form.date|as_crispy_field}}
@@ -121,7 +121,7 @@
 
 {% block javascript%}
 <script>
-    $('#id_projectsite').select2()
+    $('#id_project').select2()
     $('#id_whm').prop('disabled', true);
     $('form').bind('submit', function () {
         $(this).find('#id_whm').prop('disabled', false);

@@ -129,7 +129,7 @@ class UserEditForm(forms.ModelForm):
 #################################################################################################################################
 class ProjectForm(forms.ModelForm):
     class Meta:
-        model = ProjectSite
+        model = Project
         fields = '__all__'
         exclude = ('whm', 'pic')
         widgets={
@@ -138,7 +138,7 @@ class ProjectForm(forms.ModelForm):
 
 class ProjectUpdateForm(forms.ModelForm):
     class Meta:
-        model = ProjectSite
+        model = Project
         fields = '__all__'
         exclude = ('pm', 'client')
         widgets={
@@ -147,12 +147,12 @@ class ProjectUpdateForm(forms.ModelForm):
 
 class ProjectUpdateStaffForm(forms.ModelForm):
     class Meta:
-        model = ProjectSite
+        model = Project
         fields = ('whm', 'pic')
         
 class ProjectViewForm(forms.ModelForm):
     class Meta:
-        model=ProjectSite
+        model=Project
         fields='__all__'
 
         def __init__(self, *args, **kwargs):
@@ -171,7 +171,7 @@ class QuotationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
-        self.fields['projectsite'].queryset = ProjectSite.objects.filter(pm=user)
+        self.fields['project'].queryset = Project.objects.filter(pm=user)
 
 class QuotationNewForm(forms.ModelForm):
     tcost = forms.FloatField(widget=forms.NumberInput(attrs={'class':'form-control tcost','readonly':'true'}))
@@ -241,13 +241,13 @@ class RequisitionForm(forms.ModelForm):
     class Meta:
         model=Requisition
         fields = '__all__'
-        exclude = ('status',)
+        exclude = ('status', 'requisition_no')
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super(RequisitionForm, self).__init__(*args, **kwargs)
         if user:
-            self.fields['projectsite'].queryset = ProjectSite.objects.filter(whm=user)
+            self.fields['project'].queryset = Project.objects.filter(whm=user)
 
 class RequisitionAdminForm(forms.ModelForm):
     class Meta:
@@ -264,7 +264,7 @@ RequisitionFormSet = inlineformset_factory(Requisition, RequisitionDetails,
     form = RequisitionNewForm, 
     extra = 1,
     can_delete = True,
-    exclude = ('status', 'status2', 'quantity2'),
+    exclude = ('status', 'status2', 'quantity2', 'requisition_no'),
     widgets={
         'quantity':forms.NumberInput(attrs={'class':'form-control'}),
         'articles':forms.Select(attrs={'class':'form-control art'})
@@ -279,7 +279,7 @@ RequisitionUpdateFormSet = inlineformset_factory(Requisition, RequisitionDetails
     form=RequisitionNewForm, 
     extra=0,
     can_delete=True,
-    exclude = ('status', 'status2', 'quantity2'),
+    exclude = ('status', 'status2', 'quantity2', 'requisition_no'),
     widgets={
         'quantity':forms.NumberInput(attrs={'class':'form-control', 'required':'true'}),
         'articles':forms.Select(attrs={'class':'form-control art'})
@@ -312,7 +312,7 @@ RequisitionActionFormSet = inlineformset_factory(Requisition, RequisitionDeliver
 
 RequisitionActionFormSet_whm = inlineformset_factory(Requisition, RequisitionDelivery, 
     form=RequisitionActionForm, 
-    exclude=('requisition','quantity','articles','status'),
+    exclude=('requisition','quantity','articles','status','remarks'),
     extra=0,
     widgets={
         'status2':forms.Select(attrs={'class':'form-control status2', 'required':True}),
@@ -333,7 +333,7 @@ class ExternalOrderForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
-        self.fields['projectsite'].queryset = ProjectSite.objects.filter(whm=user)
+        self.fields['project'].queryset = Project.objects.filter(whm=user)
 
 class ExternalOrderNewForm(forms.ModelForm):
     totalprice = forms.FloatField(widget=forms.NumberInput(attrs={'class':'form-control total_price','readonly':'true'}), required=False)
@@ -394,7 +394,7 @@ class JobOrderForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
-        self.fields['projectsite'].queryset = ProjectSite.objects.filter(pic=user)
+        self.fields['project'].queryset = Project.objects.filter(pic=user)
 
 class JobOrderNewForm(forms.ModelForm):
     personnel = forms.ModelChoiceField(queryset=Personnel.objects.filter(status="Available"), widget=forms.Select(attrs={'class':'form-control personnel', 'required': 'true'}))
@@ -479,7 +479,7 @@ class ReworkNewForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
-        self.fields['projectsite'].queryset = ProjectSite.objects.filter(pm=user)
+        self.fields['project'].queryset = Project.objects.filter(pm=user)
 
 #################################################################################################################################
 #################################################################################################################################
@@ -494,7 +494,7 @@ class ProjectIssuesForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
-        self.fields['projectsite'].queryset = ProjectSite.objects.filter(whm=user)
+        self.fields['project'].queryset = Project.objects.filter(whm=user)
 
 class ProjectIssuesNewForm(forms.ModelForm):
     class Meta:
@@ -512,7 +512,7 @@ class SitePhotostForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
-        self.fields['projectsite'].queryset = ProjectSite.objects.filter(whm=user)
+        self.fields['project'].queryset = Project.objects.filter(whm=user)
 
 class SitePhotostNewForm(forms.ModelForm):
     class Meta:
@@ -530,7 +530,7 @@ class SitePhotostDetailsForm(forms.ModelForm):
 
 SitePhotostFormset = inlineformset_factory(SitePhotos, SitePhotosDetails,
     form=SitePhotostNewForm,
-    exclude=('projectsite','date',),
+    exclude=('project','date',),
     extra=0,
     can_delete=True,
     widgets={
@@ -542,7 +542,7 @@ class PersonnelForm(forms.ModelForm):
     class Meta:
         model=Personnel
         fields='__all__'
-        exclude = ('status','projectsite')
+        exclude = ('status','project')
 
 class SkillForm(forms.ModelForm):
     class Meta:
@@ -571,18 +571,18 @@ class InventoryAdminForm(forms.ModelForm):
         fields='__all__'
 
 class WeeklyReportForm(forms.Form):
-    projectsite = forms.ModelChoiceField(ProjectSite.objects.none(), label="Project Site")
+    project = forms.ModelChoiceField(Project.objects.none(), label="Project Site")
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
         
         if user.groups.all()[0].name == "Admin":
-            self.fields['projectsite'].queryset = ProjectSite.objects.all()
+            self.fields['project'].queryset = Project.objects.all()
         elif user.groups.all()[0].name == "Project Manager":
-            self.fields['projectsite'].queryset = ProjectSite.objects.filter(pm=user)
+            self.fields['project'].queryset = Project.objects.filter(pm=user)
         elif user.groups.all()[0].name == "Person In-Charge":
-            self.fields['projectsite'].queryset = ProjectSite.objects.filter(pic=user)
+            self.fields['project'].queryset = Project.objects.filter(pic=user)
            
 
 class ExternalInventoryAdminForm(forms.ModelForm):

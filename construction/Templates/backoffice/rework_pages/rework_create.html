@@ -46,7 +46,7 @@
                                         <tr role="row">
                                             <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
                                                 aria-label="Project: activate to sort column ascending" style="width: 100px;">
-                                                Project Site
+                                                Project
                                             </th>
                                             <th class="sorting" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
                                                 aria-label="Client: activate to sort column ascending" style="width: 71px;">
@@ -64,7 +64,7 @@
                                     <tbody>
                                         {% for i in view.reworkqs %}
                                         <tr role="row" class="odd">
-                                            <td>{{i.projectsite}}</td>
+                                            <td>{{i.project}}</td>
                                             <td>{{i.subject}}</td>
                                             <td>{{i.date}}</td>
                                             <td class="text-center"><a href="{% url 'rework_detail' i.id %}" class="btn btn-outline-primary">View</a></td>
@@ -94,7 +94,7 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="form-group col-md-12">
-                            {{form.projectsite|as_crispy_field}} 
+                            {{form.project|as_crispy_field}} 
                         </div>
                         <div class="form-group col-md-8">
                             {{form.subject|as_crispy_field}}
@@ -125,7 +125,7 @@
 
 {% block javascript %}
 <script>
-    $('#id_projectsite').select2()
+    $('#id_project').select2()
     $('#id_pm').prop('disabled', true);
     
     $('form').bind('submit', function () {

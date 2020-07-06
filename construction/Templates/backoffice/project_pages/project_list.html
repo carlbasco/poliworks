@@ -108,7 +108,7 @@
                                     <tbody>
                                         {% for i in data%}
                                         <tr role="row" class="odd">
-                                            <td>{{i.projectsite}}</td>
+                                            <td>{{i.project}}</td>
                                             <td>{{i.client}}</td>
                                             {% if request.user.groups.all.name.0 == "Project Manager"%}
                                                 <td>{{i.pm}}</td>

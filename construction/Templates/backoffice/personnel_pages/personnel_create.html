@@ -60,7 +60,7 @@
                                     </th>
                                     <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
                                         style="width: 50px;">
-                                        Project Site
+                                        Project
                                     </th>
                                     <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
                                         style="width: 50px;">
@@ -79,7 +79,7 @@
                             <tbody>
                                 {% for i in data%}
                                 <tr role="row" class="odd">
-                                    <td>{{i.full_name}}</td>
+                                    <td>{{i.short_name}}</td>
                                     <td>{{i.personnel_type}}</td>
                                     <td>"{{i.skill.all|join:'", "'}}"</td>
                                     {% if i.status == "Currently Assigned" %}
@@ -87,8 +87,8 @@
                                     {% elif i.status == "Available"%}
                                         <td class="text-center"><label class="badge badge-primary">{{i.status}}</label></td>
                                     {% endif %}
-                                    {% if i.projectsite %}
-                                        <td class="text-center">{{i.projectsite}}</td>
+                                    {% if i.project %}
+                                        <td class="text-center">{{i.project}}</td>
                                     {% else %}
                                         <td class="text-center">N/A</td>
                                     {% endif %}

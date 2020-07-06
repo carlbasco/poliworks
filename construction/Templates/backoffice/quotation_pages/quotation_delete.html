@@ -21,52 +21,79 @@
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col col-md-10">
-            <div class="card-header" id="quotation_view">
-                <h2 class="mb-0">Quotation</h2>
-            </div>
-            <div class="card-body">
-                <div class="row"> 
-                    <div class = "col-md-8">
-                        <h6 class="sub">Project Site: <span class="txt">{{data.projectsite}}</span></h6>
+            <div class="card">
+                <div class="card-header">
+                    <h2>Quotation</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row"> 
+                        <div class = "col-md-8">
+                            <h6 class="sub">Project: <span class="txt">{{data.project}}</span></h6>
+                        </div>
+                        <div class="col-md-4 ml-auto">
+                            <h6 class="sub">Date Created: <span class="txt">{{data.date}}</span></h6>
+                        </div>
+                        <div class = "col-md-8">
+                            <h6 class="sub">Subject: <span class="txt">{{data.subject}}</span></h6>
+                        </div>
+                        <div class="col-md-4 ml-auto">
+                            <h6 class="sub">Status: <span class="txt">{{data.status}}</span></h6>
+                        </div>
                     </div>
-                    <div class="col-md-4 ml-auto">
-                        <h6 class="sub">Date Created: <span class="txt">{{data.date}}</span></h6>
-                    </div>
-                    <div class = "col-md-8">
-                        <h6 class="sub">Subject: <span class="txt">{{data.subject}}</span></h6>
-                    </div>
-                    <div class="col-md-4 ml-auto">
-                        <h6 class="sub">Status: <span class="txt">{{data.status}}</span></h6>
+                    <div class="table-responsive-lg">
+                        <table class="table">
+                            <thead class="thead" id="head_tbl">
+                                <tr>
+                                    <th>Scope of Work</th>
+                                    <th style="width: 100px;">Unit</th>
+                                    <th style="width: 100px;">Quantity</th>
+                                    <th style="width: 100px;">Unit Cost</th>
+                                    <th class="text-center" style="width: 100px;">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in data2 %}
+                                <tr>
+                                    <td scope="row">{{i.scope_of_work.scope}}</td>
+                                    <td>{{i.unit}}</td>
+                                    <td class="quantity">{{i.quantity}}</td>
+                                    <td scope="row">{{i.scope_of_work.get_cost|intcomma}}</td>
+                                    <td class="money text-right">{{i.q_amount|intcomma}}</td>
+                                </tr>
+                                {% endfor %}
+                                <tr>
+                                    <td colspan="5"></td>
+                                </tr>
+                                <tr class="table-success font-weight-bold">
+                                    <td class="text-center" colspan="4"><span class="txt" >GRAND TOTAL (VAT EXCLUSIVE)</span></td>
+                                    <td class="money text-right"><span class="txt">{{data.amount|intcomma}}</span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3"></td>
+                                    <td class="text-center"><span class="txt" >12% VAT</span></td>
+                                    <td class="money text-right"><span class="txt">{{data.get_vat|intcomma}}</span></td>
+                                </tr>
+                                <tr class="table-primary font-weight-bold">
+                                    <td class="text-center" colspan="4"><span class="txt" >GRAND TOTAL (VAT INCLUSIVE)</span></td>
+                                    <td class="money text-right "><span class="txt">{{data.get_grandtotal|intcomma}}</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <div class="table-responsive-lg">
-                    <table class="table">
-                        <thead class="thead" id="head_tbl">
-                            <tr>
-                                <th>Scope of Work</th>
-                                <th style="width: 100px;">Unit</th>
-                                <th style="width: 100px;">Quantity</th>
-                                <th style="width: 100px;"> Cost</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for i in data2 %}
-                            <tr>
-                                <td scope="row">{{i.scope_of_work.get_scope}}</td>
-                                <td>{{i.unit}}</td>
-                                <td class="quantity">{{i.quantity}}</td>
-                                <td class="money text-right">{{i.unitcost|intcomma}}</td>
-                            </tr>
-                            {% endfor %}
-                            <tr>
-                                <td></td>
-                                <td colspan="2"><span class="txt">TOTAL COST</span></td>
-                                <td class="money text-right"><span class="txt">{{data.amount|intcomma}}</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="btn-grp mb-5">
+                    <a href="{% url 'quotation_delete' data.id%}" class="btn btn-outline-danger edit-delete-btn mr-4">Delete</a>
+                    {% if data.status == "Accepted" %}
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-primary edit-delete-btn">Create as Progress</button>
+                    </form>
+                    {% else %}
+                        <a href="{% url 'quotation_update' data.id %}" class="btn btn-outline-primary edit-delete-btn">Edit</a>
+                    {% endif %}
                 </div>
             </div>
+            
         </div>
     </div>
 </div>
@@ -75,9 +102,6 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Warning!</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
             </div>
             <div class="modal-body">
                 <p class="ptxt">Are you sure you want to delete it?</p> 

@@ -18,49 +18,61 @@
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col col-md-10">
-            <div class="card-header" id="quotation_view">
-                <h3 class="text-center">External Order</h3>
-            </div>
-            <div class="card-body">
-                <div class="row"> 
-                    <div class = "col-md-8">
-                        <h6 class="sub">Project Site: <span class="txt">{{data.projectsite}}</span></h6>
+            <div class="card">
+                <div class="card-header" id="quotation_view">
+                    <h3 class="text-center">External Order</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row"> 
+                        <div class = "col-md-8">
+                            <h6 class="sub">Project: <span class="txt">{{data.project}}</span></h6>
+                        </div>
+                        <div class="col-md-4 ml-auto">
+                            <h6 class="sub">Date Created: <span class="txt">{{data.date}}</span></h6>
+                        </div>
+                        <div class = "col-md-8">
+                            <h6 class="sub">Prepared by: <span class="txt">{{data.whm}}</span></h6>
+                        </div>
                     </div>
-                    <div class="col-md-4 ml-auto">
-                        <h6 class="sub">Date Created: <span class="txt">{{data.date}}</span></h6>
-                    </div>
-                    <div class = "col-md-8">
-                        <h6 class="sub">Subject: <span class="txt">{{data.whm}}</span></h6>
+                    <div class="table-responsive-lg col-lg-12">
+                        <table class="table">
+                            <thead class="thead" id="head_tbl">
+                                <tr>
+                                    <th class="text-center">Articles</th>
+                                    <th class="text-center">Unit</th>
+                                    <th class="text-center">Quantity</th>
+                                    <th class="text-center">Unit Price</th>
+                                    <th class="text-center">Total Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in data2 %}
+                                <tr>
+                                    <td class="text-center">{{i.articles}}</td>
+                                    <td class="text-center">{{i.unit}}</td>
+                                    <td class="text-center">{{i.quantity}}</td>
+                                    <td class="text-center">{{i.unitprice|intcomma}}</td>
+                                    <td class="text-right">{{i.get_total|intcomma}}</td>
+                                </tr>
+                                {% endfor %}
+                                <tr>
+                                    <td colspan="3"></td>
+                                    <td class="text-center"><strong>Total Amount: </strong></td>
+                                    <td class="text-right">{{data.amount|intcomma}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <div class="table-responsive-lg col-lg-12">
-                    <table class="table">
-                        <thead class="thead" id="head_tbl">
-                            <tr>
-                                <th class="text-center">Articles</th>
-                                <th class="text-center">Unit</th>
-                                <th class="text-center">Quantity</th>
-                                <th class="text-center">Unit Price</th>
-                                <th class="text-center">Total Price</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for i in data2 %}
-                            <tr>
-                                <td class="text-center">{{i.articles}}</td>
-                                <td class="text-center">{{i.unit}}</td>
-                                <td class="text-center">{{i.quantity}}</td>
-                                <td class="text-center">{{i.unitprice|intcomma}}</td>
-                                <td class="text-right">{{i.get_total|intcomma}}</td>
-                            </tr>
-                            {% endfor %}
-                            <tr>
-                                <td colspan="3"></td>
-                                <td class="text-center"><strong>Total Amount: </strong></td>
-                                <td class="text-right">{{data.amount}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="row justify-content-center">
+                    {% if data.image %}
+                        <img src="{{data.image.url}}"  style="width:50%; height:50%;">
+                    {% endif %}
+                </div>
+                <div class="btn-grp mb-5">
+                    {% if request.user.groups.all.0.name == "Admin"%}
+                        <a href="{% url 'externalorder_delete' data.id%}" class="btn btn-outline-danger float-right mt-3 mr-4">Delete</a>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -71,9 +83,6 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Warning!</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
             </div>
             <div class="modal-body">
                 <p class="ptxt">Are you sure you want to delete it?</p> 

@@ -28,7 +28,7 @@
                         <tr role="row">
                             <th class="sorting font-weight-bold" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
                                 style="width: 100px;">
-                                Project Site
+                                Project
                             </th>
                             <th class="sorting font-weight-bold"" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
                                 style="width: 50px;">
@@ -47,7 +47,7 @@
                     <tbody>
                         {% for i in data%}
                         <tr role="row" class="odd">
-                            <td>{{i.projectsite}}</td>
+                            <td>{{i.project}}</td>
                             <td>Material Report</td>
                             <td>{{i.date}}</td>
                             <td><a href="{% url 'dailyreport_detail' i.id%}" class="btn btn-outline-primary">view</a></td>
@@ -55,7 +55,7 @@
                         {% endfor %}
                         {% for j in data2%}
                         <tr role="row" class="odd">
-                            <td>{{j.projectsite}}</td>
+                            <td>{{j.project}}</td>
                             <td>External Order Material Report </td>
                             <td>{{j.date}}</td>
                             <td><a href="{% url 'external_report_detail' j.id %}" class="btn btn-outline-primary">view</a></td>

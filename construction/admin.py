@@ -14,8 +14,9 @@ admin.site.site_url ='/sign-in'
 
 class Profile(admin.TabularInline):
     model=Profile
-    
-class UserAdmin(BaseUserAdmin):
+
+@admin.register(User)    
+class UserAdmin(ImportExportModelAdmin):
     inlines=[Profile]
     form = UserAdminChangeForm
     add_form = UserAdminCreationForm
@@ -37,7 +38,6 @@ class UserAdmin(BaseUserAdmin):
     ordering = ('email',)
     filter_horizontal = ()
 
-admin.site.register(User, UserAdmin)
 
 @admin.register(Province)
 class ProvinceAdmin(ImportExportModelAdmin):
@@ -54,10 +54,10 @@ class CityAdmin(ImportExportModelAdmin):
     ordering=('id','province')
     list_per_page=20
 
-@admin.register(ProjectSite)
+@admin.register(Project)
 class projectdetails(ImportExportModelAdmin):
     exclude=('id',)
-    list_display=('pm', 'client','projectsite','typeofproject','startdate','status')
+    list_display=('pm', 'client','project','typeofproject','startdate','status')
 
 @admin.register(Gender)
 class GenderAdmin(admin.ModelAdmin):
@@ -86,8 +86,8 @@ class QuotationDetailsAdmin(admin.TabularInline):
 class QuotationAdmin(admin.ModelAdmin):
     inlines = [QuotationDetailsAdmin]
     form = QuotationFormAdmin
-    list_display = ('projectsite','subject','date','amount','status' )
-    search_fields = ('projectsite', 'subject')
+    list_display = ('project','subject','date','amount','status' )
+    search_fields = ('project', 'subject')
     ordering = ('date',)
 
 admin.site.register(Quotation, QuotationAdmin)
@@ -98,8 +98,8 @@ class RequisitionDeliveryAdmin(admin.TabularInline):
 class RequisitionAdmin(admin.ModelAdmin):
     inlines = [RequisitionDeliveryAdmin]
     form = RequisitionAdminForm
-    list_display = ('projectsite', 'date', 'whm', 'status')
-    search_fields = ('projectsite','date',)
+    list_display = ('project', 'date', 'whm', 'status')
+    search_fields = ('project','date',)
     ordering = ('date',)
 
 admin.site.register(Requisition, RequisitionAdmin)
@@ -110,8 +110,8 @@ class JobOrderAdminTask(admin.TabularInline):
 class JobOrderAdmin(admin.ModelAdmin):
     inlines = [JobOrderAdminTask]
     form = JobOrderUpdateForm
-    list_display = ('projectsite', 'date',)
-    search_fields = ('projectsite', 'date',)
+    list_display = ('project', 'date',)
+    search_fields = ('project', 'date',)
     ordering = ('date',)
 
 admin.site.register(JobOrder, JobOrderAdmin)
@@ -122,8 +122,8 @@ class ExternalOrderDetailsAdmin(admin.TabularInline):
 class ExternalOrderAdmin(admin.ModelAdmin):
     inlines = [ExternalOrderDetailsAdmin]
     form = ExternalOrderUpdateForm
-    list_display = ('projectsite', 'date', 'whm')
-    search_fields = ('projectsite', 'date')
+    list_display = ('project', 'date', 'whm')
+    search_fields = ('project', 'date')
     ordering = ('date',)
 
 admin.site.register(ExternalOrder, ExternalOrderAdmin)
@@ -134,8 +134,8 @@ class spdetailsadmin(admin.TabularInline):
 class SitePhotosAdmin(admin.ModelAdmin):
     inlines = [spdetailsadmin]
     form = SitePhotostNewForm
-    list_display = ('projectsite', 'date',)
-    search_fields = ('projectsite', 'date',)
+    list_display = ('project', 'date',)
+    search_fields = ('project', 'date',)
     ordering = ('date',)
 
 admin.site.register(SitePhotos, SitePhotosAdmin)
@@ -146,8 +146,8 @@ class dailyreport(admin.TabularInline):
 class DailyReportAdmin(admin.ModelAdmin):
     inlines = [dailyreport]
     form = DailyReportForm
-    list_display = ('projectsite', 'date',)
-    search_fields = ('projectsite', 'date',)
+    list_display = ('project', 'date',)
+    search_fields = ('project', 'date',)
     ordering = ('date',)
 
 admin.site.register(ProjectDailyReport, DailyReportAdmin)
@@ -158,8 +158,8 @@ class exdailyreport(admin.TabularInline):
 class ExternalOrderReportAdmin(admin.ModelAdmin):
     inlines = [exdailyreport]
     form = ExternalOrderReportForm
-    list_display = ('projectsite', 'date',)
-    search_fields = ('projectsite', 'date',)
+    list_display = ('project', 'date',)
+    search_fields = ('project', 'date',)
     ordering = ('date',)
 
 admin.site.register(ExternalOrderReport, ExternalOrderReportAdmin)
@@ -168,16 +168,16 @@ admin.site.register(ExternalOrderReport, ExternalOrderReportAdmin)
 class ProjectIssueAdmin(admin.ModelAdmin):
     model = ProjectIssues
     form = ProjectIssuesNewForm
-    list_display = ('projectsite', 'date',)
-    search_fields = ('projectsite', 'date',)
+    list_display = ('project', 'date',)
+    search_fields = ('project', 'date',)
     ordering = ('date',)
 ############################################################################################
 @admin.register(Rework)
 class ReworkAdmin(admin.ModelAdmin):
     model = Rework
     form = ReworkForm
-    list_display = ('projectsite', 'date', 'pm',)
-    search_fields = ('projectsite', 'date', 'pm',)
+    list_display = ('project', 'date', 'pm',)
+    search_fields = ('project', 'date', 'pm',)
     ordering = ('date',)
 ############################################################################################
 
@@ -216,8 +216,8 @@ class ExternalInventoryDetailsAdmin(admin.TabularInline):
 class ExternalInventoryAdmin(admin.ModelAdmin):
     inlines = [ExternalInventoryDetailsAdmin]
     form = ExternalInventoryAdminForm
-    list_display = ('projectsite',)
-    search_fields = ('projectsite', )
+    list_display = ('project',)
+    search_fields = ('project', )
 
 admin.site.register(ExternalProjectInventory, ExternalInventoryAdmin)
 
@@ -227,8 +227,8 @@ class InventoryDetailsAdmin(admin.TabularInline):
 class ProjectInventoryAdmin(admin.ModelAdmin):
     inlines = [InventoryDetailsAdmin]
     form = InventoryAdminForm
-    list_display = ('projectsite', 'last_update')
-    search_fields= ('projectsite',)
+    list_display = ('project', 'last_update')
+    search_fields= ('project',)
     
 
 admin.site.register(ProjectInventory, ProjectInventoryAdmin)

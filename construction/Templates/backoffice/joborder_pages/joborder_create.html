@@ -49,7 +49,7 @@
                     <div class="col-lg-12">
                         <div class="row justify-content-center">
                             <div class="form-group col-md-12">
-                                {{form.projectsite|as_crispy_field}} 
+                                {{form.project|as_crispy_field}} 
                             </div>
                             <div class="form-group col-md-6">
                                 {{form.date|as_crispy_field}}
@@ -153,7 +153,7 @@
                                                     </th>
                                                     <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
                                                         ria-label="Actions: activate to sort column ascending" style="width: 50px;">
-                                                        Project Site
+                                                        Project
                                                     </th>
                                                     <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
                                                         ria-label="Actions: activate to sort column ascending" style="width: 50px;">
@@ -180,8 +180,8 @@
                                                         {% elif i.status == "Available"%}
                                                             <td class="text-center"><label class="badge badge-primary">{{i.status}}</label></td>
                                                         {% endif %}
-                                                        {% if i.projectsite %}
-                                                            <td class="text-center">{{i.projectsite}}</td>
+                                                        {% if i.project %}
+                                                            <td class="text-center">{{i.project}}</td>
                                                         {% else %}
                                                             <td class="text-center">N/A</td>
                                                         {% endif %}
@@ -223,7 +223,7 @@
         prefix: '{{ formset.prefix }}'
     });
     $('.personnel').select2()
-    $('#id_projectsite').select2()
+    $('#id_project').select2()
     $('#id_pic').prop('disabled', true);
     $('form').bind('submit', function () {
         $(this).find('#id_pic').prop('disabled', false);

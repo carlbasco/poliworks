@@ -32,7 +32,7 @@
                         <div class="col-lg-12">
                             <div class="row">
                                 <div class="form-group col-md-12">
-                                    {{form.projectsite|as_crispy_field}} 
+                                    {{form.project|as_crispy_field}} 
                                 </div>
                                 <div class="form-group col-md-6">
                                     {{form.date|as_crispy_field}}
@@ -95,7 +95,7 @@
             <div id="table" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionExample">
                 <div class="card-body row">
                     <div class="col-md-6">
-                        <h5 class="card-title">{{data.projectsite}}</h5>
+                        <h5 class="card-title">{{data.project}}</h5>
                     </div>
                     <div class="col-md-6">
                         <h6 class="sub float-right">Last Update: <span class="txt">{{data.last_update}}</span></h6>
@@ -157,10 +157,10 @@
         $('.art').select2()
     })
     $('#id_whm').prop('disabled', true);
-    $('#id_projectsite').prop('disabled', true);
+    $('#id_project').prop('disabled', true);
     $('form').bind('submit', function () {
         $(this).find('#id_whm').prop('disabled', false);
-        $(this).find('#id_projectsite').prop('disabled', false);
+        $(this).find('#id_project').prop('disabled', false);
     });
 </script>
 <style>span.select2-selection.select2-selection--single {height: 30px;}</style>

@@ -4,6 +4,12 @@ delete from sqlite_sequence where name='`construction_requisition`';
 delete from `construction_requisitiondetails`;    
 delete from sqlite_sequence where name='`construction_requisitiondetails`';
 
+delete from `construction_requisitiondelivery`;    
+delete from sqlite_sequence where name='`construction_requisitiondelivery`';
+
+delete from `construction_requisitionimage`;    
+delete from sqlite_sequence where name='`construction_requisitionimage`';
+
 delete from `construction_projectinventory`;    
 delete from sqlite_sequence where name='`construction_projectinventory`';
 
@@ -61,14 +67,11 @@ delete from sqlite_sequence where name='`construction_projectprogress`';
 delete from `construction_projectprogressdetails`;    
 delete from sqlite_sequence where name='`construction_projectprogressdetails`';
 
-delete from `construction_projectsite`;    
-delete from sqlite_sequence where name='`construction_projectsite`';
+delete from `construction_project`;    
+delete from sqlite_sequence where name='`construction_project`';
 
 delete from `construction_projectdailyreportdetails`;    
 delete from sqlite_sequence where name='`construction_projectdailyreportdetails`';
-
-delete from `construction_personneltype`; 
-delete from sqlite_sequence where name='`construction_personneltype`';
 
 delete from `construction_inquiry`; 
 delete from sqlite_sequence where name='`construction_inquiry`';
@@ -76,7 +79,7 @@ delete from sqlite_sequence where name='`construction_inquiry`';
 delete from `construction_estimate`; 
 delete from sqlite_sequence where name='`construction_estimate`';
 
-delete from `construction_estimate_image`; 
-delete from sqlite_sequence where name='`construction_estimate_image`';
+delete from `construction_estimateimage`; 
+delete from sqlite_sequence where name='`construction_estimateimage`';
 
 Update 'construction_personnel' SET projectsite_id=NULL, date=NULL, date2=NULL, status="Available" WHERE status = "Currently Assigned"

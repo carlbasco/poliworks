@@ -28,7 +28,7 @@
 </div>
 <div class="container-fluid">
     <div class="row justify-content-center">
-        <div class="col col-md-10">
+        <div class="col col-md-8">
             <div class="card">
                 <div class="card-header" id="quotation_view">
                     <h3 class="text-center">Inquiry</h3>
@@ -38,17 +38,36 @@
                         <div class = "col-md-8">
                             <h6 class="sub">Name: <span class="txt">{{data.name}}</span></h6>
                         </div>
+                        <div class = "col-md-4">
+                            <h6 class="sub">Contact Number: <span class="txt">{{data.phone}}</span></h6>
+                        </div>
                         <div class = "col-md-8">
                             <h6 class="sub">Email: <span class="txt">{{data.email}}</span></h6>
                         </div>
                         <div class = "col-md-4">
-                            <h6 class="sub">Contact Number: <span class="txt">{{data.phone}}</span></h6>
+                            <h6 class="sub">Status: 
+                                {% if data.status == False %}
+                                <span class="txt">Unread</span>
+                                {% elif data.status == True %}
+                                <span class="txt">Read</span>
+                                {% endif %}
+                            </h6>
                         </div>
                         <div class="col-lg-10 mx-auto">
                             Message:
                             <textarea class="form-control" cols="50" rows="10" style="resize: none;" readonly>{{data.message}}</textarea>
+                            <form action="" method="post">
+                                {% csrf_token%}
+                                {% if data.status == False %}
+                                    <button type="submit" name="status" value="read" class="btn btn-outline-primary float-right mt-3">Mark as Read</button>
+                                {% elif data.status == True %}
+                                    <button type="submit" name="status" value="unread" class="btn btn-outline-secondary float-right mt-3">Mark as Unread</button>
+                                {% endif %}
+                            </form>
+                            <a href="{% url 'inquiry_delete' data.id %}" class="btn btn-outline-danger float-right mt-3 mr-3">Delete</a>
                         </div>
                     </div>
+                    
                     
                 </div>
             </div>
@@ -60,9 +79,6 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Warning!</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
             </div>
             <div class="modal-body">
                 <p class="ptxt">Are you sure you want to delete it?</p> 
