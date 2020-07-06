@@ -653,6 +653,8 @@ class RequisitionUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView)
         if formset.is_valid():
             formset.instance = self.object
             requisitiondetails = formset.save(False)
+            qs = RequisitionDelivery.objects.filter(requisition=requisitiondetails.requisition)
+            qs.delete()
             for i in requisitiondetails:
                 data2 = RequisitionDelivery.objects.create(requisition=i.requisition,articles=i.articles)
                 data2.save()
