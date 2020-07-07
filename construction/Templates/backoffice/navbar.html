@@ -18,17 +18,13 @@
                     <span class="count bg-success" id="notif-count"></span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0"  aria-labelledby="notificationDropdown">
-                    <div class="mx-auto">
-                        <a class="dropdown-item notif-item border-bottom ">
-                            <p id="notif-msg" class="mb-0 font-weight-bold"></p>
-                        </a>
+                    <div class="mx-auto p-3 border-bottom">
+                        <a id="mark-read" class="float-right "href=# >mark all as read</a>
+                        <p id="notif-msg" class="mb-0 font-weight-bold"></p>
                     </div>
-                    <div id="notif-list"></div>
-                    <div class="pt-2 pb-2 pr-2 float-right">
-                        <a id="mark-read" href=# >mark all as read</a>
-                    </div>
+                    <div id="notif-list" class="row"></div>
+                    <div class="pt-2 pb-2 pr-2 float-right"></div>
                 </div>
-                
             </li> 
             <li class="nav-item dropdown d-xl-inline-block">
                 <span class="profile-text">Hello, {{request.user.groups.all.0}}</span>

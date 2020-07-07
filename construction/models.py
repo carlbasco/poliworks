@@ -135,6 +135,7 @@ class Profile(models.Model):
 class Notification(models.Model):
     receiver = models.ForeignKey(User, on_delete=models.CASCADE)
     description = models.CharField(max_length=255, null=True)
+    url = models.CharField(max_length=255, null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)
     

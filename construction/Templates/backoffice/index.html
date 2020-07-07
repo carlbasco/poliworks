@@ -39,7 +39,6 @@
             {% include 'backoffice/footer.html'%}
         </div>
     </div>
-    
 </div>
 
 
@@ -95,12 +94,12 @@
                     let str = data[i].timestamp;
                     let date = moment.tz(data[i].timestamp, "Asia/Manila");
                     notif.append(
-                        '<a class="dropdown-item preview-item py-3 border-bottom" href="#">'+
+                        '<div class="col-12"><a class="dropdown-item preview-item py-3 border-bottom" href="'+data[i].url+'">'+
                             '<div class="preview-item-content">'+
                                 '<h6 class="preview-subject mb-1">'+data[i].description+'</h6>'+
                                 '<p class="float-right timestamp">'+ date.format('llll') +'</p>'+
                             '</div>'+
-                        '</a>'
+                        '</a></div>'
                     );
                 });   
                 $("#notif-count").text(count);
@@ -110,11 +109,9 @@
                 else{
                     $('#notif-msg').text("You have "+count+" new notifications")
                 }
-                
             }
         }); 
     };
-    
     function mark_as_read(){
         $('#mark-read').click(function(){
             $.ajax({
@@ -126,7 +123,6 @@
             })
         });
     };
-    
 </script>
 {% block javascript %}
 {% endblock %}

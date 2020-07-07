@@ -381,3 +381,6 @@ p.float-right.timestamp {
 a#mark-read {
     font-size: 13px;
 }
+.mx-auto.p-3.border-bottom {
+    min-width: 400px;
+}

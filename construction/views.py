@@ -51,8 +51,8 @@ def EstimateCreateView(request):
             name = estimate.name
             admin = User.objects.filter(groups__name="Admin")
             for i in admin:
-                qs = Notification.objects.create(receiver=i, description=f"{name} has sent an Estimate")
-                qs.save()
+                adnin_notif = Notification.objects.create(receiver=i, description=f"{name} has sent an Estimate", url=f"/project/estimate/{estimate.id}")
+                adnin_notif.save()
             return redirect('estimate_create')
     else:
         form = EstimateForm()
@@ -171,6 +171,15 @@ def ProjectCreateView(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Project has been created.')
+            project = form.save()
+            admin = User.objects.filter(groups__name="Admin")
+            for i in admin:
+                adnin_notif = Notification.objects.create(receiver=i, description=f"New Project has been created", url=f"/project/view/{project.id}")
+                adnin_notif.save()
+            client_notif = Notification.objects.create(receiver=project.client, description=f"New Project has been created", url=f"/myproject/view/{project.id}")
+            client_notif.save()
+            pm_notif = Notification.objects.create(receiver=project.pm, description=f"New Project has been created", url=f"/project/view/{project.id}")
+            pm_notif.save()
             return redirect('project_list')
         else:
             messages.error(request, 'Failed on Creating Project')
@@ -186,10 +195,23 @@ def ProjectUpdateView(request,pk):
         form = ProjectUpdateForm(request.POST, request.FILES, instance=data)
         if form.is_valid():
             form.save()
+            project = form.save()
+            admin = User.objects.filter(groups__name="Admin")
+            for i in admin:
+                adnin_notif = Notification.objects.create(receiver=i, description=f"Project {project.project} has been updated", url=f"/project/view/{project.id}")
+                adnin_notif.save()
+            client_notif = Notification.objects.create(receiver=project.client, description=f"Project {project.project} has been updated", url=f"/myproject/view/{project.id}")
+            client_notif.save()
+            pm_notif = Notification.objects.create(receiver=project.pm, description=f"Project {project.project} has been updated", url=f"/project/view/{project.id}")
+            pm_notif.save()
+            if project.pic:
+                pic_notif = Notification.objects.create(receiver=project.pic, description=f"You have been assigned at Project {project.project}", url=f"/project/view/{project.id}")
+                pic_notif.save()
+            if project.whm:
+                whm_notif = Notification.objects.create(receiver=project.whm, description=f"You have been assigned at Project {project.project}", url=f"/project/view/{project.id}")
+                whm_notif.save()
             messages.success(request, 'Project Details has been updated.')
             return redirect('project_detail', pk=data.id)
-        else:
-            messages.warning(request, 'Failed to update Project.')
     else:
         form = ProjectUpdateForm(instance=data)
     context = {'form':form, 'data':data}
@@ -250,35 +272,36 @@ def ProjectListView_WHM(request):
 @login_required(login_url='signin')
 @staff_only
 def ProjectDetailView(request, pk):
-    data = Project.objects.get(id=pk)
-    quotation = Quotation.objects.filter(project_id=data.id)
-    personnel = Personnel.objects.filter(project_id=data.id)
-    inventory = ProjectInventory.objects.filter(project_id=data.id)
-    requisition = Requisition.objects.filter(project_id=data.id)
-    external_order = ExternalOrder.objects.filter(project_id=data.id)
-    joborder = JobOrder.objects.filter(project_id=data.id)
-    rework = Rework.objects.filter(project_id=data.id)
-    sitephotos = SitePhotos.objects.filter(project_id=data.id)
-
     try:
-        data2 = ProjectProgress.objects.get(project_id=data.id)
-        data3 = ProjectProgressDetails.objects.filter(projectprogress=data2.id)
-    except ObjectDoesNotExist:
+        data = Project.objects.get(id=pk)
+        quotation = Quotation.objects.filter(project_id=data.id)
+        personnel = Personnel.objects.filter(project_id=data.id)
+        inventory = ProjectInventory.objects.filter(project_id=data.id)
+        requisition = Requisition.objects.filter(project_id=data.id)
+        external_order = ExternalOrder.objects.filter(project_id=data.id)
+        joborder = JobOrder.objects.filter(project_id=data.id)
+        rework = Rework.objects.filter(project_id=data.id)
+        sitephotos = SitePhotos.objects.filter(project_id=data.id)
+        try:
+            data2 = ProjectProgress.objects.get(project_id=data.id)
+            data3 = ProjectProgressDetails.objects.filter(projectprogress=data2.id)
+        except ObjectDoesNotExist:
+            context={
+                'data':data, 
+                'quotation':quotation, 'personnel':personnel, 'inventory':inventory,
+                'requisition':requisition, 'external_order':external_order, 'rework':rework,
+                'sitephotos':sitephotos,
+            }
+            return render(request, 'backoffice/project_pages/project_detail.html', context)
         context={
-            'data':data, 
+            'data':data, 'data2':data2, 'data3':data3,
             'quotation':quotation, 'personnel':personnel, 'inventory':inventory,
             'requisition':requisition, 'external_order':external_order, 'rework':rework,
-            'sitephotos':sitephotos,
+            'joborder':joborder,  'sitephotos':sitephotos,
         }
         return render(request, 'backoffice/project_pages/project_detail.html', context)
-
-    context={
-        'data':data, 'data2':data2, 'data3':data3,
-        'quotation':quotation, 'personnel':personnel, 'inventory':inventory,
-        'requisition':requisition, 'external_order':external_order, 'rework':rework,
-        'joborder':joborder,  'sitephotos':sitephotos,
-    }
-    return render(request, 'backoffice/project_pages/project_detail.html', context)
+    except ObjectDoesNotExist:
+        return render(request, "404.html")
 
 
 #################################################################################################################################
@@ -320,6 +343,14 @@ class QuotationCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
             for i in quotation_list:
                 quotation.amount += i.q_amount()
             quotation.save()
+            quotation = quotation.save()
+            admin = User.objects.filter(groups__name="Admin")
+            for i in admin:
+                admin_notif = Notification.objects.create(receiver=i, description=f"Quotation has been created at {quotation.project}", url=f"/project/quotation/{quotation.id}")
+                admin_notif.save()
+            project = Project.objects.get(id=quotation.project.id)
+            client_notif = Notification.objects.create(receiver=project.client, description=f"Quotation has been created at {quotation.project}", url=f"/myproject/view/quotation/{quotation.id}")
+            client_notif.save()
             return super(QuotationCreateView, self).form_valid(form)
         
     def get_success_url(self):
@@ -360,6 +391,14 @@ class QuotationUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
             for i in data3:
                 data2.amount +=i.q_amount()
             data2.save()
+            quotation = quotation.save()
+            admin = User.objects.filter(groups__name="Admin")
+            for i in admin:
+                admin_notif = Notification.objects.create(receiver=i, description=f"Quotation has been updated at {quotation.project}", url=f"/project/quotation/{quotation.id}")
+                admin_notif.save()
+            project = Project.objects.get(id=quotation.project.id)
+            client_notif = Notification.objects.create(receiver=project.client, description=f"Quotation has been updated at {quotation.project}", url=f"/myproject/view/quotation/{quotation.id}")
+            client_notif.save()
             return super(QuotationUpdateView, self).form_valid(form)
         
     def get_success_url(self):
@@ -401,30 +440,33 @@ def QuotationListView_PM(request):
 @login_required(login_url='signin')
 @allowed_users(allowed_roles=['Admin','Project Manager'])
 def QuotationDetailView(request,pk):
-    data = Quotation.objects.get(id=pk)
-    project = Project.objects.get(id=data.project.id)
-    data2 = QuotationDetails.objects.filter(quotation=data.id)
-    if request.method == "POST":
-        try:
-            data3 = ProjectProgress.objects.get(project=data.project.id)
-            messages.warning(request, "There is an existing Work Progress. Please delete the previous one to create a new Work Progress.")
-            return redirect('quotation_detail',pk=data.id)
-        except ObjectDoesNotExist:
-            data3 = ProjectProgress.objects.create(project=data.project) 
-            data3.quotation = data.id
-            data3.save()
-            for i in data2:
-                data4 = ProjectProgressDetails.objects.create(projectprogress=data3)
-                scope = ScopeOfWork.objects.get(scope=i.scope_of_work.scope)
-                data4.scope_of_work = scope.scope
+    try:
+        data = Quotation.objects.get(id=pk)
+        project = Project.objects.get(id=data.project.id)
+        data2 = QuotationDetails.objects.filter(quotation=data.id)
+        if request.method == "POST":
+            try:
+                data3 = ProjectProgress.objects.get(project=data.project.id)
+                messages.warning(request, "There is an existing Work Progress. Please delete the previous one to create a new Work Progress.")
+                return redirect('quotation_detail',pk=data.id)
+            except ObjectDoesNotExist:
+                data3 = ProjectProgress.objects.create(project=data.project) 
+                data3.quotation = data.id
+                data3.save()
+                for i in data2:
+                    data4 = ProjectProgressDetails.objects.create(projectprogress=data3)
+                    scope = ScopeOfWork.objects.get(scope=i.scope_of_work.scope)
+                    data4.scope_of_work = scope.scope
+                    data4.save()
                 data4.save()
-            data4.save()
-            project.status = "On-going"
-            project.save()
-            messages.success(request, "Work Progress has been created.")
-            return redirect('project_detail',pk=project.id)
-    context = { 'data':data, 'data2':data2 }
-    return render(request, 'backoffice/quotation_pages/quotation_detail.html', context)
+                project.status = "On-going"
+                project.save()
+                messages.success(request, "Work Progress has been created.")
+                return redirect('project_detail',pk=project.id)
+        context = { 'data':data, 'data2':data2 }
+        return render(request, 'backoffice/quotation_pages/quotation_detail.html', context)
+    except ObjectDoesNotExist:
+        return render(request, "404.html")
 
 @login_required(login_url='signin')
 @allowed_users(allowed_roles=['Admin','Project Manager'])
@@ -475,13 +517,23 @@ def ProgressUpdateView(request,pk):
                 else:
                     data3.status = "Completed"
                     data3.save()
-                messages.success(request,"Progress has been updated.")
-                return redirect('project_detail', pk=data3.id)
             else:
                 data3.status = "On-going"
                 data3.save()
-                messages.success(request,"Progress has been updated.")
-                return redirect('project_detail', pk=data3.id)
+            project = Project.objects.get(id=data3.id)    
+            admin = User.objects.filter(groups__name="Admin")
+            for i in admin:
+                adnin_notif = Notification.objects.create(receiver=i, description=f"Progress in project {project.project} has been updated", url=f"/project/view/{project.id}")
+                adnin_notif.save()
+            client_notif = Notification.objects.create(receiver=project.client, description=f"Progress in project {project.project} has been updated", url=f"/myproject/view/{project.id}")
+            client_notif.save()
+            pm_notif = Notification.objects.create(receiver=project.pm, description=f"Progress in project {project.project} has been updated", url=f"/project/view/{project.id}")
+            pm_notif.save()
+            if project.pic:
+                pic_notif = Notification.objects.create(receiver=project.pic, description=f"Progress in project {project.project} has been updated", url=f"/project/view/{project.id}")
+                pic_notif.save()
+            messages.success(request,"Progress has been updated.")
+            return redirect('project_detail', pk=data3.id)
     else:
         formset = ProgressFormset(instance=data)
     context={'formset':formset, 'data':data, 'data2':data2,}
@@ -516,19 +568,22 @@ def InquiryListView(request):
 
 @admin_only
 def InquiryDetailView(request, pk):
-    data = Inquiry.objects.get(id=pk)
-    if request.method == "POST":
-        status = request.POST.get("status")
-        if status == "read":
-            data.status = True
-            data.save()
-            return redirect('inquiry_detail', pk=data.id)
-        elif status == "unread":
-            data.status = False
-            data.save()
-            return redirect('inquiry_detail', pk=data.id)
-    context = {'data':data}
-    return render(request, 'backoffice/project_pages/inquiry_detail.html', context)
+    try:
+        data = Inquiry.objects.get(id=pk)
+        if request.method == "POST":
+            status = request.POST.get("status")
+            if status == "read":
+                data.status = True
+                data.save()
+                return redirect('inquiry_detail', pk=data.id)
+            elif status == "unread":
+                data.status = False
+                data.save()
+                return redirect('inquiry_detail', pk=data.id)
+        context = {'data':data}
+        return render(request, 'backoffice/project_pages/inquiry_detail.html', context)
+    except ObjectDoesNotExist:
+        return render(request, "404.html")
 
 @admin_only
 def InquiryDeleteView(request, pk):
@@ -548,20 +603,23 @@ def EstimateListView(request):
     
 @admin_only
 def EstimateDetailView(request, pk):
-    data = Estimate.objects.get(id=pk)
-    data2 = EstimateImage.objects.filter(estimate=data)
-    if request.method == "POST":
-        status = request.POST.get("status")
-        if status == "read":
-            data.status = True
-            data.save()
-            return redirect('estimate_detail', pk=data.id)
-        elif status == "unread":
-            data.status = False
-            data.save()
-            return redirect('estimate_detail', pk=data.id)
-    context = {'data':data , 'data2':data2}
-    return render(request, 'backoffice/project_pages/estimate_detail.html', context)
+    try:
+        data = Estimate.objects.get(id=pk)
+        data2 = EstimateImage.objects.filter(estimate=data)
+        if request.method == "POST":
+            status = request.POST.get("status")
+            if status == "read":
+                data.status = True
+                data.save()
+                return redirect('estimate_detail', pk=data.id)
+            elif status == "unread":
+                data.status = False
+                data.save()
+                return redirect('estimate_detail', pk=data.id)
+        context = {'data':data , 'data2':data2}
+        return render(request, 'backoffice/project_pages/estimate_detail.html', context)
+    except ObjectDoesNotExist:
+        return render(request, "404.html")
     
 @admin_only
 def EstimateDeleteView(request, pk):
@@ -623,6 +681,10 @@ class RequisitionCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView)
                 data2 = RequisitionDelivery.objects.create(requisition=i.requisition,articles=i.articles)
                 data2.save()
             formset.save()
+            admin = User.objects.filter(groups__name="Admin")
+            for i in admin:
+                adnin_notif = Notification.objects.create(receiver=i, description=f"{requisition.whm} has sent a requisition on  Project {requisition.project}", url=f"/materials/requisition/{requisition.id}")
+                adnin_notif.save()
             return super(RequisitionCreateView, self).form_valid(form)
 
     def get_success_url(self):
@@ -655,13 +717,18 @@ class RequisitionUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView)
         if formset.is_valid():
             formset.instance = self.object
             requisitiondetails = formset.save(False)
-            qs1 = self.object
-            qs2 = RequisitionDelivery.objects.filter(requisition=qs1.requisition)
+            qs1 = form.save()
+            qs2 = RequisitionDelivery.objects.filter(requisition=qs1.id)
             qs2.delete()
             for i in requisitiondetails:
                 data2 = RequisitionDelivery.objects.create(requisition=i.requisition,articles=i.articles)
                 data2.save()
             formset.save()
+            requisition = form.save()
+            admin = User.objects.filter(groups__name="Admin")
+            for i in admin:
+                adnin_notif = Notification.objects.create(receiver=i, description=f"Requisition on  Project {requisition.project} has been updated", url=f"/materials/requisition/{requisition.id}")
+                adnin_notif.save()
             return super().form_valid(form)
 
     def get_success_url(self):
@@ -738,12 +805,15 @@ def RequisitionListView_WHM(request):
 @login_required(login_url='signin')
 @staff_only
 def RequisitionDetailView(request, pk):
-    data = Requisition.objects.get(id=pk)
-    data2 = RequisitionDetails.objects.filter(requisition=data.id)
-    data3 = RequisitionImage.objects.filter(requisition=data.id)
-    data4 = RequisitionDelivery.objects.filter(requisition=data.id)
-    context= {'data':data, 'data2':data2, 'data3':data3, 'data4':data4,}
-    return render(request, 'backoffice/requisition_pages/requisition_detail.html', context)
+    try:
+        data = Requisition.objects.get(id=pk)
+        data2 = RequisitionDetails.objects.filter(requisition=data.id)
+        data3 = RequisitionImage.objects.filter(requisition=data.id)
+        data4 = RequisitionDelivery.objects.filter(requisition=data.id)
+        context= {'data':data, 'data2':data2, 'data3':data3, 'data4':data4,}
+        return render(request, 'backoffice/requisition_pages/requisition_detail.html', context)
+    except ObjectDoesNotExist:
+        return render(request, "404.html")
 
 @login_required(login_url='signin')
 @allowed_users(allowed_roles=['Admin','Warehouseman'])
@@ -796,6 +866,8 @@ def RequisitionActionView(request,pk):
                 else:
                     data.status = "To be Delivered"
                     data.save()
+                whm_notif = Notification.objects.create(receiver=data.whm, description=f"Admin has complied to your requisition", url=f"/materials/requisition/{data.id}")
+                whm_notif.save()
                 messages.success(request, "Requisition has been complied.")
                 return redirect('requisition_detail',pk=data.id)
             else:
@@ -899,6 +971,10 @@ def RequisitionActionView_WHM(request,pk):
                     for f in files:
                         image = RequisitionImage(requisition=data, image=f)
                         image.save()
+                    admin = User.objects.filter(groups__name="Admin")
+                    for i in admin:
+                        adnin_notif = Notification.objects.create(receiver=i, description=f"{data.whm} has updated the delivery requisition on the project {data.project}", url=f"/materials/requisition/{data.id}")
+                        adnin_notif.save()
                     messages.success(request, "Delivered Items has been added to Inventory.")
                     return redirect('requisition_detail',pk=data.id)    
             else:
@@ -987,18 +1063,24 @@ def ExternalProjectInventoryList_PIC(request):
 @login_required(login_url='signin')
 @staff_only
 def ProjectInventoryDetailView(request,pk):
-    data = ProjectInventory.objects.get(id=pk)
-    data2 = ProjectInventoryDetails.objects.filter(inventory=data)
-    context = {'data':data, 'data2':data2}
-    return render(request, 'backoffice/inventory_pages/inventory_detail.html', context)
+    try:
+        data = ProjectInventory.objects.get(id=pk)
+        data2 = ProjectInventoryDetails.objects.filter(inventory=data)
+        context = {'data':data, 'data2':data2}
+        return render(request, 'backoffice/inventory_pages/inventory_detail.html', context)
+    except ObjectDoesNotExist:
+        return render(request, "404.html")
 
 @login_required(login_url='signin')
 @staff_only
 def ExternalProjectInventoryDetailView(request,pk):
-    data = ExternalProjectInventory.objects.get(id=pk)
-    data2 = ExternalProjectInventoryDetails.objects.filter(inventory=data)
-    context = {'data':data, 'data2':data2}
-    return render(request, 'backoffice/inventory_pages/externalorder_inventory_detail.html', context)
+    try:
+        data = ExternalProjectInventory.objects.get(id=pk)
+        data2 = ExternalProjectInventoryDetails.objects.filter(inventory=data)
+        context = {'data':data, 'data2':data2}
+        return render(request, 'backoffice/inventory_pages/externalorder_inventory_detail.html', context)
+    except ObjectDoesNotExist:
+        return render(request, "404.html")
 
 @login_required(login_url='signin')
 @whm_only
@@ -1037,7 +1119,12 @@ def ProjectInventoryReport_WHM(request,pk):
                     a.save()
                 data.date=datetime.date.today
                 data.save()
-                messages.success(request, "Daily Report has been created.")
+                project = Project.objects.get(id=data.project.id)
+                admin = User.objects.filter(groups__name="Admin")
+                for i in admin:
+                    adnin_notif = Notification.objects.create(receiver=i, description=f"Daily Material Report has been created at project {project.project}", url=f"/materials/inventory/{data.id}")
+                    adnin_notif.save()
+                messages.success(request, "Daily Material Report has been created.")
                 return redirect('inventory_whm_detail', pk=data.id)
             else:
                 messages.error(request, "Invalid Input. Articles on Form doesnt exist on Inventory")
@@ -1086,7 +1173,12 @@ def ExternalProjectInventoryReport_WHM(request,pk):
                     a.save()
                 data.date=datetime.date.today
                 data.save()
-                messages.success(request, "Daily Report has been created.")
+                project = Project.objects.get(id=data.project.id)
+                admin = User.objects.filter(groups__name="Admin")
+                for i in admin:
+                    adnin_notif = Notification.objects.create(receiver=i, description=f"Daily Material Report has been created at project {project.project}", url=f"/materials/inventory/external/{data.id}")
+                    adnin_notif.save()
+                messages.success(request, "Daily Material Report has been created.")
                 return redirect('external_inventory_whm_detail', pk=data.id)
             else:
                 messages.error(request, "Invalid Input. Articles on Form doesnt exist on Inventory")
@@ -1160,6 +1252,11 @@ class ExternalOrderCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateVie
                     except ObjectDoesNotExist:
                         data3 = ExternalProjectInventoryDetails.objects.create(inventory=data2, articles=i.articles, unit=i.unit, quantity=i.quantity)
                         data3.save()
+            
+            admin = User.objects.filter(groups__name="Admin")
+            for i in admin:
+                adnin_notif = Notification.objects.create(receiver=i, description=f"External Order has been created at project {externalorder.project}", url=f"/materials/externalorder/{externalorder.id}")
+                adnin_notif.save()
             return super(ExternalOrderCreateView, self).form_valid(form)
 
     def get_success_url(self):
@@ -1240,24 +1337,26 @@ def ExternalOrderListView_WHM(request):
 @login_required(login_url = 'signin')
 @staff_only
 def ExternalOrderDetailView(request,pk):
-    data = ExternalOrder.objects.get(id=pk)
-    data2 = ExternalOrderDetails.objects.filter(externalorder=data.id)
-    if request.method == "POST":
-        form = ExternalOrderReportForm(request.POST)
-        formset = ExternalOrderReportFormSet(request.POST)
-        if form.is_valid() and formset.is_valid():
-            form = form.save()
-            formset = formset.save(False)
-            formset.report = form
-            formset.save()
-            messages.success(request, "Material Report has been submited.")
-            return redirect('externalorder_detail', pk=data.id)
-    else:
-        form = ExternalOrderReportForm()
-        formset = ExternalOrderReportFormSet()
-
-    context = {'data':data,'data2':data2, 'form':form, 'formset':formset}
-    return render(request, 'backoffice/externalorder_pages/externalorder_detail.html', context)
+    try:
+        data = ExternalOrder.objects.get(id=pk)
+        data2 = ExternalOrderDetails.objects.filter(externalorder=data.id)
+        if request.method == "POST":
+            form = ExternalOrderReportForm(request.POST)
+            formset = ExternalOrderReportFormSet(request.POST)
+            if form.is_valid() and formset.is_valid():
+                form = form.save()
+                formset = formset.save(False)
+                formset.report = form
+                formset.save()
+                messages.success(request, "Material Report has been submited.")
+                return redirect('externalorder_detail', pk=data.id)
+        else:
+            form = ExternalOrderReportForm()
+            formset = ExternalOrderReportFormSet()
+        context = {'data':data,'data2':data2, 'form':form, 'formset':formset}
+        return render(request, 'backoffice/externalorder_pages/externalorder_detail.html', context)
+    except ObjectDoesNotExist:
+        return render(request, "404.html")
 
 @login_required(login_url = 'signin')
 @allowed_users(allowed_roles = ['Admin','Warehouseman'])
@@ -1323,6 +1422,13 @@ class JobOrderCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
                 data4.date = i.date
                 data4.date2 = i.date2
                 data4.save()
+            project = Project.objects.get(id=data2.project.id)
+            admin = User.objects.filter(groups__name="Admin")
+            for i in admin:
+                adnin_notif = Notification.objects.create(receiver=i, description=f"Job Order at project {project.project} has been created", url=f"/task/joborder/{data2.id}")
+                adnin_notif.save()
+            whm_notif = Notification.objects.create(receiver=project.whm, description=f"Job Order at project {project.project} has been created", url=f"/task/joborder/{data2.id}")
+            whm_notif.save()
             return super(JobOrderCreateView, self).form_valid(form)
 
     def get_success_url(self):
@@ -1442,7 +1548,16 @@ def JobOrderReportView(request,pk):
                     data3.save()
                     i.completion_date = None
                     i.save()
-            formset.save()        
+            formset.save()
+            project = Project.objects.get(id=data.project.id)
+            admin = User.objects.filter(groups__name="Admin")
+            for i in admin:
+                adnin_notif = Notification.objects.create(receiver=i, description=f"Job Order status at project {project.project} has been updated", url=f"/task/joborder/{data.id}")
+                adnin_notif.save()
+            pm_notif = Notification.objects.create(receiver=project.pm, description=f"Job Order status at project {project.project} has been updated", url=f"/task/joborder/{data.id}")   
+            pm_notif.save()    
+            pic_notif = Notification.objects.create(receiver=project.pic, description=f"Job Order status at project {project.project} has been updated", url=f"/task/joborder/{data.id}")   
+            pic_notif.save()    
             messages.success(request, "Job Order status has been updated.")
             return redirect('joborder_detail', pk=data.id)
         else:
@@ -1456,10 +1571,13 @@ def JobOrderReportView(request,pk):
 @login_required(login_url = 'signin')
 @staff_only
 def JobOrderDetailView(request,pk):
-    data = JobOrder.objects.get(id=pk)
-    data2 = JobOrderTask.objects.filter(joborder=data.id)
-    context = {'data':data,'data2':data2}
-    return render(request, 'backoffice/joborder_pages/joborder_detail.html', context)
+    try:
+        data = JobOrder.objects.get(id=pk)
+        data2 = JobOrderTask.objects.filter(joborder=data.id)
+        context = {'data':data,'data2':data2}
+        return render(request, 'backoffice/joborder_pages/joborder_detail.html', context)
+    except ObjectDoesNotExist:
+        return render(request, "404.html")
 
 @login_required(login_url = 'signin')
 @allowed_users(allowed_roles = ['Admin','Project Manager','Person In-Charge'])
@@ -1509,9 +1627,12 @@ def PersonnelListView(request):
 @login_required(login_url = 'signin')
 @staff_only
 def PersonnelDetailView(request, pk):
-    data = Personnel.objects.get(id=pk)
-    context = {'data':data}
-    return render(request, 'backoffice/personnel_pages/personnel_detail.html', context)
+    try:
+        data = Personnel.objects.get(id=pk)
+        context = {'data':data}
+        return render(request, 'backoffice/personnel_pages/personnel_detail.html', context)
+    except ObjectDoesNotExist:
+        return render(request, "404.html")
 
 @login_required(login_url = 'signin')
 @admin_only
@@ -1567,6 +1688,14 @@ class ReworkCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 
     def form_valid(self, form):
         form.save()
+        data = form.save()
+        project = Project.objects.get(id=data.project.id)
+        admin = User.objects.filter(groups__name="Admin")
+        for i in admin:
+            adnin_notif = Notification.objects.create(receiver=i, description=f"Rework at project {project.project} has been created", url=f"/task/rework/{data.id}")
+            adnin_notif.save()
+        pic_notif = Notification.objects.create(receiver=project.pic, description=f"Rework at project {project.project} has been created", url=f"/task/rework/{data.id}")
+        pic_notif.save()
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -1586,6 +1715,14 @@ class ReworkUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 
     def form_valid(self, form):
         form.save()
+        data = form.save()
+        project = Project.objects.get(id=data.project.id)
+        admin = User.objects.filter(groups__name="Admin")
+        for i in admin:
+            adnin_notif = Notification.objects.create(receiver=i, description=f"Rework at project {project.project} has been updated", url=f"/task/rework/{data.id}")
+            adnin_notif.save()
+        pic_notif = Notification.objects.create(receiver=project.pic, description=f"Rework at project {project.project} has been updated", url=f"/task/rework/{data.id}")
+        pic_notif.save()
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -1618,9 +1755,12 @@ def ReworkListView_PIC(request):
 @login_required(login_url = 'signin')
 @allowed_users(allowed_roles = ['Admin','Project Manager', 'Person In-Charge'])
 def ReworkDetailView(request,pk):
-    data = Rework.objects.get(id=pk)
-    context={'data':data}
-    return render(request, 'backoffice/rework_pages/rework_detail.html', context)
+    try:
+        data = Rework.objects.get(id=pk)
+        context={'data':data}
+        return render(request, 'backoffice/rework_pages/rework_detail.html', context)
+    except ObjectDoesNotExist:
+        return render(request, "404.html")
 
 @login_required(login_url = 'signin')
 @allowed_users(allowed_roles = ['Admin','Project Manager', 'Person In-Charge'])
@@ -1662,6 +1802,16 @@ class ProjectIssuesCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateVie
 
     def form_valid(self, form):
         form.save()
+        data = form.save()
+        project = Project.objects.get(id=data.project.id)
+        admin = User.objects.filter(groups__name="Admin")
+        for i in admin:
+            adnin_notif = Notification.objects.create(receiver=i, description=f"Project Issue at project {project.project} has been created", url=f"/reports/issues/{data.id}")
+            adnin_notif.save()
+        pm_notif = Notification.objects.create(receiver=project.pm, description=f"Project Issue at project {project.project} has been created", url=f"/reports/issues/{data.id}")
+        pm_notif.save()
+        pic_notif = Notification.objects.create(receiver=project.pic, description=f"Project Issue at project {project.project} has been created", url=f"/reports/issues/{data.id}")
+        pic_notif.save()
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -1681,6 +1831,16 @@ class ProjectIssuesUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateVie
 
     def form_valid(self, form):
         form.save()
+        data = form.save()
+        project = Project.objects.get(id=data.project.id)
+        admin = User.objects.filter(groups__name="Admin")
+        for i in admin:
+            adnin_notif = Notification.objects.create(receiver=i, description=f"Project Issue at project {project.project} has been updated", url=f"/reports/issues/{data.id}")
+            adnin_notif.save()
+        pm_notif = Notification.objects.create(receiver=project.pm, description=f"Project Issue at project {project.project} has been updated", url=f"/reports/issues/{data.id}")
+        pm_notif.save()
+        pic_notif = Notification.objects.create(receiver=project.pic, description=f"Project Issue at project {project.project} has been updated", url=f"/reports/issues/{data.id}")
+        pic_notif.save()
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -1738,9 +1898,12 @@ def ProjectIssuesList_WHM(request):
 @login_required(login_url='signin')
 @staff_only
 def ProjectIssuesDetailView(request,pk):
-    data = ProjectIssues.objects.get(id=pk)
-    context = {'data':data}
-    return render(request, 'backoffice/report_pages/projectissues_detail.html', context)
+    try:
+        data = ProjectIssues.objects.get(id=pk)
+        context = {'data':data}
+        return render(request, 'backoffice/report_pages/projectissues_detail.html', context)
+    except ObjectDoesNotExist:
+        return render(request, "404.html")
 
 #################################################################################################################################
 #################################################################################################################################
@@ -1786,6 +1949,16 @@ class SitePhotosCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
             for f in files:
                 image = SitePhotosDetails(sitephotos=self.object, image=f)
                 image.save()
+            data = form.save()
+            project = Project.objects.get(id=data.project.id)
+            admin = User.objects.filter(groups__name="Admin")
+            for i in admin:
+                adnin_notif = Notification.objects.create(receiver=i, description=f"New Site Photos at project {project.project} has been created", url=f"/reports/sitephotos/{data.id}")
+                adnin_notif.save()
+            pm_notif = Notification.objects.create(receiver=project.pm, description=f"New Site Photos at project {project.project} has been created", url=f"/reports/sitephotos/{data.id}")
+            pm_notif.save()
+            pic_notif = Notification.objects.create(receiver=project.pic, description=f"New Site Photos at project {project.project} has been created", url=f"/reports/sitephotos/{data.id}")
+            pic_notif.save()
             return super().form_valid(form)
 
     def get_success_url(self):
@@ -1825,10 +1998,13 @@ def dailysitephotosListView_WHM(request):
 @login_required(login_url = 'signin')
 @staff_only
 def dailysitephotosDetailView(request,pk):
-    data = SitePhotos.objects.get(id=pk)
-    data2 = SitePhotosDetails.objects.filter(sitephotos=data)
-    context={'data':data, 'data2':data2}
-    return render(request, 'backoffice/report_pages/dailysitephotos_detail.html', context)
+    try:
+        data = SitePhotos.objects.get(id=pk)
+        data2 = SitePhotosDetails.objects.filter(sitephotos=data)
+        context={'data':data, 'data2':data2}
+        return render(request, 'backoffice/report_pages/dailysitephotos_detail.html', context)
+    except ObjectDoesNotExist:
+        return render(request, "404.html")
 
 @login_required(login_url = 'signin')
 @allowed_users(allowed_roles = ['Admin','Project Manager', 'Person In-Charge'])
@@ -1840,6 +2016,9 @@ def dailysitephotosUpdateView(request,pk):
         if formset.is_valid():
             formset.save()
             messages.success(request, "Daily Site Photos has been updated.")
+            project = Project.objects.get(id=data.project.id)
+            client_notif = Notification.objects.create(receiver=project.client, description=f"Site Photos at your project {project.project} has been updated", url=f"/myproject/sitephotos/view/{data.id}")
+            client_notif.save()
             return redirect('sitephotos_detail', pk=data.id)
     context={'formset':formset, 'data':data}
     return render(request, 'backoffice/report_pages/dailysitephotos_update.html', context)
@@ -1906,10 +2085,13 @@ def ProjectDailyReportListView_WHM(request):
 @login_required(login_url = 'signin')
 @staff_only
 def ProjectDailyReportDetailView(request, pk):
-    data = ProjectDailyReport.objects.get(id=pk)
-    data2 = ProjectDailyReportDetails.objects.filter(report=data.id)
-    context={'data':data, 'data2':data2}
-    return render(request, 'backoffice/report_pages/dailyreport_detail.html', context)
+    try:
+        data = ProjectDailyReport.objects.get(id=pk)
+        data2 = ProjectDailyReportDetails.objects.filter(report=data.id)
+        context={'data':data, 'data2':data2}
+        return render(request, 'backoffice/report_pages/dailyreport_detail.html', context)
+    except ObjectDoesNotExist:
+        return render(request, "404.html")
 
 @login_required(login_url = 'signin')
 @admin_only
@@ -1934,10 +2116,13 @@ def ProjectDailyReportDeleteView(request, pk):
 @login_required(login_url = 'signin')
 @staff_only
 def ExternalOrderReportDetailView(request, pk):
-    data = ExternalOrderReport.objects.get(id=pk)
-    data2 = ExternalOrderDetailsReport.objects.filter(report=data.id)
-    context={'data':data, 'data2':data2}
-    return render(request, 'backoffice/report_pages/external_report_detail.html', context)
+    try:
+        data = ExternalOrderReport.objects.get(id=pk)
+        data2 = ExternalOrderDetailsReport.objects.filter(report=data.id)
+        context={'data':data, 'data2':data2}
+        return render(request, 'backoffice/report_pages/external_report_detail.html', context)
+    except ObjectDoesNotExist:
+        return render(request, "404.html")
 
 @login_required(login_url = 'signin')
 @admin_only
@@ -2071,8 +2256,8 @@ def InquiryCreate_api(request):
     name = data.name
     admin = User.objects.filter(groups__name="Admin")
     for i in admin:
-        qs = Notification.objects.create(receiver=i, description=f"{name} has sent an Inquiry")
-        qs.save()
+        adnin_notif = Notification.objects.create(receiver=i, description=f"{name} has sent an Inquiry", url=f"/project/inquiry/{data.id}")
+        adnin_notif.save()
     return Response(serializer.data) 
 
 
