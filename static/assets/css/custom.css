@@ -365,3 +365,19 @@ td{
     padding: 0.75rem 1.70rem 0.75rem 1.25rem;
     color: white;
 }
+.preview-list .preview-item .preview-item-content {
+    padding-left: 0!important;
+}
+a.dropdown-item.notif-item.border-bottom:hover{
+    background-color: white;
+}
+a.dropdown-item.preview-item.py-3:hover{
+    color:white;
+    background-color: #428bca;
+}
+p.float-right.timestamp {
+    font-size: 10px;
+}
+a#mark-read {
+    font-size: 13px;
+}

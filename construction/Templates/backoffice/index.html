@@ -22,17 +22,6 @@
     <link rel="stylesheet" href="{% static 'assets/css/custom.css'%}">
     <!-- Favicon -->
     <link rel="apple-touch-icon" href="{%static 'images-poli/logo-poli.png'%}">
-    <!-- <link rel="apple-touch-icon" sizes="60x60" href="{%static 'images-poli/logo-poli.png'%}">
-    <link rel="apple-touch-icon" sizes="72x72" href="{%static 'images-poli/logo-poli.png'%}">
-    <link rel="apple-touch-icon" sizes="76x76" href="{%static 'images-poli/logo-poli.png'%}">
-    <link rel="apple-touch-icon" sizes="114x114" href="{%static 'images-poli/logo-poli.png'%}">
-    <link rel="apple-touch-icon" sizes="120x120" href="{%static 'images-poli/logo-poli.png'%}">
-    <link rel="apple-touch-icon" sizes="144x144" href="{%static 'images-poli/logo-poli.png'%}">
-    <link rel="apple-touch-icon" sizes="152x152" href="{%static 'images-poli/logo-poli.png'%}">
-    <link rel="apple-touch-icon" sizes="180x180" href="{%static 'images-poli/logo-poli.png'%}">
-    <link rel="icon" type="image/png" sizes="192x192"  href="{%static 'images-poli/logo-poli.png'%}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{%static 'images-poli/logo-poli.png'%}">
-    <link rel="icon" type="image/png" sizes="96x96" href="{%static 'images-poli/logo-poli.png'%}"> -->
     <link rel="icon" type="image/png" href="{%static 'images-poli/logo-poli.png'%}">
     <meta name="msapplication-TileImage" content="{%static 'images-poli/logo-poli.png'%}">
 </head>
@@ -81,7 +70,64 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datepicker/1.0.9/datepicker.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/1.0.9/datepicker.min.js"></script>
 <script src="{% static 'assets/js/custom/datepicker.js'%}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.31/moment-timezone.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.31/moment-timezone-with-data.js"></script>
+<script>
+    $(document).ready(function(){
+        load_notification();
+        mark_as_read();
+        setInterval(load_notification, 5000);
+    });
+    var url = "{% url 'notif_api' 123%}";
+    var url2 = "{% url 'notifmark_api' 123%}";
+    var user = parseInt("{{request.user.id}}")
 
+    function load_notification(){
+        var count = 0;
+        $.ajax({
+            method: 'GET',
+            url:url.replace(123,user),
+            success:function(data){
+                var notif = $("#notif-list");
+                notif.html("")
+                $.each(data, function(i){
+                    count++;
+                    let str = data[i].timestamp;
+                    let date = moment.tz(data[i].timestamp, "Asia/Manila");
+                    notif.append(
+                        '<a class="dropdown-item preview-item py-3 border-bottom" href="#">'+
+                            '<div class="preview-item-content">'+
+                                '<h6 class="preview-subject mb-1">'+data[i].description+'</h6>'+
+                                '<p class="float-right timestamp">'+ date.format('llll') +'</p>'+
+                            '</div>'+
+                        '</a>'
+                    );
+                });   
+                $("#notif-count").text(count);
+                if(count == 0){
+                    $('#notif-msg').text("You have "+count+" new notification")
+                }
+                else{
+                    $('#notif-msg').text("You have "+count+" new notifications")
+                }
+                
+            }
+        }); 
+    };
+    
+    function mark_as_read(){
+        $('#mark-read').click(function(){
+            $.ajax({
+                method: 'GET',
+                url:url2.replace(123,user),
+                success:function(data){
+                    load_notification();
+                }
+            })
+        });
+    };
+    
+</script>
 {% block javascript %}
 {% endblock %}
   

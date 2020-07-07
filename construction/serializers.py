@@ -20,3 +20,8 @@ class InquirySerializers(serializers.ModelSerializer):
 	class Meta:
 		model = Inquiry
 		fields = ('name', 'phone', 'email', 'message')
+
+class NotificationSerializers(serializers.ModelSerializer):
+	class Meta:
+		model = Notification
+		fields = '__all__'

@@ -4,9 +4,6 @@ from django.urls import path, re_path
 from . import views
 from .models import *
 
-import notifications.urls
-
-
 urlpatterns = [
     path('', views.home, name="home"),
     path('about/', views.about, name="about"),
@@ -107,7 +104,6 @@ urlpatterns = [
     path('reports/issues/<int:pk>', views.ProjectIssuesDetailView, name="issues_detail"),
 
     path('reports/materialreport_list', views. ProjectDailyReportListView, name="dailyreport_list"),
-
     path('reports/materialreport/<int:pk>', views. ProjectDailyReportDetailView, name="dailyreport_detail"),
     path('reports/materialreport/<int:pk>/delete', views. ProjectDailyReportDeleteView, name="materialreport_delete"),
     
@@ -174,5 +170,7 @@ urlpatterns = [
     path('backoffice/api/scope/<int:pk>', views.ScopeOfWork_api, name="scopeofworks_api"),
     path('backoffice/api/materials/<int:pk>/', views.Inventory_api, name="inventory_api"),
     path('backoffice/api/city/<int:pk>', views.City_api, name="city_api"),
-    path('backoffice/api/inquiry', views.InquiryCreate_api, name="inquiry_create_api")
+    path('backoffice/api/inquiry', views.InquiryCreate_api, name="inquiry_create_api"),
+    path('backoffice/api/user/notification/<int:pk>', views.Notification_api, name="notif_api"),
+    path('backoffice/api/user/notification/<int:pk>/mark', views.NotificationMark_api, name="notifmark_api"),
 ]

@@ -48,6 +48,11 @@ def EstimateCreateView(request):
                 image = EstimateImage(estimate=estimate, image=f)
                 image.save()
             messages.success(request, "Your form has been submitted. We'll be in touch soon")
+            name = estimate.name
+            admin = User.objects.filter(groups__name="Admin")
+            for i in admin:
+                qs = Notification.objects.create(receiver=i, description=f"{name} has sent an Estimate")
+                qs.save()
             return redirect('estimate_create')
     else:
         form = EstimateForm()
@@ -429,10 +434,7 @@ def QuotationDeleteView(request,pk):
     if request.method == 'POST':
         data.delete()
         messages.success(request, 'Quotation has been deleted.')
-        # if request.user.groups.all()[0].name=="Project Manager":
         return redirect('project_detail', pk=data.project.id)
-        # else:
-        #     return redirect('quotation_list')
     context={'data':data,'data2':data2,}
     return render(request, 'backoffice/quotation_pages/quotation_delete.html', context)
 
@@ -653,8 +655,9 @@ class RequisitionUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView)
         if formset.is_valid():
             formset.instance = self.object
             requisitiondetails = formset.save(False)
-            qs = RequisitionDelivery.objects.filter(requisition=requisitiondetails.requisition)
-            qs.delete()
+            qs1 = self.object
+            qs2 = RequisitionDelivery.objects.filter(requisition=qs1.requisition)
+            qs2.delete()
             for i in requisitiondetails:
                 data2 = RequisitionDelivery.objects.create(requisition=i.requisition,articles=i.articles)
                 data2.save()
@@ -1739,6 +1742,8 @@ def ProjectIssuesDetailView(request,pk):
     context = {'data':data}
     return render(request, 'backoffice/report_pages/projectissues_detail.html', context)
 
+#################################################################################################################################
+#################################################################################################################################
 class SitePhotosCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     login_url ="signin"
     redirect_field_name = "redirect_to"
@@ -1860,7 +1865,8 @@ def dailysitephotosDeleteView(request,pk):
     context={'data':data, 'data2':data2}
     return render(request, 'backoffice/report_pages/dailysitephotos_delete.html', context)
 
-
+#################################################################################################################################
+#################################################################################################################################
 @login_required(login_url = 'signin')
 @admin_only
 def ProjectDailyReportListView(request):
@@ -2061,7 +2067,31 @@ def InquiryCreate_api(request):
     serializer = InquirySerializers(data=request.data)
     if serializer.is_valid():
 	    serializer.save()
+    data = serializer.save()
+    name = data.name
+    admin = User.objects.filter(groups__name="Admin")
+    for i in admin:
+        qs = Notification.objects.create(receiver=i, description=f"{name} has sent an Inquiry")
+        qs.save()
     return Response(serializer.data) 
+
+
+@login_required(login_url = 'signin')
+@api_view(['GET'])
+def Notification_api(request, pk):
+    notification = Notification.objects.filter(receiver_id=pk, is_read=False).order_by('-timestamp')
+    serializer = NotificationSerializers(notification, many=True)
+    return Response(serializer.data)
+
+@login_required(login_url = 'signin')
+@api_view(['GET'])
+def NotificationMark_api(request, pk):
+    notification = Notification.objects.filter(receiver_id=pk, is_read=False).order_by('-timestamp')
+    for i in notification:
+        i.is_read = True
+        i.save()
+    serializer = NotificationSerializers(notification, many=True)
+    return Response(serializer.data)
 
 
 @login_required(login_url = 'signin')

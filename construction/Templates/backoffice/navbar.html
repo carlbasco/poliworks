@@ -11,54 +11,24 @@
         <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
             <span class="mdi mdi-menu"></span>
         </button>
-        <ul class="navbar-nav navbar-nav-left header-links d-none d-md-flex">
-            <!-- <li class="nav-item">
-                <a href="#" class="nav-link">Schedule</a>
-            </li>
-            <li class="nav-item active">
-                <a href="#" class="nav-link">
-                <i class="mdi mdi-elevation-rise"></i>Reports</a>
-            </li> -->
-        </ul>
         <ul class="navbar-nav navbar-nav-right" id="usernav">
             <li class="nav-item dropdown ml-4">
                 <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
                     <i class="mdi mdi-bell-outline"></i>
-                    <span class="count bg-success">4</span>
+                    <span class="count bg-success" id="notif-count"></span>
                 </a>
-                <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0" aria-labelledby="notificationDropdown">
-                    <a class="dropdown-item py-3 border-bottom">
-                        <p class="mb-0 font-weight-medium float-left">You have 4 new notifications </p>
-                        <span class="badge badge-pill badge-primary float-right">View all</span>
+                <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0"  aria-labelledby="notificationDropdown">
+                    <div class="mx-auto">
+                        <a class="dropdown-item notif-item border-bottom ">
+                            <p id="notif-msg" class="mb-0 font-weight-bold"></p>
                         </a>
-                        <a class="dropdown-item preview-item py-3">
-                        <div class="preview-thumbnail">
-                            <i class="mdi mdi-alert m-auto text-primary"></i>
-                        </div>
-                        <div class="preview-item-content">
-                            <h6 class="preview-subject font-weight-normal text-dark mb-1">Application Error</h6>
-                            <p class="font-weight-light small-text mb-0"> Just now </p>
-                        </div>
-                    </a>
-                    <a class="dropdown-item preview-item py-3">
-                        <div class="preview-thumbnail">
-                            <i class="mdi mdi-settings m-auto text-primary"></i>
-                        </div>
-                        <div class="preview-item-content">
-                            <h6 class="preview-subject font-weight-normal text-dark mb-1">Settings</h6>
-                            <p class="font-weight-light small-text mb-0"> Private message </p>
-                        </div>
-                    </a>
-                    <a class="dropdown-item preview-item py-3">
-                        <div class="preview-thumbnail">
-                            <i class="mdi mdi-airballoon m-auto text-primary"></i>
-                        </div>
-                        <div class="preview-item-content">
-                            <h6 class="preview-subject font-weight-normal text-dark mb-1">New user registration</h6>
-                            <p class="font-weight-light small-text mb-0"> 2 days ago </p>
-                        </div>
-                    </a>
+                    </div>
+                    <div id="notif-list"></div>
+                    <div class="pt-2 pb-2 pr-2 float-right">
+                        <a id="mark-read" href=# >mark all as read</a>
+                    </div>
                 </div>
+                
             </li> 
             <li class="nav-item dropdown d-xl-inline-block">
                 <span class="profile-text">Hello, {{request.user.groups.all.0}}</span>
