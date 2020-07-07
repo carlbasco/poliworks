@@ -343,12 +343,11 @@ class QuotationCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
             for i in quotation_list:
                 quotation.amount += i.q_amount()
             quotation.save()
-            quotation = quotation.save()
+            project = Project.objects.get(id=quotation.project.id)
             admin = User.objects.filter(groups__name="Admin")
             for i in admin:
                 admin_notif = Notification.objects.create(receiver=i, description=f"Quotation has been created at {quotation.project}", url=f"/project/quotation/{quotation.id}")
                 admin_notif.save()
-            project = Project.objects.get(id=quotation.project.id)
             client_notif = Notification.objects.create(receiver=project.client, description=f"Quotation has been created at {quotation.project}", url=f"/myproject/view/quotation/{quotation.id}")
             client_notif.save()
             return super(QuotationCreateView, self).form_valid(form)
@@ -2154,45 +2153,66 @@ def Client_home(request):
 @login_required(login_url = 'signin')
 @allowed_users(allowed_roles = ['Client'])
 def ClientProjectView(request,pk):
-    data = Project.objects.get(id=pk)
-    data2 = Quotation.objects.filter(project_id=data.id)
-    data5 = SitePhotos.objects.filter(project_id=data.id)
     try:
-        data3 = ProjectProgress.objects.get(project_id=data.id)
-        data4 = ProjectProgressDetails.objects.filter(projectprogress=data3.id)
-    except ObjectDoesNotExist:
-        context = {'data':data, 'data2':data2, 'data5':data5}
-        return render(request, 'client/client-view_project.html', context)
+        data = Project.objects.get(id=pk)
+        data2 = Quotation.objects.filter(project_id=data.id)
+        data5 = SitePhotos.objects.filter(project_id=data.id)
+        try:
+            data3 = ProjectProgress.objects.get(project_id=data.id)
+            data4 = ProjectProgressDetails.objects.filter(projectprogress=data3.id)
+        except ObjectDoesNotExist:
+            context = {'data':data, 'data2':data2, 'data5':data5}
+            return render(request, 'client/client-view_project.html', context)
 
-    context={'data':data, 'data2':data2, 'data3':data3, 'data4':data4, 'data5':data5}
-    return render(request, 'client/client-view_project.html', context)
+        context={'data':data, 'data2':data2, 'data3':data3, 'data4':data4, 'data5':data5}
+        return render(request, 'client/client-view_project.html', context)
+    except ObjectDoesNotExist:
+        return render(request, "404.html")
     
 @login_required(login_url = 'signin')
 @allowed_users(allowed_roles = ['Client'])
 def ClientSitePhotosView(request, pk):
-    data = SitePhotos.objects.get(id=pk)
-    data2 = SitePhotosDetails.objects.filter(sitephotos=data, reveal="True")
-    context={'data':data, 'data2':data2}
-    return render(request, 'client/client-sitephotos.html', context)
+    try:
+        data = SitePhotos.objects.get(id=pk)
+        data2 = SitePhotosDetails.objects.filter(sitephotos=data, reveal="True")
+        context={'data':data, 'data2':data2}
+        return render(request, 'client/client-sitephotos.html', context)
+    except ObjectDoesNotExist:
+        return render(request, "404.html")
 
 @login_required(login_url = 'signin')
 @allowed_users(allowed_roles = ['Client'])
 def ClientQuotationView(request,pk):
-    data = Quotation.objects.get(id=pk)
-    project = Project.objects.get(id=data.project.id)
-    if project.client != request.user:
-        return redirect('client_quotation')
-    data2 = QuotationDetails.objects.filter(quotation=data.id)
-    if request.method == "POST":
-        data.status = request.POST.get("status")
-        data.save()
-        if data.status == "Accepted":
-            messages.success(request, "Quotation has been accepted.")
-        else:
-            messages.success(request, "Quotation has been rejected.")
-        return redirect('client_home')
-    context = {'data':data, 'data2':data2,}
-    return render(request, 'client/client-quotation.html', context)
+    try:
+        data = Quotation.objects.get(id=pk)
+        project = Project.objects.get(id=data.project.id)
+        if project.client != request.user:
+            return redirect('client_quotation')
+        data2 = QuotationDetails.objects.filter(quotation=data.id)
+        if request.method == "POST":
+            data.status = request.POST.get("status")
+            data.save()
+            if data.status == "Accepted":
+                admin = User.objects.filter(groups__name="Admin")
+                for i in admin:
+                    adnin_notif = Notification.objects.create(receiver=i, description=f"{project.client} has accepted the quotation on project {project.project}", url=f"/project/quotation/{data.id}")
+                    adnin_notif.save()
+                pm_notif =  Notification.objects.create(receiver=project.pm, description=f"{project.client} has accepted the quotation on project {project.project}", url=f"/project/quotation/{data.id}")
+                pm_notif.save()
+                messages.success(request, "Quotation has been accepted.")
+            else:
+                admin = User.objects.filter(groups__name="Admin")
+                for i in admin:
+                    adnin_notif = Notification.objects.create(receiver=i, description=f"{project.client} has rejected the quotation on project {project.project}", url=f"/project/quotation/{data.id}")
+                    adnin_notif.save()
+                pm_notif =  Notification.objects.create(receiver=project.pm, description=f"{project.client} has rejected the quotation on project {project.project}", url=f"/project/quotation/{data.id}")
+                pm_notif.save()
+                messages.success(request, "Quotation has been rejected.")
+            return redirect('client_home')
+        context = {'data':data, 'data2':data2,}
+        return render(request, 'client/client-quotation.html', context)
+    except ObjectDoesNotExist:
+        return render(request, "404.html")
 
 @login_required(login_url='signin')
 @allowed_users(allowed_roles = ['Client'])
@@ -2232,19 +2252,6 @@ def ClientChangePasswordView(request):
     context={'form':form,}
     return render(request, 'client/client-change_password.html', context)
 
-@login_required(login_url='signin')
-@client_only
-def ClientProjectCreateView(request):
-    form = ProjectForm
-    if request.method == 'POST':
-        form = ProjectForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Project has been created.')
-            return redirect('client_home')
-    context = {'form':form}
-    return render(request, 'client/client-new_project.html', context)
-
 #################################################################################################################################
 #################################################################################################################################
 @api_view(['POST'])
@@ -2260,7 +2267,6 @@ def InquiryCreate_api(request):
         adnin_notif.save()
     return Response(serializer.data) 
 
-
 @login_required(login_url = 'signin')
 @api_view(['GET'])
 def Notification_api(request, pk):
@@ -2270,7 +2276,7 @@ def Notification_api(request, pk):
 
 @login_required(login_url = 'signin')
 @api_view(['GET'])
-def NotificationMark_api(request, pk):
+def NotificationMarkAll_api(request, pk):
     notification = Notification.objects.filter(receiver_id=pk, is_read=False).order_by('-timestamp')
     for i in notification:
         i.is_read = True
@@ -2278,6 +2284,14 @@ def NotificationMark_api(request, pk):
     serializer = NotificationSerializers(notification, many=True)
     return Response(serializer.data)
 
+@login_required(login_url = 'signin')
+@api_view(['GET'])
+def NotificationMark_api(request, pk):
+    notification = Notification.objects.get(id=pk)
+    notification.is_read = True
+    notification.save()
+    serializer = NotificationSerializers(notification, many=False)
+    return Response(serializer.data)
 
 @login_required(login_url = 'signin')
 @api_view(['GET'])
@@ -2353,8 +2367,6 @@ def render_to_pdf(template_src, context_dict={}):
 		return HttpResponse(result.getvalue(), content_type='application/pdf')
 	return None
 
-
-
 class ProjectReport(FormView, LoginRequiredMixin):
     form_class = WeeklyReportForm
     template_name='backoffice/report_pages/projectreport_search.html'
@@ -2391,6 +2403,10 @@ class ProjectReportPDF(TemplateView, LoginRequiredMixin):
             sitephotos = SitePhotos.objects.filter(project_id=project.id, date__range=[datefrom, dateto])
             sitephotosdetails = SitePhotosDetails.objects.filter(sitephotos__in=sitephotos)
             projectissues = ProjectIssues.objects.filter(project_id=project.id, date__range=[datefrom, dateto])
+            materialreport = ProjectDailyReport.objects.filter(project_id=project.id, date__range=[datefrom, dateto])
+            materialreportdetails = ProjectDailyReportDetails.objects.filter(report__in=materialreport)
+            externalmaterialreport = ExternalOrderReport.objects.filter(project_id=project.id, date__range=[datefrom, dateto])
+            externalmaterialreportdetails = ExternalOrderDetailsReport.objects.filter(report__in=externalmaterialreport)
             data={
                 'project':project, 'datefrom':datefrom, 'dateto':dateto,
                 'requisition':requisition, 'requisitiondetails':requisitiondetails, 
@@ -2398,6 +2414,8 @@ class ProjectReportPDF(TemplateView, LoginRequiredMixin):
                 'joborder':joborder, 'jobordertask':jobordertask,
                 'rework':rework, 'projectissues':projectissues,
                 'sitephotos':sitephotos, 'sitephotosdetails':sitephotosdetails,
+                'materialreport':materialreport,'externalmaterialreport':externalmaterialreport,
+                'materialreportdetails':materialreportdetails, 'externalmaterialreportdetails':externalmaterialreportdetails,
             }
             pdf = render_to_pdf('pdf_template.html', data)
             return HttpResponse(pdf, content_type='application/pdf')

@@ -181,7 +181,7 @@
             <tr>
                 <td class="text-center font-weight-bold" style="width: 60px;">DATE</td>
                 <td class="text-center font-weight-bold" style="width: 70px;">QUANTITY</td>
-                <td class="text-center font-weight-bold">Articles</td>
+                <td class="text-center font-weight-bold">ARTICLES</td>
                 <td class="text-center font-weight-bold" style="width: 60px;">UNIT</td>
                 <td class="text-center font-weight-bold" style="width: 80px;">STATUS</td>
             </tr>
@@ -204,6 +204,110 @@
                     <td colspan="5" class="text-center">NO RECORDS AVAILABLE</td>
                 </tr>
                 {% endif %}
-            </table>
+        </table>
+        <br>
+
+        <br>
+        <table>
+            <tr>
+                <td colspan="5" class="text-center green"><h3>Material Report</h3></td>
+            </tr>
+            <tr>
+                <td class="text-center font-weight-bold" style="width: 60px;">DATE</td>
+                <td class="text-center font-weight-bold" style="width: 70px;">QUANTITY</td>
+                <td class="text-center font-weight-bold">ARTICLES</td>
+                <td class="text-center font-weight-bold" style="width: 60px;">UNIT</td>
+                <td class="text-center font-weight-bold" style="width: 80px;">Remarks</td>
+            </tr>
+                {% if materialreportdetails %}
+                    {% for i in materialreportdetails %}
+                    <tr>
+                        <td class="text-center">{{i.report.date|date:"n/j/Y"}}</td>
+                        <td class="text-center">{{i.quantity}}</td>
+                        <td class="text-center">{{i.articles}}</td>
+                        <td class="text-center">{{i.articles.unit}}</td>
+                        {% if i.remarks != None %}
+                        <td class="text-center">{{i.remarks}}</td>
+                        {% else %}
+                        <td class="text-center">N/A</td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center">NO RECORDS AVAILABLE</td>
+                </tr>
+                {% endif %}
+        </table>
+        <br>
+
+        <br>
+        <table>
+            <tr>
+                <td colspan="6" class="text-center green"><h3>External Order</h3></td>
+            </tr>
+            <tr>
+                <td class="text-center font-weight-bold" style="width: 100px;">SUPPLIER</td>
+                <td class="text-center font-weight-bold" style="width: 60px;">DATE</td>
+                <td class="text-center font-weight-bold" style="width: 70px;">QUANTITY</td>
+                <td class="text-center font-weight-bold">ARTICLES</td>
+                <td class="text-center font-weight-bold" style="width: 60px;">UNIT</td>
+                <td class="text-center font-weight-bold" style="width: 100px;">UNIT PRICE</td>
+            </tr>
+                {% if externalorder_details%}
+                    {% for i in externalorder_details %}
+                    <tr>
+                        <td class="text-center">{{i.externalorder.supplier}}</td>
+                        <td class="text-center">{{i.date|date:"n/j/Y"}}</td>
+                        <td class="text-center">{{i.quantity}}</td>
+                        <td class="text-center">{{i.articles}}</td>
+                        {% if i.unit != None %}
+                            <td class="text-center">{{i.unit}}</td>
+                        {% else %}
+                            <td class="text-center">N/A</td>
+                        {% endif %}
+                        <td class="text-center">{{i.unitprice}}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                <tr>
+                    <td colspan="6" class="text-center">NO RECORDS AVAILABLE</td>
+                </tr>
+                {% endif %}
+        </table>
+        <br>
+
+        <br>
+        <table>
+            <tr>
+                <td colspan="5" class="text-center green"><h3>Material Report(External Order)</h3></td>
+            </tr>
+            <tr>
+                <td class="text-center font-weight-bold" style="width: 60px;">DATE</td>
+                <td class="text-center font-weight-bold" style="width: 70px;">QUANTITY</td>
+                <td class="text-center font-weight-bold">ARTICLES</td>
+                <td class="text-center font-weight-bold" style="width: 60px;">UNIT</td>
+                <td class="text-center font-weight-bold" style="width: 80px;">Remarks</td>
+            </tr>
+                {% if externalmaterialreportdetails %}
+                    {% for i in externalmaterialreportdetails %}
+                    <tr>
+                        <td class="text-center">{{i.report.date|date:"n/j/Y"}}</td>
+                        <td class="text-center">{{i.quantity}}</td>
+                        <td class="text-center">{{i.articles}}</td>
+                        <td class="text-center">{{i.articles.unit}}</td>
+                        {% if i.remarks != None %}
+                        <td class="text-center">{{i.remarks}}</td>
+                        {% else %}
+                        <td class="text-center">N/A</td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center">NO RECORDS AVAILABLE</td>
+                </tr>
+                {% endif %}
+        </table>
     </body>
     </html>

@@ -173,4 +173,5 @@ urlpatterns = [
     path('backoffice/api/inquiry', views.InquiryCreate_api, name="inquiry_create_api"),
     path('backoffice/api/user/notification/<int:pk>', views.Notification_api, name="notif_api"),
     path('backoffice/api/user/notification/<int:pk>/mark', views.NotificationMark_api, name="notifmark_api"),
+    path('backoffice/api/user/notification/<int:pk>/markall', views.NotificationMarkAll_api, name="notifmarkall_api"),
 ]

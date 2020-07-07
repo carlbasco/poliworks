@@ -1,97 +1,125 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="theme-color" content="#266caa">
-        <meta name="apple-mobile-web-app-status-bar-style" content="#266caa">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Poliworks Inc.</title>
-        <!-- Bootstrap CSS-->
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-        <link rel="stylesheet" href="{% static 'assets/vendors/iconfonts/mdi/css/materialdesignicons.min.css' %}">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800">
-        <link rel="stylesheet" href="{% static 'client/css/style.css' %}">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css">
-        <link rel="stylesheet" href="{% static 'assets/vendors/iconfonts/font-awesome/css/font-awesome.min.css' %}">
-    </head>
-    <body>
-        {% include 'client/client-navbar.html'%}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#266caa">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#266caa">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Poliworks Inc.</title>
+    <!-- Bootstrap CSS-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'assets/vendors/iconfonts/mdi/css/materialdesignicons.min.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800">
+    <link rel="stylesheet" href="{% static 'client/css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css">
+    <link rel="stylesheet" href="{% static 'assets/vendors/iconfonts/font-awesome/css/font-awesome.min.css' %}">
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" href="{%static 'images-poli/logo-poli.png'%}">
+    <link rel="icon" type="image/png" href="{%static 'images-poli/logo-poli.png'%}">
+    <meta name="msapplication-TileImage" content="{%static 'images-poli/logo-poli.png'%}">
+</head>
+<body>
+    {% include 'client/client-navbar.html'%}
 
-        {% block content%}
-        {% endblock %}
+    {% block content%}
+    {% endblock %}
 
-        {% include 'client/client-footer.html' %}
-        <!-- Javascript files-->
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-        <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
-        <!-- select2dropdown -->
-        <link   href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" 
-        rel="stylesheet" />
-        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    {% include 'client/client-footer.html' %}
+    <!-- Javascript files-->
+    <script
+            src="https://code.jquery.com/jquery-3.5.1.min.js"
+            integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    
+    <!-- select2dropdown -->
+    <link   href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" 
+    rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    <!-- DatePicker -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datepicker/1.0.9/datepicker.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/1.0.9/datepicker.min.js"></script>
+    <script src="{% static 'assets/js/custom/datepicker.js'%}"></script>
+    <script src="{% static 'assets/js/custom/moment.min.js'%}"></script>
+    <script src="{% static 'assets/js/custom/moment-timezone-with-data.js'%}"></script>
 
-        <!-- DatePicker -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datepicker/1.0.9/datepicker.min.css">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/1.0.9/datepicker.min.js"></script>
-        <script src="{% static 'assets/js/custom/datepicker.js'%}"></script>
-        <script>
-            $(document).ready(function(){
-                load_notification();
-                mark_as_read();
-                setInterval(load_notification, 5000);
-            });
-            var url = "{% url 'notif_api' 123%}";
-            var url2 = "{% url 'notifmark_api' 123%}";
-            var user = parseInt("{{request.user.id}}")
-        
-            function load_notification(){
-                var count = 0;
-                $.ajax({
-                    method: 'GET',
-                    url:url.replace(123,user),
-                    success:function(data){
-                        var notif = $("#notif-list");
-                        notif.html("")
-                        $.each(data, function(i){
-                            count++;
-                            let str = data[i].timestamp;
-                            let date = moment.tz(data[i].timestamp, "Asia/Manila");
-                            notif.append(
-                                '<a class="dropdown-item preview-item py-3 border-bottom" href="'+data[i].url+'">'+
-                                    '<div class="preview-item-content">'+
-                                        '<h6 class="preview-subject mb-1">'+data[i].description+'</h6>'+
-                                        '<p class="float-right timestamp">'+ date.format('llll') +'</p>'+
-                                    '</div>'+
-                                '</a>'
-                            );
-                        });   
-                        $("#notif-count").text(count);
-                        if(count == 0){
-                            $('#notif-msg').text("You have "+count+" new notification")
-                        }
-                        else{
-                            $('#notif-msg').text("You have "+count+" new notifications")
-                        }
+    <script>
+        $(document).ready(function(){
+            load_notification();
+            mark_as_read();
+            markall_as_read();
+            setInterval(load_notification, 5000);
+        });
+        var url = "{% url 'notif_api' 123%}";
+        var url2 = "{% url 'notifmarkall_api' 123%}";
+        var url3 = "{% url 'notifmark_api' 123%}";
+        var user = parseInt("{{request.user.id}}")
+    
+        function load_notification(){
+            var count = 0;
+            $.ajax({
+                method: 'GET',
+                url:url.replace(123,user),
+                success:function(data){
+                    var notif = $("#notif-list");
+                    notif.html("")
+                    $.each(data, function(i){
+                        count++;
+                        let str = data[i].timestamp;
+                        let date = moment.tz(data[i].timestamp, "Asia/Manila");
+                        notif.append(
+                            '<div class="border-top notif-content"><a class="dropdown-item notif-item notif-mark" id="'+data[i].id+'" href="'+data[i].url+'">'+
+                                '<div class="preview-item-content">'+
+                                    '<h6 class="preview-subject mb-1">'+data[i].description+'</h6>'+
+                                    '<p class="float-right timestamp mb-0">'+ date.format('llll') +'</p>'+
+                                '</div>'+
+                            '</a></div>'
+                        );
+                    });   
+                    $("#notif-count").text(count);
+                    if(count == 0){
+                        $('#notif-msg').text("You have "+count+" new notification")
                     }
-                }); 
-            };
+                    else{
+                        $('#notif-msg').text("You have "+count+" new notifications")
+                    }
+                    mark_as_read();
+                }
+            }); 
+        };
             
-            function mark_as_read(){
-                $('#mark-read').click(function(){
-                    $.ajax({
-                        method: 'GET',
-                        url:url2.replace(123,user),
-                        success:function(data){
-                            load_notification();
-                        }
-                    })
-                });
-            };
-        </script>
-        {% block javascript %}
-        {% endblock  %}
-    </body>
+    function markall_as_read(){
+        $('#mark-read').click(function(){
+            $.ajax({
+                method: 'GET',
+                url:url2.replace(123,user),
+                success:function(data){
+                    load_notification();
+                }
+            })
+        });
+    };
+    function mark_as_read(){
+        $('a.notif-mark').click(function(e){
+            e.preventDefault();
+            var href = $(this).attr('href');
+            var id =$(this).attr("id");
+            $.ajax({
+                method: 'GET',
+                url:url3.replace(123,id),
+                success:function(data){
+                    load_notification();
+                }
+            })
+            window.location=href;
+        })
+    };
+    </script>
+    {% block javascript %}
+    {% endblock  %}
+    
+</body>
 </html>

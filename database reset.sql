@@ -82,4 +82,7 @@ delete from sqlite_sequence where name='`construction_estimate`';
 delete from `construction_estimateimage`; 
 delete from sqlite_sequence where name='`construction_estimateimage`';
 
+delete from `construction_notification`; 
+delete from sqlite_sequence where name='`construction_notification`';
+
 Update 'construction_personnel' SET project_id=NULL, date=NULL, date2=NULL, status="Available" WHERE status = "Currently Assigned"

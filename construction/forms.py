@@ -101,7 +101,7 @@ class EstimateImageForm(forms.ModelForm):
         model = EstimateImage
         exclude = ('estimate',)
         widgets={
-            'image' : forms.FileInput(attrs={'class':'custom-file-input', 'multiple': True})
+            'image' : forms.FileInput(attrs={'class':'custom-file-input', 'multiple': True, 'required':False})
         }
 
 class ProfileForm(forms.ModelForm):

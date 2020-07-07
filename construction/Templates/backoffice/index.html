@@ -27,103 +27,119 @@
 </head>
 
 <body>
-<div class="container-scroller">
-    {% include 'backoffice/navbar.html' %}
-    <div class="container-fluid page-body-wrapper">
-        {% include 'backoffice/sidebar.html' %}
-        <div class="main-panel">
-            <div class="content-wrapper">
-            {% block content %}
-            {% endblock %}
+    <div class="container-scroller">
+        {% include 'backoffice/navbar.html' %}
+        <div class="container-fluid page-body-wrapper">
+            {% include 'backoffice/sidebar.html' %}
+            <div class="main-panel">
+                <div class="content-wrapper">
+                {% block content %}
+                {% endblock %}
+                </div>
+                {% include 'backoffice/footer.html'%}
             </div>
-            {% include 'backoffice/footer.html'%}
         </div>
     </div>
-</div>
-
-
 <!-- staradmin pro template -->
-<script src="{% static 'assets/vendors/js/vendor.bundle.base.js'%}"></script>
-<script src="{% static 'assets/vendors/js/vendor.bundle.addons.js'%}"></script>
-<script src="{% static 'assets/js/shared/off-canvas.js'%}"></script>
-<script src="{% static 'assets/js/shared/hoverable-collapse.js'%}"></script>
-<script src="{% static 'assets/js/shared/misc.js'%}"></script>
-<script src="{% static 'assets/js/demo_1/dashboard.js'%}"></script>
-<script src="{% static 'assets/js/custom/validation.js'%}"></script>
-<script src="{% static 'assets/js/shared/data-table.js'%}"></script>
-<script src="{% static 'assets/js/shared/owl-carousel.js'%}"></script>
-<!-- <script src="{% static 'assets/js/shared/formpickers.js'%}"></script> -->
+    <script src="{% static 'assets/vendors/js/vendor.bundle.base.js'%}"></script>
+    <script src="{% static 'assets/vendors/js/vendor.bundle.addons.js'%}"></script>
+    <script src="{% static 'assets/js/shared/off-canvas.js'%}"></script>
+    <script src="{% static 'assets/js/shared/hoverable-collapse.js'%}"></script>
+    <script src="{% static 'assets/js/shared/misc.js'%}"></script>
+    <script src="{% static 'assets/js/demo_1/dashboard.js'%}"></script>
+    <script src="{% static 'assets/js/custom/validation.js'%}"></script>
+    <script src="{% static 'assets/js/shared/data-table.js'%}"></script>
+    <script src="{% static 'assets/js/shared/owl-carousel.js'%}"></script>
+    <!-- <script src="{% static 'assets/js/shared/formpickers.js'%}"></script> -->
 
-<!-- inline formset -->
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-<script src="{% static 'assets/js/custom/jquery.formset.js' %}"></script>
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <!-- inline formset -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="{% static 'assets/js/custom/jquery.formset.js' %}"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-<!-- select2dropdown -->
-<link   href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" 
-            rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    <!-- select2dropdown -->
+    <link   href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" 
+                rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 
-<!-- DatePicker -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datepicker/1.0.9/datepicker.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/1.0.9/datepicker.min.js"></script>
-<script src="{% static 'assets/js/custom/datepicker.js'%}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.31/moment-timezone.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.31/moment-timezone-with-data.js"></script>
-<script>
-    $(document).ready(function(){
-        load_notification();
-        mark_as_read();
-        setInterval(load_notification, 5000);
-    });
-    var url = "{% url 'notif_api' 123%}";
-    var url2 = "{% url 'notifmark_api' 123%}";
-    var user = parseInt("{{request.user.id}}")
+    <!-- DatePicker -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datepicker/1.0.9/datepicker.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/1.0.9/datepicker.min.js"></script>
+    <script src="{% static 'assets/js/custom/datepicker.js'%}"></script>
+    <script src="{% static 'assets/js/custom/moment.min.js'%}"></script>
+    <script src="{% static 'assets/js/custom/moment-timezone-with-data.js'%}"></script>
+    <script>
+        $(document).ready(function(){
+            load_notification();
+            mark_as_read();
+            markall_as_read();
+            setInterval(load_notification, 5000);
+        });
+        var url = "{% url 'notif_api' 123%}";
+        var url2 = "{% url 'notifmarkall_api' 123%}";
+        var url3 = "{% url 'notifmark_api' 123%}";
+        var user = parseInt("{{request.user.id}}")
 
-    function load_notification(){
-        var count = 0;
-        $.ajax({
-            method: 'GET',
-            url:url.replace(123,user),
-            success:function(data){
-                var notif = $("#notif-list");
-                notif.html("")
-                $.each(data, function(i){
-                    count++;
-                    let str = data[i].timestamp;
-                    let date = moment.tz(data[i].timestamp, "Asia/Manila");
-                    notif.append(
-                        '<div class="col-12"><a class="dropdown-item preview-item py-3 border-bottom" href="'+data[i].url+'">'+
-                            '<div class="preview-item-content">'+
-                                '<h6 class="preview-subject mb-1">'+data[i].description+'</h6>'+
-                                '<p class="float-right timestamp">'+ date.format('llll') +'</p>'+
-                            '</div>'+
-                        '</a></div>'
-                    );
-                });   
-                $("#notif-count").text(count);
-                if(count == 0){
-                    $('#notif-msg').text("You have "+count+" new notification")
-                }
-                else{
-                    $('#notif-msg').text("You have "+count+" new notifications")
-                }
-            }
-        }); 
-    };
-    function mark_as_read(){
-        $('#mark-read').click(function(){
+        function load_notification(){
+            var count = 0;
             $.ajax({
                 method: 'GET',
-                url:url2.replace(123,user),
+                url:url.replace(123,user),
                 success:function(data){
-                    load_notification();
+                    var notif = $("#notif-list");
+                    notif.html("")
+                    $.each(data, function(i){
+                        count++;
+                        let str = data[i].timestamp;
+                        let date = moment.tz(data[i].timestamp, "Asia/Manila");
+                        notif.append(
+                            '<a class="dropdown-item preview-item border-top notif-mark" id="'+data[i].id+'" href="'+data[i].url+'">'+
+                                '<div class="preview-item-content col-12">'+
+                                    '<h6 class="preview-subject mb-1">'+data[i].description+'</h6>'+
+                                    '<p class="float-right timestamp">'+ date.format('llll') +'</p>'+
+                                '</div>'+
+                            '</a>'
+                        );
+                    });   
+                    $("#notif-count").text(count);
+                    if(count == 0){
+                        $('#notif-msg').text("You have "+count+" new notification")
+                    }
+                    else{
+                        $('#notif-msg').text("You have "+count+" new notifications")
+                    }
+                    mark_as_read();
                 }
+            }); 
+        };
+        function markall_as_read(){
+            $('#mark-read').click(function(){
+                $.ajax({
+                    method: 'GET',
+                    url:url2.replace(123,user),
+                    success:function(data){
+                        load_notification();
+                    }
+                })
+            });
+        };
+        function mark_as_read(){
+            $('a.notif-mark').click(function(e){
+                e.preventDefault();
+                var href = $(this).attr('href');
+                var id =$(this).attr("id");
+                $.ajax({
+                    method: 'GET',
+                    url:url3.replace(123,id),
+                    success:function(data){
+                        load_notification();
+                    }
+                })
+                window.location=href;
             })
-        });
-    };
-</script>
+        };
+    </script>
 {% block javascript %}
 {% endblock %}
   

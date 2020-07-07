@@ -12,14 +12,14 @@
             <span class="mdi mdi-menu"></span>
         </button>
         <ul class="navbar-nav navbar-nav-right" id="usernav">
-            <li class="nav-item dropdown ml-4">
+            <li class="nav-item dropdown ml-4" id="notif-menu">
                 <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
                     <i class="mdi mdi-bell-outline"></i>
                     <span class="count bg-success" id="notif-count"></span>
                 </a>
-                <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0"  aria-labelledby="notificationDropdown">
-                    <div class="mx-auto p-3 border-bottom">
-                        <a id="mark-read" class="float-right "href=# >mark all as read</a>
+                <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0 overflow-auto" aria-labelledby="notificationDropdown">
+                    <div class="mx-auto p-3">
+                        <a id="mark-read" class="float-right " href=# >mark all as read</a>
                         <p id="notif-msg" class="mb-0 font-weight-bold"></p>
                     </div>
                     <div id="notif-list" class="row"></div>
