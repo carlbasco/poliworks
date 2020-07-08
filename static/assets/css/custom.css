@@ -393,10 +393,10 @@ a.mark-read {
 @media (max-width: 991px){
     .nav .nav-item.dropdown .navbar-dropdown, .navbar-nav .nav-item.dropdown .navbar-dropdown {
         right: -150px;
-        width: 370px;
+        width: 320px;
     }
     .mx-auto.p-3 {
-        width: 370px;
+        width: 320px;
     }
 }
 a.dropdown-item.preview-item.border-top {

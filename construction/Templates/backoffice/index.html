@@ -124,9 +124,9 @@
                 })
             });
         };
-        function mark_as_read(){
-            $('a.notif-mark').click(function(e){
-                e.preventDefault();
+        function mark_as_read(event){
+            $('a.notif-mark').click(function(event){
+                event.preventDefault();
                 var href = $(this).attr('href');
                 var id =$(this).attr("id");
                 $.ajax({
@@ -137,7 +137,7 @@
                     }
                 })
                 window.location=href;
-            })
+            });
         };
     </script>
 {% block javascript %}

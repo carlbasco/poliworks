@@ -205,10 +205,10 @@ def ProjectUpdateView(request,pk):
             pm_notif = Notification.objects.create(receiver=project.pm, description=f"Project {project.project} has been updated", url=f"/project/view/{project.id}")
             pm_notif.save()
             if project.pic:
-                pic_notif = Notification.objects.create(receiver=project.pic, description=f"You have been assigned at Project {project.project}", url=f"/project/view/{project.id}")
+                pic_notif = Notification.objects.create(receiver=project.pic, description=f"Project {project.project} has been updated", url=f"/project/view/{project.id}")
                 pic_notif.save()
             if project.whm:
-                whm_notif = Notification.objects.create(receiver=project.whm, description=f"You have been assigned at Project {project.project}", url=f"/project/view/{project.id}")
+                whm_notif = Notification.objects.create(receiver=project.whm, description=f"Project {project.project} has been updated", url=f"/project/view/{project.id}")
                 whm_notif.save()
             messages.success(request, 'Project Details has been updated.')
             return redirect('project_detail', pk=data.id)
@@ -346,9 +346,9 @@ class QuotationCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
             project = Project.objects.get(id=quotation.project.id)
             admin = User.objects.filter(groups__name="Admin")
             for i in admin:
-                admin_notif = Notification.objects.create(receiver=i, description=f"Quotation has been created at {quotation.project}", url=f"/project/quotation/{quotation.id}")
+                admin_notif = Notification.objects.create(receiver=i, description=f"Quotation at {quotation.project} has been created ", url=f"/project/quotation/{quotation.id}")
                 admin_notif.save()
-            client_notif = Notification.objects.create(receiver=project.client, description=f"Quotation has been created at {quotation.project}", url=f"/myproject/view/quotation/{quotation.id}")
+            client_notif = Notification.objects.create(receiver=project.client, description=f"Quotation at {quotation.project} has been created ", url=f"/myproject/view/quotation/{quotation.id}")
             client_notif.save()
             return super(QuotationCreateView, self).form_valid(form)
         
@@ -390,13 +390,13 @@ class QuotationUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
             for i in data3:
                 data2.amount +=i.q_amount()
             data2.save()
-            quotation = quotation.save()
+            quotation = form.save()
             admin = User.objects.filter(groups__name="Admin")
             for i in admin:
-                admin_notif = Notification.objects.create(receiver=i, description=f"Quotation has been updated at {quotation.project}", url=f"/project/quotation/{quotation.id}")
+                admin_notif = Notification.objects.create(receiver=i, description=f"Quotation at {quotation.project} has been updated", url=f"/project/quotation/{quotation.id}")
                 admin_notif.save()
             project = Project.objects.get(id=quotation.project.id)
-            client_notif = Notification.objects.create(receiver=project.client, description=f"Quotation has been updated at {quotation.project}", url=f"/myproject/view/quotation/{quotation.id}")
+            client_notif = Notification.objects.create(receiver=project.client, description=f"Quotation at {quotation.project} has been updated", url=f"/myproject/view/quotation/{quotation.id}")
             client_notif.save()
             return super(QuotationUpdateView, self).form_valid(form)
         
@@ -518,19 +518,17 @@ def ProgressUpdateView(request,pk):
                     data3.save()
             else:
                 data3.status = "On-going"
-                data3.save()
-            project = Project.objects.get(id=data3.id)    
+                data3.save()  
             admin = User.objects.filter(groups__name="Admin")
             for i in admin:
-                adnin_notif = Notification.objects.create(receiver=i, description=f"Progress in project {project.project} has been updated", url=f"/project/view/{project.id}")
+                adnin_notif = Notification.objects.create(receiver=i, description=f"Progress in project {data3.project} has been updated", url=f"/project/view/{data3.id}")
                 adnin_notif.save()
-            client_notif = Notification.objects.create(receiver=project.client, description=f"Progress in project {project.project} has been updated", url=f"/myproject/view/{project.id}")
+            client_notif = Notification.objects.create(receiver=project.client, description=f"Progress in project {data3.project} has been updated", url=f"/myproject/view/{data3.id}")
             client_notif.save()
-            pm_notif = Notification.objects.create(receiver=project.pm, description=f"Progress in project {project.project} has been updated", url=f"/project/view/{project.id}")
+            pm_notif = Notification.objects.create(receiver=project.pm, description=f"Progress in project {data3.project} has been updated", url=f"/project/view/{data3.id}")
             pm_notif.save()
-            if project.pic:
-                pic_notif = Notification.objects.create(receiver=project.pic, description=f"Progress in project {project.project} has been updated", url=f"/project/view/{project.id}")
-                pic_notif.save()
+            pic_notif = Notification.objects.create(receiver=project.pic, description=f"Progress in project {data3.project} has been updated", url=f"/project/view/{data3.id}")
+            pic_notif.save()
             messages.success(request,"Progress has been updated.")
             return redirect('project_detail', pk=data3.id)
     else:
@@ -681,9 +679,14 @@ class RequisitionCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView)
                 data2.save()
             formset.save()
             admin = User.objects.filter(groups__name="Admin")
+            project = Project.objects.get(id=requisition.project.id)
             for i in admin:
                 adnin_notif = Notification.objects.create(receiver=i, description=f"{requisition.whm} has sent a requisition on  Project {requisition.project}", url=f"/materials/requisition/{requisition.id}")
                 adnin_notif.save()
+            pm_notif = Notification.objects.create(receiver=project.pm, description=f"{requisition.whm} has sent a requisition on  Project {requisition.project}", url=f"/materials/requisition/{requisition.id}")
+            pm_notif.save()
+            pic_notif = Notification.objects.create(receiver=project.pic, description=f"{requisition.whm} has sent a requisition on  Project {requisition.project}", url=f"/materials/requisition/{requisition.id}")
+            pic_notif.save()
             return super(RequisitionCreateView, self).form_valid(form)
 
     def get_success_url(self):
@@ -724,10 +727,14 @@ class RequisitionUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView)
                 data2.save()
             formset.save()
             requisition = form.save()
-            admin = User.objects.filter(groups__name="Admin")
+            project = Project.objects.get(id=requisition.project.id)
             for i in admin:
-                adnin_notif = Notification.objects.create(receiver=i, description=f"Requisition on  Project {requisition.project} has been updated", url=f"/materials/requisition/{requisition.id}")
+                adnin_notif = Notification.objects.create(receiver=i, description=f"{requisition.whm} has updated the requisition on  Project {requisition.project}", url=f"/materials/requisition/{requisition.id}")
                 adnin_notif.save()
+            pm_notif = Notification.objects.create(receiver=project.pm, description=f"{requisition.whm} has updated the requisition on  Project {requisition.project}", url=f"/materials/requisition/{requisition.id}")
+            pm_notif.save()
+            pic_notif = Notification.objects.create(receiver=project.pic, description=f"{requisition.whm} has updated the requisition on  Project {requisition.project}", url=f"/materials/requisition/{requisition.id}")
+            pic_notif.save()
             return super().form_valid(form)
 
     def get_success_url(self):
@@ -865,7 +872,7 @@ def RequisitionActionView(request,pk):
                 else:
                     data.status = "To be Delivered"
                     data.save()
-                whm_notif = Notification.objects.create(receiver=data.whm, description=f"Admin has complied to your requisition", url=f"/materials/requisition/{data.id}")
+                whm_notif = Notification.objects.create(receiver=data.whm, description=f"The Admin has complied to your requisition", url=f"/materials/requisition/{data.id}")
                 whm_notif.save()
                 messages.success(request, "Requisition has been complied.")
                 return redirect('requisition_detail',pk=data.id)
@@ -1121,8 +1128,13 @@ def ProjectInventoryReport_WHM(request,pk):
                 project = Project.objects.get(id=data.project.id)
                 admin = User.objects.filter(groups__name="Admin")
                 for i in admin:
-                    adnin_notif = Notification.objects.create(receiver=i, description=f"Daily Material Report has been created at project {project.project}", url=f"/materials/inventory/{data.id}")
+                    adnin_notif = Notification.objects.create(receiver=i, description=f"Daily Material Report at project {project.project} has been created ", url=f"/materials/inventory/{data.id}")
                     adnin_notif.save()
+                project = Project.objects.get(id=data.project.id)
+                pm_notif = Notification.objects.create(receiver=project.pm, description=f"Daily Material Report at project {project.project} has been created ", url=f"/materials/inventory/{data.id}")
+                pm_notif.save()
+                pic_notif = Notification.objects.create(receiver=project.pic, description=f"Daily Material Report at project {project.project} has been created ", url=f"/materials/inventory/{data.id}")
+                pic_notif.save()
                 messages.success(request, "Daily Material Report has been created.")
                 return redirect('inventory_whm_detail', pk=data.id)
             else:
@@ -1252,10 +1264,15 @@ class ExternalOrderCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateVie
                         data3 = ExternalProjectInventoryDetails.objects.create(inventory=data2, articles=i.articles, unit=i.unit, quantity=i.quantity)
                         data3.save()
             
+            project = Project.objects.get(id=externalorder.project.id)
             admin = User.objects.filter(groups__name="Admin")
             for i in admin:
                 adnin_notif = Notification.objects.create(receiver=i, description=f"External Order has been created at project {externalorder.project}", url=f"/materials/externalorder/{externalorder.id}")
                 adnin_notif.save()
+            pm_notif = Notification.objects.create(receiver=project.pm, description=f"External Order has been created at project {externalorder.project}", url=f"/materials/externalorder/{externalorder.id}")
+            pm_notif.save()
+            pic_notif = Notification.objects.create(receiver=project.pic, description=f"External Order has been created at project {externalorder.project}", url=f"/materials/externalorder/{externalorder.id}")
+            pic_notif.save()
             return super(ExternalOrderCreateView, self).form_valid(form)
 
     def get_success_url(self):
@@ -1426,6 +1443,8 @@ class JobOrderCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
             for i in admin:
                 adnin_notif = Notification.objects.create(receiver=i, description=f"Job Order at project {project.project} has been created", url=f"/task/joborder/{data2.id}")
                 adnin_notif.save()
+            pm_notif = Notification.objects.create(receiver=project.pm, description=f"Job Order at project {project.project} has been created", url=f"/task/joborder/{data2.id}")
+            pm_notif.save()
             whm_notif = Notification.objects.create(receiver=project.whm, description=f"Job Order at project {project.project} has been created", url=f"/task/joborder/{data2.id}")
             whm_notif.save()
             return super(JobOrderCreateView, self).form_valid(form)
@@ -1608,6 +1627,11 @@ def PersonnelCreateView(request):
         form = PersonnelForm(request.POST)
         if form.is_valid():
             form.save()
+            personnel = form.save
+            admin = User.objects.filter(groups__name="Admin")
+            for i in admin:
+                adnin_notif = Notification.objects.create(receiver=i, description=f"New Personnel has been added", url=f"/personnel//{personnel.id}")
+                adnin_notif.save()
             messages.success(request, "New personnel has been added to the list", extra_tags='success')
             return redirect('personnel_create')
     else:
@@ -1652,6 +1676,11 @@ def PersonnelUpdateView(request, pk):
         form = PersonnelForm(request.POST, instance=data)
         if form.is_valid():
             form.save()
+            personnel = form.save
+            admin = User.objects.filter(groups__name="Admin")
+            for i in admin:
+                adnin_notif = Notification.objects.create(receiver=i, description=f"{personnel.short_name}'s information has been updated'", url=f"/personnel/{personnel.id}")
+                adnin_notif.save()
             messages.success(request, "Personnel Information has been updated.")
             return redirect('personnel_detail', pk=data.id)
     else:
@@ -2279,8 +2308,7 @@ def Notification_api(request, pk):
 def NotificationMarkAll_api(request, pk):
     notification = Notification.objects.filter(receiver_id=pk, is_read=False).order_by('-timestamp')
     for i in notification:
-        i.is_read = True
-        i.save()
+        i.delete()
     serializer = NotificationSerializers(notification, many=True)
     return Response(serializer.data)
 
@@ -2288,8 +2316,7 @@ def NotificationMarkAll_api(request, pk):
 @api_view(['GET'])
 def NotificationMark_api(request, pk):
     notification = Notification.objects.get(id=pk)
-    notification.is_read = True
-    notification.save()
+    notification.delete()
     serializer = NotificationSerializers(notification, many=False)
     return Response(serializer.data)
 

@@ -172,7 +172,7 @@ class Estimate(models.Model):
 
 class EstimateImage(models.Model):
     estimate = models.ForeignKey(Estimate, on_delete=models.CASCADE)
-    image = models.FileField(verbose_name='Image/Design/Reference', upload_to=estimate_upload_path)
+    image = models.FileField(verbose_name='Image/Design/Reference', upload_to=estimate_upload_path, null=True, blank=True)
 
 class Project(models.Model):
     project = models.CharField(('Project Name'),max_length=255, null=True)

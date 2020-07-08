@@ -2,14 +2,14 @@
 {% load static %}
 {% block content %}
 <header class="header">
-    <nav class="navbar navbar-expand-lg fixed-top">
-        <a class="navbar-brand" href="{% url 'home'%}">
-            <img src="{% static 'images-poli/logo-poliworks.png' %}" width="70" height="35" class="d-inline-block align-top" alt="">
-            Poliworks
-        </a>
+    <nav class="navbar navbar-expand-lg fixed-top"><a href="index.html" class="navbar-brand"></a>
+		<a class="navbar-brand" href="{%url 'home'%}">
+			<img src="{% static 'images-poli/logo-poliworks.png' %}" width="70" height="35" class="d-inline-block align-top" alt="">
+			Poliworks
+		</a>
         <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler navbar-toggler-right"><span></span><span></span><span></span></button>
         <div id="navbarSupportedContent" class="collapse navbar-collapse">
-            <ul class="navbar-nav ml-auto align-items-start align-items-lg-center">
+            <ul class="navbar-nav ml-auto ">
                 <li class="nav-item"><a href="{% url 'home'%}" class="nav-link link-scroll">Home </a></li>
                 <li class="nav-item"><a href="{% url 'signin'%}" class="nav-link link-scroll">Sign In</a></li>
             </ul>
@@ -20,10 +20,12 @@
     <div class="container">
     <div class="row block">
         <div class="col-lg-9">
-        <ul class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{% url 'home'%}">Home</a></li>
-            <li class="breadcrumb-item">About Us</li>
-        </ul>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home'%}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">About Us</li>
+            </ol>
+        </nav>
         <h1>Poliworks</h1>
         <p class="lead">Poliworks Inc. is a private corporation, PCAB licensed contractor, established in October 2012.
             The company began serving its customers through simple maintenance and minor facilities repair; 
@@ -32,7 +34,7 @@
             Being able to cater several industries; from commercial units, warehouses, medical laboratories and clinics, residential condo units and houses.</p>
         </div>
     </div>
-    <div class="row d-flex align-items-center block">
+    <div class="row d-flex align-items-center block" data-aos="fade-down-left">
         <div class="col-lg-6 image"><img src="{% static 'images-poli/handshake.png' %}"alt="..." class="img-fluid"></div>
         <div class="col-lg-6 text">
         <h2>Putting Value on What's Important</h2>
@@ -43,7 +45,7 @@
         constraints.</p>
         </div>
     </div>
-    <div class="row d-flex align-items-center block">
+    <div class="row d-flex align-items-center block" data-aos="fade-down-right"> 
         <div class="col-lg-6 text text-right order-2 order-lg-1">
         <p>Whether it is your dream house, corporate office expansion, facilities improvements,
             building restoration, or an entirely new structure, our team will be there to lend a hand in designing it, offering multiple solutions for your different needs. From the inception to commissioning, to actual fully operational facility, we will endeavor in not only meeting your requirements but exceed expectations.

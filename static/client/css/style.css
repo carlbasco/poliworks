@@ -31,6 +31,11 @@ a.nav-link{
     a.dropdown-item {
         white-space: pre-wrap;
     }
+    #notification {
+        width: 325px;
+        height: 100px!important;
+        overflow-y: scroll;
+    }
 }
 li.projectdetails{
     padding-bottom:20px;

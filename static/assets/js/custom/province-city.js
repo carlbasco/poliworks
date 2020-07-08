@@ -1,5 +1,4 @@
 $('#id_province').select2();
-// $('#id_city').hide();
 $('#div_id_city').hide();
 
 $('#id_province').change(function(){
