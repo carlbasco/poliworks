@@ -728,6 +728,7 @@ class RequisitionUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView)
             formset.save()
             requisition = form.save()
             project = Project.objects.get(id=requisition.project.id)
+            admin = User.objects.filter(groups__name="Admin")
             for i in admin:
                 adnin_notif = Notification.objects.create(receiver=i, description=f"{requisition.whm} has updated the requisition on  Project {requisition.project}", url=f"/materials/requisition/{requisition.id}")
                 adnin_notif.save()
@@ -1627,7 +1628,7 @@ def PersonnelCreateView(request):
         form = PersonnelForm(request.POST)
         if form.is_valid():
             form.save()
-            personnel = form.save
+            personnel = form.save()
             admin = User.objects.filter(groups__name="Admin")
             for i in admin:
                 adnin_notif = Notification.objects.create(receiver=i, description=f"New Personnel has been added", url=f"/personnel//{personnel.id}")
@@ -1676,10 +1677,10 @@ def PersonnelUpdateView(request, pk):
         form = PersonnelForm(request.POST, instance=data)
         if form.is_valid():
             form.save()
-            personnel = form.save
+            personnel = form.save()
             admin = User.objects.filter(groups__name="Admin")
             for i in admin:
-                adnin_notif = Notification.objects.create(receiver=i, description=f"{personnel.short_name}'s information has been updated'", url=f"/personnel/{personnel.id}")
+                adnin_notif = Notification.objects.create(receiver=i, description=f"{personnel.short_name()} 's information has been updated'", url=f"/personnel/{personnel.id}")
                 adnin_notif.save()
             messages.success(request, "Personnel Information has been updated.")
             return redirect('personnel_detail', pk=data.id)

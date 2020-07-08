@@ -367,7 +367,7 @@ class Inventory(models.Model):
         return self.description 
 
 class Requisition(models.Model):
-    requisition_no= models.IntegerField(unique=True, null=True, verbose_name="requisition number")
+    requisition_no= models.IntegerField(null=True, verbose_name="requisition number")
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='requisition_project',verbose_name='Project')
     date = models.DateTimeField(default=datetime.datetime.now, verbose_name='Date', null=True)
     whm = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='requisition_whm', verbose_name='Prepared by', 
@@ -409,7 +409,7 @@ class RequisitionImage(models.Model):
 class ExternalOrder(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='externalorder_project', verbose_name='Project')
     supplier = models.CharField(max_length=255)
-    date = models.DateField(default=datetime.datetime.now, verbose_name='Date')
+    date = models.DateTimeField(default=datetime.datetime.now, verbose_name='Date', null=True)
     whm = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='externalorder_whm', verbose_name='Prepared By', 
         limit_choices_to={'groups__name': "Warehouseman"}, help_text="Warehouseman")
     amount = models.FloatField(verbose_name='Amount', default=0)
