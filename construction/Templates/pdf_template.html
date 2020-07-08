@@ -210,6 +210,35 @@
         <br>
         <table>
             <tr>
+                <td colspan="3" class="text-center green"><h3> Project Inventory (On-site)</h3></td>
+            </tr>
+            <tr>
+                <td colspan="3" ><h4>Last Update: {{projectinventory.last_update}} </h4></td>
+            </tr>
+            <tr>
+                <td class="text-center font-weight-bold" style="width: 200px;">QUANTITY</td>
+                <td class="text-center font-weight-bold">ARTICLES</td>
+                <td class="text-center font-weight-bold" style="width: 200px;">UNIT</td>
+            </tr>
+                {% if projectinventorydetails %}
+                    {% for i in projectinventorydetails %}
+                    <tr>
+                        <td class="text-center">{{i.quantity}}</td>
+                        <td class="text-center">{{i.articles}}</td>
+                        <td class="text-center">{{i.articles.unit}}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center">NO RECORDS AVAILABLE</td>
+                </tr>
+                {% endif %}
+        </table>
+        <br>
+
+        <br>
+        <table>
+            <tr>
                 <td colspan="5" class="text-center green"><h3>Material Report</h3></td>
             </tr>
             <tr>
@@ -258,7 +287,7 @@
                     {% for i in externalorder_details %}
                     <tr>
                         <td class="text-center">{{i.externalorder.supplier}}</td>
-                        <td class="text-center">{{i.date|date:"n/j/Y"}}</td>
+                        <td class="text-center">{{i.externalorder.date|date:"n/j/Y"}}</td>
                         <td class="text-center">{{i.quantity}}</td>
                         <td class="text-center">{{i.articles}}</td>
                         {% if i.unit != None %}
@@ -272,6 +301,35 @@
                 {% else %}
                 <tr>
                     <td colspan="6" class="text-center">NO RECORDS AVAILABLE</td>
+                </tr>
+                {% endif %}
+        </table>
+        <br>
+
+        <br>
+        <table>
+            <tr>
+                <td colspan="3" class="text-center green"><h3> External Project Inventory (On-site)</h3></td>
+            </tr>
+            <tr>
+                <td colspan="3" ><h4>Last Update: {{externalprojectinventory.last_update}} </h4></td>
+            </tr>
+            <tr>
+                <td class="text-center font-weight-bold" style="width: 200px;">QUANTITY</td>
+                <td class="text-center font-weight-bold">ARTICLES</td>
+                <td class="text-center font-weight-bold" style="width: 200px;">UNIT</td>
+            </tr>
+                {% if externalprojectinventorydetails %}
+                    {% for i in externalprojectinventorydetails %}
+                    <tr>
+                        <td class="text-center">{{i.quantity}}</td>
+                        <td class="text-center">{{i.articles}}</td>
+                        <td class="text-center">{{i.unit}}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center">NO RECORDS AVAILABLE</td>
                 </tr>
                 {% endif %}
         </table>
@@ -309,5 +367,6 @@
                 </tr>
                 {% endif %}
         </table>
+        <br>
     </body>
     </html>

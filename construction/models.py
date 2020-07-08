@@ -424,6 +424,7 @@ class ExternalOrderDetails(models.Model):
     quantity = models.IntegerField((), default=1,)
     unit = models.CharField(('Unit'),max_length=255)
     articles = models.CharField(('Article'),max_length=255)
+    remarks = models.CharField(('Remarks'), max_length=255, null=True, blank=True)
     unitprice = models.FloatField(('Unit Price'))
     class Meta:
         verbose_name_plural='External Order Details'

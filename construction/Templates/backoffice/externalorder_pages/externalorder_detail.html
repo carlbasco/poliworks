@@ -66,6 +66,7 @@
                                     <th class="text-center">Unit</th>
                                     <th class="text-center">Quantity</th>
                                     <th class="text-center">Unit Price</th>
+                                    <th class="text-center">Remarks</th>
                                     <th class="text-center">Total Price</th>
                                 </tr>
                             </thead>
@@ -76,11 +77,12 @@
                                     <td class="text-center">{{i.unit}}</td>
                                     <td class="text-center">{{i.quantity}}</td>
                                     <td class="text-center">{{i.unitprice|intcomma}}</td>
+                                    <td class="text-center">{{i.remarks}}</td>
                                     <td class="text-right">{{i.get_total|intcomma}}</td>
                                 </tr>
                                 {% endfor %}
                                 <tr>
-                                    <td colspan="3"></td>
+                                    <td colspan="4"></td>
                                     <td class="text-center"><strong>Total Amount: </strong></td>
                                     <td class="text-right">{{data.amount|intcomma}}</td>
                                 </tr>

@@ -523,11 +523,11 @@ def ProgressUpdateView(request,pk):
             for i in admin:
                 adnin_notif = Notification.objects.create(receiver=i, description=f"Progress in project {data3.project} has been updated", url=f"/project/view/{data3.id}")
                 adnin_notif.save()
-            client_notif = Notification.objects.create(receiver=project.client, description=f"Progress in project {data3.project} has been updated", url=f"/myproject/view/{data3.id}")
+            client_notif = Notification.objects.create(receiver=data3.client, description=f"Progress in project {data3.project} has been updated", url=f"/myproject/view/{data3.id}")
             client_notif.save()
-            pm_notif = Notification.objects.create(receiver=project.pm, description=f"Progress in project {data3.project} has been updated", url=f"/project/view/{data3.id}")
+            pm_notif = Notification.objects.create(receiver=data3.pm, description=f"Progress in project {data3.project} has been updated", url=f"/project/view/{data3.id}")
             pm_notif.save()
-            pic_notif = Notification.objects.create(receiver=project.pic, description=f"Progress in project {data3.project} has been updated", url=f"/project/view/{data3.id}")
+            pic_notif = Notification.objects.create(receiver=data3.pic, description=f"Progress in project {data3.project} has been updated", url=f"/project/view/{data3.id}")
             pic_notif.save()
             messages.success(request,"Progress has been updated.")
             return redirect('project_detail', pk=data3.id)
@@ -2435,6 +2435,10 @@ class ProjectReportPDF(TemplateView, LoginRequiredMixin):
             materialreportdetails = ProjectDailyReportDetails.objects.filter(report__in=materialreport)
             externalmaterialreport = ExternalOrderReport.objects.filter(project_id=project.id, date__range=[datefrom, dateto])
             externalmaterialreportdetails = ExternalOrderDetailsReport.objects.filter(report__in=externalmaterialreport)
+            projectinventory = ProjectInventory.objects.get(project_id=project.id)
+            projectinventorydetails = ProjectInventoryDetails.objects.filter(inventory_id=projectinventory.id)
+            externalprojectinventory = ExternalProjectInventory.objects.get(project_id=project.id)
+            externalprojectinventorydetails = ExternalProjectInventoryDetails.objects.filter(inventory_id=externalprojectinventory.id)
             data={
                 'project':project, 'datefrom':datefrom, 'dateto':dateto,
                 'requisition':requisition, 'requisitiondetails':requisitiondetails, 
@@ -2444,6 +2448,8 @@ class ProjectReportPDF(TemplateView, LoginRequiredMixin):
                 'sitephotos':sitephotos, 'sitephotosdetails':sitephotosdetails,
                 'materialreport':materialreport,'externalmaterialreport':externalmaterialreport,
                 'materialreportdetails':materialreportdetails, 'externalmaterialreportdetails':externalmaterialreportdetails,
+                'projectinventorydetails':projectinventorydetails, 'externalprojectinventorydetails': externalprojectinventorydetails,
+                'projectinventory': projectinventory, 'externalprojectinventory':externalprojectinventory,
             }
             pdf = render_to_pdf('pdf_template.html', data)
             return HttpResponse(pdf, content_type='application/pdf')

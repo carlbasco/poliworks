@@ -413,7 +413,7 @@
                             <table class="table table-borderless">
                                 <thead>
                                     <tr>
-                                        <th>Full Name</th>
+                                        <th>Name</th>
                                         <th class="text-center">Type of Personnel</th>
                                         <th class="text-center">From</th>
                                         <th class="text-center">To</th>
@@ -424,7 +424,7 @@
                                     {% if personnel %}
                                         {% for i in personnel%}
                                             <tr>
-                                                <td>{{i.full_name}}</td>
+                                                <td>{{i.short_name}}</td>
                                                 <td>{{i.personnel_type}}</td>
                                                 <td>{{i.date}}</td>
                                                 <td>{{i.date2}}</td>

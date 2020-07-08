@@ -354,6 +354,7 @@ ExternalOrderFormSet = inlineformset_factory(ExternalOrder, ExternalOrderDetails
         'quantity':forms.NumberInput(attrs={'class':'form-control','required': 'true'}),
         'unit':forms.TextInput(attrs={'class':'form-control'}),
         'articles':forms.TextInput(attrs={'class':'form-control','required': 'true'}),
+        'remarks':forms.TextInput(attrs={'class':'form-control'}),
         'unitprice':forms.NumberInput(attrs={'class':'form-control','required': 'true'})
     }    
 )
