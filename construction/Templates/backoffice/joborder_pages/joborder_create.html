@@ -172,7 +172,7 @@
                                             <tbody>
                                                 {% for i in view.data2%}
                                                     <tr role="row" class="odd">
-                                                        <td>{{i.full_name}}</td>
+                                                        <td>{{i.short_name}}</td>
                                                         <td>{{i.personnel_type}}</td>
                                                         <td>"{{i.skill.all|join:'", "'}}"</td>
                                                         {% if i.status == "Currently Assigned" %}

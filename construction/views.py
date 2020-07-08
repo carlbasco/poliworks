@@ -1852,7 +1852,7 @@ class ProjectIssuesUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateVie
     model = ProjectIssues
     fields =('description',)
     template_name ='backoffice/report_pages/projectissues_update.html'
-    success_message = "Project Issues has been ."
+    success_message = "Project Issues has been updated."
     
     @method_decorator(whm_only, name='dispatch')
     def dispatch(self, *args, **kwargs):
