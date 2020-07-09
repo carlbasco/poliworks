@@ -14,29 +14,7 @@ a.nav-link{
     font-size: 1.1rem;
     color: black;
 }
-@media (min-width: 992px){
-    #navbar{
-        padding-left: 3rem;
-        padding-right: 3rem;
-    }
-}
-@media(max-width:992px){
-    a.navbar-brand{
-        margin:auto;
-    }
-    .border-bottom.notif-content {
-        width: 320px;
-        height: 65px;
-    }
-    a.dropdown-item {
-        white-space: pre-wrap;
-    }
-    #notification {
-        width: 325px;
-        height: 100px!important;
-        overflow-y: scroll;
-    }
-}
+
 li.projectdetails{
     padding-bottom:20px;
 }
@@ -200,15 +178,12 @@ h6.preview-subject.mb-1 {
     font-weight: 600;
 } 
 .notif-header {
-    width: 375px;
-    padding: 0 20px 0;
+    padding-right: 20px;
+    padding-left: 20px;
+    padding-bottom: 9px;
 }
 .dropdown-menu.show {
     margin: 0 0 0 0;
-    padding-bottom: 0;
-}
-.notif-header{
-    padding-bottom: 9px;
 }
 .border-top.notif-content {
     height: 70px;
@@ -223,4 +198,49 @@ div#notification {
     height: 450px;
     overflow-y: scroll;
     border: 2px solid darkgray;
+}
+
+i.mdi.mdi-bell-outline {
+    margin-left: 15px;
+    font-size: xx-large;
+}
+
+span#notif-count {
+    position: relative;
+    top: -20px;
+    left: -25px;
+}
+
+@media (min-width: 992px){
+    #navbar{
+        padding-left: 3rem;
+        padding-right: 3rem;
+    }
+    #notificationDropdown {
+        height: 0;
+    }
+}
+@media(max-width:992px){
+    a.navbar-brand{
+        margin:auto;
+    }
+    .border-bottom.notif-content {
+        width: 320px;
+        height: 65px;
+    }
+    a.dropdown-item {
+        white-space: pre-wrap;
+    }
+    #notification {
+        width: 100%!important;
+        height: 150px!important;
+    }
+    .notif-header {
+        width: 100%;
+        padding-left: 15px;
+        padding-right: 20px;
+    }
+    .dropdown-menu{
+        display: none;
+    }
 }
