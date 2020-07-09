@@ -72,7 +72,7 @@
     <script>
         $(document).ready(function(){
             load_notification();
-            // mark_as_read();
+            mark_as_read();
             markall_as_read();
             setInterval(load_notification, 5000);
         });
@@ -109,19 +109,7 @@
                     else{
                         $('#notif-msg').text("You have "+count+" new notifications")
                     }
-                    $('a.notif-mark').click(function(event){
-                        event.preventDefault();
-                        var href = $(this).attr('href');
-                        var id =$(this).attr("id");
-                        $.ajax({
-                            method: 'GET',
-                            url:url3.replace(123,id),
-                            success:function(data){
-                                load_notification();
-                            }
-                        })
-                        window.location=href;
-                    });
+                    mark_as_read();
                 }
             }); 
         };
@@ -136,9 +124,22 @@
                 })
             });
         };
-        // function mark_as_read(){
-            
-        // };
+        function mark_as_read(){
+            $('a.notif-mark').click(function( event ){
+                event.preventDefault();
+                var href = $(this).attr('href');
+                var id =$(this).attr("id");
+                var bool = false;
+                $.ajax({
+                    method: 'GET',
+                    url:url3.replace(123,id),
+                    success:function(data){
+                        load_notification();
+                        window.location=href;
+                    }
+                });
+            })
+        };
     </script>
 {% block javascript %}
 {% endblock %}

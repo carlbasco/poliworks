@@ -112,10 +112,10 @@
                 url:url3.replace(123,id),
                 success:function(data){
                     load_notification();
+                    window.location=href;
                 }
-            })
-            window.location=href;
-        })
+            });
+        });
     };
     </script>
     {% block javascript %}
