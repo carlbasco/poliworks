@@ -142,6 +142,28 @@
                     </div>
                 </div>
                 <div class="card">
+                    <div class="card-header" id="headingTwo">
+                        <h2 class="mb-0">
+                            <a class="btn btn-link btn-cardheader" type="button" data-toggle="collapse" data-target="#blueprint" aria-expanded="false" aria-controls="collapseTwo">
+                                    BLUEPRINT/ DESIGN
+                            </a>
+                        </h2>
+                    </div>
+                    <div id="blueprint" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="mx-auto">
+                                    {% if data.design %}
+                                        <img src="{{data.design.url}}" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="">
+                                    {% else %}
+                                        <p>No Data Available</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
                     <div class="card-header" id="headingThree">
                         <h2 class="mb-0">
                             <a class="btn btn-link collapsed  btn-cardheader" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
