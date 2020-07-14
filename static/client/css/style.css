@@ -195,6 +195,7 @@ a.dropdown-item.notif-item {
     height: 70px;
 }
 div#notification {
+    width: 400px;
     height: 450px;
     overflow-y: scroll;
     border: 2px solid darkgray;

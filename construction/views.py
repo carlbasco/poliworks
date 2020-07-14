@@ -1738,7 +1738,7 @@ class ReworkUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     template_name ='backoffice/rework_pages/rework_update.html'
     success_message = "Rework Form has been updated."
     
-    @method_decorator(pm_only, name='dispatch')
+    @method_decorator(staff_only, name='dispatch')
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
 

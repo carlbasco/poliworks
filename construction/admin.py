@@ -9,7 +9,7 @@ from .models import*
 
 admin.site.site_header='Poliworks Inc'
 admin.site.site_title='Poliworks Superuser'
-# admin.site.unregister(Group)
+admin.site.unregister(Group)
 admin.site.site_url ='/sign-in'
 
 class Profile(admin.TabularInline):

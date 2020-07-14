@@ -19,56 +19,62 @@
                             <img src="{% static 'images-poli/logo-2.png' %}" class="d-inline-block align-top" alt="" id="logo-login"> 
                         </a>
                         <br>
-                        <h3>Sign In</h3>
-                        <p class="mb-2">Enter your details below.</p>
-                        <form action="" method="post">
-                            {% csrf_token %}
-                            <div class="form-group">
-                                {% for message in messages %}
-                                    <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
-                                        {% if message.extra_tags == "success" %}
-                                            <strong>Success! </strong>
-                                        {% else %}
-                                            <strong>Error! </strong>
-                                        {% endif %}
-                                        {{message}}
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">
-                                        <i class="mdi mdi-account-outline"></i>
-                                    </span>
-                                    </div>
-                                    <input type="text" name="username" class="form-control" placeholder="Email"> 
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="mdi mdi-lock-outline"></i></span>
-                                    </div>
-                                    <input type="password" name="password" class="form-control" placeholder="Password"> 
-                                </div>
-                                <a id="forgot" class="float-right" href="{% url 'password_reset'%}"> Forgot password?</a>
-                            </div>
+                        {% if cooloff_time %}
+                            <h6>Your ip address or account has been temporary lock due to failed attempts to login</h6>
+                            <h6>Please try again after 30 mins. If after 30mins your account is still lock, please contact the administrator</h6>
                             <br>
-                            <div class="form-group">
-                                <button type=submit class="btn btn-primary submit-btn float-right">SIGN IN</button>
-                            </div>
-                        </form>
+                        {% else %}
+                            <h3>Sign In</h3>
+                            <p class="mb-2">Enter your details below.</p>
+                            <form action="" method="post">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    {% for message in messages %}
+                                        <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+                                            {% if message.extra_tags == "success" %}
+                                                <strong>Success! </strong>
+                                            {% else %}
+                                                <strong>Error! </strong>
+                                            {% endif %}
+                                            {{message}}
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                            <i class="mdi mdi-account-outline"></i>
+                                        </span>
+                                        </div>
+                                        <input type="text" name="username" class="form-control" placeholder="Email"> 
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="mdi mdi-lock-outline"></i></span>
+                                        </div>
+                                        <input type="password" name="password" class="form-control" placeholder="Password"> 
+                                    </div>
+                                    {{failure_limit}}
+                                    <a id="forgot" class="float-right" href="{% url 'password_reset'%}"> Forgot password?</a>
+                                </div>
+                                <br>
+                                <div class="form-group">
+                                    <button type=submit class="btn btn-primary submit-btn float-right">SIGN IN</button>
+                                </div>
+                            </form>
+                        {% endif %}
                         <div class="wrapper mt-5 text-gray">
                             <p class="footer-text">Copyright © 2020 Poliworks Inc. All rights reserved.</p>
                             <ul class="auth-footer text-gray">
                                 <li><a href="{% url 'home'%}">Home</a></li>
                                 <li><a href="#">Terms & Conditions</a></li>
                                 <li><a href="#">Cookie Policy</a></li>
-
                             </ul>
                         </div>
                     </div>

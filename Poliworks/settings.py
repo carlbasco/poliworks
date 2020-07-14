@@ -42,7 +42,22 @@ INSTALLED_APPS = [
     'crispy_forms',
     'import_export',
     'django_cleanup',
+    'dbbackup',
+    'axes',
 ]
+
+AUTHENTICATION_BACKENDS = [
+    'axes.backends.AxesBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+from datetime import timedelta
+
+AXES_COOLOFF_TIME = timedelta(minutes=30)
+AXES_FAILURE_LIMIT = 5
+AXES_LOCKOUT_TEMPLATE = 'frontend/signin.html'
+AXES_RESET_ON_SUCCESS = True
+AXES_LOCK_OUT_BY_COMBINATION_USER_AND_IP = True
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
@@ -54,6 +69,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'axes.middleware.AxesMiddleware',
 ]
 
 ROOT_URLCONF = 'Poliworks.urls'
@@ -149,6 +165,11 @@ STATICFILES_DIRS = [
 ]
 MEDIA_ROOT=os.path.join(BASE_DIR, 'static/images')
 
+
+DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DBBACKUP_STORAGE_OPTIONS = {'location': 'backup'}
+
+
 AUTH_USER_MODEL = 'construction.User'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -168,4 +189,3 @@ MESSAGE_TAGS = {
     messages.WARNING: 'warning',
     messages.ERROR: 'danger',
 }
-

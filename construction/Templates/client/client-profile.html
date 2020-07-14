@@ -43,7 +43,12 @@
                         <div class="form-row">
                             <div class="form-group col-md-12">
                                 <label for="feFirstName">Name</label>
+                                {% if request.user.suffix and request.user.middle_name%}
                                 <input type="text" class="form-control" value="{{request.user.full_name}}" readonly>
+                                {% else %}
+                                <input type="text" class="form-control" 
+                                value="{{request.user.first_name}} {% if request.user.middle_name %}{{request.user.middle_name}} {% endif %}{{request.user.last_name}}" readonly>
+                                {% endif %}
                             </div>
                             
                         </div>
