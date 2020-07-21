@@ -60,6 +60,7 @@
                                 <tr>
                                     <td colspan="5"></td>
                                 </tr>
+                                {% if data.is_vat %}
                                 <tr class="table-success font-weight-bold">
                                     <td class="text-center" colspan="4"><span class="txt" >GRAND TOTAL (VAT EXCLUSIVE)</span></td>
                                     <td class="money text-right"><span class="txt">{{data.amount|intcomma}}</span></td>
@@ -73,6 +74,21 @@
                                     <td class="text-center" colspan="4"><span class="txt" >GRAND TOTAL (VAT INCLUSIVE)</span></td>
                                     <td class="money text-right "><span class="txt">{{data.get_grandtotal|intcomma}}</span></td>
                                 </tr>
+                                {% else %}
+                                <tr class="table-success font-weight-bold">
+                                    <td class="text-center" colspan="4"><span class="txt" >GRAND TOTAL (VAT EXCLUSIVE)</span></td>
+                                    <td class="money text-right"><span class="txt">{{data.amount|intcomma}}</span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3"></td>
+                                    <td class="text-center"><span class="txt" >12% VAT</span></td>
+                                    <td class="money text-right"><span class="txt">0</span></td>
+                                </tr>
+                                <tr class="table-primary font-weight-bold">
+                                    <td class="text-center" colspan="4"><span class="txt" >GRAND TOTAL</span></td>
+                                    <td class="money text-right "><span class="txt">{{data.amount|intcomma}}</span></td>
+                                </tr>
+                                {% endif %}
                             </tbody>
                         </table>
                     </div>

@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'django.conf',
-    'construction',
+    'construction.apps.ProjectConfig',
     'rest_framework',
     'crispy_forms',
     'import_export',

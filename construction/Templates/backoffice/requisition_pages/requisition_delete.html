@@ -24,6 +24,21 @@
         </li>
     </ol>
 </nav>
+<div class="col-md-12 mx-auto">
+    {% for message in messages %}
+        <div class="alert alert-{{message.level_tag}} alert-dismissible fade show" role="alert">
+            {% if message.level_tag  == "success" %}
+                <strong>Success! </strong>
+            {% else %}
+                <strong>Error! </strong>
+            {% endif %}
+            {{message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endfor %}
+</div>
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-11 mx-auto">
@@ -37,13 +52,16 @@
                             <h6 class="sub">Project: <span class="txt">{{data.project}}</span></h6>
                         </div>
                         <div class="col-md-4 ">
-                            <h6 class="sub">Date Created: <span class="txt">{{data.date}}</span></h6>
+                            <h6 class="sub">Date Created: <span class="txt">{{data.date|date:"F d, Y"}}</span></h6>
                         </div>
                         <div class="col-md-8">
                             <h6 class="sub">Prepared by: <span class="txt">{{data.whm}}</span></h6>
                         </div>
                         <div class="col-md-4">
                             <h6 class="sub">Status: <span class="txt">{{data.status}}</span></h6>
+                        </div>
+                        <div class="col-md-12">
+                            <p>Requisition no. {{data.requisition_no}}</p>
                         </div>
                     </div>
                     <div class="accordion basic-accordion" id="accordion" role="tablist">
@@ -97,7 +115,7 @@
                                                         <th class="text-center" style="width: 150px!important;">Status</th>
                                                         <th class="text-center">Remarks</th>
                                                         <th style="width: 150px">Delivered Quantity</th>
-                                                        <th style="width: 150px">Recieved Quantity</th>
+                                                        <th style="width: 150px">Received Quantity</th>
                                                     </tr>
                                                 </thead>
                                                     <tbody>
@@ -130,7 +148,7 @@
                                                                 {% if i.quantity %}
                                                                     <td class="text-center">{{i.quantity}}</td>
                                                                 {% else %}
-                                                                    <td class="text-center">N/a</td>
+                                                                    <td class="text-center">N/A</td>
                                                                 {% endif %}
                                                                 {% if i.quantity2 %}
                                                                 <td class="text-center">{{i.quantity2}}</td>
@@ -168,11 +186,9 @@
                 
                 <div class="btn-grp mb-5">
                     {% if request.user.groups.all.0.name == "Admin"%}
-                        <a href="{% url 'requisition_delete' data.id%}" class="btn btn-outline-danger float-right mb-3 mr-3">Delete</a>
-                        {% if data.status == "To be Delivered" %}
-                            <a href="{% url 'requisition_action' data.id%}" class="btn btn-outline-primary float-right mr-3">Update Request</a>
-                        {% elif data.status == "Pending" %}
-                            <a href="{% url 'requisition_action' data.id%}" class="btn btn-outline-primary float-right mr-3">Comply Request</a>
+                        <a href="{% url 'requisition_delete' data.id%}" class="btn btn-outline-danger float-right mb-3 mr-5">Delete</a>
+                        {% if data.status == "Pending" %}
+                            <a href="{% url 'requisition_action' data.id%}" class="btn btn-outline-primary float-right mr-5">Comply Request</a>
                         {% endif%}
                     {% else %}
                         {% if request.user.groups.all.0.name == "Warehouseman"%}

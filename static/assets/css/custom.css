@@ -407,3 +407,6 @@ a.dropdown-item.preview-item.border-top {
     overflow-y: scroll;
     border: 2px solid darkgray;
 }
+textarea.form-control{
+    padding: 12px;
+}

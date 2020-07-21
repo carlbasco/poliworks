@@ -74,7 +74,7 @@ class Migration(migrations.Migration):
                 ('supplier', models.CharField(max_length=255)),
                 ('date', models.DateField(default=datetime.date.today, verbose_name='Date')),
                 ('amount', models.FloatField(default=0, verbose_name='Amount')),
-                ('image', models.ImageField(blank=True, null=True, upload_to=construction.models.or_upload_path, verbose_name='OR Image')),
+                ('image', models.ImageField(blank=True, null=True, upload_to=construction.models.externalorder_upload_path, verbose_name='OR Image')),
             ],
             options={
                 'verbose_name': 'Project - External Order',

@@ -13,8 +13,12 @@ urlpatterns = [
     path('sign-in', views.signin, name="signin"),
     path('sign-out/', views.signout, name="signout"),
 
-    #signuppages
-    path('signup', views.SignupView, name="signup"),
+    #Admin Page
+    path('admin/signup', views.SignupView, name="signup"),
+    path('admin/landingpage', views.LandingPageImageCreateView, name="landing_page_create"),
+    path('admin/landingpage/<int:pk>', views.LandingPageImageDetailView, name="landing_page_detail"),
+    path('admin/landingpage/<int:pk>/edit', views.LandingPageImageUpdateView, name="landing_page_update"),
+    path('admin/landingpage/<int:pk>/delete', views.LandingPageImageDeleteView, name="landing_page_delete"),
 
     #UserProfiles
     path('profile', views.profile, name="userprofile"),
@@ -25,7 +29,8 @@ urlpatterns = [
     path('createproject/', views.ProjectCreateView, name="project_create"),
     path('project_list', views.ProjectListView, name="project_list"),
     path('project/view/<int:pk>', views.ProjectDetailView, name="project_detail"),
-    path('project/view/<int:pk>/update', views.ProjectUpdateView, name="project_update"),
+    path('project/view/<int:pk>/edit', views.ProjectUpdateView, name="project_update"),
+    path('project/blueprint/<int:pk>/edit', views.ProjectBlueprintUpdateView, name="blueprint_update"),
 
     #Quotation
     path('project/create_quotation', views.QuotationCreateView.as_view(), name="quotation_create"),
@@ -67,6 +72,8 @@ urlpatterns = [
     path('task/rework/<int:pk>', views.ReworkDetailView, name="rework_detail"),
     path('task/rework/<int:pk>/edit', views.ReworkUpdateView.as_view(), name="rework_update"),
     path('task/rework/<int:pk>/delete', views.ReworkDeleteView, name="rework_delete"),
+    path('task/rework/<int:pk>/before', views.ReworkBeforeUpdateView, name="rework_before"),
+    path('task/rework/<int:pk>/after', views.ReworkAfterUpdateView, name="rework_after"),
 
     #Requisition
     path('materials/create_requisition', views.RequisitionCreateView.as_view(), name="requisition_create"),
@@ -80,7 +87,6 @@ urlpatterns = [
     path('materials/create_externalorder', views.ExternalOrderCreateView.as_view(), name="externalorder_create"),
     path('materials/externalorder_list', views.ExternalOrderListView, name="externalorder_list"),
     path('materials/externalorder/<int:pk>', views.ExternalOrderDetailView, name="externalorder_detail"),
-    path('materials/externalorder/<int:pk>/edit', views.ExternalOrderUpdateView.as_view(), name="externalorder_update"),
     path('materials/externalorder/<int:pk>/delete', views.ExternalOrderDeleteView, name="externalorder_delete"),
 
     #Inventory
@@ -93,7 +99,7 @@ urlpatterns = [
     path('reports/sitephotos', views.SitePhotosCreateView.as_view(), name="sitephotos"),
     path('reports/sitephotos_list', views.dailysitephotosListView, name="sitephotos_list"),
     path('reports/sitephotos/<int:pk>', views.dailysitephotosDetailView, name="sitephotos_detail"),
-    path('reports/sitephotos/<int:pk>/update', views.dailysitephotosUpdateView, name="sitephotos_update"),
+    path('reports/sitephotos/<int:pk>/edit', views.dailysitephotosUpdateView, name="sitephotos_update"),
     path('reports/sitephotos/<int:pk>/delete', views.dailysitephotosDeleteView, name="sitephotos_delete"),
     path('reports/projectsite', views.ProjectReport.as_view(), name="projectreport"),
     path('reports/projectsite/results', views.ProjectReportPDF.as_view(), name="projectreportPDF"),
@@ -146,6 +152,7 @@ urlpatterns = [
     path('pic/inventory', views.ProjectInventoryList_PIC, name="inventory_pic"),
     path('pic/inventory/external', views.ExternalProjectInventoryList_PIC, name="external_inventory_pic"),
     path('pic/materials/requisition_list', views.RequisitionListView_PIC, name="requisition_list_pic"),
+    path('pic/materials/requisition/<int:pk>/edit', views.RequisitionUpdatePIC, name="requisition_update_pic"),
     path('pic/materials/externalorder_list', views.ExternalOrderListView_PIC, name="externalorder_list_pic"),
     path('pic/reports/dailyreport_list', views. ProjectDailyReportListView_PIC, name="dailyreport_list_pic"),
     path('pic/reports/sitephotos_list', views.dailysitephotosListView_PIC, name="sitephotos_list_pic"),

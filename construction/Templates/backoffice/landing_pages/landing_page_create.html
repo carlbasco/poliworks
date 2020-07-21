@@ -1,0 +1,139 @@
+{%extends 'backoffice/index.html'%}
+{%load static%}
+{%load crispy% }
+{%load crispy_forms_tags%}
+{% block content %}
+<span class="text-uppercase page-subtitle">Report</span>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-inverse-primary">
+        <li class="breadcrumb-item active" aria-current="page">
+            Landing Page Image
+        </li>
+        
+    </ol>
+</nav>
+<div class="col-md-12 mx-auto">
+    {% for message in messages %}
+        <div class="alert alert-{{message.level_tag}} alert-dismissible fade show" role="alert">
+            {% if message.level_tag  == "success" %}
+                <strong>Success! </strong>
+            {% else %}
+                <strong>Error! </strong>
+            {% endif %}
+            {{message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endfor %}
+</div>
+
+
+<div class="col-lg-10 mx-auto">
+    <div class="card">
+        <div class="card-header card-list">
+            <h3 class="text-center">Landing Page Image List
+                <button type="button" class="btn btn-primary float-right" data-toggle="modal" title="New Site Photos" data-target="#sitephotosmodal" >
+                    <i class="mdi mdi-file-document"></i><label class="btn-add-responsive">New Form</label> 
+                </button>
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <div id="order-listing_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer col-lg-12">
+                    <table id="order-listing" class="table dataTable no-footer" role="grid" aria-describedby="order-listing_info">
+                        <thead>
+                            <tr role="row">
+                                <th class="sorting font-weight-bold" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                    style="width: 100px;">
+                                    Title 
+                                </th>
+                                <th class="sorting font-weight-bold"" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                    style="width: 50px;">
+                                    Category
+                                </th>
+                                <th class="sorting font-weight-bold"" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
+                                    style="width: 50px;">
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in data2%}
+                            <tr role="row" class="odd">
+                                <td>{{i.name}}</td>
+                                <td>{{i.category}}</td>
+                                <td><a href="{% url 'landing_page_detail' i.id%}" class="btn btn-outline-primary">view</a></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="sitephotosmodal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content form-modal-content">
+            <form action="" method="POST" id="" enctype="multipart/form-data">
+                {% csrf_token%}
+                <div class="modal-header form-modal-header">
+                    <h4 class="modal-title">Landing Page Image Form</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group mb-3">
+                        {{form.name|as_crispy_field}} 
+                    </div>
+                    <div class="form-group  mt-4">
+                        {{form.address|as_crispy_field}} 
+                    </div>   
+                    <div class="form-group  mt-4">
+                        {{form.category|as_crispy_field}} 
+                    </div>   
+                    <div class="form-group mt-4">
+                        <label for="">Image<span class="asteriskField">*</span> </label>
+                        <div class="custom-file">
+                            {{form2.image}}
+                            <label class="custom-file-label" for="customFile">Choose file</label>
+                        </div>
+                        <div id="preview"></div>
+                        <small class="text-muted"><i>WEBP is recommended image format for fast loading process</i></small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-primary" >Submit</button>
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{%endblock%}
+{% block javascript %}
+<script>
+    function previewImages() {  
+        var $preview = $('#preview').empty();
+        if (this.files) $.each(this.files, readAndPreview);
+
+        function readAndPreview(i, file) {
+            if (!/\.(jpe?g|png|gif|webp)$/i.test(file.name)){
+                return alert(file.name +" is not an image");
+            }
+            var reader = new FileReader();
+
+            $(reader).on("load", function() {
+                $preview.append($("<img/>", {src:this.result, height:100}));
+            });
+            reader.readAsDataURL(file);
+        }
+    }
+    $('#id_image').on("change", previewImages);
+</script>
+<style>span.select2-selection.select2-selection--single {height: 30px;}</style>
+{% endblock %}

@@ -5,17 +5,17 @@
 <div class="container-fluid" id="view_project">
     <section>
         <div class="row">
-            <div class="col-md-7 mb-5">
+            <div class="col-lg-7 mb-5">
                 <div class="card">
                     <div class="card-header">
                         <h2 class="mb-0">Overview</h2>
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-3 text-center"><strong >Project Start Date:</strong><p>{{data.startdate}}</p></div>
-                            <div class="col-md-3 text-center"><strong>Project Completion Date:</strong><p>{{data.comdate}}</p></div>
-                            <div class="col-md-3 text-center"><strong>Maintenance Period End Date:</strong><p>{{data.mpd}}</p></div>
-                            <div class="col-md-3 text-center">
+                            <div class="col-lg-3 text-center"><strong >Project Start Date:</strong><p>{{data.startdate}}</p></div>
+                            <div class="col-lg-3 text-center"><strong>Project Completion Date:</strong><p>{{data.colgate}}</p></div>
+                            <div class="col-lg-3 text-center"><strong>Maintenance Period End Date:</strong><p>{{data.mpd}}</p></div>
+                            <div class="col-lg-3 text-center">
                                 <strong>Project Status</strong>
                                 {% if data.status == "Pending"%}
                                     <p><span class="badge badge-warning">{{data.status}}</span></p>
@@ -38,7 +38,7 @@
                                 </div>
                             {% endif %}
                             {% if data4 %}
-                            <div class="col-md-12 table-responsive mx-auto ">
+                            <div class="col-lg-12 table-responsive mx-auto ">
                                 <table class="table table-bordered">
                                     <thead>
                                             <tr>
@@ -71,7 +71,7 @@
                     </div>
                 </div>
             </div>
-            <div class="accordion col-md-5 mb-5" id="accordionExample">
+            <div class="accordion col-lg-5 mb-5" id="accordionExample">
                 <div class="card">
                     <div class="card-header" id="headingOne">
                     <h2 class="mb-0">
@@ -151,14 +151,14 @@
                     </div>
                     <div id="blueprint" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
                         <div class="card-body">
-                            <div class="row">
-                                <div class="mx-auto">
-                                    {% if data.design %}
-                                        <img src="{{data.design.url}}" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="">
+                            <div class="row justify-content-center">
+                                    {% if blueprint %}
+                                        {% for i in blueprint %}
+                                            <img src="{{i.image.url}}" class="img-fluid mb-3" alt="">
+                                        {% endfor %}
                                     {% else %}
                                         <p>No Data Available</p>
                                     {% endif %}
-                                </div>
                             </div>
                         </div>
                     </div>

@@ -1,0 +1,100 @@
+{% extends 'backoffice/index.html' %}
+{% load static %}
+{% load crispy_forms_tags%}
+{% block content %}
+{% load humanize %}
+<span class="text-uppercase page-subtitle">Reports</span>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-inverse-primary">
+        <li class="breadcrumb-item">
+            <a href="{% url 'landing_page_create' %}">Landing Page Image List</a>
+        </li>
+    </ol>
+</nav>
+
+    <div class="row justify-content-center">
+        <div class="col col-md-12">
+            <div class="card">
+                <div class="card-header" id="quotation_view">
+                    <h3 class="mb-0">Landing Page Image Update</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row"> 
+                        <div class = "col-md-7">
+                            <h6 class="sub">Title: <span class="txt">{{data.name}}</span></h6>
+                        </div>
+                        <div class="col-md-5">
+                            <h6 class="sub float-right">Category: <span class="txt">{{data.category}}</span></h6>
+                        </div>
+                        {% if data.address %}
+                        <div class = "col-md-7">
+                            <h6 class="sub">Title: <span class="txt">{{data.address}}</span></h6>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <form action="" method="post" enctype="multipart/form-data">
+                        <div class="col-md-12 table-responsive">
+                            {% csrf_token%}
+                            <table class="table mt-4 ">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center font-weight-bold">Image</th>
+                                        <th class="text-center font-weight-bold">Delete this Image?</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{ formset.management_form }}
+                                        {% for i in formset.forms %}
+                                        {{i.id}}
+                                        <tr class="formset_row">
+                                            {% if i.image.value %}
+                                            <td class="text-center" style="width: 50%;">
+                                                <div class="div-tbl-img" style="margin: auto;">
+                                                    <img src="{{i.image.value.url}}" class="rounded table-img img-fluid p-3 mx-auto d-block" width="100%">
+                                                </div>
+                                            </td>
+                                            {% else %}
+                                            <td>{{i.image}}</td>
+                                            {% endif %}
+                                            <td class="text-center">{{i.DELETE}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <button type="button" id="sbmt-modal" class="btn btn-outline-primary btn-rounded" style="float:right" data-toggle="modal" data-target="#exampleModal-2">Update</button>
+                        <div class="modal fade" id="exampleModal-2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel-2" style="display: none;" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title" id="exampleModalLabel-2">Confirmation</h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Are you sure you want to update this form?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-outline-primary" >Submit</button>
+                                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block javascript%}
+<script>
+    $('.formset_row').formset({
+        addText: 'Add',
+        deleteText: 'Remove',
+        prefix: '{{ formset.prefix }}'
+    })
+</script>
+{% endblock %}

@@ -61,7 +61,7 @@
                             <h6 class="sub">Status: <span class="txt">{{data.status}}</span></h6>
                         </div>
                         <div class="col-md-12">
-                            <p>Requisition no. {{data.requisition_no}}</p>
+                            <h6 class="sub">Requisition no: <span class="txt">{{data.requisition_no}}</span></h6>
                         </div>
                     </div>
                     <div class="accordion basic-accordion" id="accordion" role="tablist">
@@ -115,6 +115,12 @@
                                                         <th class="text-center" style="width: 150px!important;">Status</th>
                                                         <th class="text-center">Remarks</th>
                                                         <th style="width: 150px">Delivered Quantity</th>
+                                                        {% if request.user.groups.all.0.name != "Warehouseman"%}
+                                                            {% if data.amount %}
+                                                                <th style="width: 150px">Unit Price</th>
+                                                                <th style="width: 150px">Total Price</th>
+                                                            {% endif %}
+                                                        {% endif %}
                                                         <th style="width: 150px">Received Quantity</th>
                                                     </tr>
                                                 </thead>
@@ -145,18 +151,31 @@
 
                                                                 {% endif %}
                                                                 <td class="text-center">{{i.remarks}}</td>
-                                                                {% if i.quantity %}
+                                                                {% if data.amount %}
                                                                     <td class="text-center">{{i.quantity}}</td>
+                                                                    {% if request.user.groups.all.0.name != "Warehouseman"%}
+                                                                        <td class="text-center">{{i.articles.unit_price|intcomma}}</td>
+                                                                        <td class="text-center">{{i.total_price|intcomma}}</td>
+                                                                    {% endif %}
                                                                 {% else %}
                                                                     <td class="text-center">N/A</td>
                                                                 {% endif %}
                                                                 {% if i.quantity2 %}
-                                                                <td class="text-center">{{i.quantity2}}</td>
+                                                                    <td class="text-center">{{i.quantity2}}</td>
                                                                 {% else %}
-                                                                <td class="text-center">N/A</td>
+                                                                    <td class="text-center">N/A</td>
                                                                 {% endif %}
                                                             </tr>
                                                         {% endfor %}
+                                                        {% if request.user.groups.all.0.name != "Warehouseman"%}
+                                                            {% if data.amount%}
+                                                            <tr>
+                                                                <td colspan="4"></td>
+                                                                <td class="text-center font-weight-bold">Grand Total Price</td>
+                                                                <td class="text-center">{{data.amount|intcomma}}</td>
+                                                            </tr>
+                                                            {% endif %}
+                                                        {% endif %}
                                                     </tbody>
                                             </table>
                                         </div>
@@ -187,11 +206,11 @@
                 <div class="btn-grp mb-5">
                     {% if request.user.groups.all.0.name == "Admin"%}
                         <a href="{% url 'requisition_delete' data.id%}" class="btn btn-outline-danger float-right mb-3 mr-3">Delete</a>
-                        {% if data.status == "To be Delivered" %}
-                            <a href="{% url 'requisition_action' data.id%}" class="btn btn-outline-primary float-right mr-3">Update Request</a>
-                        {% elif data.status == "Pending" %}
+                        {% if data.status == "Pending" %}
                             <a href="{% url 'requisition_action' data.id%}" class="btn btn-outline-primary float-right mr-3">Comply Request</a>
                         {% endif%}
+                    {% elif request.user.groups.all.0.name == "Person In-Charge"%}
+                        <a href="{% url 'requisition_update_pic' data.id%}" class="btn btn-outline-primary float-right mr-3">Update Requisition Number</a>
                     {% else %}
                         {% if request.user.groups.all.0.name == "Warehouseman"%}
                             {% if data.status == "Pending" %}

@@ -25,7 +25,7 @@ p {
   .auth.theme-two .banner-section .slide-content {
     width: 100%; }
     .auth.theme-two .banner-section .slide-content.bg-1 {
-        background: url("../../images-poli/build.png") no-repeat center center;
+        background: url("../../images-poli/build.webp") no-repeat center center;
         background-size: cover;
     }
 

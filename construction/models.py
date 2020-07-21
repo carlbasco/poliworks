@@ -13,22 +13,28 @@ import datetime
 
 
 def profile_upload_path(instance, filename):
-    return 'profile_image/{0}/{1}'.format(instance.user, filename)
+    return f'profile_image/{instance.user}/{filename}'
 
 def estimate_upload_path(instance, filename):
-    return 'Estimate/{}/{}'.format(instance.estimate.name, filename)
+    return f'Estimate/{instance.estimate.name}/{filename}'
 
 def project_upload_path(instance, filename):
-    return 'Projects/{0}/blueprint~design/{1}'.format(instance.project, filename)
+    return f'Projects/{instance.project}/blueprint~design/{filename}'
 
 def project_sitephotos_path(instance, filename):
-    return 'Projects/{0}/sitephotos/{1}'.format(instance.sitephotos.project, filename)
+    return f'Projects/{instance.sitephotos.project}/sitephotos/{filename}'
 
-def or_upload_path(instance, filename):
-    return 'Projects/{0}/or image/{1}'.format(instance.project, filename)
-
+def externalorder_upload_path(instance, filename):
+    return f'Projects/{instance.externalorder.project}/or image/{filename}'
+    
 def requisition_upload_path(instance, filename):
-    return 'Projects/{0}/requisition image/{1}'.format(instance.requisition.project, filename)
+    return f'Projects/{instance.requisition.project}/{filename}'
+
+def landingpage_image_path(instance,filename):
+    return f'Landing Page Images/{instance.title.category}/{instance.title.name}/{filename}'
+
+def rework_upload_path(instance,filename):
+    return f'Projects/{instance.rework.project}/rework/{filename}'
 
 class Province(models.Model):
     name = models.CharField(max_length=255, null=True, blank=True)
@@ -143,8 +149,9 @@ class ProjectType(models.Model):
     projecttype = models.CharField(max_length=255, null=True)
     class Meta:
         verbose_name_plural='Admin - Project Type'
+
     def __str__(self):
-        return self.projecttype
+        return str(self.projecttype)
 
 class Inquiry(models.Model):
     name = models.CharField(('Name'),max_length=255)
@@ -195,10 +202,16 @@ class Project(models.Model):
     startdate = models.DateField(('Start Project Date'),  help_text='Format: YYYY-MM-DD', blank=True,null=True)
     comdate = models.DateField(('Project Completion Date'), help_text='Format: YYYY-MM-DD', blank=True, null=True)
     mpd = models.DateField(('Maintenance Period End Date'), help_text='Format: YYYY-MM-DD', blank=True, null=True)
-    design=models.ImageField(('Blueprint'),upload_to=project_upload_path, blank=True, null=True)
     class Meta:
         verbose_name='Project'
         verbose_name_plural='Project'
+
+    def __str__(self):
+        return self.project
+
+class ProjectBlueprint(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    image = models.FileField(upload_to=project_upload_path, blank=True, null=True, verbose_name="Blueprint/ Design/ Reference")
     def __str__(self):
         return self.project
 
@@ -234,6 +247,7 @@ class Quotation(models.Model):
     date = models.DateField(('Date'),default=datetime.date.today)
     amount = models.FloatField(('Total Amount'), default=0)
     status = models.CharField(('Status'), max_length=255, default='Pending',choices=status_choice)
+    is_vat = models.BooleanField(('is VAT included?'), default=False)
     class Meta:
         verbose_name = 'Project - Quotation'
         verbose_name_plural = 'Project - Quotation'
@@ -301,9 +315,7 @@ class Personnel(models.Model):
     province = models.ForeignKey(Province, on_delete=models.SET_NULL, verbose_name='Province', null=True)
     status ={('Currently Assigned', 'Currently Assigned'), ('Available', 'Available')}
     status = models.CharField(('Status'), max_length=255, choices=status, default="Available")
-    project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
-    date = models.DateField(null=True, blank=True)
-    date2 = models.DateField(null=True, blank=True)
+    project = models.ManyToManyField(Project, blank=True)
     class Meta:
         verbose_name_plural = 'Personnel'
         verbose_name = 'Personnel'
@@ -313,6 +325,7 @@ class Personnel(models.Model):
     def __str__(self):
         flname ='%s %s' % (self.first_name, self.last_name)
         return flname.strip()
+
 
 class JobOrder(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='joborder', verbose_name='Project')
@@ -353,13 +366,20 @@ class Rework(models.Model):
         verbose_name_plural='Project - Rework'
         verbose_name='Project - Rework'
 
+class ReworkBeforeImage(models.Model):
+    rework = models.ForeignKey(Rework, on_delete=models.CASCADE)
+    image = models.FileField(upload_to=rework_upload_path)
+
+class ReworkAfterImage(models.Model):
+    rework = models.ForeignKey(Rework, on_delete=models.CASCADE)
+    image = models.FileField(upload_to=rework_upload_path)
 
 class Inventory(models.Model):
     alternate_code = models.CharField(verbose_name="Alternate Code", max_length=255, null=True, blank=True)
     item_code = models.CharField(verbose_name="Item Code", max_length=255, null=True, blank=True)
     unit = models.CharField(verbose_name="Unit", max_length=255, null=True, blank=True)
     description = models.CharField(verbose_name="Description", max_length=255)
-    quantity = models.FloatField(verbose_name="Quantity", default=0)
+    quantity = models.IntegerField(verbose_name="Quantity", default=0)
     unit_price = models.FloatField(verbose_name="Unit Price", null=True, blank=True)
     class Meta:
         verbose_name_plural = 'Admin - Material Inventory Office'
@@ -367,17 +387,17 @@ class Inventory(models.Model):
         return self.description 
 
 class Requisition(models.Model):
-    requisition_no= models.IntegerField(null=True, verbose_name="requisition number")
+    requisition_no = models.CharField(max_length=255,null=True, verbose_name="requisition number", blank=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='requisition_project',verbose_name='Project')
     date = models.DateTimeField(default=datetime.datetime.now, verbose_name='Date', null=True)
     whm = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='requisition_whm', verbose_name='Prepared by', 
         help_text="Warehouseman" ,limit_choices_to={'groups__name': "Warehouseman"})
     status = {('Pending', 'Pending'), ('To be Delivered', 'To be Delivered'),('Closed', 'Closed')}
     status = models.CharField( max_length=255, choices=status, default="Pending")
+    amount = models.FloatField(("Total Amount"), default=0)
     class Meta:
         verbose_name_plural = 'Project - Requisition'
         verbose_name = 'Project - Requisition'
-
 
 class RequisitionDetails(models.Model):
     requisition = models.ForeignKey(Requisition, on_delete=models.CASCADE, related_name='requisitiondetail', verbose_name='Requesition')
@@ -394,9 +414,13 @@ class RequisitionDelivery(models.Model):
     remarks = models.CharField(max_length=255, null=True, blank=True)
     status=(('Canceled', 'Canceled'),('To be delivered', 'To be delivered'))
     status = models.CharField(('Status'),max_length=255, choices=status, null=True,)
-    status2 ={('Incomplete', 'Incomplete'), ('Not Received','Not Received'), ('Complete','Complete')}
+    status2 = {('Incomplete', 'Incomplete'), ('Not Received','Not Received'), ('Complete','Complete')}
     status2 = models.CharField(('Action'), max_length=255, choices=status2, null=True, blank=True)
     quantity2 = models.IntegerField(('Received Quantity'), null=True, blank=True, default=0)
+    
+    def total_price(self):
+        total_price = self.articles.unit_price * self.quantity
+        return total_price
 
 class RequisitionImage(models.Model):
     requisition = models.ForeignKey(Requisition, on_delete=models.CASCADE)
@@ -413,10 +437,16 @@ class ExternalOrder(models.Model):
     whm = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='externalorder_whm', verbose_name='Prepared By', 
         limit_choices_to={'groups__name': "Warehouseman"}, help_text="Warehouseman")
     amount = models.FloatField(verbose_name='Amount', default=0)
-    image = models.ImageField(upload_to=or_upload_path, null=True, blank=True, verbose_name="OR Image")
     class Meta:
         verbose_name_plural = 'Project - External Order'
         verbose_name = 'Project - External Order'
+
+
+class ExternalOrderImage(models.Model):
+    externalorder = models.ForeignKey(ExternalOrder, on_delete=models.CASCADE) 
+    image = models.ImageField(upload_to=externalorder_upload_path, null=True, blank=True, verbose_name="OR/Reciept/Materials")
+    class Meta:
+        verbose_name = 'External Order Image'
 
 
 class ExternalOrderDetails(models.Model):
@@ -431,7 +461,7 @@ class ExternalOrderDetails(models.Model):
         verbose_name='External Order Detail'
     def get_total(self):
         return self.quantity * self.unitprice
-    
+
 
 class ProjectIssues(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='projectissue')
@@ -477,8 +507,8 @@ class ProjectInventory(models.Model):
     project = models.OneToOneField(Project, on_delete=models.CASCADE,verbose_name='Project')
     last_update = models.DateField(auto_now=True)
     class Meta:
-        verbose_name_plural='Project - Inventory(onsite)'
-        verbose_name='Project - Inventory(onsite)'
+        verbose_name_plural='Project - Material Inventory(onsite)'
+        verbose_name='Project - Material Inventory(onsite)'
     
 
 class ProjectInventoryDetails(models.Model):
@@ -537,3 +567,19 @@ class ExternalOrderDetailsReport(models.Model):
     quantity = models.IntegerField(default=1)
     remarks = models.CharField(max_length=255, null=True, blank=True)
 
+class LandingPageCategory(models.Model):
+    name = models.CharField(max_length=255, verbose_name="Landing Page Image Category")
+    def __str__(self):
+        return self.name
+    class Meta:
+        verbose_name_plural = "Admin - Landing Page Image Categories"
+        verbose_name = "Admin - Landing Page Image Categories"
+
+class LandingPageTitle(models.Model):
+    name = models.CharField(max_length=255, verbose_name="Title")
+    address = models.CharField(max_length=255, null=True, blank=True, verbose_name="Location")
+    category = models.ForeignKey(LandingPageCategory, on_delete=models.CASCADE)
+
+class LandingPageImage(models.Model):
+    title = models.ForeignKey(LandingPageTitle, on_delete=models.CASCADE)
+    image = models.FileField(upload_to=landingpage_image_path, verbose_name="Image")

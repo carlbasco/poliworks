@@ -129,11 +129,10 @@
         if (this.files) $.each(this.files, readAndPreview);
 
         function readAndPreview(i, file) {
-            if (!/\.(jpe?g|png|gif)$/i.test(file.name)){
-                return alert(file.name +" is not an image");
-            } // else...
+            if (!/\.(jpe?g|png|gif|webp)$/i.test(file.name)){
+                return alert(file.name +" format is not supported");
+            }
             var reader = new FileReader();
-
             $(reader).on("load", function() {
                 $preview.append($("<img/>", {src:this.result, height:100}));
             });
@@ -142,12 +141,10 @@
     }
     $('#id_image').on("change", previewImages);
     $('#id_project').select2()
-    
-    $(function() {
-      $('[data-toggle="datepicker"]').datepicker({
-        autoHide: true,
-        zIndex: 2048,
-      });
+        
+    $('#id_date').prop('disabled', true);
+    $('form').bind('submit', function () {
+        $(this).find('#id_date').prop('disabled', false);
     });
 </script>
 <style>span.select2-selection.select2-selection--single {height: 30px;}</style>

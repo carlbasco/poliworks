@@ -1,0 +1,65 @@
+{% extends 'backoffice/index.html' %}
+{% load static %}
+{% load crispy_forms_tags%}
+{% block content %}
+{% load humanize %}
+<span class="text-uppercase page-subtitle">Reports</span>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-inverse-primary">
+        <li class="breadcrumb-item">
+            <a href="{% url 'landing_page_create' %}">Landing Page Image List</a>
+        </li>
+    </ol>
+</nav>
+<div class="col-md-12 mx-auto">
+    {% for message in messages %}
+        <div class="alert alert-{{message.level_tag}} alert-dismissible fade show" role="alert">
+            {% if message.level_tag  == "success" %}
+                <strong>Success! </strong>
+            {% else %}
+                <strong>Error! </strong>
+            {% endif %}
+            {{message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endfor %}
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" id="quotation_view">
+                    <h2 class="mb-0">Landing Page Image</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row"> 
+                        <div class = "col-md-7">
+                            <h6 class="sub">Title: <span class="txt">{{data.name}}</span></h6>
+                        </div>
+                        <div class="col-md-5">
+                            <h6 class="sub float-right">Category: <span class="txt">{{data.category}}</span></h6>
+                        </div>
+                        {% if data.address %}
+                        <div class = "col-md-7">
+                            <h6 class="sub">Title: <span class="txt">{{data.address}}</span></h6>
+                        </div>
+                        {% endif %}
+                        <div class="col-md-10 mt-5 mx-auto">
+                            {% for i in data2 %}
+                                <img src="{{i.image.url}}" class="img-fluid rounded mx-auto d-block mb-3" alt="Responsive image">
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <a class="btn btn-outline-danger float-right" href="{% url 'landing_page_delete' data.id%}">Delete</a>
+                    <a class="btn btn-outline-primary float-right mr-3" href="{% url 'landing_page_update' data.id%}">Edit</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript%}
+{% endblock %}

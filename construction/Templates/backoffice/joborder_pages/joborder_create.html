@@ -209,12 +209,12 @@
 <script type="text/javascript">
     var dateToday = new Date();
     $("#id_date").datepicker({
-        startDate: dateToday,
+        startDate: "dateToday",
         format:'yyyy-mm-dd',
     });
     $("#id_duration").datepicker({
-        startDate: dateToday,
-        startDate: dateToday
+        startDate: "dateToday",
+        startDate: "dateToday",
     });
 
     $('.formset_row').formset({

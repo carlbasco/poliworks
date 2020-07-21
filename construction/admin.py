@@ -37,7 +37,15 @@ class UserAdmin(ImportExportModelAdmin):
     search_fields = ('email',)
     ordering = ('email',)
     filter_horizontal = ()
+    
+    def has_add_permission(self, request):
+        return False
 
+@admin.register(LandingPageCategory)
+class LandingPageImageCategoryAdmin(admin.ModelAdmin):
+    model = LandingPageCategory
+    list_display=('name',)
+    search_fields=('name',)
 
 @admin.register(Province)
 class ProvinceAdmin(ImportExportModelAdmin):
@@ -57,7 +65,7 @@ class CityAdmin(ImportExportModelAdmin):
 @admin.register(Project)
 class projectdetails(ImportExportModelAdmin):
     exclude=('id',)
-    list_display=('pm', 'client','project','typeofproject','startdate','status')
+    list_display=('project','pm', 'client','typeofproject','startdate','status')
 
 @admin.register(Gender)
 class GenderAdmin(admin.ModelAdmin):
@@ -204,8 +212,8 @@ class PersonnelAdmin(ImportExportModelAdmin):
 
 @admin.register(Inventory)
 class Inventory(ImportExportModelAdmin):
-    list_display = ('alternate_code','item_code','description','quantity', 'unit_price')
-    search_fields = ('alternate_code','item_code','description',)
+    list_display = ('description','alternate_code','item_code','quantity', 'unit_price')
+    search_fields = ('description','alternate_code','item_code','quantity')
     list_per_page = 20
     ordering = ('pk',)
 

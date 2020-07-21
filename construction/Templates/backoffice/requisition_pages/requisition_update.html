@@ -160,6 +160,11 @@
             }
         });
     };
+
+    $('#id_date').prop('disabled', true);
+    $('form').bind('submit', function () {
+        $(this).find('#id_date').prop('disabled', false);
+    });
 </script>
 
 {%endblock%}

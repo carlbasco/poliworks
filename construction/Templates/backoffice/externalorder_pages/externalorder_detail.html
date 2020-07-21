@@ -58,36 +58,65 @@
                             <h6 class="sub">Prepared by: <span class="txt">{{data.whm}}</span></h6>
                         </div>
                     </div>
-                    <div class="table-responsive-lg col-lg-12">
-                        <table class="table">
-                            <thead class="thead" id="head_tbl">
-                                <tr>
-                                    <th class="text-center">Articles</th>
-                                    <th class="text-center">Unit</th>
-                                    <th class="text-center">Quantity</th>
-                                    <th class="text-center">Unit Price</th>
-                                    <th class="text-center">Remarks</th>
-                                    <th class="text-center">Total Price</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for i in data2 %}
-                                <tr>
-                                    <td class="text-center">{{i.articles}}</td>
-                                    <td class="text-center">{{i.unit}}</td>
-                                    <td class="text-center">{{i.quantity}}</td>
-                                    <td class="text-center">{{i.unitprice|intcomma}}</td>
-                                    <td class="text-center">{{i.remarks}}</td>
-                                    <td class="text-right">{{i.get_total|intcomma}}</td>
-                                </tr>
-                                {% endfor %}
-                                <tr>
-                                    <td colspan="4"></td>
-                                    <td class="text-center"><strong>Total Amount: </strong></td>
-                                    <td class="text-right">{{data.amount|intcomma}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="accordion basic-accordion" id="accordion" role="tablist">
+                        <div class="card">
+                            <div class="card-header border-0" role="tab" id="headingOne">
+                                <h6>
+                                <a data-toggle="collapse" href="#externalorderdetails" aria-expanded="false" aria-controls="collapseOne" class="collapsed req_accordion">
+                                    <i class="card-icon mdi mdi-clipboard-outline"></i>Details</a>
+                                </h6>
+                            </div>
+                            <div id="externalorderdetails" class="collapse show" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
+                                <div class="table-responsive-lg col-lg-12">
+                                    <table class="table">
+                                        <thead class="thead" id="head_tbl">
+                                            <tr>
+                                                <th class="text-center">Articles</th>
+                                                <th class="text-center">Unit</th>
+                                                <th class="text-center">Quantity</th>
+                                                <th class="text-center">Unit Price</th>
+                                                <th class="text-center">Remarks</th>
+                                                <th class="text-center">Total Price</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for i in data2 %}
+                                            <tr>
+                                                <td class="text-center">{{i.articles}}</td>
+                                                <td class="text-center">{{i.unit}}</td>
+                                                <td class="text-center">{{i.quantity}}</td>
+                                                <td class="text-center">{{i.unitprice|intcomma}}</td>
+                                                <td class="text-center">{{i.remarks}}</td>
+                                                <td class="text-right">{{i.get_total|intcomma}}</td>
+                                            </tr>
+                                            {% endfor %}
+                                            <tr>
+                                                <td colspan="4"></td>
+                                                <td class="text-center"><strong>Total Amount: </strong></td>
+                                                <td class="text-right">{{data.amount|intcomma}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        {% if data3 %}
+                        <div class="card">
+                            <div class="card-header border-0" role="tab" id="headingOne">
+                                <h6>
+                                <a data-toggle="collapse" href="#externalorderimage" aria-expanded="false" aria-controls="collapseOne" class="collapsed req_accordion">
+                                    <i class="card-icon mdi mdi-file-image"></i> OR/Material </a>
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div id="externalorderimage" class="collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
+                                    {% for i in data3 %}
+                                        <img src="{{i.image.url}}" class="img-fluid rounded mx-auto d-block mb-3" alt="Responsive image">
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="row justify-content-center">

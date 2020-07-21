@@ -38,35 +38,31 @@
         </div>
     {% endfor %}
 </div>
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header" id="quotation_view">
-                    <h2 class="mb-0">Site Photos</h2>
+<div class="mx-auto">
+    <div class="card">
+        <div class="card-header" id="quotation_view">
+            <h2 class="mb-0">Site Photos</h2>
+        </div>
+        <div class="card-body">
+            <div class="row"> 
+                <div class = "col-md-7">
+                    <h6 class="sub">Project: <span class="txt">{{data.project}}</span></h6>
                 </div>
-                <div class="card-body">
-                    <div class="row"> 
-                        <div class = "col-md-7">
-                            <h6 class="sub">Project: <span class="txt">{{data.project}}</span></h6>
-                        </div>
-                        <div class="col-md-5">
-                            <h6 class="sub float-right">Date Created: <span class="txt">{{data.date}}</span></h6>
-                        </div>
-                        <div class="col-md-10 mt-5 mx-auto">
-                            {% for i in data2 %}
-                            <img src="{{i.image.url}}" class="img-fluid rounded mx-auto d-block mb-3" alt="Responsive image">
-                            {% endfor %}
-                        </div>
-                    </div>
-                    {% if request.user.groups.all.0.name == "Warehouseman" or request.user.groups.all.0.name == "Admin" %}
-                        <a class="btn btn-outline-danger float-right" href="{% url 'sitephotos_delete' data.id %}">Delete</a>
-                    {% endif %}
-                    {% if request.user.groups.all.0.name != "Warehouseman"%}
-                        <a class="btn btn-outline-primary float-right mr-3" href="{% url 'sitephotos_update' data.id %}">Update</a>
-                    {% endif %}
+                <div class="col-md-5">
+                    <h6 class="sub float-right">Date Created: <span class="txt">{{data.date}}</span></h6>
+                </div>
+                <div class="col-md-10 mt-5 mx-auto">
+                    {% for i in data2 %}
+                    <img src="{{i.image.url}}" class="img-fluid rounded mx-auto d-block mb-3" alt="Responsive image">
+                    {% endfor %}
                 </div>
             </div>
+            {% if request.user.groups.all.0.name == "Warehouseman" or request.user.groups.all.0.name == "Admin" %}
+                <a class="btn btn-outline-danger float-right" href="{% url 'sitephotos_delete' data.id %}">Delete</a>
+            {% endif %}
+            {% if request.user.groups.all.0.name != "Warehouseman"%}
+                <a class="btn btn-outline-primary float-right mr-3" href="{% url 'sitephotos_update' data.id %}">Update</a>
+            {% endif %}
         </div>
     </div>
 </div>

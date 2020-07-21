@@ -47,12 +47,13 @@
                                 {{form.lotarea|as_crispy_field}}
                             </div>
                             <div class="form-group col-md-8">
-                                <label for="">Blueprint </label>
+                                <label for="">Blueprint/ Design/ Reference</label>
                                 <div class="custom-file">
-                                    {{form.design}}
+                                    {{form2.image}}
                                     <label class="custom-file-label" for="customFile">Choose file</label>
                                 </div>
-                                <img id="design_img" src="#" alt="your image" />
+                                <div id="preview"></div>
+                                <small class="text-muted"><i>WEBP is recommended image format for lightweight and fast loading process</i></small>
                             </div>
                             <div class="form-group col-md-8">
                                 {{form.address|as_crispy_field}}
@@ -110,21 +111,22 @@
 <script>
     $('#id_pic').select2();
     $('#id_whm').select2();
-    $('#design_img').hide();
 
-    var reader = new FileReader();
-    reader.onload = function (e) {
-        $('#design_img').show();
-        $('#design_img').attr('src', e.target.result);
-    }
-   function readURL(input) {
-        if (input.files && input.files[0]) {
-            reader.readAsDataURL(input.files[0]);
+    function previewImages() {  
+        var $preview = $('#preview').empty();
+        if (this.files) $.each(this.files, readAndPreview);
+        function readAndPreview(i, file) {
+            if (!/\.(jpe?g|png|gif|webp)$/i.test(file.name)){
+                return alert(file.name +" is not an image");
+            }
+            var reader = new FileReader();
+            $(reader).on("load", function() {
+                $preview.append($("<img/>", {src:this.result, height:100}));
+            });
+            reader.readAsDataURL(file);
         }
     }
-    $("#id_design").change(function(){
-        readURL(this);
-    });
+    $('#id_image').on("change", previewImages);
 </script>
 <style>span.select2-selection.select2-selection--single {height: 30px;}</style>
 {% endblock %}

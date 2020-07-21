@@ -116,7 +116,7 @@
                             <td>{{i.project}}</td>
                             <td class="text-center" style="width:50px">{{i.requisition_no}}</td>
                             <td>{{i.whm}}</td>
-                            <td>{{i.date}}</td>
+                            <td>{{i.date|date:"F d, Y"}}</td>
                             {% if i.status == "Pending" %}
                                 <td><label class="badge badge-warning">{{i.status}}</label></td>
                             {% elif i.status == "Complied"%}

@@ -116,12 +116,12 @@
        
         {% if request.user.groups.all.0.name != "Warehouseman" %}
         <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#account-dropdown" aria-expanded="false" aria-controls="account-dropdown">
+            <a class="nav-link" data-toggle="collapse" href="#task-dropdown" aria-expanded="false" aria-controls="task-dropdown">
                 <i class="menu-icon mdi mdi-account-multiple"></i>
                 <span class="menu-title">Project Task</span>
                 <i class="menu-arrow"></i>
             </a>
-            <div class="collapse" id="account-dropdown">
+            <div class="collapse" id="task-dropdown">
                 <ul class="nav flex-column sub-menu">
                     <li class="nav-item">
                         {% if request.user.groups.all.0.name == "Admin" %}
@@ -156,15 +156,18 @@
         
         {% if request.user.groups.all.0.name == "Admin"%}
         <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#personnel-dropdown" aria-expanded="false" aria-controls="personnel-dropdown">
+            <a class="nav-link" data-toggle="collapse" href="#admin-dropdown" aria-expanded="false" aria-controls="admin-dropdown">
                 <i class="menu-icon mdi mdi-account-multiple"></i>
-                <span class="menu-title">Account</span>
+                <span class="menu-title">Admin</span>
                 <i class="menu-arrow"></i>
             </a>
-            <div class="collapse" id="personnel-dropdown">
+            <div class="collapse" id="admin-dropdown">
                 <ul class="nav flex-column sub-menu">
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'signup' %}">Create Account</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'landing_page_create'%}">Landing Page Images</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'admin:index'%}">File Maintenance</a>

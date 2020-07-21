@@ -1,5 +1,5 @@
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from django.forms.models import inlineformset_factory
+from django.forms.models import inlineformset_factory, formset_factory
 from django.forms.widgets import CheckboxSelectMultiple
 from django.contrib.auth.models import Group
 from django import forms
@@ -136,6 +136,27 @@ class ProjectForm(forms.ModelForm):
             'design' : forms.FileInput(attrs={'class':'custom-file-input'})
         }
 
+class ProjectNewForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = '__all__'
+        exclude = ('whm', 'pic')
+
+class ProjectBlueprintForm(forms.ModelForm):
+    class Meta:
+        model = ProjectBlueprint
+        fields = ('image',)
+        widgets={
+            'image':forms.FileInput(attrs={'class':'custom-file-input','multiple': True, })
+        }
+
+ProjectBlueprintFormset = inlineformset_factory(Project, ProjectBlueprint,
+    form = ProjectNewForm,
+    exclude = ('project', 'address', 'province', 'city', 'pm', 'pic', 'whm', 'client', 'status', 'typeofproject', 'lotarea', 'startdate', 'comdate', 'mpd', 'design'),
+    extra=0,
+    can_delete=True,
+)
+
 class ProjectUpdateForm(forms.ModelForm):
     class Meta:
         model = Project
@@ -241,7 +262,7 @@ class RequisitionForm(forms.ModelForm):
     class Meta:
         model=Requisition
         fields = '__all__'
-        exclude = ('status', 'requisition_no')
+        exclude = ('status', 'requisition_no', 'amount')
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
@@ -264,7 +285,7 @@ RequisitionFormSet = inlineformset_factory(Requisition, RequisitionDetails,
     form = RequisitionNewForm, 
     extra = 1,
     can_delete = True,
-    exclude = ('status', 'status2', 'quantity2', 'requisition_no'),
+    exclude = ('status', 'status2', 'quantity2', 'requisition_no', 'amount'),
     widgets={
         'quantity':forms.NumberInput(attrs={'class':'form-control'}),
         'articles':forms.Select(attrs={'class':'form-control art'}),
@@ -279,12 +300,20 @@ RequisitionUpdateFormSet = inlineformset_factory(Requisition, RequisitionDetails
     form=RequisitionNewForm, 
     extra=0,
     can_delete=True,
-    exclude = ('status', 'status2', 'quantity2', 'requisition_no'),
+    exclude = ('status', 'status2', 'quantity2', 'requisition_no', 'amount'),
     widgets={
         'quantity':forms.NumberInput(attrs={'class':'form-control', 'required':'true'}),
         'articles':forms.Select(attrs={'class':'form-control art'})
     }
 )
+
+class RequisitionPICForm(forms.ModelForm):
+    class Meta:
+        model = Requisition
+        fields = ('requisition_no',)
+        widgets={
+            'requisition_no':forms.TextInput(attrs={'class':'form-control'}),
+        }
 
 class RequisitionActionForm(forms.ModelForm):
     class Meta:
@@ -296,7 +325,7 @@ class RequisitionImageForm(forms.ModelForm):
         model = RequisitionImage
         fields = ('image',)
         widgets={
-            'image':forms.FileInput(attrs={'class':'custom-file-input','multiple': True,})
+            'image':forms.FileInput(attrs={'class':'custom-file-input','multiple': True, 'required':True})
         }
         
 RequisitionActionFormSet = inlineformset_factory(Requisition, RequisitionDelivery, 
@@ -322,13 +351,11 @@ RequisitionActionFormSet_whm = inlineformset_factory(Requisition, RequisitionDel
 #################################################################################################################################
 #################################################################################################################################
 class ExternalOrderForm(forms.ModelForm):
+    image = forms.FileField(widget=forms.FileInput(attrs={'class':'custom-file-input','multiple': True, }))
     class Meta:
         model = ExternalOrder
         fields = '__all__'
         exclude = ('amount',)
-        widgets={
-            'image' : forms.FileInput(attrs={'class':'custom-file-input'})
-        }
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
@@ -445,18 +472,12 @@ class JobOrderReportForm(forms.ModelForm):
         model = JobOrder
         fields = '__all__'
 
-    # def __init__(self, *args, **kwargs):
-    #     new_choices = kwargs.pop('new_choices')
-    #     super().__init__(*args, **kwargs)
-    #     self.fields['status'].choices = new_choices
-
 JobOrderReportFormSet = inlineformset_factory(JobOrder, JobOrderTask,
     form=JobOrderReportForm,
     exclude=('activity', 'date','date2','personnel','completion_date','remarks'),
     extra=0,
     can_delete=False,
     widgets={
-        # 'remarks':forms.TextInput(attrs={'class':'form-control'}),
         'status':forms.Select(attrs={'class':'form-control'}),
     }  
 )
@@ -468,15 +489,42 @@ class ReworkForm(forms.ModelForm):
         model=Rework
         fields='__all__'
         
+class ReworkBeforeImageForm(forms.ModelForm):
+    class Meta:
+        model = ReworkBeforeImage
+        fields = ('image',)
+
+ReworkBeforeFormset = inlineformset_factory(Rework, ReworkBeforeImage,
+    form = ReworkBeforeImageForm,
+    exclude = ('rework',),
+    extra = 1,
+    can_delete=True,
+)
+
+class ReworkAfterImageForm(forms.ModelForm):
+    image = forms.FileField(widget=forms.FileInput(attrs={'class':'custom-file-input','multiple': True, }))
+    class Meta:
+        model = ReworkAfterImage
+        fields = ('image',)
+
+class ReworkAfterImageUpdateForm(forms.ModelForm):
+    class Meta:
+        model = ReworkAfterImage
+        fields = ('image',)
+
+ReworkAfterFormset = inlineformset_factory(Rework, ReworkAfterImage,
+    form = ReworkAfterImageUpdateForm,
+    exclude = ('rework',),
+    extra = 1,
+    can_delete=True,
+)
 
 class ReworkNewForm(forms.ModelForm):
+    image = forms.FileField(widget=forms.FileInput(attrs={'class':'custom-file-input','multiple': True, }))
     class Meta:
         model=Rework
         fields='__all__'
-        widgets={
-            'date':forms.TextInput(attrs={'data-toggle':'datepicker'})
-        }
-    
+        
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
@@ -590,3 +638,24 @@ class ExternalInventoryAdminForm(forms.ModelForm):
     class Meta:
         model = ExternalProjectInventory
         fields ='__all__'
+
+class LandingPageTitleForm(forms.ModelForm):
+    class Meta:
+        model = LandingPageTitle
+        fields='__all__'
+
+class LandingPageImageForm(forms.ModelForm):
+    class Meta:
+        model=LandingPageImage
+        fields='__all__'
+        exclude = ('title',)
+        widgets={
+            'image':forms.FileInput(attrs={'class':'custom-file-input','multiple': True, })
+        }
+
+LandingPageImageFormset = inlineformset_factory(LandingPageTitle, LandingPageImage,
+    form=LandingPageTitleForm,
+    exclude=('title',),
+    extra=1,
+    can_delete=True,
+)

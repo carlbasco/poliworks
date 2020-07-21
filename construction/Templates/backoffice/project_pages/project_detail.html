@@ -24,537 +24,538 @@
         </div>
     {% endfor %}
 </div>
-<section>
-    <div class="row">
-        <div class="accordion col col-md-5" id="accordionExample">
-            <div class="card">
-                <div class="card-header" id="headingTwo">
-                    <h2 class="mb-0">
-                    <button class="btn btn-link btn-cardheader" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                    PROJECT DETAILS</button>
-                    </h2>
-                </div>
-                <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionExample">
-                    <div class="card-body">
-                        <ul class="ul-projectdetails">
-                            <li class="projectdetails">Client:<h5>{{data.client}}</h5></li>
-                            <li class="projectdetails">Project Manager:<h5>{{data.pm}}</h5></li>
-                            <li class="projectdetails">Person In-Charge: <h5>{{data.pic}}</h5></li>
-                            <li class="projectdetails">Warehouseman: <h5>{{data.whm}}</h5></li>
-                            <li class="projectdetails">Project Type: <h5>{{data.typeofproject}}</h5></li>
-                            <li class="projectdetails">Lot Area: <h5>{{data.lotarea}}</h5></li>
-                            <li class="projectdetails">Address: <h5>{{data.address}}</h5> </li>
-                            <li class="projectdetails">City: <h5>{{data.city}}</h5> </li>
-                            <li class="projectdetails">Province: <h5>{{data.province}}</h5> </li>
-                            {% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Project Manager"%}
-                                <a class="btn btn-outline-primary float-right ml-3" href="{% url 'project_update' data.id%}">Edit Project Details</a></td>
-                            {% endif %}
-                            <br>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            {% if request.user.groups.all.0.name != "Warehouseman"%}
-            <div class="card">
-                <div class="card-header" id="headingTwo">
-                    <h2 class="mb-0">
-                        <button class="btn btn-link collapsed  btn-cardheader" type="button" data-toggle="collapse" data-target="#blueprint" aria-expanded="false" aria-controls="collapseThree">
-                        Blueprint/Design</button>
-                    </h2>
-                </div>
-                <div id="blueprint" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="mx-auto">
-                                {% if data.design %}
-                                    <img src="{{data.design.url}}" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="">
-                                {% else %}
-                                    <p>No Data Available</p>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-
-            {% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Project Manager"%}
-            <div class="card">
-                <div class="card-header" id="headingOne">
-                    <h2 class="mb-0">
-                        <button class="btn btn-link collapsed btn-cardheader" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                        Quotation
-                        </button>
-                    </h2>
-                </div>
-            <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-borderless">
-                            <thead>
-                                <tr>
-                                <th class="text-center">Subject</th>
-                                <th class="text-center">Date</th>
-                                <th class="text-center">Total Amount</th>
-                                <th class="text-center">Status</th>
-                                <th class="text-center">Action</th>
-                                </tr>
-                            </thead>
-                        <tbody>
-                            {% if quotation %}
-                            {% for i in quotation %}
-                            <tr>
-                                <td>{{i.subject}}</td>
-                                <td>{{i.date}}</td>
-                                <td class="text-right">{{i.amount}}</td>
-                                {% if i.status == "Rejected"%}
-                                    <td><span class="badge badge-danger">{{i.status}}</span></td>
-                                {% elif i.status == "Pending"%}
-                                    <td><span class="badge badge-warning">{{i.status}}</span></td>
-                                {% else %}
-                                    <td><span class="badge badge-success">{{i.status}}</span></td>
-                                {% endif %}
-                                <td><a href="{% url 'quotation_detail' i.id%}" class="btn btn-outline-primary view-btn">View</a></td>
-                            </tr>
-                            {% endfor %}
-                            {% else %}
-                            <tr>
-                                <td colspan="5">
-                                    <p class="text-center">No Data Available</p><br>
-                                    {% if request.user.groups.all.0.name == "Project Manager" %}
-                                    <a href="{% url 'quotation_create'%}">Create Quotation</a>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            {% endif%}
-                        </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            </div>
-            {% endif %}
-            
-            <div class="card">
-                <div class="card-header" id="headingThree">
-                    <h2 class="mb-0">
-                        <button class="btn btn-link collapsed  btn-cardheader" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                        Inventory</button>
-                    </h2>
-                </div>
-                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-borderless">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center" >Last Update</th>
-                                        <th class="text-center">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% if inventory%}
-                                    {% for i in inventory%}
-                                    <tr role="row" class="odd">
-                                        <td>{{i.last_update}}</td>
-                                        <td><a href="{% url 'inventory_detail' i.id %}" class="btn btn-outline-primary">View</a></td>
-                                    </tr>
-                                    {% endfor %}
-                                    {% else %}
-                                    <tr>
-                                        <td colspan="2">
-                                            <p class="text-center">No Data Available</p><br>
-                                        </td>
-                                    </tr>
-                                    {% endif %}
-                                </tbody>
-                            </table>
-                        </div>
-                       
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header" id="headingThree">
-                    <h2 class="mb-0">
-                        <button class="btn btn-link collapsed  btn-cardheader" type="button" data-toggle="collapse" data-target="#requisition" aria-expanded="false" aria-controls="collapseThree">
-                        Requisition</button>
-                    </h2>
-                </div>
-                <div id="requisition" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-borderless">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center">Date</th>
-                                        <th class="text-center">Status</th>
-                                        <th class="text-center">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                 <tbody>
-                                     {% if requisition %}
-                                     {% for i in requisition%}
-                                     <tr role="row" class="odd">
-                                         <td>{{i.date}}</td>
-                                         {% if i.status == "Pending" %}
-                                             <td><label class="badge badge-warning">{{i.status}}</label></td>
-                                         {% elif i.status == "Complied"%}
-                                             <td><label class="badge badge-info">{{i.status}}</label></td>
-                                         {% elif i.status == "To be Delivered"%}
-                                             <td><label class="badge badge-primary">{{i.status}}</label></td>
-                                         {% elif i.status == "Incomplete Order (Closed)"%}
-                                             <td><label class="badge badge-danger">{{i.status}}</label></td>
-                                         {% elif i.status == "Closed"%}
-                                             <td><label class="badge badge-success">{{i.status}}</label></td>
-                                         {% endif %}
-                                         <td>
-                                             <form action="{% url 'requisition_detail' i.id%}">
-                                                 <button class="btn btn-outline-primary view-btn">View</button>
-                                             </form>
-                                         </td>
-                                     </tr>
-                                     {% endfor %}
-                                     {% else%}
-                                     <tr>
-                                         <td colspan="3">
-                                             <p class="text-center">No Data Available</p><br>
-                                         </td>
-                                     </tr>
-                                     {% endif %}
-                                 </tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header" id="headingThree">
-                    <h2 class="mb-0">
-                        <button class="btn btn-link collapsed  btn-cardheader" type="button" data-toggle="collapse" data-target="#joborder" aria-expanded="false" aria-controls="collapseThree">
-                        Job Order</button>
-                    </h2>
-                </div>
-                <div id="joborder" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-borderless ">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center">Date</th>
-                                        <th class="text-center">Duration</th>
-                                        <th class="text-center">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                     {% if joborder%}
-                                         {% for i in joborder%}
-                                         <tr role="row" class="odd">
-                                             <td>{{i.date}}</td>
-                                             <td>{{i.duration}}</td>
-                                             <td><a class="btn btn-outline-primary" href="{% url 'joborder_detail' i.id%}">View</a></td>
-                                         </tr>
-                                         {% endfor %}
-                                     {% else %}
-                                         <tr>
-                                             <td colspan="3">
-                                                 <p class="text-center">No Data Available</p><br>
-                                             </td>
-                                         </tr>
-                                     {% endif %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header" id="headingThree">
-                    <h2 class="mb-0">
-                        <button class="btn btn-link collapsed  btn-cardheader" type="button" data-toggle="collapse" data-target="#externalorder" aria-expanded="false" aria-controls="collapseThree">
-                        External Order</button>
-                    </h2>
-                </div>
-                <div id="externalorder" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-borderless ">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center">Supplier</th>
-                                        <th class="text-center">Date</th>
-                                        <th class="text-center">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                     {% if external_order%}
-                                         {% for i in external_order%}
-                                         <tr role="row" class="odd">
-                                             <td>{{i.supplier}}</td>
-                                             <td>{{i.date}}</td>
-                                             <td>
-                                                 <a href="{% url 'externalorder_detail' i.id%}" class="btn btn-outline-primary">View</a>
-                                             </td>
-                                         </tr>
-                                         {% endfor %}
-                                     {% else %}
-                                     <tr>
-                                         <td colspan="3">
-                                             <p class="text-center">No Data Available</p><br>
-                                         </td>
-                                     </tr>
-                                     {% endif %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% if request.user.groups.all.0.name != "Warehouseman"%}
-            <div class="card">
-                <div class="card-header" id="headingThree">
-                    <h2 class="mb-0">
-                        <button class="btn btn-link collapsed  btn-cardheader" type="button" data-toggle="collapse" data-target="#rework" aria-expanded="false" aria-controls="collapseThree">
-                        Rework</button>
-                    </h2>
-                </div>
-                <div id="rework" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-borderless">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center">Subject</th>
-                                        <th class="text-center">Date</th>
-                                        <th class="text-center">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                     {% if rework %}
-                                         {% for i in rework%}
-                                         <tr role="row" class="odd">
-                                             <td>{{i.subject}}</td>
-                                             <td>{{i.date}}</td>
-                                             <td><a href="{% url 'rework_detail' i.id %}" class="btn btn-outline-primary">View</a></td>
-                                         </tr>
-                                         {% endfor %}
-                                     {% else %}
-                                     <tr>
-                                         <td colspan="3">
-                                             <p class="text-center">No Data Available</p><br>
-                                         </td>
-                                     </tr>
-                                     {% endif %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-            <div class="card">
-                <div class="card-header" id="headingThree">
-                    <h2 class="mb-0">
-                        <button class="btn btn-link collapsed  btn-cardheader" type="button" data-toggle="collapse" data-target="#sitephotos" aria-expanded="false" aria-controls="collapseThree">
-                        Site Photos</button>
-                    </h2>
-                </div>
-                <div id="sitephotos" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-borderless">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center">Date</th>
-                                        <th class="text-center">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        {% if sitephotos%}
-                                            {% for i in sitephotos%}
-                                            <tr role="row" class="odd">
-                                                <td class="text-center">{{i.date}}</td>
-                                                <td class="text-center"><a href="{% url 'sitephotos_detail' i.id%}" class="btn btn-outline-primary">View</a></td>
-                                            </tr>
-                                            {% endfor %}
-                                        {% else %}
-                                        <tr>
-                                            <td colspan="2">
-                                            <p class="text-center">No Data Available</p><br>
-                                            </td>
-                                        </tr>
-                                        {% endif %}
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {% if request.user.groups.all.0.name != "Warehouseman"%}
-            <div class="card">
-                <div class="card-header" id="headingThree">
-                    <h2 class="mb-0">
-                        <button class="btn btn-link collapsed  btn-cardheader" type="button" data-toggle="collapse" data-target="#personnel" aria-expanded="false" aria-controls="collapseThree">
-                        Personnel</button>
-                    </h2>
-                </div>
-                <div id="personnel" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-borderless">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th class="text-center">Type of Personnel</th>
-                                        <th class="text-center">From</th>
-                                        <th class="text-center">To</th>
-                                        <th class="text-center">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% if personnel %}
-                                        {% for i in personnel%}
-                                            <tr>
-                                                <td>{{i.short_name}}</td>
-                                                <td>{{i.personnel_type}}</td>
-                                                <td>{{i.date}}</td>
-                                                <td>{{i.date2}}</td>
-                                                <td>
-                                                    <a class="btn btn-outline-primary" href="{% url 'personnel_detail' i.id%}">View</a>
-                                                </td>
-                                            </tr>
-                                        {% endfor %}
-                                    {% else %}
-                                    <tr>
-                                        <td colspan="5">
-                                            <p class="text-center">No Data Available</p><br>
-                                        </td>
-                                    </tr>
-                                    {% endif%}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-
-            
-        </div>
-
-        <div class="col col-md-7 ">
-            <div class="card mb-4">
-                <div class="card-header" id="headingOverview">
-                    <h3>Overview</h3> 
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-borderless">
-                            <thead>
-                                <tr>
-                                    <th>Project Start Date</th>
-                                    <th>Project Completion Date</th>
-                                    <th>Maintenance Period End Date</th>
-                                    <th>Project Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>{{data.startdate}}</td>
-                                    <td>{{data.comdate}}</td>
-                                    <td>{{data.mpd}}</td>
-                                    {% if data.status == "Pending"%}
-                                    <td><span class="badge badge-warning">{{data.status}}</span></td>
-                                    {% elif data.status == "On-going"%}
-                                    <td><span class="badge badge-primary">{{data.status}}</span></td>
-                                    {% elif data.status == "Completed (Overdue)"%}
-                                    <td><span class="badge badge-danger">{{data.status}}</span></td>
-                                    {% else %}
-                                    <td><span class="badge badge-success">{{data.status}}</span></td>
-                                    {% endif %}
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-            </div>
-        </div>
-        
-        <div class="card">
+<div class="row">
+    <div class="col-xl-7 ">
+        <div class="card mb-4">
             <div class="card-header" id="headingOverview">
-                <h3>Work Details
-                    {% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Project Manager"%}
-                        {% if data2 %}
-                            <a href="{% url 'progress_update' data2.id %}"style="float:right; color:white;"title="Edit Project Progress"><i class="fa fa-edit"></i></a>
-                        {% endif %}
-                    {% endif %}
-                </h3>
+                <h3>Overview</h3> 
             </div>
             <div class="card-body">
-                <div class="row">
-                    {% if data2 %}
-                    <div class="mx-auto d-flex align-items-center ">
-                        <div class="forth circle " data-value="{{data2.total_progress}}">
-                            <strong></strong>
-                        </div>
-                        <h3>Project Progress</h3>
-                    </div>
-                    {% endif %}
-                    <div class="table-responsive">
-                        <table class="table table-bordered" id="table_progress">
-                            <thead>
-                                <tr>
-                                    <th>Scope of Work</th>
-                                    <th>Level</th>
-                                    <th>Status</th>
-                                    <th>Start Date</th>
-                                    <th>Completion Date</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% if data3 %}
-                                    {% for i in data3 %}
-                                        <tr>
-                                            <td>{{i.scope_of_work}}</td>
-                                            {% if i.level == 1 %}
-                                                <td>Low</td>
-                                            {% elif i.level == 3 %}
-                                                <td>Medium</td>
-                                            {% else %}
-                                                <td>High</td>
-                                            {% endif%}
-                                            {% if i.status == "Pending"%}
-                                                <td><span class="badge badge-warning">{{i.status}}</span></td>
-                                            {% elif i.status == "On-going"%}
-                                                <td><span class="badge badge-primary">{{i.status}}</span></td>
-                                            {% else %}
-                                                <td><span class="badge badge-success">{{i.status}}</span></td>
-                                            {% endif %}
-                                            <td>{{i.start_date}}</td>
-                                            <td>{{i.completion_date}}</td>
-                                        </tr>
-                                    {% endfor %}
+                <div class="table-responsive">
+                    <table class="table table-borderless">
+                        <thead>
+                            <tr>
+                                <th>Project Start Date</th>
+                                <th>Project Completion Date</th>
+                                <th>Maintenance Period End Date</th>
+                                <th>Project Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{data.startdate}}</td>
+                                <td>{{data.comdate}}</td>
+                                <td>{{data.mpd}}</td>
+                                {% if data.status == "Pending"%}
+                                <td><span class="badge badge-warning">{{data.status}}</span></td>
+                                {% elif data.status == "On-going"%}
+                                <td><span class="badge badge-primary">{{data.status}}</span></td>
+                                {% elif data.status == "Completed (Overdue)"%}
+                                <td><span class="badge badge-danger">{{data.status}}</span></td>
                                 {% else %}
-                                    <tr>
-                                        <td colspan="5"><p class="text-center">No data available</p></td>
-                                    </tr>
+                                <td><span class="badge badge-success">{{data.status}}</span></td>
                                 {% endif %}
-                            </tbody>
-                        </table>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header" id="headingOverview">
+            <h3>Work Details
+                {% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Project Manager"%}
+                    {% if data2 %}
+                        <a href="{% url 'progress_update' data2.id %}"style="float:right; color:white;"title="Edit Project Progress"><i class="fa fa-edit"></i></a>
+                    {% endif %}
+                {% endif %}
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                {% if data2 %}
+                <div class="mx-auto d-flex align-items-center ">
+                    <div class="forth circle " data-value="{{data2.total_progress}}">
+                        <strong></strong>
                     </div>
+                    <h3>Project Progress</h3>
+                </div>
+                {% endif %}
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="table_progress">
+                        <thead>
+                            <tr>
+                                <th>Scope of Work</th>
+                                <th>Level</th>
+                                <th>Status</th>
+                                <th>Start Date</th>
+                                <th>Completion Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if data3 %}
+                                {% for i in data3 %}
+                                    <tr>
+                                        <td>{{i.scope_of_work}}</td>
+                                        {% if i.level == 1 %}
+                                            <td>Low</td>
+                                        {% elif i.level == 3 %}
+                                            <td>Medium</td>
+                                        {% else %}
+                                            <td>High</td>
+                                        {% endif%}
+                                        {% if i.status == "Pending"%}
+                                            <td><span class="badge badge-warning">{{i.status}}</span></td>
+                                        {% elif i.status == "On-going"%}
+                                            <td><span class="badge badge-primary">{{i.status}}</span></td>
+                                        {% else %}
+                                            <td><span class="badge badge-success">{{i.status}}</span></td>
+                                        {% endif %}
+                                        <td>{{i.start_date}}</td>
+                                        <td>{{i.completion_date}}</td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="5"><p class="text-center">No data available</p></td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
-</section>
+    </div>
+
+    <div class="accordion col-xl-5" id="accordionExample">
+        <div class="card">
+            <div class="card-header" id="headingTwo">
+                <h2 class="mb-0">
+                <button class="btn btn-link btn-cardheader" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                PROJECT DETAILS</button>
+                </h2>
+            </div>
+            <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                <div class="card-body">
+                    <ul class="ul-projectdetails">
+                        <li class="projectdetails">Client:<h5>{{data.client}}</h5></li>
+                        <li class="projectdetails">Project Manager:<h5>{{data.pm}}</h5></li>
+                        <li class="projectdetails">Person In-Charge: <h5>{{data.pic}}</h5></li>
+                        <li class="projectdetails">Warehouseman: <h5>{{data.whm}}</h5></li>
+                        <li class="projectdetails">Project Type: <h5>{{data.typeofproject}}</h5></li>
+                        <li class="projectdetails">Lot Area: <h5>{{data.lotarea}}</h5></li>
+                        <li class="projectdetails">Address: <h5>{{data.address}}</h5> </li>
+                        <li class="projectdetails">City: <h5>{{data.city}}</h5> </li>
+                        <li class="projectdetails">Province: <h5>{{data.province}}</h5> </li>
+                        {% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Project Manager"%}
+                            <a class="btn btn-outline-primary float-right ml-3" href="{% url 'project_update' data.id%}">Edit Project Details</a></td>
+                        {% endif %}
+                        <br>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        {% if request.user.groups.all.0.name != "Warehouseman"%}
+        <div class="card">
+            <div class="card-header" id="headingTwo">
+                <h2 class="mb-0">
+                    <button class="btn btn-link collapsed  btn-cardheader" type="button" data-toggle="collapse" data-target="#blueprint" aria-expanded="false" aria-controls="collapseThree">
+                    Blueprint/Design</button>
+                </h2>
+            </div>
+            <div id="blueprint" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                <div class="card-body">
+                    {% if blueprint %}
+                    {% for i in blueprint%}
+                        <img src="{{i.image.url}}" class="img-fluid  mb-3 mx-auto" alt="">
+                        {% endfor %}
+                    {% else %}
+                        <p>No Data Available</p>
+                    {% endif %}
+                </div>
+                <a href="{% url 'blueprint_update' data.id %}" class="btn btn-outline-primary float-right mb-3 mr-3">Edit</a>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if request.user.groups.all.0.name == "Admin" or request.user.groups.all.0.name == "Project Manager"%}
+        <div class="card">
+            <div class="card-header" id="headingOne">
+                <h2 class="mb-0">
+                    <button class="btn btn-link collapsed btn-cardheader" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    Quotation
+                    </button>
+                </h2>
+            </div>
+        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-borderless">
+                        <thead>
+                            <tr>
+                            <th class="text-center">Subject</th>
+                            <th class="text-center">Date</th>
+                            <th class="text-center">Total Amount</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                    <tbody>
+                        {% if quotation %}
+                        {% for i in quotation %}
+                        <tr>
+                            <td>{{i.subject}}</td>
+                            <td>{{i.date}}</td>
+                            <td class="text-right">{{i.amount}}</td>
+                            {% if i.status == "Rejected"%}
+                                <td><span class="badge badge-danger">{{i.status}}</span></td>
+                            {% elif i.status == "Pending"%}
+                                <td><span class="badge badge-warning">{{i.status}}</span></td>
+                            {% else %}
+                                <td><span class="badge badge-success">{{i.status}}</span></td>
+                            {% endif %}
+                            <td><a href="{% url 'quotation_detail' i.id%}" class="btn btn-outline-primary view-btn">View</a></td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="5">
+                                <p class="text-center">No Data Available</p><br>
+                                {% if request.user.groups.all.0.name == "Project Manager" %}
+                                <a href="{% url 'quotation_create'%}">Create Quotation</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endif%}
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        </div>
+        {% endif %}
+        
+        <div class="card">
+            <div class="card-header" id="headingThree">
+                <h2 class="mb-0">
+                    <button class="btn btn-link collapsed  btn-cardheader" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    Inventory</button>
+                </h2>
+            </div>
+            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-borderless">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" >Last Update</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if inventory%}
+                                {% for i in inventory%}
+                                <tr role="row" class="odd">
+                                    <td>{{i.last_update}}</td>
+                                    <td><a href="{% url 'inventory_detail' i.id %}" class="btn btn-outline-primary">View</a></td>
+                                </tr>
+                                {% endfor %}
+                                {% else %}
+                                <tr>
+                                    <td colspan="2">
+                                        <p class="text-center">No Data Available</p><br>
+                                    </td>
+                                </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" id="headingThree">
+                <h2 class="mb-0">
+                    <button class="btn btn-link collapsed  btn-cardheader" type="button" data-toggle="collapse" data-target="#requisition" aria-expanded="false" aria-controls="collapseThree">
+                    Requisition</button>
+                </h2>
+            </div>
+            <div id="requisition" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-borderless">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Date</th>
+                                    <th class="text-center">Status</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tbody>
+                                    {% if requisition %}
+                                    {% for i in requisition%}
+                                    <tr role="row" class="odd">
+                                        <td>{{i.date}}</td>
+                                        {% if i.status == "Pending" %}
+                                            <td><label class="badge badge-warning">{{i.status}}</label></td>
+                                        {% elif i.status == "Complied"%}
+                                            <td><label class="badge badge-info">{{i.status}}</label></td>
+                                        {% elif i.status == "To be Delivered"%}
+                                            <td><label class="badge badge-primary">{{i.status}}</label></td>
+                                        {% elif i.status == "Incomplete Order (Closed)"%}
+                                            <td><label class="badge badge-danger">{{i.status}}</label></td>
+                                        {% elif i.status == "Closed"%}
+                                            <td><label class="badge badge-success">{{i.status}}</label></td>
+                                        {% endif %}
+                                        <td>
+                                            <form action="{% url 'requisition_detail' i.id%}">
+                                                <button class="btn btn-outline-primary view-btn">View</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                    {% else%}
+                                    <tr>
+                                        <td colspan="3">
+                                            <p class="text-center">No Data Available</p><br>
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                                </tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" id="headingThree">
+                <h2 class="mb-0">
+                    <button class="btn btn-link collapsed  btn-cardheader" type="button" data-toggle="collapse" data-target="#joborder" aria-expanded="false" aria-controls="collapseThree">
+                    Job Order</button>
+                </h2>
+            </div>
+            <div id="joborder" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-borderless ">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Date</th>
+                                    <th class="text-center">Duration</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                    {% if joborder%}
+                                        {% for i in joborder%}
+                                        <tr role="row" class="odd">
+                                            <td>{{i.date}}</td>
+                                            <td>{{i.duration}}</td>
+                                            <td><a class="btn btn-outline-primary" href="{% url 'joborder_detail' i.id%}">View</a></td>
+                                        </tr>
+                                        {% endfor %}
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="3">
+                                                <p class="text-center">No Data Available</p><br>
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" id="headingThree">
+                <h2 class="mb-0">
+                    <button class="btn btn-link collapsed  btn-cardheader" type="button" data-toggle="collapse" data-target="#externalorder" aria-expanded="false" aria-controls="collapseThree">
+                    External Order</button>
+                </h2>
+            </div>
+            <div id="externalorder" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-borderless ">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Supplier</th>
+                                    <th class="text-center">Date</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                    {% if external_order%}
+                                        {% for i in external_order%}
+                                        <tr role="row" class="odd">
+                                            <td>{{i.supplier}}</td>
+                                            <td>{{i.date}}</td>
+                                            <td>
+                                                <a href="{% url 'externalorder_detail' i.id%}" class="btn btn-outline-primary">View</a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="3">
+                                            <p class="text-center">No Data Available</p><br>
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if request.user.groups.all.0.name != "Warehouseman"%}
+        <div class="card">
+            <div class="card-header" id="headingThree">
+                <h2 class="mb-0">
+                    <button class="btn btn-link collapsed  btn-cardheader" type="button" data-toggle="collapse" data-target="#rework" aria-expanded="false" aria-controls="collapseThree">
+                    Rework</button>
+                </h2>
+            </div>
+            <div id="rework" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-borderless">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Subject</th>
+                                    <th class="text-center">Date</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                    {% if rework %}
+                                        {% for i in rework%}
+                                        <tr role="row" class="odd">
+                                            <td>{{i.subject}}</td>
+                                            <td>{{i.date}}</td>
+                                            <td><a href="{% url 'rework_detail' i.id %}" class="btn btn-outline-primary">View</a></td>
+                                        </tr>
+                                        {% endfor %}
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="3">
+                                            <p class="text-center">No Data Available</p><br>
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        <div class="card">
+            <div class="card-header" id="headingThree">
+                <h2 class="mb-0">
+                    <button class="btn btn-link collapsed  btn-cardheader" type="button" data-toggle="collapse" data-target="#sitephotos" aria-expanded="false" aria-controls="collapseThree">
+                    Site Photos</button>
+                </h2>
+            </div>
+            <div id="sitephotos" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-borderless">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Date</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    {% if sitephotos%}
+                                        {% for i in sitephotos%}
+                                        <tr role="row" class="odd">
+                                            <td class="text-center">{{i.date}}</td>
+                                            <td class="text-center"><a href="{% url 'sitephotos_detail' i.id%}" class="btn btn-outline-primary">View</a></td>
+                                        </tr>
+                                        {% endfor %}
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="2">
+                                        <p class="text-center">No Data Available</p><br>
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if request.user.groups.all.0.name != "Warehouseman"%}
+        <div class="card">
+            <div class="card-header" id="headingThree">
+                <h2 class="mb-0">
+                    <button class="btn btn-link collapsed  btn-cardheader" type="button" data-toggle="collapse" data-target="#personnel" aria-expanded="false" aria-controls="collapseThree">
+                    Personnel</button>
+                </h2>
+            </div>
+            <div id="personnel" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-borderless">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th class="text-center">Type of Personnel</th>
+                                    <th class="text-center">From</th>
+                                    <th class="text-center">To</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if personnel %}
+                                    {% for i in personnel%}
+                                        <tr>
+                                            <td>{{i.short_name}}</td>
+                                            <td>{{i.personnel_type}}</td>
+                                            <td>{{i.date}}</td>
+                                            <td>{{i.date2}}</td>
+                                            <td>
+                                                <a class="btn btn-outline-primary" href="{% url 'personnel_detail' i.id%}">View</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                <tr>
+                                    <td colspan="5">
+                                        <p class="text-center">No Data Available</p><br>
+                                    </td>
+                                </tr>
+                                {% endif%}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        
+    </div>
+</div>
+
 {% endblock %}
 
 {% block javascript%}
