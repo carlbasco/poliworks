@@ -425,7 +425,6 @@ class JobOrderForm(forms.ModelForm):
         self.fields['project'].queryset = Project.objects.filter(pic=user)
 
 class JobOrderNewForm(forms.ModelForm):
-    personnel = forms.ModelChoiceField(queryset=Personnel.objects.filter(status="Available"), widget=forms.Select(attrs={'class':'form-control personnel', 'required': 'true'}))
     class Meta:
         model=JobOrder
         fields='__all__'
@@ -436,6 +435,7 @@ JobOrderFormSet = inlineformset_factory(JobOrder, JobOrderTask,
     extra=1,
     can_delete=True,
     widgets={
+        'personnel':forms.Select(attrs={'class':'form-control personnel', 'required': 'true'}),
         'activity':forms.TextInput( attrs={'class':'form-control'}),
         'date':forms.DateInput( attrs={'class':'form-control dateinput'}),
         'date2':forms.DateInput( attrs={'class':'form-control dateinput'}),
@@ -454,7 +454,7 @@ JobOrderUpdateFormSet = inlineformset_factory(JobOrder, JobOrderTask,
     extra=0,
     can_delete=True,
     widgets={
-        'personnel':forms.Select(attrs={'class':'form-control personnel'}),
+        'personnel':forms.Select(attrs={'class':'form-control personnel', 'required': 'true'}),
         'activity':forms.TextInput( attrs={'class':'form-control'}),
         'date':forms.DateInput( attrs={'class':'form-control dateinput'}),
         'date2':forms.DateInput( attrs={'class':'form-control dateinput'}),

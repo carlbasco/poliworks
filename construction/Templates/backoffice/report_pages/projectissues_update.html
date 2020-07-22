@@ -80,3 +80,10 @@
 </div>
 
 {%endblock%}
+{% block javascript %}
+<script>
+    $('form').bind('submit', function () {
+        $(this).find(':submit').attr('disabled','disabled');
+    });
+</script>
+{% endblock %}

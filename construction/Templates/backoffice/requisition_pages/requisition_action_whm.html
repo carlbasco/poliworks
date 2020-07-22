@@ -145,9 +145,8 @@
             });
             reader.readAsDataURL(file);
         }
-    }
+    };
     $('.qty2').prop('readonly', true);
-
     $('#id_image').on("change", previewImages);
     $('.status2').change(function(){
         var status2 = $(this).val()
@@ -161,7 +160,7 @@
             $(this).closest('tr').find('.qty2').css('border-color', '');
             $(this).closest('tr').find('.qty_valid').empty();
         }
-    })
+    });
     
     $('.qty2').change(function(){
         var quantity = parseFloat($(this).closest('tr').find('.qty').text());
@@ -176,6 +175,10 @@
             x.css('border-color', '');
             $(this).closest('td').find('.qty_valid').empty();
         }
-    })
+    });
+
+    $('form').bind('submit', function () {
+        $(this).find(':submit').attr('disabled','disabled');
+    });
 </script>
 {% endblock %}

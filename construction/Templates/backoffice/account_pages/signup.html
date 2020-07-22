@@ -113,4 +113,9 @@
 {% block javascript%}
 <script src="{% static 'assets/js/custom/province-city.js'%}"></script>
 <style>span.select2-selection.select2-selection--single {height: 35px;}</style>
+<script>
+    $('form').bind('submit', function () {
+        $(this).find(':submit').attr('disabled','disabled');
+    });
+</script>
 {% endblock %}

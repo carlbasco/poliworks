@@ -149,19 +149,7 @@
                                                     </th>
                                                     <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
                                                         ria-label="Actions: activate to sort column ascending" style="width: 50px;">
-                                                        Status
-                                                    </th>
-                                                    <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                                        ria-label="Actions: activate to sort column ascending" style="width: 50px;">
-                                                        Project
-                                                    </th>
-                                                    <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                                        ria-label="Actions: activate to sort column ascending" style="width: 50px;">
-                                                        From
-                                                    </th>
-                                                    <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                                        ria-label="Actions: activate to sort column ascending" style="width: 50px;">
-                                                        To
+                                                        Job Orders
                                                     </th>
                                                     <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
                                                         ria-label="Actions: activate to sort column ascending" style="width: 50px;">
@@ -172,21 +160,10 @@
                                             <tbody>
                                                 {% for i in view.data2%}
                                                     <tr role="row" class="odd">
-                                                        <td>{{i.short_name}}</td>
-                                                        <td>{{i.personnel_type}}</td>
-                                                        <td>"{{i.skill.all|join:'", "'}}"</td>
-                                                        {% if i.status == "Currently Assigned" %}
-                                                            <td class="text-center"><label class="badge badge-warning">{{i.status}}</label></td>
-                                                        {% elif i.status == "Available"%}
-                                                            <td class="text-center"><label class="badge badge-primary">{{i.status}}</label></td>
-                                                        {% endif %}
-                                                        {% if i.project %}
-                                                            <td class="text-center">{{i.project}}</td>
-                                                        {% else %}
-                                                            <td class="text-center">N/A</td>
-                                                        {% endif %}
-                                                        <td>{{i.date}}</td>
-                                                        <td>{{i.date2}}</td>
+                                                        <td class="text-center">{{i.short_name}}</td>
+                                                        <td class="text-center">{{i.personnel_type}}</td>
+                                                        <td class="text-center">"{{i.skill.all|join:'", "'}}"</td>
+                                                        <td class="text-center">{{i.joborder_count}}</td>
                                                         <td class="text-center"><a class="btn btn-outline-primary" href="{% url 'personnel_detail' i.id %}">View</a></td>
                                                     </tr>
                                                 {% endfor %}
@@ -212,6 +189,7 @@
         startDate: "dateToday",
         format:'yyyy-mm-dd',
     });
+
     $("#id_duration").datepicker({
         startDate: "dateToday",
         startDate: "dateToday",
@@ -222,11 +200,13 @@
         deleteText: 'Remove',
         prefix: '{{ formset.prefix }}'
     });
+
     $('.personnel').select2()
     $('#id_project').select2()
     $('#id_pic').prop('disabled', true);
     $('form').bind('submit', function () {
         $(this).find('#id_pic').prop('disabled', false);
+        $(this).find(':submit').attr('disabled','disabled');
     });
 
     $('.add-row').click(function(){

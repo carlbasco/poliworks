@@ -87,6 +87,10 @@
         addText: 'Add',
         deleteText: 'Remove',
         prefix: '{{ formset.prefix }}'
-    })
+    });
+
+    $('form').bind('submit', function () {
+        $(this).find(':submit').attr('disabled','disabled');
+    });
 </script>
 {% endblock %}

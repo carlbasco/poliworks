@@ -313,9 +313,7 @@ class Personnel(models.Model):
     address = models.CharField(max_length=255, null=True, help_text='Apartment, suite, unit, building, floor, street, barangay')
     city = models.ForeignKey(City, on_delete=models.SET_NULL, verbose_name='City', null=True)
     province = models.ForeignKey(Province, on_delete=models.SET_NULL, verbose_name='Province', null=True)
-    status ={('Currently Assigned', 'Currently Assigned'), ('Available', 'Available')}
-    status = models.CharField(('Status'), max_length=255, choices=status, default="Available")
-    project = models.ManyToManyField(Project, blank=True)
+    joborder_count = models.IntegerField(('Job Order'), default=0)
     class Meta:
         verbose_name_plural = 'Personnel'
         verbose_name = 'Personnel'
@@ -325,7 +323,6 @@ class Personnel(models.Model):
     def __str__(self):
         flname ='%s %s' % (self.first_name, self.last_name)
         return flname.strip()
-
 
 class JobOrder(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='joborder', verbose_name='Project')
@@ -354,6 +351,10 @@ class JobOrderTask(models.Model):
         verbose_name_plural = 'Job Order Tasks'
     def __str__(self):
         return self.activity
+
+class PersonnelJobOrder(models.Model):
+    personnel = models.ForeignKey(Personnel, on_delete=models.CASCADE)
+    joborder = models.ForeignKey(JobOrderTask, on_delete=models.CASCADE)
 
 class Rework(models.Model):
     project=models.ForeignKey(Project, on_delete=models.CASCADE, related_name='reworkform', verbose_name='Project')

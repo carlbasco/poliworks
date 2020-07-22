@@ -134,6 +134,10 @@
         }
     }
     $('#id_image').on("change", previewImages);
+    
+    $('form').bind('submit', function () {
+        $(this).find(':submit').attr('disabled','disabled');
+    });
 </script>
 <style>span.select2-selection.select2-selection--single {height: 30px;}</style>
 {% endblock %}

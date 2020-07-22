@@ -125,6 +125,7 @@
     $('#id_whm').prop('disabled', true);
     $('form').bind('submit', function () {
         $(this).find('#id_whm').prop('disabled', false);
+        $(this).find(':submit').attr('disabled','disabled');
     });
 
     $(function() {

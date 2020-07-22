@@ -56,19 +56,7 @@
                                     </th>
                                     <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
                                         style="width: 50px;">
-                                        Status
-                                    </th>
-                                    <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                        style="width: 50px;">
-                                        Project
-                                    </th>
-                                    <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                        style="width: 50px;">
-                                        From
-                                    </th>
-                                    <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                        style="width: 50px;">
-                                        To
+                                        Job Order
                                     </th>
                                     <th class="sorting text-center" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
                                         style="width: 50px;">
@@ -82,18 +70,7 @@
                                     <td>{{i.short_name}}</td>
                                     <td>{{i.personnel_type}}</td>
                                     <td>"{{i.skill.all|join:'", "'}}"</td>
-                                    {% if i.status == "Currently Assigned" %}
-                                        <td class="text-center"><label class="badge badge-warning">{{i.status}}</label></td>
-                                    {% elif i.status == "Available"%}
-                                        <td class="text-center"><label class="badge badge-primary">{{i.status}}</label></td>
-                                    {% endif %}
-                                    {% if i.project %}
-                                        <td class="text-center">{{i.project}}</td>
-                                    {% else %}
-                                        <td class="text-center">N/A</td>
-                                    {% endif %}
-                                    <td class="text-center">{{i.date}}</td>
-                                    <td class="text-center">{{i.date2}}</td>
+                                    <td class="text-center">{{i.joborder_count}}</td>
                                     <td class="text-center"><a class="btn btn-outline-primary" href="{% url 'personnel_detail' i.id %}">View</a></td>
                                 </tr>
                                 {% endfor %}

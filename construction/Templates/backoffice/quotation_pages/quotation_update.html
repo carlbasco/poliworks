@@ -122,6 +122,9 @@
     $('.sow').select2();
     $('.add-row').click(function(){
         $('.sow').select2();
-    })
+    });
+    $('form').bind('submit', function () {
+        $(this).find(':submit').attr('disabled','disabled');
+    });
 </script>
 {%endblock%}

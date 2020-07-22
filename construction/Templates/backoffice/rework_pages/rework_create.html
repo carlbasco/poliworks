@@ -139,6 +139,7 @@
     $('form').bind('submit', function () {
         $(this).find('#id_pm').prop('disabled', false);
         $(this).find('#id_date').prop('disabled', false);
+        $(this).find(':submit').attr('disabled','disabled');
     });
     function previewImages() {  
         var $preview = $('#preview').empty();

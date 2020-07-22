@@ -154,16 +154,17 @@
         addText: 'Add',
         deleteText: 'Remove',
         prefix: '{{ formset.prefix }}'
-    })
+    });
     $('.art').select2()
     $('.add-row').click(function(){
         $('.art').select2()
-    })
+    });
     $('#id_whm').prop('disabled', true);
     $('#id_project').prop('disabled', true);
     $('form').bind('submit', function () {
         $(this).find('#id_whm').prop('disabled', false);
         $(this).find('#id_project').prop('disabled', false);
+        $(this).find(':submit').attr('disabled','disabled');
     });
 </script>
 <style>span.select2-selection.select2-selection--single {height: 30px;}</style>

@@ -26,11 +26,11 @@
                     <div class="pt-2 pb-2 pr-2 float-right"></div>
                 </div>
             </li> 
-            <li class="nav-item dropdown d-xl-inline-block">
+            <li class="nav-item dropdown d-xl-inline-block responsive-nav">
                 <span class="profile-text">Hello, {{request.user.groups.all.0}}</span>
                 <img id="dp" class="rounded-circle" src="{{request.user.profile.image.url}}" alt="Profile image" width="40px" height="35px;">
             </li>
-            <li class="nav-item dropdown d-xl-inline-block" id="navdrpdwn">
+            <li class="nav-item dropdown d-xl-inline-block responsive-nav" id="navdrpdwn">
                 <a class="nav-link dropdown-toggle" id="UserDropdown" href="#" data-toggle="dropdown" aria-expanded="false"></a>
                 <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
                     <a class="dropdown-item" href="{% url 'userprofile'%}">Profile</a>

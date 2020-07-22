@@ -107,7 +107,6 @@
     function previewImages() {  
         var $preview = $('#preview').empty();
         if (this.files) $.each(this.files, readAndPreview);
-
         function readAndPreview(i, file) {
             if (!/\.(jpe?g|png|gif|webp)$/i.test(file.name)){
                 return alert(file.name +" is not an image");
@@ -121,6 +120,10 @@
         }
     }
     $('#id_image').on("change", previewImages);
+
+    $('form').bind('submit', function () {
+        $(this).find(':submit').attr('disabled','disabled');
+    });
 </script>
 <style>span.select2-selection.select2-selection--single {height: 30px;}</style>
 {% endblock %}

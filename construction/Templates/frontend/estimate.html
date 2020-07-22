@@ -153,5 +153,8 @@
         startDate: "dateToday",
         format:'yyyy-mm-dd',
     });
+    $('form').bind('submit', function () {
+        $(this).find(':submit').attr('disabled','disabled');
+    });
 </script>
 {% endblock%}

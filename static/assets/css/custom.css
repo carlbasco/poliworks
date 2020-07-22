@@ -64,12 +64,13 @@
 label.btn-add-responsive{
     margin-bottom: 0;
 }
-ul#usernav{
-    visibility: hidden!important;
-}
-@media only screen and (min-width: 992px){
-    ul#usernav {
-       visibility: visible!important;
+
+@media only screen and (max-width: 991px){
+    .responsive-nav {
+       display:none;
+    }
+    button.navbar-toggler.navbar-toggler-right.d-lg-none.align-self-center{
+        margin-left:auto;
     }
 }
 #bt-account{
