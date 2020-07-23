@@ -80,13 +80,13 @@
                 <ul class="nav flex-column sub-menu">
                     <li class="nav-item">
                         {% if request.user.groups.all.0.name == "Warehouseman" %}
-                            <a class="nav-link" href="{% url 'inventory_whm' %}">ProjectSite Inventory</a>
+                            <a class="nav-link" href="{% url 'inventory_whm' %}">Project Site Inventory</a>
                         {% elif request.user.groups.all.0.name == "Project Manager" %}
-                            <a class="nav-link" href="{% url 'inventory_pm' %}">ProjectSite Inventory</a>
+                            <a class="nav-link" href="{% url 'inventory_pm' %}">Project Site Inventory</a>
                         {% elif request.user.groups.all.0.name == "Person In-Charge" %}
-                            <a class="nav-link" href="{% url 'inventory_pic' %}">ProjectSite Inventory</a>
+                            <a class="nav-link" href="{% url 'inventory_pic' %}">Project Site Inventory</a>
                         {% else %}
-                            <a class="nav-link" href="{% url 'inventory_list' %}">ProjectSite Inventory</a>
+                            <a class="nav-link" href="{% url 'inventory_list' %}">Project Site Inventory</a>
                         {% endif %}
                     <li class="nav-item">
                         {% if request.user.groups.all.0.name == "Project Manager" %}

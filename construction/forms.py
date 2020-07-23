@@ -210,7 +210,7 @@ QuotationFormSet = inlineformset_factory(Quotation, QuotationDetails,
     extra=1,
     can_delete=True,
     widgets={
-        'scope_of_work':forms.Select(attrs={'class':'sow', 'required': 'true'}),
+        'scope_of_work':forms.Select(attrs={'class':'sow', 'required':True}),
         'unit':forms.TextInput(attrs={'class':'form-control',}),
         'quantity':forms.NumberInput( attrs={'class':'form-control qty','required': 'true'}),
     }
@@ -391,10 +391,10 @@ ExternalOrderUpdateFormSet = inlineformset_factory(ExternalOrder, ExternalOrderD
     extra=0,
     can_delete=True,
     widgets={
-        'quantity':forms.NumberInput(attrs={'class':'form-control','required': 'true'}),
-        'unit':forms.TextInput(attrs={'class':'form-control','required': 'true'}),
-        'articles':forms.TextInput(attrs={'class':'form-control','required': 'true'}),
-        'unitprice':forms.NumberInput(attrs={'class':'form-control','required': 'true'})
+        'quantity':forms.NumberInput(attrs={'class':'form-control', 'required':True}),
+        'unit':forms.TextInput(attrs={'class':'form-control', 'required':True}),
+        'articles':forms.TextInput(attrs={'class':'form-control', 'required':True}),
+        'unitprice':forms.NumberInput(attrs={'class':'form-control', 'required':True})
     }    
 )
 class ExternalOrderReportForm(forms.ModelForm):
@@ -407,8 +407,8 @@ ExternalOrderReportFormSet = inlineformset_factory(ExternalOrderReport, External
     extra=1,
     can_delete=True,
     widgets={
-        'articles':forms.Select(attrs={'class':'form-control art'}),
-        'quantity':forms.NumberInput(attrs={'class':'form-control','required': 'true'}),
+        'articles':forms.Select(attrs={'class':'form-control art', 'required':True}),
+        'quantity':forms.NumberInput(attrs={'class':'form-control','required':True}),
         'remarks':forms.TextInput(attrs={'class':'form-control'}),
     }
 )
@@ -435,7 +435,7 @@ JobOrderFormSet = inlineformset_factory(JobOrder, JobOrderTask,
     extra=1,
     can_delete=True,
     widgets={
-        'personnel':forms.Select(attrs={'class':'form-control personnel', 'required': 'true'}),
+        'personnel':forms.Select(attrs={'class':'form-control personnel', 'required':True}),
         'activity':forms.TextInput( attrs={'class':'form-control'}),
         'date':forms.DateInput( attrs={'class':'form-control dateinput'}),
         'date2':forms.DateInput( attrs={'class':'form-control dateinput'}),
@@ -454,7 +454,7 @@ JobOrderUpdateFormSet = inlineformset_factory(JobOrder, JobOrderTask,
     extra=0,
     can_delete=True,
     widgets={
-        'personnel':forms.Select(attrs={'class':'form-control personnel', 'required': 'true'}),
+        'personnel':forms.Select(attrs={'class':'form-control personnel', 'required':True}),
         'activity':forms.TextInput( attrs={'class':'form-control'}),
         'date':forms.DateInput( attrs={'class':'form-control dateinput'}),
         'date2':forms.DateInput( attrs={'class':'form-control dateinput'}),

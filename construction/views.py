@@ -288,7 +288,7 @@ def ProjectDetailView(request, pk):
         except ObjectDoesNotExist:
             context={
                 'data':data, 'blueprint':blueprint,
-                'quotation':quotation, 'personnel':personnel, 'inventory':inventory,
+                'quotation':quotation, 'inventory':inventory,
                 'requisition':requisition, 'external_order':external_order, 'rework':rework,
                 'sitephotos':sitephotos,
             }
@@ -786,7 +786,7 @@ def RequisitionDetailView(request, pk):
         data = Requisition.objects.get(id=pk)
         data2 = RequisitionDetails.objects.filter(requisition=data.id)
         data3 = RequisitionImage.objects.filter(requisition=data.id)
-        data4 = RequisitionDelivery.objects.filter(requisition=data.id)
+        data4 = RequisitionDelivery.objects.filter(requisition=data.id).order_by('status', 'articles')
         context= {'data':data, 'data2':data2, 'data3':data3, 'data4':data4,}
         return render(request, 'backoffice/requisition_pages/requisition_detail.html', context)
     except ObjectDoesNotExist:
@@ -821,44 +821,53 @@ def RequisitionActionView(request,pk):
     data3 = RequisitionDelivery.objects.filter(requisition=data.id)
     if request.method == 'POST':
         formset = RequisitionActionFormSet(request.POST, instance=data)
-        print(data.status)
         if data.status == "Closed" or data.status =="To be Delivered":
             messages.warning(request, "Cannot update Requistion because it's already been complied")
             return redirect('requisition_detail',pk=data.id)
         else:
             if formset.is_valid():
+                delivery = formset.save(False)
+                for i in delivery:
+                    if i.status == "To be delivered":
+                        item = Inventory.objects.get(id=i.articles.id)
+                        #check if quantity on requisition is greater than on Inventory 
+                        if item.quantity < i.quantity:
+                            messages.error(request, f"Quantity of {i.articles} on Inventory Office are not sufficient to comply requisition. Please update your stocks or canceled the item request.")
+                            return redirect('requisition_action', pk=data.id)
+                        # check if item has price
+                        if i.articles.unit_price is None or i.articles.unit_price == 0:
+                            messages.error(request, f'"{i.articles}" has no unit price. Please update its unit price on Material Inventory Office')
+                            return redirect('requisition_action', pk=data.id)
+                    elif i.status =="Canceled":
+                        i.quantity = 0
                 formset.save()
                 canceled = RequisitionDelivery.objects.filter(requisition=data.id, status="Canceled")
-                to_be_delivered = RequisitionDelivery.objects.filter(requisition=data.id, status="To be delivered")
-                for j in to_be_delivered:
-                    item =Inventory.objects.get(id=j.articles.id)
-                    #check if quantity on requisition is greater than on Inventory 
-                    if item.quantity < j.quantity:
-                        messages.error(request, f"Quantity of {j.articles} on Inventory Office are not sufficient to comply requisition. Please update your stocks or canceled the item request.")
-                        return redirect('requisition_action', pk=data.id)
-                    # check if item has price
-                    if j.articles.unit_price is None:
-                        messages.error(request, f'"{j.articles}" has no unit price. Please update its unit price on Material Inventory Office')
-                        return redirect('requisition_action', pk=data.id)
-                #process logic        
-                data.amount = 0
-                for k in data3:
-                    if k.status == "To be delivered":
-                        item =Inventory.objects.get(id=k.articles.id)
-                        item.quantity -= k.quantity
+                #process logic   
+                for i in data3:
+                    if i.status == "To be delivered":
+                        item =Inventory.objects.get(id=i.articles.id)
+                        item.quantity -= i.quantity
                         item.save()
-                        print(k.articles.unit_price)
-                        data.amount += k.quantity*k.articles.unit_price
+                        # data.amount += i.quantity*i.articles.unit_price
+                        # data.save()
+                    elif i.status == "Canceled":
+                        i.quantity = 0
+                        i.save()
+                data.amount = 0
+                for j in data3:
+                    if j.status != "Canceled":
+                        data.amount += j.quantity*j.articles.unit_price
                         data.save()
-                    elif k.status == "Canceled":
-                        j.quantity = 0
-                        j.save()
                 if data3.count() == canceled.count():
-                    data.status == "Closed (canceled)"
+                    print(data3.count())
+                    print(canceled.count())
+                    data.status = "Closed"
                     data.save()
+                    print(data.status)
                 else:
                     data.status = "To be Delivered"
                     data.save()
+                    print(data.status)
                 whm_notif = Notification.objects.create(receiver=data.whm, description=f"The Admin has complied to your requisition", url=f"/materials/requisition/{data.id}")
                 messages.success(request, "Requisition has been complied.")
                 return redirect('requisition_detail',pk=data.id)
@@ -891,21 +900,21 @@ def RequisitionActionView_WHM(request,pk):
                                 j.status2 = None
                                 j.quantity2 = None
                                 j.save()
-                            messages.error(request,"Invalid Input. Received Quantity cannot be higher than Delivered Quantity ")
+                            messages.error(request,"Received Quantity cannot be higher than Delivered Quantity ")
                             return redirect("requisition_action_whm", pk=data.id)
                         elif i.quantity == i.quantity2:
                             for j in data2:
                                 j.status2 = None
                                 j.quantity2 = None
                                 j.save()
-                            messages.error(request,'Invalid Input. Received Quantity cannot be equal to the Delivered Quantity when selected in action is "Incomplete"')
+                            messages.error(request,'Received Quantity cannot be equal to the Delivered Quantity when selected in action is "Incomplete"')
                             return redirect("requisition_action_whm", pk=data.id)
                         elif i.quantity2 == 0:
                             for j in data2:
                                 j.status2 = None
                                 j.quantity2 = None
                                 j.save()
-                            messages.error(request,'Invalid Input. Please check your fields before you submit it"')
+                            messages.error(request,'Please check your fields before you submit it"')
                             return redirect("requisition_action_whm", pk=data.id)
                     else:
                         i.quantity2=None
@@ -1036,7 +1045,7 @@ def ExternalProjectInventoryList_WHM(request):
 def ProjectInventoryList_PM(request):
     user = request.user
     data = Project.objects.filter(pm=user)
-    data2 = ProjectInventory.objects.filter(project__in=data)
+    data2 = ProjectInventory.objects.filter(project__in=data).order_by('articles')
     context = {'data2':data2}
     return render(request, 'backoffice/inventory_pages/inventory_list.html', context)
 
@@ -1045,7 +1054,7 @@ def ProjectInventoryList_PM(request):
 def ExternalProjectInventoryList_PM(request):
     user = request.user
     data = Project.objects.filter(pm=user)
-    data2 = ExternalProjectInventory.objects.filter(project__in=data)
+    data2 = ExternalProjectInventory.objects.filter(project__in=data).order_by('articles')
     context = {'data2':data2}
     return render(request, 'backoffice/inventory_pages/externalorder_inventory_list.html', context)
 
@@ -1054,7 +1063,7 @@ def ExternalProjectInventoryList_PM(request):
 def ProjectInventoryList_PIC(request):
     user = request.user
     data = Project.objects.filter(pic=user)
-    data2 = ProjectInventory.objects.filter(project__in=data)
+    data2 = ProjectInventory.objects.filter(project__in=data).order_by('articles')
     context = {'data2':data2}
     return render(request, 'backoffice/inventory_pages/inventory_list.html', context)
 
@@ -1063,7 +1072,7 @@ def ProjectInventoryList_PIC(request):
 def ExternalProjectInventoryList_PIC(request):
     user = request.user
     data = Project.objects.filter(pic=user)
-    data2 = ExternalProjectInventory.objects.filter(project__in=data)
+    data2 = ExternalProjectInventory.objects.filter(project__in=data).order_by('articles')
     context = {'data2':data2}
     return render(request, 'backoffice/inventory_pages/externalorder_inventory_list.html', context)
 
@@ -1072,7 +1081,7 @@ def ExternalProjectInventoryList_PIC(request):
 def ProjectInventoryDetailView(request,pk):
     try:
         data = ProjectInventory.objects.get(id=pk)
-        data2 = ProjectInventoryDetails.objects.filter(inventory=data)
+        data2 = ProjectInventoryDetails.objects.filter(inventory=data).order_by('articles')
         context = {'data':data, 'data2':data2}
         return render(request, 'backoffice/inventory_pages/inventory_detail.html', context)
     except ObjectDoesNotExist:
@@ -1083,7 +1092,7 @@ def ProjectInventoryDetailView(request,pk):
 def ExternalProjectInventoryDetailView(request,pk):
     try:
         data = ExternalProjectInventory.objects.get(id=pk)
-        data2 = ExternalProjectInventoryDetails.objects.filter(inventory=data)
+        data2 = ExternalProjectInventoryDetails.objects.filter(inventory=data).order_by('articles')
         context = {'data':data, 'data2':data2}
         return render(request, 'backoffice/inventory_pages/externalorder_inventory_detail.html', context)
     except ObjectDoesNotExist:
@@ -1105,36 +1114,35 @@ def ProjectInventoryReport_WHM(request,pk):
                 try:
                     article = ProjectInventoryDetails.objects.get(inventory=data, articles=i.articles)
                 except ObjectDoesNotExist:
-                    messages.error(request, "Invalid Input. Articles on Form does not exist on Inventory")
+                    messages.error(request, "Articles on Form does not exist on Inventory")
                     return redirect('inventory_whm_detail', pk=data.id)
-            for j in formset:
-                item = ProjectInventoryDetails.objects.get(inventory=data, articles=j.articles)
-                if item.quantity < j.quantity:
-                    messages.error(request, f"Quantity of {j.articles} on Project Site are not sufficient.")
+            for i in formset:
+                item = ProjectInventoryDetails.objects.get(inventory=data, articles=i.articles)
+                if item.quantity < i.quantity:
+                    messages.error(request, f"Quantity of {i.articles} on Project Site Inventory are not sufficient.")
                     return redirect('inventory_whm_detail', pk=data.id)
-            for k in formset:
-                for l in data2:
-                    if k.articles == l.articles:
-                        l.quantity -= k.quantity
-                        if 0 > l.quantity: 
-                            messages.error(request, "Error Inputs. Please check all fields before you submit. Do not input two same choice on a field")
-                        else:
-                            l.save()
+            for i in formset:
+                for j in data2:
+                    if i.articles == j.articles:
+                        j.quantity -= i.quantity
+                        j.save()
             form.save()
-            for a in formset:
-                a.report = form
-                a.save()
-            data.date=datetime.date.today
+            for i in formset:
+                i.report = form
+                i.save()
+            data.date = datetime.date.today
             data.save()
             project = Project.objects.get(id=data.project.id)
             admin = User.objects.filter(groups__name="Admin")
             for i in admin:
-                adnin_notif = Notification.objects.create(receiver=i, description=f"Daily Material Report at project {project.project} has been created ", url=f"/materials/inventory/{data.id}")
+                adnin_notif = Notification.objects.create(receiver=i, description=f"Material Report at project {project.project} has been created ", url=f"/reports/materialreport/{form.id}")
             project = Project.objects.get(id=data.project.id)
-            pm_notif = Notification.objects.create(receiver=project.pm, description=f"Daily Material Report at project {project.project} has been created ", url=f"/materials/inventory/{data.id}")
-            pic_notif = Notification.objects.create(receiver=project.pic, description=f"Daily Material Report at project {project.project} has been created ", url=f"/materials/inventory/{data.id}")
+            pm_notif = Notification.objects.create(receiver=project.pm, description=f"Material Report at project {project.project} has been created ", url=f"/materials/inventory/{form.id}")
+            pic_notif = Notification.objects.create(receiver=project.pic, description=f"Material Report at project {project.project} has been created ", url=f"/materials/inventory/{form.id}")
             messages.success(request, "Daily Material Report has been created.")
             return redirect('inventory_whm_detail', pk=data.id)  
+        else:
+            print(form.errors, formset.errors)
     else:
         form = DailyReportForm(initial={'project':data.project, 'whm':request.user})
         formset = DailyReportFormSet()
@@ -1152,45 +1160,45 @@ def ExternalProjectInventoryReport_WHM(request,pk):
         if form.is_valid() and formset.is_valid():
             form = form.save(False)
             formset = formset.save(False)
-            count=0
-            count2=0
             for i in formset:
-                count+=1
-            for j in formset:
-                for k in data2:
-                    if j.articles.id == k.id:
-                        print("Article Equal 1st loop")
-                        count2+=1
-                        if j.quantity > k.quantity:
-                            messages.error(request, "Invalid Input. Quantity cannot be higher than the current stock of the item in Inventory")
-                            return redirect('external_inventory_whm_detail', pk=data.id)
-                    else:
-                        print("they are not equal")
-            if count == count2:
-                for x in formset:
-                    for y in data2:
-                        if x.articles.id == y.id:
-                            if y.quantity >= x.quantity:
-                                y.quantity -= x.quantity
-                                y.save()
-                form.save()
-                for a in formset:
-                    a.report = form
-                    a.save()
-                data.date=datetime.date.today
-                data.save()
-                project = Project.objects.get(id=data.project.id)
-                admin = User.objects.filter(groups__name="Admin")
-                for i in admin:
-                    adnin_notif = Notification.objects.create(receiver=i, description=f"Daily Material Report has been created at project {project.project}", url=f"/materials/inventory/external/{data.id}")
-                messages.success(request, "Daily Material Report has been created.")
-                return redirect('external_inventory_whm_detail', pk=data.id)
-            else:
-                messages.error(request, "Invalid Input. Articles on Form doesnt exist on Inventory")
-                return redirect('external_inventory_whm_detail', pk=data.id)
+                try:
+                    article = ExternalProjectInventoryDetails.objects.get(inventory=data, articles=i.articles)
+                except ObjectDoesNotExist:
+                    messages.error(request, "Invalid Input. Articles on Form does not exist on Inventory")
+                    return redirect('external_inventory_whm_detail', pk=data.id)
+            for i in formset:
+                item = ExternalProjectInventoryDetails.objects.get(inventory=data, articles=i.articles)
+                if item.quantity < i.quantity:
+                    messages.error(request, f"Quantity of {i.articles} on Project Site External Inventory are not sufficient.")
+                    return redirect('inventory_whm_detail', pk=data.id)
+            for i in formset:
+                for j in data2:
+                    if i.articles == j.articles:
+                        j.quantity -= i.quantity
+                        if 0 > j.quantity: 
+                            messages.error(request, "Please check all fields before you submit. Do not input same choice on a field")
+            for i in formset:
+                for j in data2:
+                    if i.articles == j.articles:
+                        j.quantity -= i.quantity
+                        j.save()
+            form.save()
+            for i in formset:
+                i.report = form
+                i.save()
+            data.date=datetime.date.today
+            data.save()
+            project = Project.objects.get(id=data.project.id)
+            admin = User.objects.filter(groups__name="Admin")
+            for i in admin:
+                adnin_notif = Notification.objects.create(receiver=i, description=f"Material Report has been created at project {project.project}", url=f"/materials/inventory/external/{data.id}")
+            messages.success(request, "Daily Material Report has been created.")
+            return redirect('external_inventory_whm_detail', pk=data.id)
     else:
         form = ExternalOrderReportForm(initial={'project':data.project, 'whm':request.user})
         formset =ExternalOrderReportFormSet()
+        for f in formset:
+            f.fields["articles"].queryset = ExternalProjectInventoryDetails.objects.filter(inventory=data)
     context = {'data':data, 'data2':data2, 'form':form, 'formset':formset}
     return render(request, 'backoffice/inventory_pages/externalorder_inventory_detail_whm.html', context)
 
@@ -1983,7 +1991,7 @@ def dailysitephotosDeleteView(request,pk):
 @login_required(login_url = 'signin')
 @admin_only
 def ProjectDailyReportListView(request):
-    data = ProjectDailyReport.objects.all()
+    data = ProjectDailyReport.objects.all().order_by('-date')
     data2 = ExternalOrderReport.objects.all()
     context = {'data':data, 'data2':data2}
     return render(request, 'backoffice/report_pages/dailyreport_list.html', context)
@@ -2068,7 +2076,7 @@ def ExternalOrderReportDeleteView(request, pk):
         messages.success(request, "Material Report has been deleted.")
         group = request.user.groups.all()[0].name
         if group == "Admin":
-            return redirect('dailyreport_detail')
+            return redirect('dailyreport_list')
         elif group == "Warehouseman":
             return redirect('dailyreport_list_whm')
         return redirect('dailyreport_list')

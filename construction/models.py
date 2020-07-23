@@ -381,7 +381,7 @@ class Inventory(models.Model):
     unit = models.CharField(verbose_name="Unit", max_length=255, null=True, blank=True)
     description = models.CharField(verbose_name="Description", max_length=255)
     quantity = models.IntegerField(verbose_name="Quantity", default=0)
-    unit_price = models.FloatField(verbose_name="Unit Price", null=True, blank=True)
+    unit_price = models.FloatField(verbose_name="Unit Price", default=0)
     class Meta:
         verbose_name_plural = 'Admin - Material Inventory Office'
     def __str__(self):
@@ -524,7 +524,7 @@ class ProjectDailyReport(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True)
     whm = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True,blank=True,
         related_name='dailyreport_whm', verbose_name='Warehouseman',limit_choices_to={'groups__name': "Warehouseman"})
-    date = models.DateField(default=datetime.date.today)
+    date = models.DateTimeField(default=datetime.datetime.today)
     class Meta:
         verbose_name = 'Project - Material Report(Inventory - onsite)'
         verbose_name_plural = 'Project - Material Report(Inventory - onsite)'
@@ -557,7 +557,7 @@ class ExternalOrderReport(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True)
     whm = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True,blank=True,
         verbose_name='Warehouseman',limit_choices_to={'groups__name': "Warehouseman"})
-    date = models.DateField(default=datetime.date.today)
+    date = models.DateTimeField(default=datetime.datetime.today)
     class Meta:
         verbose_name = 'Project - Material Report(External Inventory - onsite)'
         verbose_name_plural = 'Project - Material Report(External Inventory - onsite)'

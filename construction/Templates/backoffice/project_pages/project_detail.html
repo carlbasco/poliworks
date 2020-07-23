@@ -502,57 +502,6 @@
                 </div>
             </div>
         </div>
-
-        {% if request.user.groups.all.0.name != "Warehouseman"%}
-        <div class="card">
-            <div class="card-header" id="headingThree">
-                <h2 class="mb-0">
-                    <button class="btn btn-link collapsed  btn-cardheader" type="button" data-toggle="collapse" data-target="#personnel" aria-expanded="false" aria-controls="collapseThree">
-                    Personnel</button>
-                </h2>
-            </div>
-            <div id="personnel" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-borderless">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th class="text-center">Type of Personnel</th>
-                                    <th class="text-center">From</th>
-                                    <th class="text-center">To</th>
-                                    <th class="text-center">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% if personnel %}
-                                    {% for i in personnel%}
-                                        <tr>
-                                            <td>{{i.short_name}}</td>
-                                            <td>{{i.personnel_type}}</td>
-                                            <td>{{i.date}}</td>
-                                            <td>{{i.date2}}</td>
-                                            <td>
-                                                <a class="btn btn-outline-primary" href="{% url 'personnel_detail' i.id%}">View</a>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                {% else %}
-                                <tr>
-                                    <td colspan="5">
-                                        <p class="text-center">No Data Available</p><br>
-                                    </td>
-                                </tr>
-                                {% endif%}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endif %}
-
-        
     </div>
 </div>
 

@@ -120,10 +120,12 @@
     $('#id_project').select2();
     $('#id_whm').prop('disabled', true);
     $('#id_date').prop('disabled', true);
+    
     $('form').bind('submit', function () {
         $(this).find('#id_whm').prop('disabled', false);
         $(this).find('#id_date').prop('disabled', false);
         $(this).find(':submit').attr('disabled','disabled');
+        option_enable();
     });
 ///////////////////////////////////////////////////////////////////////////
     loadstart();
@@ -151,7 +153,51 @@
 ///////////////////////////////////////////////////////////////////////////
     $('.add-row').click(function(){
         loadstart();
+        reset_option();
+        option_disable();
+        option_disable_all();
+        delete_func();
     })
+    
+    function delete_func(){
+        $('.delete-row').click(function (){
+            reset_option();
+            option_disable_all();
+        });
+    }
+    ///////////////////////////////////////////////////////////////////////
+    var selected = [];  
+    
+    function option_disable_all(){
+        $("option").prop("disabled", false);         
+        for (var index in selected) {
+            $('option[value="'+selected[index]+'"]').prop("disabled", true); 
+        }
+    }   
+    function option_disable(){
+        $('.art').on("change", function() {
+            $.each($(this), function(index, select) {
+                if(selected.value!=""){
+                    selected.push(select.value); 
+                }     
+            });         
+            option_disable_all();
+        });
+    };
+    function reset_option(){
+        option_enable();
+        selected.length = 0;
+        $('.art').each(function(index,select) {     
+            selected.push(select.value); 
+        });      
+    }
+    function option_enable(){
+        $("option").prop("disabled", false);         
+        for (var index in selected) {
+            $('option[value="'+selected[index]+'"]').prop("disabled", false); 
+        };
+    }
+///////////////////////////////////////////////////////////////////////    
 </script>
 <style>span.select2-selection.select2-selection--single {height: 30px;}</style>
 {%endblock%}

@@ -91,4 +91,14 @@ delete from sqlite_sequence where name='`construction_estimate`';
 delete from `construction_inquiry`; 
 delete from sqlite_sequence where name='`construction_inquiry`';
 
-Update 'construction_personnel' SET project_id=NULL, date=NULL, date2=NULL, status="Available" WHERE status = "Currently Assigned"
+delete from `construction_personneljoborder`; 
+delete from sqlite_sequence where name='`construction_personneljoborder`';
+
+delete from `construction_reworkbeforeimage`; 
+delete from sqlite_sequence where name='`construction_reworkbeforeimage`';
+
+delete from `construction_reworkafterimage`; 
+delete from sqlite_sequence where name='`construction_reworkafterimage`';
+
+delete from `construction_externalorderimage`; 
+delete from sqlite_sequence where name='`construction_reworkafterimage`';

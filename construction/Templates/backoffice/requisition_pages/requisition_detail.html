@@ -152,13 +152,24 @@
                                                                 {% endif %}
                                                                 <td class="text-center">{{i.remarks}}</td>
                                                                 {% if data.amount %}
-                                                                    <td class="text-center">{{i.quantity}}</td>
-                                                                    {% if request.user.groups.all.0.name != "Warehouseman"%}
-                                                                        <td class="text-center">{{i.articles.unit_price|intcomma}}</td>
-                                                                        <td class="text-center">{{i.total_price|intcomma}}</td>
+                                                                    {% if i.status != "Canceled"%}
+                                                                        <td class="text-center">{{i.quantity}}</td>
+                                                                        {% if request.user.groups.all.0.name != "Warehouseman"%}
+                                                                            <td class="text-center">{{i.articles.unit_price|intcomma}}</td>
+                                                                            <td class="text-center">{{i.total_price|intcomma}}</td>
+                                                                        {% endif %}
+                                                                    {% else %}
+                                                                        {% if request.user.groups.all.0.name != "Warehouseman"%}
+                                                                            <td class="text-center">N/A</td>  
+                                                                            <td class="text-center">N/A</td>  
+                                                                            <td class="text-center">N/A</td>  
+                                                                        {% else %}
+                                                                            <td class="text-center">N/A</td>
+                                                                        {% endif %}
                                                                     {% endif %}
                                                                 {% else %}
                                                                     <td class="text-center">N/A</td>
+                                                                    
                                                                 {% endif %}
                                                                 {% if i.quantity2 %}
                                                                     <td class="text-center">{{i.quantity2}}</td>
@@ -173,6 +184,7 @@
                                                                 <td colspan="4"></td>
                                                                 <td class="text-center font-weight-bold">Grand Total Price</td>
                                                                 <td class="text-center font-weight-bold">{{data.amount|intcomma}}</td>
+                                                                <td></td>
                                                             </tr>
                                                             {% endif %}
                                                         {% endif %}
