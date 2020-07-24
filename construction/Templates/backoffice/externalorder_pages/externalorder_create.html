@@ -22,7 +22,7 @@
         </li>
     </ol>
 </nav>  
-<div class="col-md-12 mx-auto">
+<div class="col-lg-12 mx-auto">
     {% for message in messages %}
         <div class="alert alert-{{message.level_tag}} alert-dismissible fade show" role="alert">
             {% if message.level_tag  == "success" %}
@@ -46,16 +46,16 @@
         <div class="card-body">
             <div class="col-lg-12">
                 <div class="row justify-content-center">
-                    <div class="form-group col-md-8">
+                    <div class="form-group col-lg-8">
                         {{form.project|as_crispy_field}} 
                     </div>
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-lg-4">
                         {{form.date|as_crispy_field}}
                     </div>
-                    <div class="form-group col-md-8">
+                    <div class="form-group col-lg-8">
                         {{form.supplier|as_crispy_field}}
                     </div>
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-lg-4">
                         {{form.whm|as_crispy_field}}
                     </div>
                 </div>
@@ -85,17 +85,17 @@
                     {% endfor %}
                 </table>
             </div>
-            <div class="row col-md-12">
-                <div class="form-group col-md-4">
-                    <label for="">OR Image</label>
+            <div class="row col-lg-12">
+                <div class="form-group col-lg-4">
+                    <label for="">OR Image</label><span class="asteriskField">*</span>
                     <div class="custom-file">
                         {{form.image}}
                         <label class="custom-file-label" for="customFile">Choose file</label>
                     </div>
                     <div id="preview"></div>
                 </div>
-                <div class="form-group col-md-4"></div>
-                <div class="form-group col-md-4">
+                <div class="form-group col-lg-4"></div>
+                <div class="form-group col-lg-4">
                     <div class="form-group">
                       <label for="total_amount">Total Amount</label>
                       <input type="text"

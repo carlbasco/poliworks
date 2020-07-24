@@ -520,7 +520,7 @@ class ProjectInventoryDetails(models.Model):
         return self.articles.__str__()
 
 
-class ProjectDailyReport(models.Model):
+class MaterialReport(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True)
     whm = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True,blank=True,
         related_name='dailyreport_whm', verbose_name='Warehouseman',limit_choices_to={'groups__name': "Warehouseman"})
@@ -529,8 +529,8 @@ class ProjectDailyReport(models.Model):
         verbose_name = 'Project - Material Report(Inventory - onsite)'
         verbose_name_plural = 'Project - Material Report(Inventory - onsite)'
 
-class ProjectDailyReportDetails(models.Model):
-    report = models.ForeignKey(ProjectDailyReport, on_delete=models.CASCADE, null=True)
+class MaterialReportDetails(models.Model):
+    report = models.ForeignKey(MaterialReport, on_delete=models.CASCADE, null=True)
     articles = models.ForeignKey(Inventory, on_delete=models.SET_NULL, null=True)
     quantity = models.IntegerField(null=True)
     remarks = models.CharField(max_length=255, null=True, blank=True)
@@ -553,7 +553,7 @@ class ExternalProjectInventoryDetails(models.Model):
         return self.articles
 
 
-class ExternalOrderReport(models.Model):
+class ExternalMaterialReport(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True)
     whm = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True,blank=True,
         verbose_name='Warehouseman',limit_choices_to={'groups__name': "Warehouseman"})
@@ -562,8 +562,8 @@ class ExternalOrderReport(models.Model):
         verbose_name = 'Project - Material Report(External Inventory - onsite)'
         verbose_name_plural = 'Project - Material Report(External Inventory - onsite)'
 
-class ExternalOrderDetailsReport(models.Model):
-    report = models.ForeignKey(ExternalOrderReport, on_delete=models.CASCADE, null=True)
+class ExternalMaterialReportDetails(models.Model):
+    report = models.ForeignKey(ExternalMaterialReport, on_delete=models.CASCADE, null=True)
     articles = models.ForeignKey(ExternalProjectInventoryDetails, on_delete=models.SET_NULL, null=True)
     quantity = models.IntegerField(default=1)
     remarks = models.CharField(max_length=255, null=True, blank=True)

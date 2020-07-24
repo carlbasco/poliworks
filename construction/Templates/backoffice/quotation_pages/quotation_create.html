@@ -160,7 +160,50 @@
 ///////////////////////////////////////////////////////////////////////////
     $('.add-row').click(function(){
         loadstart();
+        reset_option();
+        option_disable();
+        option_disable_all();
+        delete_func();
     })
+///////////////////////////////////////////////////////////////////////
+var selected = [];  
+    
+    function option_disable_all(){
+        $("option").prop("disabled", false);         
+        for (var index in selected) {
+            $('option[value="'+selected[index]+'"]').prop("disabled", true); 
+        }
+    }   
+    function option_disable(){
+        $('.sow').on("change", function() {
+            $.each($(this), function(index, select) {
+                if(selected.value!=""){
+                    selected.push(select.value); 
+                }     
+            });         
+            option_disable_all();
+        });
+    };
+    function reset_option(){
+        option_enable();
+        selected.length = 0;
+        $('.sow').each(function(index,select) {     
+            selected.push(select.value); 
+        });      
+    }
+    function option_enable(){
+        $("option").prop("disabled", false);         
+        for (var index in selected) {
+            $('option[value="'+selected[index]+'"]').prop("disabled", false); 
+        };
+    }
+    function delete_func(){
+        $('.delete-row').click(function (){
+            reset_option();
+            option_disable_all();
+        });
+    }
+///////////////////////////////////////////////////////////////////////    
 </script>
 <style>span.select2-selection.select2-selection--single {height: 30px;}</style>
 {%endblock%}

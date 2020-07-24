@@ -104,17 +104,17 @@ urlpatterns = [
     path('reports/projectsite', views.ProjectReport.as_view(), name="projectreport"),
     path('reports/projectsite/results', views.ProjectReportPDF.as_view(), name="projectreportPDF"),
 
-    # path('reports/issues', views.projectissues, name="issues"),
     path('reports/issues', views.ProjectIssuesCreateView.as_view(), name="issues"),
     path('reports/issues_list', views.ProjectIssuesList, name="issues_list"),
     path('reports/issues/<int:pk>', views.ProjectIssuesDetailView, name="issues_detail"),
 
-    path('reports/materialreport_list', views. ProjectDailyReportListView, name="dailyreport_list"),
-    path('reports/materialreport/<int:pk>', views. ProjectDailyReportDetailView, name="dailyreport_detail"),
-    path('reports/materialreport/<int:pk>/delete', views. ProjectDailyReportDeleteView, name="materialreport_delete"),
+    path('reports/materialreport_list', views.MaterialReportListView, name="materialreport_list"),
+    path('reports/materialreport/<int:pk>', views.MaterialReportDetailView, name="materialreport_detail"),
+    path('reports/materialreport/<int:pk>/delete', views.MaterialReportDeleteView, name="materialreport_delete"),
     
-    path('reports/materialreport/external/<int:pk>', views. ExternalOrderReportDetailView, name="external_report_detail"),
-    path('reports/materialreport/external/<int:pk>/delete', views. ExternalOrderReportDeleteView, name="external_report_delete"),
+    path('reports/materialreport_list', views.ExternalMaterialReportListView, name="external_report_list"),
+    path('reports/materialreport/external/<int:pk>', views.ExternalMaterialReportDetailView, name="external_report_detail"),
+    path('reports/materialreport/external/<int:pk>/delete', views.ExternalMaterialReportDeleteView, name="external_report_delete"),
 
     #client
     path('myproject/', views.Client_home, name="client_home"),
@@ -141,7 +141,8 @@ urlpatterns = [
     path('pm/joborder_list', views.JobOrderListView_PM, name="joborder_list_pm"),
     path('pm/task/rework_list', views.ReworkListView_PM, name="rework_list_pm"),
     path('pm/reports/issues_list', views.ProjectIssuesList_PM, name="issues_list_pm"),
-    path('pm/reports/dailyreport_list', views. ProjectDailyReportListView_PM, name="dailyreport_list_pm"),
+    path('pm/reports/materialreport_list', views. MaterialReportListView_PM, name="materialreport_list_pm"),
+    path('pm/reports/external_report_list', views.ExternalMaterialReportListView_PM, name="external_report_list_pm"),
     path('pm/reports/sitephotos_list', views.dailysitephotosListView_PM, name="sitephotos_list_pm"),
 
     #PIC's page
@@ -154,7 +155,8 @@ urlpatterns = [
     path('pic/materials/requisition_list', views.RequisitionListView_PIC, name="requisition_list_pic"),
     path('pic/materials/requisition/<int:pk>/edit', views.RequisitionUpdatePIC, name="requisition_update_pic"),
     path('pic/materials/externalorder_list', views.ExternalOrderListView_PIC, name="externalorder_list_pic"),
-    path('pic/reports/dailyreport_list', views. ProjectDailyReportListView_PIC, name="dailyreport_list_pic"),
+    path('pic/reports/materialreport_list', views. MaterialReportListView_PIC, name="materialreport_list_pic"),
+    path('pic/reports/external_report_list', views.ExternalMaterialReportListView_PIC, name="external_report_list_pic"),
     path('pic/reports/sitephotos_list', views.dailysitephotosListView_PIC, name="sitephotos_list_pic"),
 
     #whm page
@@ -170,7 +172,8 @@ urlpatterns = [
     path('reports/issues/<int:pk>/delete', views.ProjectIssuesDeleteView, name="issues_delete"),
     path('whm/materials/requisition_list', views.RequisitionListView_WHM, name="requisition_list_whm"),
     path('whm/materials/externalorder_list', views.ExternalOrderListView_WHM, name="externalorder_list_whm"),
-    path('whm/reports/dailyreport_list', views. ProjectDailyReportListView_WHM, name="dailyreport_list_whm"),
+    path('whm/reports/materialreport_list', views. MaterialReportListView_WHM, name="materialreport_list_whm"),
+    path('whm/reports/external_report_list', views.ExternalMaterialReportListView_WHM, name="external_report_list_whm"),
     path('whm/reports/sitephotos_list', views.dailysitephotosListView_WHM, name="sitephotos_list_whm"),
 
 #api method

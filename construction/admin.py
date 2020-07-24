@@ -149,7 +149,7 @@ class SitePhotosAdmin(admin.ModelAdmin):
 admin.site.register(SitePhotos, SitePhotosAdmin)
 ############################################################################################
 class dailyreport(admin.TabularInline):
-    model = ProjectDailyReportDetails
+    model = MaterialReportDetails
 
 class DailyReportAdmin(admin.ModelAdmin):
     inlines = [dailyreport]
@@ -158,19 +158,19 @@ class DailyReportAdmin(admin.ModelAdmin):
     search_fields = ('project', 'date',)
     ordering = ('date',)
 
-admin.site.register(ProjectDailyReport, DailyReportAdmin)
+admin.site.register(MaterialReport, DailyReportAdmin)
 ############################################################################################
 class exdailyreport(admin.TabularInline):
-    model = ExternalOrderDetailsReport
+    model = ExternalMaterialReportDetails
 
-class ExternalOrderReportAdmin(admin.ModelAdmin):
+class ExternalMaterialReportAdmin(admin.ModelAdmin):
     inlines = [exdailyreport]
-    form = ExternalOrderReportForm
+    form = ExternalMaterialReportForm
     list_display = ('project', 'date',)
     search_fields = ('project', 'date',)
     ordering = ('date',)
 
-admin.site.register(ExternalOrderReport, ExternalOrderReportAdmin)
+admin.site.register(ExternalMaterialReport, ExternalMaterialReportAdmin)
 ############################################################################################
 @admin.register(ProjectIssues)
 class ProjectIssueAdmin(admin.ModelAdmin):

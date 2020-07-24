@@ -3,6 +3,24 @@
 {% load crispy_forms_tags%}
 {% block content %}
 <span class="text-uppercase page-subtitle">Report</span>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-inverse-primary">
+        <li class="breadcrumb-item">
+            {% if request.user.groups.all.0.name == "Project Manager"%}
+                <a href="{% url 'materialreport_list_pm'%}"> Materials Report List</a>
+            {% elif request.user.groups.all.0.name == "Person In-Charge"%}
+                <a href="{% url 'materialreport_list_pic'%}"> Materials Report List</a>
+            {% elif request.user.groups.all.0.name == "Warehouseman"%}
+                <a href="{% url 'materialreport_list_whm'%}"> Materials Report List</a>
+            {% else %}
+                <a href="{% url 'materialreport_list'%}"> Materials Report List</a>
+            {% endif %}
+        </li>
+        <li class="breadcrumb-item active">
+           External Material Report
+        </li>
+    </ol>
+</nav>
 <div class="col-md-12 mx-auto">
     {% for message in messages %}
         <div class="alert alert-{{message.level_tag}} alert-dismissible fade show" role="alert">
@@ -20,7 +38,7 @@
 </div>
 <div class="card">
     <div class="card-body">
-    <h4 class="card-title">Material Report List</h4>
+    <h4 class="card-title">External Material Report List</h4>
         <div class="table-responsive">
             <div id="order-listing_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer col-lg-12">
                 <table id="order-listing" class="table dataTable no-footer" role="grid" aria-describedby="order-listing_info">
@@ -29,10 +47,6 @@
                             <th class="sorting font-weight-bold" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
                                 style="width: 100px;">
                                 Project
-                            </th>
-                            <th class="sorting font-weight-bold"" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
-                                style="width: 50px;">
-                                Type of Reports
                             </th>
                             <th class="sorting font-weight-bold"" tabindex="0" aria-controls="order-listing" rowspan="1" colspan="1" 
                                 style="width: 50px;">
@@ -48,17 +62,8 @@
                         {% for i in data%}
                         <tr role="row" class="odd">
                             <td>{{i.project}}</td>
-                            <td>Material Report</td>
                             <td>{{i.date}}</td>
-                            <td><a href="{% url 'dailyreport_detail' i.id%}" class="btn btn-outline-primary">view</a></td>
-                        </tr>
-                        {% endfor %}
-                        {% for j in data2%}
-                        <tr role="row" class="odd">
-                            <td>{{j.project}}</td>
-                            <td>External Order Material Report </td>
-                            <td>{{j.date}}</td>
-                            <td><a href="{% url 'external_report_detail' j.id %}" class="btn btn-outline-primary">view</a></td>
+                            <td><a href="{% url 'external_report_detail' i.id %}" class="btn btn-outline-primary">view</a></td>
                         </tr>
                         {% endfor %}
                     </tbody>

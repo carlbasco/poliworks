@@ -8,13 +8,13 @@
     <ol class="breadcrumb bg-inverse-primary">
         <li class="breadcrumb-item">
             {% if request.user.groups.all.0.name == "Project Manager"%}
-                <a href="{% url 'dailyreport_list_pm'%}"> Materials Report List</a>
+                <a href="{% url 'external_report_list_pm'%}"> External Material Report List</a>
             {% elif request.user.groups.all.0.name == "Person In-Charge"%}
-                <a href="{% url 'dailyreport_list_pic'%}"> Materials Report List</a>
+                <a href="{% url 'external_report_list_pic'%}"> External Material Report List</a>
             {% elif request.user.groups.all.0.name == "Warehouseman"%}
-                <a href="{% url 'dailyreport_list_whm'%}"> Materials Report List</a>
+                <a href="{% url 'external_report_list_whm'%}"> External Material Report List</a>
             {% else %}
-                <a href="{% url 'dailyreport_list'%}"> Materials Report List</a>
+                <a href="{% url 'external_report_list'%}"> External Material Report List</a>
             {% endif %}
         </li>
     </ol>
@@ -39,7 +39,7 @@
         <div class="col col-md-10">
             <div class="card">
                 <div class="card-header" id="quotation_view">
-                    <h2 class="mb-0">Daily Report</h2>
+                    <h2 class="mb-0">External Material Report</h2>
                 </div>
                 <div class="card-body">
                     <div class="row"> 

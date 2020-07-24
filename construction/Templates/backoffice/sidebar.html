@@ -221,13 +221,13 @@
                     </li>
                     <li class="nav-item">
                         {% if request.user.groups.all.0.name == "Project Manager"%}
-                            <a class="nav-link" href="{% url 'dailyreport_list_pm'%}"> Materials Report</a>
+                            <a class="nav-link" href="{% url 'materialreport_list_pm'%}"> Materials Report</a>
                         {% elif request.user.groups.all.0.name == "Person In-Charge"%}
-                            <a class="nav-link" href="{% url 'dailyreport_list_pic'%}"> Materials Report</a>
+                            <a class="nav-link" href="{% url 'materialreport_list_pic'%}"> Materials Report</a>
                         {% elif request.user.groups.all.0.name == "Warehouseman"%}
-                            <a class="nav-link" href="{% url 'dailyreport_list_whm'%}"> Materials Report</a>
+                            <a class="nav-link" href="{% url 'materialreport_list_whm'%}"> Materials Report</a>
                         {% else %}
-                            <a class="nav-link" href="{% url 'dailyreport_list'%}"> Materials Report</a>
+                            <a class="nav-link" href="{% url 'materialreport_list'%}"> Materials Report</a>
                         {% endif %}
                     </li>
                     {% if request.user.groups.all.0.name != "Warehouseman"%}

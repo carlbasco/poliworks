@@ -1155,8 +1155,8 @@ def ExternalProjectInventoryReport_WHM(request,pk):
     data = ExternalProjectInventory.objects.get(id=pk)
     data2 = ExternalProjectInventoryDetails.objects.filter(inventory=data).order_by('articles')
     if request.method == 'POST':
-        form = ExternalOrderReportForm(request.POST)
-        formset = ExternalOrderReportFormSet(request.POST)
+        form = ExternalMaterialReportForm(request.POST)
+        formset = ExternalMaterialReportFormSet(request.POST)
         if form.is_valid() and formset.is_valid():
             form = form.save(False)
             formset = formset.save(False)
@@ -1164,22 +1164,16 @@ def ExternalProjectInventoryReport_WHM(request,pk):
                 try:
                     article = ExternalProjectInventoryDetails.objects.get(inventory=data, articles=i.articles)
                 except ObjectDoesNotExist:
-                    messages.error(request, "Invalid Input. Articles on Form does not exist on Inventory")
+                    messages.error(request, "Invalid Input. Articles on Form does not exist on External Order Inventory")
                     return redirect('external_inventory_whm_detail', pk=data.id)
             for i in formset:
                 item = ExternalProjectInventoryDetails.objects.get(inventory=data, articles=i.articles)
                 if item.quantity < i.quantity:
-                    messages.error(request, f"Quantity of {i.articles} on Project Site External Inventory are not sufficient.")
-                    return redirect('inventory_whm_detail', pk=data.id)
+                    messages.error(request, f"Quantity of {i.articles} on Project Site External Order Inventory are not sufficient.")
+                    return redirect('external_inventory_whm_detail', pk=data.id)
             for i in formset:
                 for j in data2:
-                    if i.articles == j.articles:
-                        j.quantity -= i.quantity
-                        if 0 > j.quantity: 
-                            messages.error(request, "Please check all fields before you submit. Do not input same choice on a field")
-            for i in formset:
-                for j in data2:
-                    if i.articles == j.articles:
+                    if i.articles.articles == j.articles:
                         j.quantity -= i.quantity
                         j.save()
             form.save()
@@ -1191,12 +1185,12 @@ def ExternalProjectInventoryReport_WHM(request,pk):
             project = Project.objects.get(id=data.project.id)
             admin = User.objects.filter(groups__name="Admin")
             for i in admin:
-                adnin_notif = Notification.objects.create(receiver=i, description=f"Material Report has been created at project {project.project}", url=f"/materials/inventory/external/{data.id}")
+                adnin_notif = Notification.objects.create(receiver=i, description=f"Material Report has been created at project {project.project}", url=f"/reports/materialreport/external/{data.id}")
             messages.success(request, "Daily Material Report has been created.")
             return redirect('external_inventory_whm_detail', pk=data.id)
     else:
-        form = ExternalOrderReportForm(initial={'project':data.project, 'whm':request.user})
-        formset =ExternalOrderReportFormSet()
+        form = ExternalMaterialReportForm(initial={'project':data.project, 'whm':request.user})
+        formset =ExternalMaterialReportFormSet()
         for f in formset:
             f.fields["articles"].queryset = ExternalProjectInventoryDetails.objects.filter(inventory=data)
     context = {'data':data, 'data2':data2, 'form':form, 'formset':formset}
@@ -1748,7 +1742,7 @@ class ProjectIssuesCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateVie
     login_url ="signin"
     redirect_field_name = "redirect_to"
     form_class = ProjectIssuesForm
-    template_name ='backoffice/report_pages/projectissues.html'
+    template_name ='backoffice/report_pages/project_issue/projectissues.html'
     success_message = "Project Issues has been submitted!"
     
     @method_decorator(whm_only, name='dispatch')
@@ -1780,7 +1774,7 @@ class ProjectIssuesUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateVie
     redirect_field_name = "redirect_to"
     model = ProjectIssues
     fields =('description',)
-    template_name ='backoffice/report_pages/projectissues_update.html'
+    template_name ='backoffice/report_pages/project_issue/projectissues_update.html'
     success_message = "Project Issues has been updated."
     
     @method_decorator(whm_only, name='dispatch')
@@ -1807,14 +1801,14 @@ def ProjectIssuesDeleteView(request,pk):
         elif group == "Admin":
             return redirect('issues_list')
     context ={'data':data}
-    return render(request, 'backoffice/report_pages/projectissues_delete.html', context)
+    return render(request, 'backoffice/report_pages/project_issue/projectissues_delete.html', context)
     
 @login_required(login_url='signin')
 @admin_only
 def ProjectIssuesList(request):
     data = ProjectIssues.objects.all()
     context = {'data':data}
-    return render(request, 'backoffice/report_pages/projectissues_list.html', context)
+    return render(request, 'backoffice/report_pages/project_issue/projectissues_list.html', context)
 
 @login_required(login_url='signin')
 @pm_only
@@ -1823,7 +1817,7 @@ def ProjectIssuesList_PM(request):
     project = Project.objects.filter(pm=user)
     data = ProjectIssues.objects.filter(project__in=project)
     context = {'data':data}
-    return render(request, 'backoffice/report_pages/projectissues_list.html', context)
+    return render(request, 'backoffice/report_pages/project_issue/projectissues_list.html', context)
 
 @login_required(login_url='signin')
 @pic_only
@@ -1832,7 +1826,7 @@ def ProjectIssuesList_PIC(request):
     project = Project.objects.filter(pic=user)
     data = ProjectIssues.objects.filter(project__in=project)
     context = {'data':data}
-    return render(request, 'backoffice/report_pages/projectissues_list.html', context)
+    return render(request, 'backoffice/report_pages/project_issue/projectissues_list.html', context)
 
 @login_required(login_url='signin')
 @whm_only
@@ -1841,7 +1835,7 @@ def ProjectIssuesList_WHM(request):
     project = Project.objects.filter(whm=user)
     data = ProjectIssues.objects.filter(project__in=project)
     context = {'data':data}
-    return render(request, 'backoffice/report_pages/projectissues_list.html', context)
+    return render(request, 'backoffice/report_pages/project_issue/projectissues_list.html', context)
 
 @login_required(login_url='signin')
 @staff_only
@@ -1849,7 +1843,7 @@ def ProjectIssuesDetailView(request,pk):
     try:
         data = ProjectIssues.objects.get(id=pk)
         context = {'data':data}
-        return render(request, 'backoffice/report_pages/projectissues_detail.html', context)
+        return render(request, 'backoffice/report_pages/project_issue/projectissues_detail.html', context)
     except ObjectDoesNotExist:
         return render(request, "404.html")
 
@@ -1859,7 +1853,7 @@ class SitePhotosCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     login_url ="signin"
     redirect_field_name = "redirect_to"
     form_class = SitePhotostForm
-    template_name ='backoffice/report_pages/dailysitephotos.html'
+    template_name ='backoffice/report_pages/site_photos/sitephotos_create.html'
     success_message = "Daily Site Photos has been submitted!"
     
     @method_decorator(whm_only, name='dispatch')
@@ -1907,7 +1901,7 @@ class SitePhotosCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 def dailysitephotosListView(request):
     data = SitePhotos.objects.all().order_by('-date')
     context={'data':data}
-    return render(request, 'backoffice/report_pages/dailysitephotos_list.html', context)
+    return render(request, 'backoffice/report_pages/site_photos/sitephotos_list.html', context)
 
 @login_required(login_url = 'signin')
 @pm_only
@@ -1915,7 +1909,7 @@ def dailysitephotosListView_PM(request):
     project = Project.objects.filter(pm=request.user)
     data = SitePhotos.objects.filter(project__in=project).order_by('-date')
     context={'data':data}
-    return render(request, 'backoffice/report_pages/dailysitephotos_list.html', context)
+    return render(request, 'backoffice/report_pages/site_photos/sitephotos_list.html', context)
 
 @login_required(login_url = 'signin')
 @pic_only
@@ -1923,7 +1917,7 @@ def dailysitephotosListView_PIC(request):
     project = Project.objects.filter(pic=request.user)
     data = SitePhotos.objects.filter(project__in=project).order_by('-date')
     context={'data':data}
-    return render(request, 'backoffice/report_pages/dailysitephotos_list.html', context)
+    return render(request, 'backoffice/report_pages/site_photos/sitephotos_list.html', context)
 
 @login_required(login_url = 'signin')
 @whm_only
@@ -1931,7 +1925,7 @@ def dailysitephotosListView_WHM(request):
     project = Project.objects.filter(whm=request.user)
     data = SitePhotos.objects.filter(project__in=project).order_by('-date')
     context={'data':data}
-    return render(request, 'backoffice/report_pages/dailysitephotos_list.html', context)
+    return render(request, 'backoffice/report_pages/site_photos/sitephotos_list.html', context)
 
 @login_required(login_url = 'signin')
 @staff_only
@@ -1940,7 +1934,7 @@ def dailysitephotosDetailView(request,pk):
         data = SitePhotos.objects.get(id=pk)
         data2 = SitePhotosDetails.objects.filter(sitephotos=data)
         context={'data':data, 'data2':data2}
-        return render(request, 'backoffice/report_pages/dailysitephotos_detail.html', context)
+        return render(request, 'backoffice/report_pages/site_photos/sitephotos_detail.html', context)
     except ObjectDoesNotExist:
         return render(request, "404.html")
 
@@ -1963,7 +1957,7 @@ def dailysitephotosUpdateView(request,pk):
                 client_notif = Notification.objects.create(receiver=project.client, description=f"Site Photos at your project {project.project} has been updated", url=f"/myproject/sitephotos/view/{data.id}")
             return redirect('sitephotos_detail', pk=data.id)
     context={'formset':formset, 'data':data}
-    return render(request, 'backoffice/report_pages/dailysitephotos_update.html', context)
+    return render(request, 'backoffice/report_pages/site_photos/sitephotos_update.html', context)
 
 @login_required(login_url = 'signin')
 @staff_only
@@ -1984,106 +1978,135 @@ def dailysitephotosDeleteView(request,pk):
         else:
             return redirect('sitephotos_list')
     context={'data':data, 'data2':data2}
-    return render(request, 'backoffice/report_pages/dailysitephotos_delete.html', context)
+    return render(request, 'backoffice/report_pages/site_photos/sitephotos_delete.html', context)
 
 #################################################################################################################################
 #################################################################################################################################
 @login_required(login_url = 'signin')
 @admin_only
-def ProjectDailyReportListView(request):
-    data = ProjectDailyReport.objects.all().order_by('-date')
-    data2 = ExternalOrderReport.objects.all()
-    context = {'data':data, 'data2':data2}
-    return render(request, 'backoffice/report_pages/dailyreport_list.html', context)
-
+def MaterialReportListView(request):
+    data = MaterialReport.objects.all().order_by('-date')
+    context = {'data':data,}
+    return render(request, 'backoffice/report_pages/material/materialreport_list.html', context)
 
 @login_required(login_url = 'signin')
 @pm_only
-def ProjectDailyReportListView_PM(request):
+def MaterialReportListView_PM(request):
     project = Project.objects.filter(pm=request.user)
-    data = ProjectDailyReport.objects.filter(project__in=project)
-    data2 = ExternalOrderReport.objects.filter(project__in=project)
-    context = {'data':data, 'data2':data2}
-    return render(request, 'backoffice/report_pages/dailyreport_list.html', context)
+    data = MaterialReport.objects.filter(project__in=project).order_by('-date')
+    context = {'data':data}
+    return render(request, 'backoffice/report_pages/material/materialreport_list.html', context)
 
 @login_required(login_url = 'signin')
 @pic_only
-def ProjectDailyReportListView_PIC(request):
+def MaterialReportListView_PIC(request):
     project = Project.objects.filter(pic=request.user)
-    data = ProjectDailyReport.objects.filter(project__in=project)
-    data2 = ExternalOrderReport.objects.filter(project__in=project)
-    context = {'data':data, 'data2':data2}
-    return render(request, 'backoffice/report_pages/dailyreport_list.html', context)
+    data = MaterialReport.objects.filter(project__in=project).order_by('-date')
+    context = {'data':data}
+    return render(request, 'backoffice/report_pages/material/materialreport_list.html', context)
 
 @login_required(login_url = 'signin')
 @whm_only
-def ProjectDailyReportListView_WHM(request):
+def MaterialReportListView_WHM(request):
     project = Project.objects.filter(whm=request.user)
-    data = ProjectDailyReport.objects.filter(project__in=project)
-    data2 = ExternalOrderReport.objects.filter(project__in=project)
-    context = {'data':data, 'data2':data2}
-    return render(request, 'backoffice/report_pages/dailyreport_list.html', context)
+    data = MaterialReport.objects.filter(project__in=project).order_by('-date')
+    context = {'data':data}
+    return render(request, 'backoffice/report_pages/material/materialreport_list.html', context)
 
 @login_required(login_url = 'signin')
 @staff_only
-def ProjectDailyReportDetailView(request, pk):
+def MaterialReportDetailView(request, pk):
     try:
-        data = ProjectDailyReport.objects.get(id=pk)
-        data2 = ProjectDailyReportDetails.objects.filter(report=data.id)
+        data = MaterialReport.objects.get(id=pk)
+        data2 = MaterialReportDetails.objects.filter(report=data.id)
         context={'data':data, 'data2':data2}
-        return render(request, 'backoffice/report_pages/dailyreport_detail.html', context)
+        return render(request, 'backoffice/report_pages/material/materialreport_detail.html', context)
     except ObjectDoesNotExist:
         return render(request, "404.html")
 
 @login_required(login_url = 'signin')
 @admin_only
-def ProjectDailyReportDeleteView(request, pk):
-    data = ProjectDailyReport.objects.get(id=pk)
-    data2 = ProjectDailyReportDetails.objects.filter(report=data.id)
+def MaterialReportDeleteView(request, pk):
+    data = MaterialReport.objects.get(id=pk)
+    data2 = MaterialReportDetails.objects.filter(report=data.id)
     if request.method == "POST":
         data.delete()
         messages.success(request, "Material Report has been deleted.")
         group = request.user.groups.all()[0].name
         if group == "Warehouseman":
-            return redirect("dailyreport_list_whm")
+            return redirect("materialreport_list_whm")
         elif group == "Person In-Charge":
-            return redirect("dailyreport_list_pic")
+            return redirect("materialreport_list_pic")
         elif group == "Project Manager":
-            return redirect("dailyreport_list_pic")
+            return redirect("materialreport_list_pic")
         elif group == "Admin":
-            return redirect("dailyreport_list")
+            return redirect("materialreport_list")
     context={'data':data, 'data2':data2}
-    return render(request, 'backoffice/report_pages/materialreport_delete.html', context)
+    return render(request, 'backoffice/report_pages/material/materialreport_delete.html', context)
+
+@login_required(login_url = 'signin')
+@admin_only
+def ExternalMaterialReportListView(request):
+    data = ExternalMaterialReport.objects.all().order_by('-date')
+    context = {'data':data}
+    return render(request, 'backoffice/report_pages/external_material/external_report_list.html', context)
+
+
+@login_required(login_url = 'signin')
+@pm_only
+def ExternalMaterialReportListView_PM(request):
+    project = Project.objects.filter(pm=request.user)
+    data = ExternalMaterialReport.objects.filter(project__in=project).order_by('-date')
+    context = {'data':data}
+    return render(request, 'backoffice/report_pages/external_material/external_report_list.html', context)
+
+@login_required(login_url = 'signin')
+@pic_only
+def ExternalMaterialReportListView_PIC(request):
+    project = Project.objects.filter(pic=request.user)
+    data = ExternalMaterialReport.objects.filter(project__in=project).order_by('-date')
+    context = {'data':data}
+    return render(request, 'backoffice/report_pages/external_material/external_report_list.html', context)
+
+@login_required(login_url = 'signin')
+@whm_only
+def ExternalMaterialReportListView_WHM(request):
+    project = Project.objects.filter(whm=request.user)
+    data = ExternalMaterialReport.objects.filter(project__in=project).order_by('-date')
+    context = {'data':data}
+    return render(request, 'backoffice/report_pages/external_material/external_report_list.html', context)
+
 
 @login_required(login_url = 'signin')
 @staff_only
-def ExternalOrderReportDetailView(request, pk):
+def ExternalMaterialReportDetailView(request, pk):
     try:
-        data = ExternalOrderReport.objects.get(id=pk)
-        data2 = ExternalOrderDetailsReport.objects.filter(report=data.id)
+        data = ExternalMaterialReport.objects.get(id=pk)
+        data2 = ExternalMaterialReportDetails.objects.filter(report=data.id)
         context={'data':data, 'data2':data2}
-        return render(request, 'backoffice/report_pages/external_report_detail.html', context)
+        return render(request, 'backoffice/report_pages/external_material/external_report_detail.html', context)
     except ObjectDoesNotExist:
         return render(request, "404.html")
 
 @login_required(login_url = 'signin')
 @admin_only
-def ExternalOrderReportDeleteView(request, pk):
-    data = ExternalOrderReport.objects.get(id=pk)
-    data2 = ExternalOrderDetailsReport.objects.filter(report=data.id)
+def ExternalMaterialReportDeleteView(request, pk):
+    data = ExternalMaterialReport.objects.get(id=pk)
+    data2 = ExternalMaterialReportDetails.objects.filter(report=data.id)
     if request.method == "POST":
         data.delete()
         messages.success(request, "Material Report has been deleted.")
         group = request.user.groups.all()[0].name
         if group == "Admin":
-            return redirect('dailyreport_list')
+            return redirect('materialreport_list')
         elif group == "Warehouseman":
-            return redirect('dailyreport_list_whm')
-        return redirect('dailyreport_list')
+            return redirect('materialreport_list_whm')
+        return redirect('materialreport_list')
     context={'data':data, 'data2':data2}
-    return render(request, 'backoffice/report_pages/external_report_delete.html', context)
+    return render(request, 'backoffice/report_pages/external_external_material/external_report_delete.html', context)
 #################################################################################################################################
 #################################################################################################################################
+@login_required(login_url = 'signin')
 @admin_only
 def LandingPageImageCreateView(request):
     data2 = LandingPageTitle.objects.all().order_by('name', 'category')
@@ -2105,6 +2128,7 @@ def LandingPageImageCreateView(request):
     context = {'form':form, 'form2':form2, 'data2':data2}
     return render(request, 'backoffice/landing_pages/landing_page_create.html', context)
 
+@login_required(login_url = 'signin')
 @admin_only
 def LandingPageImageDetailView(request, pk):
     data = LandingPageTitle.objects.get(id=pk)
@@ -2112,6 +2136,7 @@ def LandingPageImageDetailView(request, pk):
     context = {'data':data, 'data2':data2}
     return render(request, 'backoffice/landing_pages/landing_page_detail.html', context)
 
+@login_required(login_url = 'signin')
 @admin_only
 def LandingPageImageUpdateView(request, pk):
     data = LandingPageTitle.objects.get(id=pk)
@@ -2126,6 +2151,7 @@ def LandingPageImageUpdateView(request, pk):
     context = {'formset':formset, 'data':data,}
     return render(request, 'backoffice/landing_pages/landing_page_update.html', context)   
 
+@login_required(login_url = 'signin')
 @admin_only
 def LandingPageImageDeleteView(request, pk):
     data = LandingPageTitle.objects.get(id=pk)
@@ -2390,10 +2416,10 @@ class ProjectReportPDF(TemplateView, LoginRequiredMixin):
             sitephotos = SitePhotos.objects.filter(project_id=project.id, date__range=[datefrom, dateto])
             sitephotosdetails = SitePhotosDetails.objects.filter(sitephotos__in=sitephotos)
             projectissues = ProjectIssues.objects.filter(project_id=project.id, date__range=[datefrom, dateto])
-            materialreport = ProjectDailyReport.objects.filter(project_id=project.id, date__range=[datefrom, dateto])
-            materialreportdetails = ProjectDailyReportDetails.objects.filter(report__in=materialreport)
-            externalmaterialreport = ExternalOrderReport.objects.filter(project_id=project.id, date__range=[datefrom, dateto])
-            externalmaterialreportdetails = ExternalOrderDetailsReport.objects.filter(report__in=externalmaterialreport)
+            materialreport = MaterialReport.objects.filter(project_id=project.id, date__range=[datefrom, dateto])
+            materialreportdetails = MaterialReportDetails.objects.filter(report__in=materialreport)
+            externalmaterialreport = ExternalMaterialReport.objects.filter(project_id=project.id, date__range=[datefrom, dateto])
+            externalmaterialreportdetails = ExternalMaterialReportDetails.objects.filter(report__in=externalmaterialreport)
             projectinventory = ProjectInventory.objects.get(project_id=project.id)
             projectinventorydetails = ProjectInventoryDetails.objects.filter(inventory_id=projectinventory.id)
             externalprojectinventory = ExternalProjectInventory.objects.get(project_id=project.id)

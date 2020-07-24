@@ -397,13 +397,13 @@ ExternalOrderUpdateFormSet = inlineformset_factory(ExternalOrder, ExternalOrderD
         'unitprice':forms.NumberInput(attrs={'class':'form-control', 'required':True})
     }    
 )
-class ExternalOrderReportForm(forms.ModelForm):
+class ExternalMaterialReportForm(forms.ModelForm):
     class Meta:
-        model = ExternalOrderReport
+        model = ExternalMaterialReport
         fields = '__all__'
 
-ExternalOrderReportFormSet = inlineformset_factory(ExternalOrderReport, ExternalOrderDetailsReport,
-    form=ExternalOrderReportForm,
+ExternalMaterialReportFormSet = inlineformset_factory(ExternalMaterialReport, ExternalMaterialReportDetails,
+    form=ExternalMaterialReportForm,
     extra=1,
     can_delete=True,
     widgets={
@@ -600,10 +600,10 @@ class SkillForm(forms.ModelForm):
 
 class DailyReportForm(forms.ModelForm):
     class Meta:
-        model=ProjectDailyReport
+        model=MaterialReport
         fields = '__all__'
 
-DailyReportFormSet = inlineformset_factory(ProjectDailyReport, ProjectDailyReportDetails,
+DailyReportFormSet = inlineformset_factory(MaterialReport, MaterialReportDetails,
     form=DailyReportForm,
     extra=1,
     can_delete=True,
