@@ -153,7 +153,7 @@ class ProjectBlueprintForm(forms.ModelForm):
 ProjectBlueprintFormset = inlineformset_factory(Project, ProjectBlueprint,
     form = ProjectNewForm,
     exclude = ('project', 'address', 'province', 'city', 'pm', 'pic', 'whm', 'client', 'status', 'typeofproject', 'lotarea', 'startdate', 'comdate', 'mpd', 'design'),
-    extra=0,
+    extra=1,
     can_delete=True,
 )
 
@@ -195,10 +195,11 @@ class QuotationForm(forms.ModelForm):
         self.fields['project'].queryset = Project.objects.filter(pm=user)
 
 class QuotationNewForm(forms.ModelForm):
-    tcost = forms.FloatField(widget=forms.NumberInput(attrs={'class':'form-control tcost','readonly':'true'}))
+    scope_of_work = forms.ModelChoiceField(queryset=ScopeOfWork.objects.all(), widget=forms.Select(attrs={'class':'sow', 'required':True}))
     class Meta:
         model=Quotation
         fields='__all__'
+        exclude = ('total',)
 
 class QuotationFormAdmin(forms.ModelForm):
     class Meta:
@@ -210,25 +211,10 @@ QuotationFormSet = inlineformset_factory(Quotation, QuotationDetails,
     extra=1,
     can_delete=True,
     widgets={
-        'scope_of_work':forms.Select(attrs={'class':'sow', 'required':True}),
         'unit':forms.TextInput(attrs={'class':'form-control',}),
-        'quantity':forms.NumberInput( attrs={'class':'form-control qty','required': 'true'}),
-    }
-)
-
-class QuotationUpdateForm(forms.ModelForm):
-    class Meta:
-        model=Quotation
-        fields='__all__'
-
-QuotationUpdateFormSet = inlineformset_factory(Quotation, QuotationDetails,
-    form=QuotationUpdateForm,
-    extra=0,
-    can_delete=True,
-    widgets={
-        'scope_of_work':forms.Select(attrs={'class':'sow', }),
-        'unit':forms.TextInput(attrs={'class':'form-control',}),
-        'quantity':forms.NumberInput( attrs={'class':'form-control qty','required': 'true'}),
+        'quantity':forms.NumberInput( attrs={'class':'form-control qty','required': 'true', 'min':0, "oninput":"validity.valid||(value='');"}),
+        'amount':forms.NumberInput(attrs={'class':'form-control amount','readonly':'true'}),
+        'unit_cost':forms.NumberInput(attrs={'class':'form-control unit_cost','readonly':'true'}),
     }
 )
 #################################################################################################################################
@@ -287,7 +273,7 @@ RequisitionFormSet = inlineformset_factory(Requisition, RequisitionDetails,
     can_delete = True,
     exclude = ('status', 'status2', 'quantity2', 'requisition_no', 'amount'),
     widgets={
-        'quantity':forms.NumberInput(attrs={'class':'form-control'}),
+        'quantity':forms.NumberInput(attrs={'class':'form-control', 'min':0, "oninput":"validity.valid||(value='');"}),
         'articles':forms.Select(attrs={'class':'form-control art'}),
     }
 )
@@ -302,7 +288,7 @@ RequisitionUpdateFormSet = inlineformset_factory(Requisition, RequisitionDetails
     can_delete=True,
     exclude = ('status', 'status2', 'quantity2', 'requisition_no', 'amount'),
     widgets={
-        'quantity':forms.NumberInput(attrs={'class':'form-control', 'required':'true'}),
+        'quantity':forms.NumberInput(attrs={'class':'form-control', 'required':'true', 'min':0, "oninput":"validity.valid||(value='');"}),
         'articles':forms.Select(attrs={'class':'form-control art'})
     }
 )
@@ -334,7 +320,7 @@ RequisitionActionFormSet = inlineformset_factory(Requisition, RequisitionDeliver
     extra=0,
     widgets={
         'remarks':forms.TextInput(attrs={'class':'form-control '}),
-        'quantity':forms.TextInput(attrs={'class':'form-control'}),
+        'quantity':forms.TextInput(attrs={'class':'form-control', 'min':0, "oninput":"validity.valid||(value='');"}),
         'status':forms.Select(attrs={'class':'form-control', 'required':True}),
     }
 )
@@ -345,7 +331,7 @@ RequisitionActionFormSet_whm = inlineformset_factory(Requisition, RequisitionDel
     extra=0,
     widgets={
         'status2':forms.Select(attrs={'class':'form-control status2', 'required':True}),
-        'quantity2':forms.NumberInput(attrs={'class':'form-control qty2'}),
+        'quantity2':forms.NumberInput(attrs={'class':'form-control qty2', 'min':0, "oninput":"validity.valid||(value='');"}),
     }
 )
 #################################################################################################################################
@@ -391,7 +377,7 @@ ExternalOrderUpdateFormSet = inlineformset_factory(ExternalOrder, ExternalOrderD
     extra=0,
     can_delete=True,
     widgets={
-        'quantity':forms.NumberInput(attrs={'class':'form-control', 'required':True}),
+        'quantity':forms.NumberInput(attrs={'class':'form-control', 'required':True, 'min':0, "oninput":"validity.valid||(value='');"}),
         'unit':forms.TextInput(attrs={'class':'form-control', 'required':True}),
         'articles':forms.TextInput(attrs={'class':'form-control', 'required':True}),
         'unitprice':forms.NumberInput(attrs={'class':'form-control', 'required':True})
@@ -408,7 +394,7 @@ ExternalMaterialReportFormSet = inlineformset_factory(ExternalMaterialReport, Ex
     can_delete=True,
     widgets={
         'articles':forms.Select(attrs={'class':'form-control art', 'required':True}),
-        'quantity':forms.NumberInput(attrs={'class':'form-control','required':True}),
+        'quantity':forms.NumberInput(attrs={'class':'form-control','required':True, 'min':0, "oninput":"validity.valid||(value='');"}),
         'remarks':forms.TextInput(attrs={'class':'form-control'}),
     }
 )
@@ -591,7 +577,7 @@ class PersonnelForm(forms.ModelForm):
     class Meta:
         model=Personnel
         fields='__all__'
-        exclude = ('status','project')
+        exclude = ('joborder_count',)
 
 class SkillForm(forms.ModelForm):
     class Meta:
@@ -609,7 +595,7 @@ DailyReportFormSet = inlineformset_factory(MaterialReport, MaterialReportDetails
     can_delete=True,
     widgets={
         'articles':forms.Select(attrs={'class':'form-control art'}),
-        'quantity':forms.NumberInput(attrs={'class':'form-control'}),
+        'quantity':forms.NumberInput(attrs={'class':'form-control', 'min':0, "oninput":"validity.valid||(value='');"}),
         'remarks':forms.TextInput(attrs={'class':'form-control'}),
     }  
 )

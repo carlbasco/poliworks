@@ -22,7 +22,7 @@
 <form action="" method="POST">
 {% csrf_token%}
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-lg-12">
             <div class="card card-form">
                 <div class="card-header" id="card_header_content">
                     <h3 style="text-align: center;">Quotation Form</h3>
@@ -30,44 +30,47 @@
                 <div class="card-body">
                     <div class="col-lg-12">
                         <div class="row justify-content-center">
-                            <div class="form-group col-md-8">
+                            <div class="form-group col-lg-8">
                                 {{form.project|as_crispy_field}} 
                             </div>
-                            <div class="form-group col-md-4">
+                            <div class="form-group col-lg-4">
                                 {{form.date|as_crispy_field}}
                             </div>
-                            <div class="form-group col-md-8">
+                            <div class="form-group col-lg-8">
                                 {{form.subject|as_crispy_field}}
                             </div>
-                            <div class="form-group col-md-4">
+                            <div class="form-group col-lg-4">
                                 
                             </div>
                         </div>
                     </div>
-                    <table id="tbl_quotation" class="table table-responsive-sm">
-                        <thead>
-                            <th style="min-width: 250px;">Scope of Work <span class="asteriskField">*</span></th>
-                            <th style="min-width: 100px;">Unit</th>
-                            <th style="min-width: 100px;">Quantity <span class="asteriskField">*</span></th>
-                            <th style="min-width: 150px;">Total Cost</th>
-                            <th>Delete</th>
-                        </thead>
-                        {{ formset.management_form }}
-                        {% for i in formset.forms %}
-                        <tr class="formset_row">
-                            <td style="min-width: 250px;">{{i.scope_of_work}}</td>
-                            <td>{{i.unit}}</td>
-                            <td>{{i.quantity}}</td>
-                            <td>{{i.tcost}}</td>
-                            <td>{{i.delete}}</td>
-                        </tr>
-                        {% endfor %}
-                    </table>
-                    
+                    <div class="table-responsive">
+                        <table id="tbl_quotation" class="table">
+                            <thead>
+                                <th>Scope of Work <span class="asteriskField">*</span></th>
+                                <th>Unit Cost</th>
+                                <th>Unit</th>
+                                <th>Quantity <span class="asteriskField">*</span></th>
+                                <th>Amount</th>
+                                <th>Delete</th>
+                            </thead>
+                            {{ formset.management_form }}
+                            {% for i in formset.forms %}
+                            <tr class="formset_row">
+                                <td style="min-width: 320px;">{{i.scope_of_work}}</td>
+                                <td>{{i.unit_cost}}</td>
+                                <td>{{i.unit}}</td>
+                                <td>{{i.quantity}}</td>
+                                <td>{{i.amount}}</td>
+                                <td>{{i.delete}}</td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
                     <div class="row">
-                        <div class="form-group col-md-8">
+                        <div class="form-group col-lg-8">
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-lg-4">
                             <div class="form-check">
                                 <label class="form-check-label">
                                   {{form.is_vat}}
@@ -117,6 +120,10 @@
         prefix: '{{ formset.prefix }}'
     })
 ///////////////////////////////////////////////////////////////////////////
+    $('.add-row').click(function(){
+        loadstart();
+    })
+///////////////////////////////////////////////////////////////////////////
     loadstart();
     $('#id_date').prop('disabled', true);
     $('form').bind('submit', function () {
@@ -128,28 +135,42 @@
         $('.sow').select2();
         $('#id_project').select2()
         var url = "{% url 'scopeofworks_api' 123%}"
-        $('.qty').change(function(){
-            var quantity = $(this).val()
-            var scope = $(this).closest('tr').find('.sow').val()
-            var amount =$(this).closest('tr').find('.tcost')
-            if(scope != ""){
+
+        $('.sow').change(function(){
+            var scope = $(this).val()
+            var unit_cost = $(this).closest('tr').find('.unit_cost');
+            var quantity = $(this).closest('tr').find('.qty').val()
+            var amount = $(this).closest('tr').find('.amount');
+            if(scope != "" || scope != null){
                 $.ajax({
                     method: 'GET',
                     url:url.replace(123,scope),
                     success:function(data){
-                        var unit_cost = parseFloat(data[0].materialcost+data[0].laborcost+data[0].subbid)
-                        var tcost = parseFloat(unit_cost * quantity)
-                        amount.val(tcost)
-                        calculate()
+                        var cost = parseFloat(data[0].materialcost+data[0].laborcost+data[0].subbid);
+                        unit_cost.val(cost)
+                        if(quantity != 0 || quantity != ""){
+                            amount.val(parseFloat(quantity*unit_cost.val()))
+                            calculate();
+                        };
                     }
-                }); 
+                })
+            }
+        });
+        
+        $('.qty').change(function(){
+            var quantity = $(this).val();
+            var unit_cost = $(this).closest('tr').find('.unit_cost').val();
+            var amount = $(this).closest('tr').find('.amount');
+            if(unit_cost!=null || unit_cost!=""){
+                amount.val(parseFloat(quantity*unit_cost))
+                calculate();
             }
         });
     };
 ///////////////////////////////////////////////////////////////////////////
     function calculate(){
         var sum = 0;
-        $('.tcost').each(function() {
+        $('.amount').each(function() {
             var value = $(this).val();
             if(!isNaN(value) && value.length != 0 && value != 0) {
                 sum += parseFloat(value);
@@ -157,53 +178,7 @@
             $('#total_amount').val(sum)
         });
     };
-///////////////////////////////////////////////////////////////////////////
-    $('.add-row').click(function(){
-        loadstart();
-        reset_option();
-        option_disable();
-        option_disable_all();
-        delete_func();
-    })
 ///////////////////////////////////////////////////////////////////////
-var selected = [];  
-    
-    function option_disable_all(){
-        $("option").prop("disabled", false);         
-        for (var index in selected) {
-            $('option[value="'+selected[index]+'"]').prop("disabled", true); 
-        }
-    }   
-    function option_disable(){
-        $('.sow').on("change", function() {
-            $.each($(this), function(index, select) {
-                if(selected.value!=""){
-                    selected.push(select.value); 
-                }     
-            });         
-            option_disable_all();
-        });
-    };
-    function reset_option(){
-        option_enable();
-        selected.length = 0;
-        $('.sow').each(function(index,select) {     
-            selected.push(select.value); 
-        });      
-    }
-    function option_enable(){
-        $("option").prop("disabled", false);         
-        for (var index in selected) {
-            $('option[value="'+selected[index]+'"]').prop("disabled", false); 
-        };
-    }
-    function delete_func(){
-        $('.delete-row').click(function (){
-            reset_option();
-            option_disable_all();
-        });
-    }
-///////////////////////////////////////////////////////////////////////    
 </script>
 <style>span.select2-selection.select2-selection--single {height: 30px;}</style>
 {%endblock%}

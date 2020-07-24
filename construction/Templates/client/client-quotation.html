@@ -41,20 +41,20 @@
                             <thead class="thead" id="head_tbl">
                                 <tr>
                                     <th>Scope of Work</th>
-                                    <th style="width: 100px;">Unit</th>
-                                    <th style="width: 100px;">Quantity</th>
-                                    <th style="width: 100px;">Unit Cost</th>
+                                    <th style="min-width: 100px;">Unit</th>
+                                    <th style="min-width: 100px;">Quantity</th>
+                                    <th style="min-width: 100px;">Unit Cost</th>
                                     <th class="text-center" style="width: 100px;">Amount</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for i in data2 %}
                                 <tr>
-                                    <td scope="row">{{i.scope_of_work.scope}}</td>
+                                    <td scope="row">{{i.scope_of_work}}</td>
                                     <td>{{i.unit}}</td>
-                                    <td class="quantity">{{i.quantity}}</td>
-                                    <td scope="row">{{i.scope_of_work.get_cost|intcomma}}</td>
-                                    <td class="money text-right">{{i.q_amount|intcomma}}</td>
+                                    <td >{{i.quantity}}</td>
+                                    <td>{{i.unit_cost|intcomma}}</td>
+                                    <td class="money text-right">{{i.amount|intcomma}}</td>
                                 </tr>
                                 {% endfor %}
                                 <tr>
@@ -63,7 +63,7 @@
                                 {% if data.is_vat %}
                                 <tr class="table-success font-weight-bold">
                                     <td class="text-center" colspan="4"><span class="txt" >GRAND TOTAL (VAT EXCLUSIVE)</span></td>
-                                    <td class="money text-right"><span class="txt">{{data.amount|intcomma}}</span></td>
+                                    <td class="money text-right"><span class="txt">{{data.total|intcomma}}</span></td>
                                 </tr>
                                 <tr>
                                     <td colspan="3"></td>
@@ -77,7 +77,7 @@
                                 {% else %}
                                 <tr class="table-success font-weight-bold">
                                     <td class="text-center" colspan="4"><span class="txt" >GRAND TOTAL (VAT EXCLUSIVE)</span></td>
-                                    <td class="money text-right"><span class="txt">{{data.amount|intcomma}}</span></td>
+                                    <td class="money text-right"><span class="txt">{{data.total|intcomma}}</span></td>
                                 </tr>
                                 <tr>
                                     <td colspan="3"></td>
@@ -86,7 +86,7 @@
                                 </tr>
                                 <tr class="table-primary font-weight-bold">
                                     <td class="text-center" colspan="4"><span class="txt" >GRAND TOTAL</span></td>
-                                    <td class="money text-right "><span class="txt">{{data.amount|intcomma}}</span></td>
+                                    <td class="money text-right "><span class="txt">{{data.total|intcomma}}</span></td>
                                 </tr>
                                 {% endif %}
                             </tbody>

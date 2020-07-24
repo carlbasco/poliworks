@@ -36,7 +36,6 @@ urlpatterns = [
     path('project/create_quotation', views.QuotationCreateView.as_view(), name="quotation_create"),
     path('project/quotation_list', views.QuotationListView, name="quotation_list"),
     path('project/quotation/<int:pk>', views.QuotationDetailView, name="quotation_detail"),
-    path('project/quotation/<int:pk>/edit', views.QuotationUpdateView.as_view(), name="quotation_update"),
     path('project/quotation/<int:pk>/delete', views.QuotationDeleteView, name="quotation_delete"),
 
     #ProjectProgress

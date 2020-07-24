@@ -43,7 +43,7 @@
                         </div>
                         {% if data.address %}
                         <div class = "col-md-7">
-                            <h6 class="sub">Title: <span class="txt">{{data.address}}</span></h6>
+                            <h6 class="sub">Location: <span class="txt">{{data.address}}</span></h6>
                         </div>
                         {% endif %}
                         <div class="col-md-10 mt-5 mx-auto">
@@ -52,8 +52,8 @@
                             {% endfor %}
                         </div>
                     </div>
-                    <a class="btn btn-outline-danger float-right" href="">Delete</a>
-                    <a class="btn btn-outline-primary float-right mr-3" href="">Edit</a>
+                    <a class="btn btn-outline-danger float-right" href="{% url 'landing_page_delete' data.id%}">Delete</a>
+                    <a class="btn btn-outline-primary float-right mr-3" href="{% url 'landing_page_update' data.id%}">Edit</a>
                 </div>
             </div>
         </div>

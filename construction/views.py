@@ -353,68 +353,18 @@ class QuotationCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
             formset.instance = quotation
             quotation_list = formset.save()
             #reset quotation total amount
-            quotation.amount = 0
-            #logic ~ get total amount from requistion details
+            quotation.total = 0
+            #logic ~ set unit cost and get total amount from requistion details
             for i in quotation_list:
-                quotation.amount += i.q_amount()
-            quotation.save()
+                quotation.total += i.amount
+                quotation.save()
             return super(QuotationCreateView, self).form_valid(form)
-        
+    def form_invalid(self, form):
+        print(form.errors)
     def get_success_url(self):
         data = self.object
         data2 = data.project.id
         return reverse_lazy("project_detail", kwargs={'pk': data2})
-
-class QuotationUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
-    login_url ="signin"
-    redirect_field_name = "redirect_to"
-    model = Quotation
-    fields = ('subject', 'is_vat',)
-    template_name = 'backoffice/quotation_pages/quotation_update.html'
-    success_message = "Quotation has been updated"
-    
-    @method_decorator(staff_only, name='dispatch')
-    def dispatch(self, *args, **kwargs):
-        return super(QuotationUpdateView, self).dispatch(*args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        data = super(QuotationUpdateView, self).get_context_data(**kwargs)
-        if self.request.POST:
-            data["formset"] = QuotationUpdateFormSet(self.request.POST, instance=self.object)
-        else:
-            data["formset"] = QuotationUpdateFormSet(instance=self.object)
-        return data
-
-    def form_valid(self, form):
-        context = self.get_context_data()
-        formset = context["formset"]
-        quotation = form.save()
-        if formset.is_valid():
-            formset.instance = quotation
-            formset.save()
-            #reset quotation total amount
-            quotation_list = QuotationDetails.objects.filter(quotation=quotation.id)
-            quotation.amount = 0
-            #logic ~ get total amount from requistion details
-            for i in quotation_list:                
-                quotation.amount +=i.q_amount()
-            quotation_list
-            #notification
-            admin = User.objects.filter(groups__name="Admin")
-            for i in admin:
-                admin_notif = Notification.objects.create(receiver=i, description=f"Quotation at {quotation.project} has been updated", url=f"/project/quotation/{quotation.id}")
-                admin_notif.save()
-            project = Project.objects.get(id=quotation.project.id)
-            client_notif = Notification.objects.create(receiver=project.client, description=f"Quotation at {quotation.project} has been updated", url=f"/myproject/view/quotation/{quotation.id}")
-            client_notif.save()
-            return super(QuotationUpdateView, self).form_valid(form)
-    
-    def form_invalid(self,form):
-        print(form.errors)
-
-    def get_success_url(self):
-        data=self.kwargs['pk']
-        return reverse_lazy("quotation_detail", kwargs={'pk': data})
 
 @login_required(login_url='signin')
 @admin_only
@@ -465,15 +415,9 @@ def QuotationDetailView(request,pk):
                 return redirect('quotation_detail',pk=data.id)
             except ObjectDoesNotExist:
                 #if doesn't exist, create project progress
-                data3 = ProjectProgress.objects.create(project=data.project) 
-                data3.quotation = data.id
-                data3.save()
+                data3 = ProjectProgress.objects.create(project=data.project)
                 for i in data2:
-                    data4 = ProjectProgressDetails.objects.create(projectprogress=data3)
-                    scope = ScopeOfWork.objects.get(scope=i.scope_of_work.scope)
-                    data4.scope_of_work = scope.scope
-                    data4.save()
-                data4.save()
+                    data4 = ProjectProgressDetails.objects.create(projectprogress=data3, scope_of_work=i.scope_of_work)
                 project.status = "On-going"
                 project.save()
                 messages.success(request, "Work Progress has been created.")
@@ -1045,7 +989,7 @@ def ExternalProjectInventoryList_WHM(request):
 def ProjectInventoryList_PM(request):
     user = request.user
     data = Project.objects.filter(pm=user)
-    data2 = ProjectInventory.objects.filter(project__in=data).order_by('articles')
+    data2 = ProjectInventory.objects.filter(project__in=data)
     context = {'data2':data2}
     return render(request, 'backoffice/inventory_pages/inventory_list.html', context)
 
@@ -1054,7 +998,7 @@ def ProjectInventoryList_PM(request):
 def ExternalProjectInventoryList_PM(request):
     user = request.user
     data = Project.objects.filter(pm=user)
-    data2 = ExternalProjectInventory.objects.filter(project__in=data).order_by('articles')
+    data2 = ExternalProjectInventory.objects.filter(project__in=data)
     context = {'data2':data2}
     return render(request, 'backoffice/inventory_pages/externalorder_inventory_list.html', context)
 
@@ -1063,7 +1007,7 @@ def ExternalProjectInventoryList_PM(request):
 def ProjectInventoryList_PIC(request):
     user = request.user
     data = Project.objects.filter(pic=user)
-    data2 = ProjectInventory.objects.filter(project__in=data).order_by('articles')
+    data2 = ProjectInventory.objects.filter(project__in=data)
     context = {'data2':data2}
     return render(request, 'backoffice/inventory_pages/inventory_list.html', context)
 
@@ -1072,7 +1016,7 @@ def ProjectInventoryList_PIC(request):
 def ExternalProjectInventoryList_PIC(request):
     user = request.user
     data = Project.objects.filter(pic=user)
-    data2 = ExternalProjectInventory.objects.filter(project__in=data).order_by('articles')
+    data2 = ExternalProjectInventory.objects.filter(project__in=data)
     context = {'data2':data2}
     return render(request, 'backoffice/inventory_pages/externalorder_inventory_list.html', context)
 
@@ -1462,8 +1406,6 @@ def JobOrderReportView(request,pk):
                     if i.date2 < i.completion_date:
                         i.status = "Done (Overdue)"
                         i.save()
-                elif i.status == "Done (Overdue)":
-                    i.save()
                 else:
                     data3 = Personnel.objects.get(id=i.personnel.id)
                     data3.project=data.project
@@ -1534,6 +1476,8 @@ def PersonnelCreateView(request):
             form.save()
             messages.success(request, "New personnel has been added to the list", extra_tags='success')
             return redirect('personnel_create')
+        else:
+            print(form.errors)
     else:
         form = PersonnelForm()
     context={'form':form, 'data':data}
@@ -2187,8 +2131,7 @@ def ClientProjectView(request,pk):
         except ObjectDoesNotExist:
             context = {'data':data, 'data2':data2, 'data5':data5, 'blueprint':blueprint}
             return render(request, 'client/client-view_project.html', context)
-
-        context={'data':data, 'data2':data2, 'data3':data3, 'data4':data4, 'data5':data5}
+        context={'data':data, 'data2':data2, 'data3':data3, 'data4':data4, 'data5':data5, 'blueprint':blueprint}
         return render(request, 'client/client-view_project.html', context)
     except ObjectDoesNotExist:
         return render(request, "404.html")

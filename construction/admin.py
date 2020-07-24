@@ -94,7 +94,7 @@ class QuotationDetailsAdmin(admin.TabularInline):
 class QuotationAdmin(admin.ModelAdmin):
     inlines = [QuotationDetailsAdmin]
     form = QuotationFormAdmin
-    list_display = ('project','subject','date','amount','status' )
+    list_display = ('project','subject','date','total','status' )
     search_fields = ('project', 'subject')
     ordering = ('date',)
 

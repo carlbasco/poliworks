@@ -75,9 +75,9 @@
                 <div class="card">
                     <div class="card-header" id="headingOne">
                     <h2 class="mb-0">
-                            <a class="btn btn-link collapsed btn-cardheader" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                            QUOTATION
-                            </a>
+                        <a class="btn btn-link collapsed btn-cardheader" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        QUOTATION
+                        </a>
                     </h2>
                     </div>
                     <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
@@ -151,15 +151,13 @@
                     </div>
                     <div id="blueprint" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
                         <div class="card-body">
-                            <div class="row justify-content-center">
-                                    {% if blueprint %}
-                                        {% for i in blueprint %}
-                                            <img src="{{i.image.url}}" class="img-fluid mb-3" alt="">
-                                        {% endfor %}
-                                    {% else %}
-                                        <p>No Data Available</p>
-                                    {% endif %}
-                            </div>
+                            {% if blueprint %}
+                            {% for i in blueprint%}
+                                <img src="{{i.image.url}}" class="img-fluid  mb-3 mx-auto" alt="">
+                                {% endfor %}
+                            {% else %}
+                                <p class="text-center">No Data Available</p>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

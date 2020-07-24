@@ -226,9 +226,9 @@ class ScopeOfWorkCategory(models.Model):
 class ScopeOfWork(models.Model):
     category = models.ForeignKey(ScopeOfWorkCategory, on_delete=models.CASCADE)
     scope = models.CharField(('Description'), max_length=255, null=True)
-    materialcost = models.FloatField(('Material Cost'),blank=True)
-    laborcost = models.FloatField(('Labor Cost'), blank=True)
-    subbid = models.FloatField(('Sub bid'), blank=True)
+    materialcost = models.FloatField(('Material Cost'), default=0)
+    laborcost = models.FloatField(('Labor Cost'), default=0)
+    subbid = models.FloatField(('Sub bid'), default=0)
     class Meta:
         verbose_name_plural='Admin - Scope Of Work'
         verbose_name='Admin - Scope Of Work'
@@ -237,36 +237,35 @@ class ScopeOfWork(models.Model):
     def get_scope(self):
         return self.scope
     def __str__(self):
-        scope = '%s %s %s' % (self.scope," - ",self.materialcost+self.laborcost+self.subbid)
-        return scope.strip()
+        return self.scope
 
 class Quotation(models.Model):
     status_choice = {('Pending','Pending'),('Accepted','Accepted'),('Rejected','Rejected')}
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='quotation', verbose_name='Project')
     subject = models.CharField(('Subject'),max_length=255, null=True)
     date = models.DateField(('Date'),default=datetime.date.today)
-    amount = models.FloatField(('Total Amount'), default=0)
+    total = models.FloatField(('Total Amount'), default=0, blank=True)
     status = models.CharField(('Status'), max_length=255, default='Pending',choices=status_choice)
     is_vat = models.BooleanField(('is VAT included?'), default=False)
     class Meta:
         verbose_name = 'Project - Quotation'
         verbose_name_plural = 'Project - Quotation'
     def get_vat(self):
-        vat = self.amount *.12
+        vat = self.total *.12
         return vat
     def get_grandtotal(self):
-        grandtotal = self.amount + (self.amount*.12)
+        grandtotal = self.total + (self.total*.12)
         return grandtotal
     def __str__(self):
         return "{0}".format(self.project)
 
 class QuotationDetails(models.Model):
     quotation = models.ForeignKey(Quotation, on_delete=models.CASCADE)
-    scope_of_work = models.ForeignKey(ScopeOfWork, on_delete=models.CASCADE, related_name='quotationsow', verbose_name='quotation')
+    scope_of_work = models.CharField(("Scope Of Work"), max_length=255)
     unit = models.CharField(max_length=255, blank=True)
     quantity = models.IntegerField(('Quantity'))
-    def q_amount(self):
-        return self.quantity*self.scope_of_work.get_cost()
+    unit_cost = models.FloatField(('Unit Cost'), default=0)
+    amount = models.FloatField(('Amount'), default=0)
 
 class ProjectProgress(models.Model):
     project = models.OneToOneField(Project, on_delete=models.CASCADE)
