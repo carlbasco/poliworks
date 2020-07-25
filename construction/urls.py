@@ -120,6 +120,7 @@ urlpatterns = [
     path('myproject/view/<int:pk>', views.ClientProjectView, name="client_view_project"),
     path('myproject/sitephotos/view/<int:pk>', views.ClientSitePhotosView, name="client_sitephotos"),
     path('myproject/view/quotation/<int:pk>', views.ClientQuotationView, name="client_quotation"),
+    path('myproject/view/rework/<int:pk>', views.ClientReworkDetailView, name="client_rework"),
     path('myprofile', views.ClientProfileView, name="client_profile"),
     path('myprofile/edit', views.ClientProfileUpdateView, name="client_profile_update"),
     path('myprofile/changepassword', views.ClientChangePasswordView, name="client_change_password"),

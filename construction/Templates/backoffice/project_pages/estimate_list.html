@@ -58,7 +58,7 @@
                             {% for i in data%}
                                 {% if i.status == False %}
                                 <tr role="row" class="odd">
-                                    <td><strong>{{i.date_created}}</strong></td>
+                                    <td><strong>{{i.date_created|date:"F d, Y"}}</strong></td>
                                     <td><strong>{{i.name}}</strong></td>
                                     <td><strong>{{i.email}}</strong></td>
                                     <td><strong>{{i.phone}}</strong></td>

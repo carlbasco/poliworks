@@ -200,10 +200,50 @@
                         </div>
                     </div>
                 </div>
+                <div class="card">
+                    <div class="card-header" id="headingThree">
+                        <h2 class="mb-0">
+                            <a class="btn btn-link collapsed  btn-cardheader" type="button" data-toggle="collapse" data-target="#rework" aria-expanded="false" aria-controls="collapseThree">
+                                Rework
+                            </a>
+                        </h2>
+                    </div>
+                    <div id="rework" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                        <div class="card-body">
+                            <table class="table table-borderless">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Subject</th>
+                                        <th class="text-center">Date</th>
+                                        <th class="text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        {% if rework %}
+                                            {% for i in rework%}
+                                            <tr role="row" class="odd">
+                                                <td class="text-center">{{i.subject}}</td>
+                                                <td class="text-center">{{i.date}}</td>
+                                                <td class="text-center"><a href="{% url 'client_rework' i.id %}" class="btn btn-outline-primary">View</a></td>
+                                            </tr>
+                                            {% endfor %}
+                                        {% else %}
+                                        <tr>
+                                            <td colspan="3">
+                                                <p class="text-center">No Data Available</p><br>
+                                            </td>
+                                        </tr>
+                                        {% endif %}
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
-
 </div>
 {% endblock %}
 {% block javascript%}

@@ -64,7 +64,7 @@
                         <tr role="row" class="odd">
                             <td>{{i.project}}</td>
                             <td>{{i.supplier}}</td>
-                            <td>{{i.date}}</td>
+                            <td>{{i.date|date:"F d, Y"}}</td>
                             <td>{{i.whm}}</td>
                             <td>
                                 <form action="{% url 'externalorder_detail' i.id%}">

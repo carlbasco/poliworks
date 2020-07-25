@@ -277,6 +277,7 @@ def ProjectDetailView(request, pk):
         blueprint = ProjectBlueprint.objects.filter(project_id=data.id)
         quotation = Quotation.objects.filter(project_id=data.id)
         inventory = ProjectInventory.objects.filter(project_id=data.id)
+        ex_inventory = ExternalProjectInventory.objects.filter(project_id=data.id)
         requisition = Requisition.objects.filter(project_id=data.id)
         external_order = ExternalOrder.objects.filter(project_id=data.id)
         joborder = JobOrder.objects.filter(project_id=data.id)
@@ -290,14 +291,14 @@ def ProjectDetailView(request, pk):
                 'data':data, 'blueprint':blueprint,
                 'quotation':quotation, 'inventory':inventory,
                 'requisition':requisition, 'external_order':external_order, 'rework':rework,
-                'sitephotos':sitephotos,
+                'sitephotos':sitephotos, 'joborder':joborder, 'ex_inventory':ex_inventory,
             }
             return render(request, 'backoffice/project_pages/project_detail.html', context)
         context={
             'data':data, 'data2':data2, 'data3':data3, 'blueprint':blueprint,
             'quotation':quotation, 'inventory':inventory,
             'requisition':requisition, 'external_order':external_order, 'rework':rework,
-            'joborder':joborder,  'sitephotos':sitephotos,
+            'joborder':joborder,  'sitephotos':sitephotos, 'ex_inventory':ex_inventory,
         }
         return render(request, 'backoffice/project_pages/project_detail.html', context)
     except ObjectDoesNotExist:
@@ -2194,6 +2195,18 @@ def ClientQuotationView(request,pk):
     except ObjectDoesNotExist:
         return render(request, "404.html")
 
+@login_required(login_url = 'signin')
+@allowed_users(allowed_roles = ['Client'])
+def ClientReworkDetailView(request,pk):
+    try:
+        data = Rework.objects.get(id=pk)
+        data2 = ReworkBeforeImage.objects.filter(rework=data.id)
+        data3 = ReworkAfterImage.objects.filter(rework=data.id)
+        context={'data':data, 'data2':data2, 'data3':data3,}
+        return render(request, 'client/client-rework.html', context)
+    except ObjectDoesNotExist:
+        return render(request, "404.html")
+
 @login_required(login_url='signin')
 @allowed_users(allowed_roles = ['Client'])
 def ClientProfileView(request):
@@ -2399,8 +2412,8 @@ class ProjectReportPDF(TemplateView, LoginRequiredMixin):
             pdf = render_to_pdf('pdf_template.html', data)
             return HttpResponse(pdf, content_type='application/pdf')
         except ObjectDoesNotExist:
-            messages.error(request, "Dates Does not exist on data")
-            return redirect('weeklyreport')
+            messages.warning(request, "Input dates does not match on data or does not exist at all.")
+            return redirect('projectreport')
 		
 
 # class DownloadPDF(View):

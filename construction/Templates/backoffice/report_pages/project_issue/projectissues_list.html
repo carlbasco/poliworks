@@ -62,7 +62,7 @@
                                 {% for i in data%}
                                 <tr role="row" class="odd">
                                     <td>{{i.project}}</td>
-                                    <td>{{i.date}}</td>
+                                    <td>{{i.date|date:"F d, Y"}}</td>
                                     <td>{{i.whm}}</td>
                                     <td><a href="{% url 'issues_detail' i.id%}" class="btn btn-outline-primary">view</a></td>
                                 </tr>
