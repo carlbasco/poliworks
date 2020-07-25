@@ -7,7 +7,6 @@ from django.db import models
 from django.db.models import F, Sum
 from decimal import Decimal
 from datetime import datetime
-import djfractions
 import datetime
 
 
