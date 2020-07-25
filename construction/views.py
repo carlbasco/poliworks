@@ -234,7 +234,7 @@ def ProjectListView(request):
 @pm_only
 def ProjectListView_PM(request):
     data = Project.objects.filter(pm=request.user)
-    data2 = Project.objects.filter(pm=request.user, status="Completed")
+    data2 = Project.objects.filter(Q(pm=request.user, status="Completed") | Q(pm=request.user, status ="Completed(Overdue)"))
     data3 = Project.objects.filter(pm=request.user, status="On-going")
     data4 = Project.objects.filter(pm=request.user, status="Pending")
     completed = data2.count()
@@ -247,7 +247,7 @@ def ProjectListView_PM(request):
 @pic_only
 def ProjectListView_PIC(request):
     data = Project.objects.filter(pic=request.user)
-    data2 = Project.objects.filter(pic=request.user, status="Completed")
+    data2 = Project.objects.filter(Q(pic=request.user, status="Completed") | Q(pic=request.user, status ="Completed(Overdue)"))
     data3 = Project.objects.filter(pic=request.user, status="On-going")
     data4 = Project.objects.filter(pic=request.user, status="Pending")
     completed = data2.count()
@@ -260,7 +260,7 @@ def ProjectListView_PIC(request):
 @whm_only
 def ProjectListView_WHM(request):
     data = Project.objects.filter(whm=request.user)
-    data2 = Project.objects.filter(whm=request.user, status="Completed")
+    data2 = Project.objects.filter(Q(whm=request.user, status="Completed") | Q(whm=request.user, status ="Completed(Overdue)"))
     data3 = Project.objects.filter(whm=request.user, status="On-going")
     data4 = Project.objects.filter(whm=request.user, status="Pending")
     completed = data2.count()
@@ -1081,8 +1081,8 @@ def ProjectInventoryReport_WHM(request,pk):
             for i in admin:
                 adnin_notif = Notification.objects.create(receiver=i, description=f"Material Report at project {project.project} has been created ", url=f"/reports/materialreport/{form.id}")
             project = Project.objects.get(id=data.project.id)
-            pm_notif = Notification.objects.create(receiver=project.pm, description=f"Material Report at project {project.project} has been created ", url=f"/materials/inventory/{form.id}")
-            pic_notif = Notification.objects.create(receiver=project.pic, description=f"Material Report at project {project.project} has been created ", url=f"/materials/inventory/{form.id}")
+            pm_notif = Notification.objects.create(receiver=project.pm, description=f"Material Report at project {project.project} has been created ", url=f"/reports/materialreport/{form.id}")
+            pic_notif = Notification.objects.create(receiver=project.pic, description=f"Material Report at project {project.project} has been created ", url=f"/reports/materialreport/{form.id}")
             messages.success(request, "Daily Material Report has been created.")
             return redirect('inventory_whm_detail', pk=data.id)  
         else:
@@ -1585,7 +1585,11 @@ class ReworkUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         return super().dispatch(*args, **kwargs)
 
     def form_valid(self, form):
-        form.save()
+        rework = form.save()
+        admin = User.objects.filter(groups__name="Admin")
+        for i in admin:
+            adnin_notif = Notification.objects.create(receiver=i, description=f"Rework at project {rework.project} has been updated", url=f"/task/rework/{rework.id}")
+        pic_notif = Notification.objects.create(receiver=rework.project.pic, description=f"Rework at project {rework.project} has been updated", url=f"/task/rework/{rework.id}")
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -1629,6 +1633,10 @@ def ReworkDetailView(request,pk):
                 form.save(False)
                 for f in files:
                     image = ReworkAfterImage.objects.create(rework=data, image=f)
+                admin = User.objects.filter(groups__name="Admin")
+                for i in admin:
+                    adnin_notif = Notification.objects.create(receiver=i, description=f"Rework at project {data.project} has been updated", url=f"/task/rework/{data.id}")
+                pm_notif = Notification.objects.create(receiver=data.project.pm, description=f"Rework at project {data.project} has been updated", url=f"/task/rework/{data.id}")
                 messages.success(request, "Rework After Image has been updated")
                 return redirect('rework_detail', pk=data.id)
         else:
@@ -1650,13 +1658,17 @@ def ReworkDeleteView(request, pk):
     return render(request, 'backoffice/rework_pages/rework_delete.html', context) 
 
 @login_required(login_url = 'signin')
-@pm_only
+@allowed_users(allowed_roles = ['Admin','Project Manager'])
 def ReworkBeforeUpdateView(request, pk):
     data = Rework.objects.get(id=pk)
     if request.method == "POST":
         formset = ReworkBeforeFormset(request.POST, request.FILES, instance=data)
         if formset.is_valid():
             formset.save()
+            admin = User.objects.filter(groups__name="Admin")
+            for i in admin:
+                adnin_notif = Notification.objects.create(receiver=i, description=f"Rework at project {data.project} has been updated", url=f"/task/rework/{data.id}")
+            pic_notif = Notification.objects.create(receiver=data.project.pic, description=f"Rework at project {data.project} has been updated", url=f"/task/rework/{data.id}")
             messages.success(request, "Rework Before Image has been updated")
             return redirect('rework_detail',pk=data.id)
     else:
@@ -1672,6 +1684,10 @@ def ReworkAfterUpdateView(request, pk):
         formset = ReworkAfterFormset(request.POST, request.FILES, instance=data)
         if formset.is_valid():
             formset.save()
+            admin = User.objects.filter(groups__name="Admin")
+            for i in admin:
+                adnin_notif = Notification.objects.create(receiver=i, description=f"Rework at project {data.project} has been updated", url=f"/task/rework/{data.id}")
+            pm_notif = Notification.objects.create(receiver=data.project.pm, description=f"Rework at project {data.project} has been updated", url=f"/task/rework/{data.id}")
             messages.success(request, "Rework Before Image has been updated")
             return redirect('rework_detail',pk=data.id)
     else:
@@ -2125,11 +2141,12 @@ def ClientProjectView(request,pk):
         blueprint = ProjectBlueprint.objects.filter(project_id=data.id)
         data2 = Quotation.objects.filter(project_id=data.id)
         data5 = SitePhotos.objects.filter(project_id=data.id)
+        rework = Rework.objects.filter(project_id=data.id)
         try:
             data3 = ProjectProgress.objects.get(project_id=data.id)
             data4 = ProjectProgressDetails.objects.filter(projectprogress=data3.id)
         except ObjectDoesNotExist:
-            context = {'data':data, 'data2':data2, 'data5':data5, 'blueprint':blueprint}
+            context = {'data':data, 'data2':data2, 'data5':data5, 'blueprint':blueprint, 'rework':rework}
             return render(request, 'client/client-view_project.html', context)
         context={'data':data, 'data2':data2, 'data3':data3, 'data4':data4, 'data5':data5, 'blueprint':blueprint}
         return render(request, 'client/client-view_project.html', context)

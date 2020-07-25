@@ -13,7 +13,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-lg-3 text-center"><strong >Project Start Date:</strong><p>{{data.startdate}}</p></div>
-                            <div class="col-lg-3 text-center"><strong>Project Completion Date:</strong><p>{{data.colgate}}</p></div>
+                            <div class="col-lg-3 text-center"><strong>Project Completion Date:</strong><p>{{data.comdate}}</p></div>
                             <div class="col-lg-3 text-center"><strong>Maintenance Period End Date:</strong><p>{{data.mpd}}</p></div>
                             <div class="col-lg-3 text-center">
                                 <strong>Project Status</strong>
@@ -98,7 +98,7 @@
                                     <tr>
                                         <td>{{i.subject}}</td>
                                         <td>{{i.date}}</td>
-                                        <td class="text-right">{{i.amount}}</td>
+                                        <td class="text-center">{{i.total}}</td>
                                         {% if i.status == "Rejected"%}
                                         <td><span class="badge badge-danger">{{i.status}}</span></td>
                                         {% elif i.status == "Pending"%}

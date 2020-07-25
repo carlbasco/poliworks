@@ -106,11 +106,6 @@ def ReworkNotif(sender, instance, created, **kwargs):
         for i in admin:
             adnin_notif = Notification.objects.create(receiver=i, description=f"Rework at project {instance.project} has been created", url=f"/task/rework/{instance.id}")
         pic_notif = Notification.objects.create(receiver=instance.project.pic, description=f"Rework at project {instance.project} has been created", url=f"/task/rework/{instance.id}")
-    else:
-        admin = User.objects.filter(groups__name="Admin")
-        for i in admin:
-            adnin_notif = Notification.objects.create(receiver=i, description=f"Rework at project {instance.project} has been updated", url=f"/task/rework/{instance.id}")
-        pic_notif = Notification.objects.create(receiver=instance.project.pic, description=f"Rework at project {instance.project} has been updated", url=f"/task/rework/{instance.id}")
 
 @receiver(post_save, sender=ProjectIssues)
 def ProjectIssueNotif(sender, instance, created, **kwargs):

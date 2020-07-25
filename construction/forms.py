@@ -93,7 +93,7 @@ class EstimateForm(forms.ModelForm):
             'address' : forms.TextInput(attrs={'class':'form-control', 'placeholder':'Location of Property'}),
             'lotarea' : forms.TextInput(attrs={'class':'form-control', 'placeholder':'Lot Area'}),
             'date_start':forms.DateInput( attrs={'class':'form-control dateinput', 'placeholder':'Estimated Date Start'}),
-            'budget' : forms.NumberInput(attrs={'class':'form-control', 'placeholder':'Estimate Budget (php)'}),
+            'budget' : forms.NumberInput(attrs={'class':'form-control', 'placeholder':'Estimate Budget (php)','min':0, "oninput":"validity.valid||(value='');"}),
             'message' : forms.Textarea(attrs={'class':'form-control', 'placeholder':'Message', 'style':'resize: none;'}),
         }
 class EstimateImageForm(forms.ModelForm):

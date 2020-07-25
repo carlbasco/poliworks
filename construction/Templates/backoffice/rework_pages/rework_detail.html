@@ -158,3 +158,31 @@
     </div>
 </div>
 {% endblock %}
+{% block javascript %}
+<script>
+    $('#id_project').select2()
+    $('#id_pm').prop('disabled', true);
+    $('#id_date').prop('disabled', true);
+    $('form').bind('submit', function () {
+        $(this).find('#id_pm').prop('disabled', false);
+        $(this).find('#id_date').prop('disabled', false);
+        $(this).find(':submit').attr('disabled','disabled');
+    });
+    function previewImages() {  
+        var $preview = $('#preview').empty();
+        if (this.files) $.each(this.files, readAndPreview);
+        function readAndPreview(i, file) {
+            if (!/\.(jpe?g|png|gif|webp)$/i.test(file.name)){
+                return alert(file.name +" format is not supported");
+            }
+            var reader = new FileReader();
+            $(reader).on("load", function() {
+                $preview.append($("<img/>", {src:this.result, height:100}));
+            });
+            reader.readAsDataURL(file);
+        }
+    }
+    $('#id_image').on("change", previewImages);
+</script>
+<style>span.select2-selection.select2-selection--single {height: 30px;}</style>
+{% endblock%}
