@@ -20,7 +20,7 @@
 </div>
 
 <div class="row">
-    <div class="col-md-4 grid-margin stretch-card">
+    <div class="col-md-3 grid-margin stretch-card">
         <div class="card aligner-wrapper" id="card_completed">
             <div class="card-body" >
                 <div class="absolute left top bottom h-100 v-strock-2 bg-success"></div>
@@ -31,7 +31,18 @@
             </div>
         </div>
     </div>
-    <div class="col-md-4 grid-margin stretch-card" >
+    <div class="col-md-3 grid-margin stretch-card">
+        <div class="card aligner-wrapper" id="card_completed">
+            <div class="card-body" >
+                <div class="absolute left top bottom h-100 v-strock-2 bg-danger"></div>
+                <p class="text-muted mb-2">Completed (Overdue) Projects</p>
+                <div class="d-flex align-items-center">
+                    <h1 class="font-weight-medium mb-2">{{overdue}}</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 grid-margin stretch-card" >
         <div class="card aligner-wrapper" id="card_ongoing">
             <div class="card-body">
                 <div class="absolute left top bottom h-100 v-strock-2 bg-primary"></div>
@@ -42,19 +53,14 @@
             </div>
         </div>
     </div>
-    <div class="col-md-4 grid-margin stretch-card">
+    <div class="col-md-3 grid-margin stretch-card">
         <div class="card aligner-wrapper"id="card_pending">
             <div class="card-body">
                 <div class="absolute left top bottom h-100 v-strock-2 bg-warning"></div>
                 <p class="text-muted mb-2">Pending Projects</p>
                 <div class="d-flex align-items-center">
                     <h1 class="font-weight-medium mb-2">{{pending}}</h1>
-                    <!-- <h5 class="font-weight-medium text-success ml-2">+296.6%</h5> -->
                 </div>
-                <!-- <div class="d-flex align-items-center">
-                    <div class="bg-danger dot-indicator"></div>
-                    <p class="text-muted mb-0 ml-2">Payout for next week $100 </p>
-                </div> -->
             </div>
         </div>
       </div>
@@ -120,8 +126,10 @@
                                                 <td><label class="badge badge-warning">{{i.status}}</label></td>
                                                 {% elif i.status == "On-going"%}
                                                 <td><label class="badge badge-primary">{{i.status}}</label></td>
-                                                {% else%}
-                                                <td><label class="badge badge-success">{{i.status}}</label></td>
+                                            {% elif i.status == "Completed (Overdue)"%}
+                                                <td><span class="badge badge-danger">{{i.status}}</span></td>
+                                            {% else %}
+                                                <td><span class="badge badge-success">{{i.status}}</span></td>
                                             {% endif %}
                                             <td><a class="btn btn-outline-primary" href="{% url 'project_detail' i.id%}">View</a></td>
                                         </tr>

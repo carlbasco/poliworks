@@ -224,49 +224,57 @@ def ProjectListView(request):
     data2 = Project.objects.filter(status="Completed")
     data3 = Project.objects.filter(status="On-going")
     data4 = Project.objects.filter(status="Pending")
+    data5 = Project.objects.filter(status="Completed (Overdue)")
     completed = data2.count()
     ongoing = data3.count()
     pending = data4.count()
-    context={'data':data, 'completed':completed, 'ongoing':ongoing, 'pending':pending}
+    overdue = data5.count()
+    context={'data':data, 'completed':completed, 'ongoing':ongoing, 'pending':pending, 'overdue':overdue}
     return render(request,'backoffice/project_pages/project_list.html', context)
 
 @login_required(login_url='signin')
 @pm_only
 def ProjectListView_PM(request):
     data = Project.objects.filter(pm=request.user)
-    data2 = Project.objects.filter(Q(pm=request.user, status="Completed") | Q(pm=request.user, status ="Completed(Overdue)"))
+    data2 = Project.objects.filter(pm=request.user, status="Completed")
     data3 = Project.objects.filter(pm=request.user, status="On-going")
     data4 = Project.objects.filter(pm=request.user, status="Pending")
+    data5 = Project.objects.filter(pm=request.user, status="Completed (Overdue)")
     completed = data2.count()
     ongoing = data3.count()
     pending = data4.count()
-    context={'data':data, 'completed':completed, 'ongoing':ongoing, 'pending':pending}
+    overdue = data5.count()
+    context={'data':data, 'completed':completed, 'ongoing':ongoing, 'pending':pending, 'overdue':overdue}
     return render(request,'backoffice/project_pages/project_list.html', context)
 
 @login_required(login_url='signin')
 @pic_only
 def ProjectListView_PIC(request):
     data = Project.objects.filter(pic=request.user)
-    data2 = Project.objects.filter(Q(pic=request.user, status="Completed") | Q(pic=request.user, status ="Completed(Overdue)"))
+    data2 = Project.objects.filter(pic=request.user, status="Completed")
     data3 = Project.objects.filter(pic=request.user, status="On-going")
     data4 = Project.objects.filter(pic=request.user, status="Pending")
+    data5 = Project.objects.filter(pic=request.user, status="Completed (Overdue)")
     completed = data2.count()
     ongoing = data3.count()
     pending = data4.count()
-    context={'data':data, 'completed':completed, 'ongoing':ongoing, 'pending':pending}
+    overdue = data5.count()
+    context={'data':data, 'completed':completed, 'ongoing':ongoing, 'pending':pending, 'overdue':overdue}
     return render(request,'backoffice/project_pages/project_list.html', context)
 
 @login_required(login_url='signin')
 @whm_only
 def ProjectListView_WHM(request):
     data = Project.objects.filter(whm=request.user)
-    data2 = Project.objects.filter(Q(whm=request.user, status="Completed") | Q(whm=request.user, status ="Completed(Overdue)"))
+    data2 = Project.objects.filter(whm=request.user, status="Completed")
     data3 = Project.objects.filter(whm=request.user, status="On-going")
     data4 = Project.objects.filter(whm=request.user, status="Pending")
+    data5 = Project.objects.filter(whm=request.user, status="Completed (Overdue)")
     completed = data2.count()
     ongoing = data3.count()
     pending = data4.count()
-    context={'data':data, 'completed':completed, 'ongoing':ongoing, 'pending':pending}
+    overdue = data5.count()
+    context={'data':data, 'completed':completed, 'ongoing':ongoing, 'pending':pending, 'overdue':overdue}
     return render(request,'backoffice/project_pages/project_list.html', context)
 
 @login_required(login_url='signin')
