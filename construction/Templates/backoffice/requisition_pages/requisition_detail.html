@@ -87,7 +87,7 @@
                                                 {% for i in data2 %}
                                                 <tr>
                                                     <td>{{i.articles}}</td>
-                                                    <td class="text-center">{{i.articles.unit}}</td>
+                                                    <td class="text-center">{{i.unit}}</td>
                                                     <td class="text-center">{{i.quantity}}</td>
                                                 </tr>
                                                 {% endfor %}
@@ -155,7 +155,7 @@
                                                                     {% if i.status != "Canceled"%}
                                                                         <td class="text-center">{{i.quantity}}</td>
                                                                         {% if request.user.groups.all.0.name != "Warehouseman"%}
-                                                                            <td class="text-center">{{i.articles.unit_price|intcomma}}</td>
+                                                                            <td class="text-center">{{i.unit_price|intcomma}}</td>
                                                                             <td class="text-center">{{i.total_price|intcomma}}</td>
                                                                         {% endif %}
                                                                     {% else %}

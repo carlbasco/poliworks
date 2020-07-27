@@ -35,6 +35,9 @@ delete from sqlite_sequence where name='`construction_rework`';
 delete from `construction_materialreport`;    
 delete from sqlite_sequence where name='`construction_materialreport`';
 
+delete from `construction_materialreportdetails`;    
+delete from sqlite_sequence where name='`construction_materialreportdetails`';
+
 delete from `construction_sitephotos`;    
 delete from sqlite_sequence where name='`construction_sitephotos`';
 

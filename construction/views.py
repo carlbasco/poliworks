@@ -607,7 +607,8 @@ class RequisitionCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView)
             formset.instance = requisition
             requisitiondetails = formset.save(False)
             for i in requisitiondetails:
-                data2 = RequisitionDelivery.objects.create(requisition=i.requisition,articles=i.articles)
+                item = Inventory.objects.get(description=i.articles)
+                data2 = RequisitionDelivery.objects.create(requisition=i.requisition,articles=i.articles, unit_price=item.unit_price, unit=item.unit)
             formset.save()
             return super(RequisitionCreateView, self).form_valid(form)
     def get_success_url(self):
@@ -774,13 +775,13 @@ def RequisitionActionView(request,pk):
                 delivery = formset.save(False)
                 for i in delivery:
                     if i.status == "To be delivered":
-                        item = Inventory.objects.get(id=i.articles.id)
+                        item = Inventory.objects.get(description=i.articles)
                         #check if quantity on requisition is greater than on Inventory 
                         if item.quantity < i.quantity:
                             messages.error(request, f"Quantity of {i.articles} on Inventory Office are not sufficient to comply requisition. Please update your stocks or canceled the item request.")
                             return redirect('requisition_action', pk=data.id)
                         # check if item has price
-                        if i.articles.unit_price is None or i.articles.unit_price == 0:
+                        if item.unit_price is None or item.unit_price == 0:
                             messages.error(request, f'"{i.articles}" has no unit price. Please update its unit price on Material Inventory Office')
                             return redirect('requisition_action', pk=data.id)
                     elif i.status =="Canceled":
@@ -790,7 +791,7 @@ def RequisitionActionView(request,pk):
                 #process logic   
                 for i in data3:
                     if i.status == "To be delivered":
-                        item =Inventory.objects.get(id=i.articles.id)
+                        item =Inventory.objects.get(description=i.articles)
                         item.quantity -= i.quantity
                         item.save()
                         # data.amount += i.quantity*i.articles.unit_price
@@ -801,18 +802,14 @@ def RequisitionActionView(request,pk):
                 data.amount = 0
                 for j in data3:
                     if j.status != "Canceled":
-                        data.amount += j.quantity*j.articles.unit_price
+                        data.amount += j.total_price()
                         data.save()
                 if data3.count() == canceled.count():
-                    print(data3.count())
-                    print(canceled.count())
                     data.status = "Closed"
                     data.save()
-                    print(data.status)
                 else:
                     data.status = "To be Delivered"
                     data.save()
-                    print(data.status)
                 whm_notif = Notification.objects.create(receiver=data.whm, description=f"The Admin has complied to your requisition", url=f"/materials/requisition/{data.id}")
                 messages.success(request, "Requisition has been complied.")
                 return redirect('requisition_detail',pk=data.id)
@@ -869,12 +866,12 @@ def RequisitionActionView_WHM(request,pk):
                     for k in data2:
                         if k.status2 !="Not Received" and k.status !="Pending" and k.status !="Canceled":
                             try:
-                                data4 = ProjectInventoryDetails.objects.get(inventory=data3,articles=k.articles)
+                                data4 = ProjectInventoryDetails.objects.get(inventory=data3,articles=k.articles, unit=k.unit)
                                 data4.quantity += k.quantity2
                                 k.save()
                                 data4.save()
                             except ObjectDoesNotExist:
-                                data4 = ProjectInventoryDetails.objects.create(inventory=data3, articles=k.articles, quantity=k.quantity2)
+                                data4 = ProjectInventoryDetails.objects.create(inventory=data3, articles=k.articles, quantity=k.quantity2, unit=k.unit)
                                 k.save()
                     data3.last_update = datetime.date.today()
                     data3.save()
@@ -895,12 +892,12 @@ def RequisitionActionView_WHM(request,pk):
                     for k in data2:
                         if k.status2 !="Not Received" and k.status !="Pending" and k.status !="Canceled":
                             try:
-                                data4 = ProjectInventoryDetails.objects.get(inventory=data3, articles=k.articles)
+                                data4 = ProjectInventoryDetails.objects.get(inventory=data3, articles=k.articles, unit=k.unit)
                                 data4.quantity += k.quantity2
                                 k.save()
                                 data4.save()
                             except ObjectDoesNotExist:
-                                data4 = ProjectInventoryDetails.objects.create(inventory=data3, articles=k.articles, quantity=k.quantity2)
+                                data4 = ProjectInventoryDetails.objects.create(inventory=data3, articles=k.articles, quantity=k.quantity2, unit=k.unit)
                                 k.save()
                     data3.last_update = datetime.date.today()
                     data3.save()
@@ -1068,7 +1065,7 @@ def ProjectInventoryReport_WHM(request,pk):
                     return redirect('inventory_whm_detail', pk=data.id)
             for i in formset:
                 for j in data2:
-                    if i.articles == j.articles:
+                    if i.articles.articles == j.articles:
                         j.quantity -= i.quantity
                         j.save()
             form.save()
@@ -1091,6 +1088,8 @@ def ProjectInventoryReport_WHM(request,pk):
     else:
         form = DailyReportForm(initial={'project':data.project, 'whm':request.user})
         formset = DailyReportFormSet()
+        for f in formset:
+            f.fields['articles'].queryset = ProjectInventoryDetails.objects.filter(inventory=data)
     context = {'data':data, 'data2':data2, 'form':form, 'formset':formset}
     return render(request, 'backoffice/inventory_pages/inventory_detail_whm.html', context)
 

@@ -400,16 +400,19 @@ class Requisition(models.Model):
 
 class RequisitionDetails(models.Model):
     requisition = models.ForeignKey(Requisition, on_delete=models.CASCADE, related_name='requisitiondetail', verbose_name='Requesition')
-    articles = models.ForeignKey(Inventory, on_delete=models.CASCADE, verbose_name="Articles")
+    articles = models.CharField(('Articles'), max_length=255)
     quantity = models.IntegerField(('Request Quantity'),default=1)
+    unit = models.CharField(('Unit'), max_length=255, null=True, blank=True)
     class Meta:
         verbose_name_plural = 'Requisition Details'
         verbose_name = 'Requisition Detail'
 
 class RequisitionDelivery(models.Model):
     requisition = models.ForeignKey(Requisition, on_delete=models.CASCADE, verbose_name='Requesition')
-    articles = models.ForeignKey(Inventory, on_delete=models.CASCADE, verbose_name="Articles")
+    articles = models.CharField(('Articles'), max_length=255)
     quantity = models.IntegerField(('Delivered Quantity'),default=0, null=True)
+    unit = models.CharField(('Unit'), max_length=255, null=True, blank=True)
+    unit_price = models.FloatField(('Unit Price'), null=True, blank=True)
     remarks = models.CharField(max_length=255, null=True, blank=True)
     status=(('Canceled', 'Canceled'),('To be delivered', 'To be delivered'))
     status = models.CharField(('Status'),max_length=255, choices=status, null=True,)
@@ -418,7 +421,7 @@ class RequisitionDelivery(models.Model):
     quantity2 = models.IntegerField(('Received Quantity'), null=True, blank=True, default=0)
     
     def total_price(self):
-        total_price = self.articles.unit_price * self.quantity
+        total_price = self.unit_price * self.quantity
         return total_price
 
 class RequisitionImage(models.Model):
@@ -512,8 +515,10 @@ class ProjectInventory(models.Model):
 
 class ProjectInventoryDetails(models.Model):
     inventory = models.ForeignKey(ProjectInventory, on_delete=models.CASCADE, verbose_name='Project Inventory')
-    articles = models.ForeignKey(Inventory, on_delete=models.CASCADE, verbose_name="Articles")
+    articles = models.CharField(('Articles'), max_length=255)
+    unit = models.CharField(max_length=255, null=True, blank=True)
     quantity = models.IntegerField(('Quantity'), null=True, blank=True)
+
     def __str__(self):
         return self.articles.__str__()
 
@@ -529,7 +534,7 @@ class MaterialReport(models.Model):
 
 class MaterialReportDetails(models.Model):
     report = models.ForeignKey(MaterialReport, on_delete=models.CASCADE, null=True)
-    articles = models.ForeignKey(Inventory, on_delete=models.SET_NULL, null=True)
+    articles = models.ForeignKey(ProjectInventoryDetails, on_delete=models.SET_NULL, null=True)
     quantity = models.IntegerField(null=True)
     remarks = models.CharField(max_length=255, null=True, blank=True)
 

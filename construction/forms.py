@@ -263,6 +263,7 @@ class RequisitionAdminForm(forms.ModelForm):
 
 class RequisitionNewForm(forms.ModelForm):
     unit = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control unit','readonly':'true', 'required':'false'}))
+    articles = forms.ModelChoiceField(queryset=Inventory.objects.all(), widget=forms.Select(attrs={'class':'form-control art'}))
     class Meta:
         model = Requisition
         fields ='__all__'
@@ -274,7 +275,6 @@ RequisitionFormSet = inlineformset_factory(Requisition, RequisitionDetails,
     exclude = ('status', 'status2', 'quantity2', 'requisition_no', 'amount'),
     widgets={
         'quantity':forms.NumberInput(attrs={'class':'form-control', 'min':0, "oninput":"validity.valid||(value='');"}),
-        'articles':forms.Select(attrs={'class':'form-control art'}),
     }
 )
 class RequisitionUpdateForm(forms.ModelForm):
@@ -316,7 +316,7 @@ class RequisitionImageForm(forms.ModelForm):
         
 RequisitionActionFormSet = inlineformset_factory(Requisition, RequisitionDelivery, 
     form=RequisitionActionForm, 
-    exclude=('requisition','articles','quantity2'),
+    exclude=('requisition','articles','quantity2', 'unit_price','total_price'),
     extra=0,
     widgets={
         'remarks':forms.TextInput(attrs={'class':'form-control '}),
@@ -327,7 +327,7 @@ RequisitionActionFormSet = inlineformset_factory(Requisition, RequisitionDeliver
 
 RequisitionActionFormSet_whm = inlineformset_factory(Requisition, RequisitionDelivery, 
     form=RequisitionActionForm, 
-    exclude=('requisition','quantity','articles','status','remarks'),
+    exclude=('requisition','quantity','articles','status','remarks', 'unit_price','total_price'),
     extra=0,
     widgets={
         'status2':forms.Select(attrs={'class':'form-control status2', 'required':True}),
@@ -594,8 +594,8 @@ DailyReportFormSet = inlineformset_factory(MaterialReport, MaterialReportDetails
     extra=1,
     can_delete=True,
     widgets={
-        'articles':forms.Select(attrs={'class':'form-control art'}),
-        'quantity':forms.NumberInput(attrs={'class':'form-control', 'min':0, "oninput":"validity.valid||(value='');"}),
+        'articles':forms.Select(attrs={'class':'form-control art', 'required':True}),
+        'quantity':forms.NumberInput(attrs={'class':'form-control','required':True, 'min':0, "oninput":"validity.valid||(value='');"}),
         'remarks':forms.TextInput(attrs={'class':'form-control'}),
     }  
 )

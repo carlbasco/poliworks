@@ -25,6 +25,13 @@ SECRET_KEY = 'g)ast+ip51afc5jo0$7f&+s9maz)*4q#+89^xtdg_y^hn$z1_i'
 DEBUG = True
 
 ALLOWED_HOSTS = [] #'carlbasco.pythonanywhere.com'#]
+# SECURE_HSTS_SECONDS=True
+# SECURE_SSL_REDIRECT=True
+# SESSION_COOKIE_SECURE=True
+# CSRF_COOKIE_SECURE=True
+# SECURE_HSTS_INCLUDE_SUBDOMAINS=True
+# SECURE_HSTS_PRELOAD=True
+# SECURE_REFERRER_POLICY='same-origin'
 
 # Application definition
 
