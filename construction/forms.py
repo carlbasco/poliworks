@@ -316,7 +316,7 @@ class RequisitionImageForm(forms.ModelForm):
         
 RequisitionActionFormSet = inlineformset_factory(Requisition, RequisitionDelivery, 
     form=RequisitionActionForm, 
-    exclude=('requisition','articles','quantity2', 'unit_price','total_price'),
+    exclude=('requisition','articles','quantity2', 'unit_price','total_price', 'unit'),
     extra=0,
     widgets={
         'remarks':forms.TextInput(attrs={'class':'form-control '}),
@@ -327,7 +327,7 @@ RequisitionActionFormSet = inlineformset_factory(Requisition, RequisitionDeliver
 
 RequisitionActionFormSet_whm = inlineformset_factory(Requisition, RequisitionDelivery, 
     form=RequisitionActionForm, 
-    exclude=('requisition','quantity','articles','status','remarks', 'unit_price','total_price'),
+    exclude=('requisition','quantity','articles','status','remarks', 'unit_price','total_price', 'unit'),
     extra=0,
     widgets={
         'status2':forms.Select(attrs={'class':'form-control status2', 'required':True}),

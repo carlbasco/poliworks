@@ -24,10 +24,10 @@ def project_sitephotos_path(instance, filename):
     return f'Projects/{instance.sitephotos.project}/sitephotos/{filename}'
 
 def externalorder_upload_path(instance, filename):
-    return f'Projects/{instance.externalorder.project}/or image/{filename}'
+    return f'Projects/{instance.externalorder.project}/externalorder/{filename}'
     
 def requisition_upload_path(instance, filename):
-    return f'Projects/{instance.requisition.project}/{filename}'
+    return f'Projects/{instance.requisition.project}/requisition/{filename}'
 
 def landingpage_image_path(instance,filename):
     return f'Landing Page Images/{instance.title.category}/{instance.title.name}/{filename}'
@@ -415,7 +415,7 @@ class RequisitionDelivery(models.Model):
     unit_price = models.FloatField(('Unit Price'), null=True, blank=True)
     remarks = models.CharField(max_length=255, null=True, blank=True)
     status=(('Canceled', 'Canceled'),('To be delivered', 'To be delivered'))
-    status = models.CharField(('Status'),max_length=255, choices=status, null=True,)
+    status = models.CharField(('Status'),max_length=255, choices=status, null=True, blank=True)
     status2 = {('Incomplete', 'Incomplete'), ('Not Received','Not Received'), ('Complete','Complete')}
     status2 = models.CharField(('Action'), max_length=255, choices=status2, null=True, blank=True)
     quantity2 = models.IntegerField(('Received Quantity'), null=True, blank=True, default=0)

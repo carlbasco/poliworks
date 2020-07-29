@@ -751,6 +751,8 @@ def RequisitionDetailView(request, pk):
 def RequisitionDeleteView(request, pk):
     data = Requisition.objects.get(id=pk)
     data2 = RequisitionDetails.objects.filter(requisition=data.id)
+    data3 = RequisitionImage.objects.filter(requisition=data.id)
+    data4 = RequisitionDelivery.objects.filter(requisition=data.id).order_by('status', 'articles')
     if request.method == 'POST':
         data.delete()
         messages.success(request, 'Requisition has been deleted.', extra_tags='success')
@@ -764,7 +766,7 @@ def RequisitionDeleteView(request, pk):
         elif group == "Admin":
             return redirect("requisition_list")
 
-    context= {'data':data, 'data2':data2, }
+    context= {'data':data, 'data2':data2, 'data3':data3, 'data4':data4,}
     return render(request, 'backoffice/requisition_pages/requisition_delete.html', context)
 
 @login_required(login_url='signin')
@@ -802,8 +804,6 @@ def RequisitionActionView(request,pk):
                         item =Inventory.objects.get(description=i.articles)
                         item.quantity -= i.quantity
                         item.save()
-                        # data.amount += i.quantity*i.articles.unit_price
-                        # data.save()
                     elif i.status == "Canceled":
                         i.quantity = 0
                         i.save()
@@ -1463,6 +1463,8 @@ def JobOrderDeleteView(request,pk):
     data2 = JobOrderTask.objects.filter(joborder=data.id)
     if request.method == 'POST':
         data.delete()
+        data2.delete()
+        personnel = Personnel.objects.all()
         for i in personnel:
             count = JobOrderTask.objects.filter(Q(personnel=i, status="Pending") | Q(personnel=i,status="On-going")).count()
             i.joborder_count = count

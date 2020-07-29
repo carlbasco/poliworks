@@ -191,11 +191,15 @@
                         <td class="text-center">{{i.requisition.date|date:"n/j/Y"}}</td>
                         <td class="text-center">{{i.quantity}}</td>
                         <td class="text-center">{{i.articles}}</td>
-                        <td class="text-center">{{i.articles.unit}}</td>
+                        <td class="text-center">{{i.unit}}</td>
                         {% if i.status2 != None %}
                         <td class="text-center">{{i.status2}}</td>
                         {% else %}
-                        <td class="text-center">{{i.status}}</td>
+                            {% if i.status != None %}
+                                <td class="text-center">{{i.status}}</td>
+                            {% else %}
+                            <td class="text-center">Pending</td>
+                            {% endif %}
                         {% endif %}
                     </tr>
                     {% endfor %}
@@ -225,7 +229,7 @@
                     <tr>
                         <td class="text-center">{{i.quantity}}</td>
                         <td class="text-center">{{i.articles}}</td>
-                        <td class="text-center">{{i.articles.unit}}</td>
+                        <td class="text-center">{{i.unit}}</td>
                     </tr>
                     {% endfor %}
                 {% else %}
