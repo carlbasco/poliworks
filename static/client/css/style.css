@@ -243,6 +243,7 @@ span#notif-count {
         display: none;
     }
 }
-a.dropdown-item {
+
+a.notif-item{
     white-space: pre-wrap;
 }
