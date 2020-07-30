@@ -606,8 +606,20 @@ class InventoryAdminForm(forms.ModelForm):
         fields='__all__'
 
 class WeeklyReportForm(forms.Form):
-    project = forms.ModelChoiceField(Project.objects.none(), label="Project Site")
-
+    report_type_choices=[
+        ('requisition','requisition'),
+        ('externalorder','extrenal order'),
+        ('joborder','joborder'),
+        ('rework','rework'),
+        ('sitephotos','site photos'),
+        ('projectissues','project issues'),
+        ('materialreport','material report'),
+        ('externalmaterialreport','external material report'),
+        ('projectinventory', 'project inventory'),
+        ('externalprojectinventory', 'external project inventory'),
+    ]
+    project = forms.ModelChoiceField(Project.objects.none(), label="Project Name")
+    report = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=report_type_choices, label="Type of Report")
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)

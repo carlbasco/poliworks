@@ -85,32 +85,31 @@
         </table>
         <br>
         
+        
         <table>
             <tr>
                 <td class="text-center blue"><h3>PROJECT STATUS REPORT</h3></td>
             </tr>
         </table>
 
+        {% if sitephotosdetails %}
         <table>
             <tr>
                 <td class="text-center blue font-weight-bold"><h3>SITE PHOTOS</h3></td>
                 <br>
             </tr>
-                {% if sitephotosdetails%}
-                    {% for i in sitephotosdetails%}
-                    <tr>
-                        <td class="image mx-auto">
-                            <img class="mx-auto" src="{{i.image.path}}" style="width: 100%">
-                        </td>
-                    </tr>
-                    {% endfor %}
-                    {% else %}
-                    <tr>
-                        <td class="text-center">NO RECORDS AVAILABLE</td>
-                    </tr>
-                {% endif %}
+                {% for i in sitephotosdetails %}
+                <tr>
+                    <td class="image mx-auto">
+                        <img class="mx-auto" src="{{i.image.path}}" style="width: 100%">
+                    </td>
+                </tr>
+                {% endfor %}
         </table>
+        {% endif %}
         <br>
+
+        {% if projectissues %}
         <table>
             <tr>
                 <td colspan="2" class="green text-center"> <h3>ISSUES ON SITE</h3></td>
@@ -119,22 +118,17 @@
                 <td class="text-center font-weight-bold">DATE</td>
                 <td class="text-center font-weight-bold">PROBLEM</td>
             </tr>
-            {% if projectissues %}
                 {% for i in projectissues %}
                     <tr>
                         <td class="text-center">{{i.date|date:"n/j/Y"}}</td>
                         <td class="text-center">{{i.description}}</td>
                     </tr>
                 {% endfor %}
-            {% else %}
-            <tr>
-                <td colspan="2" class="text-center">NO RECORDS AVAILABLE</td>
-            </tr>
-            {% endif %}
-        
         </table>
+        {% endif %}
         <br>
 
+        {% if jobordertask %}
         <br>
         <table>
             <tr>
@@ -149,7 +143,6 @@
                 <td class="text-center font-weight-bold" style="width: 80px;">STATUS</th>
                 <td class="text-center font-weight-bold" style="width: 70px;">COMPLETION DATE</th>
             </tr>
-            {% if jobordertask%}
                 {% for i in jobordertask %}
                     <tr>
                         <td class="text-center">{{i.date|date:"n/j/Y"}}</td>
@@ -158,21 +151,18 @@
                         <td class="text-center">{{i.activity}}</td>
                         <td class="text-center">{{i.remarks}}</td>
                         <td class="text-center" style="width: 80px;">{{i.status}}</td>
-                        {% if i.completion_date%}
+                        {% if i.completion_date %}
                         <td class="text-center">{{i.completion_date|date:"n/j/Y"}}</td>
                         {% else %}
                         <td class="text-center">N/A</td>
                         {% endif %}
                     </tr>
                 {% endfor %}
-            {% else %}
-            <tr>
-                <td class="text-center" colspan="7">NO RECORDS AVAILABLE</td>
-            </tr>
-            {% endif %}
         </table>
         <br>
+        {% endif %}
 
+        {% if requisition %}
         <br>
         <table>
             <tr>
@@ -185,32 +175,28 @@
                 <td class="text-center font-weight-bold" style="width: 60px;">UNIT</td>
                 <td class="text-center font-weight-bold" style="width: 80px;">STATUS</td>
             </tr>
-                {% if requisitiondetails%}
-                    {% for i in requisitiondetails %}
-                    <tr>
-                        <td class="text-center">{{i.requisition.date|date:"n/j/Y"}}</td>
-                        <td class="text-center">{{i.quantity}}</td>
-                        <td class="text-center">{{i.articles}}</td>
-                        <td class="text-center">{{i.unit}}</td>
-                        {% if i.status2 != None %}
-                        <td class="text-center">{{i.status2}}</td>
-                        {% else %}
-                            {% if i.status != None %}
-                                <td class="text-center">{{i.status}}</td>
-                            {% else %}
-                            <td class="text-center">Pending</td>
-                            {% endif %}
-                        {% endif %}
-                    </tr>
-                    {% endfor %}
-                {% else %}
+                {% for i in requisitiondetails %}
                 <tr>
-                    <td colspan="5" class="text-center">NO RECORDS AVAILABLE</td>
+                    <td class="text-center">{{i.requisition.date|date:"n/j/Y"}}</td>
+                    <td class="text-center">{{i.quantity}}</td>
+                    <td class="text-center">{{i.articles}}</td>
+                    <td class="text-center">{{i.unit}}</td>
+                    {% if i.status2 != None %}
+                    <td class="text-center">{{i.status2}}</td>
+                    {% else %}
+                        {% if i.status != None %}
+                            <td class="text-center">{{i.status}}</td>
+                        {% else %}
+                        <td class="text-center">Pending</td>
+                        {% endif %}
+                    {% endif %}
                 </tr>
-                {% endif %}
+                {% endfor %}
         </table>
         <br>
+        {% endif %}
 
+        {% if projectinventory %}
         <br>
         <table>
             <tr>
@@ -224,22 +210,18 @@
                 <td class="text-center font-weight-bold">ARTICLES</td>
                 <td class="text-center font-weight-bold" style="width: 200px;">UNIT</td>
             </tr>
-                {% if projectinventorydetails %}
-                    {% for i in projectinventorydetails %}
-                    <tr>
-                        <td class="text-center">{{i.quantity}}</td>
-                        <td class="text-center">{{i.articles}}</td>
-                        <td class="text-center">{{i.unit}}</td>
-                    </tr>
-                    {% endfor %}
-                {% else %}
+                {% for i in projectinventorydetails %}
                 <tr>
-                    <td colspan="5" class="text-center">NO RECORDS AVAILABLE</td>
+                    <td class="text-center">{{i.quantity}}</td>
+                    <td class="text-center">{{i.articles}}</td>
+                    <td class="text-center">{{i.unit}}</td>
                 </tr>
-                {% endif %}
+                {% endfor %}
         </table>
         <br>
+        {% endif %}
 
+        {% if materialreport %}
         <br>
         <table>
             <tr>
@@ -252,28 +234,24 @@
                 <td class="text-center font-weight-bold" style="width: 60px;">UNIT</td>
                 <td class="text-center font-weight-bold" style="width: 80px;">Remarks</td>
             </tr>
-                {% if materialreportdetails %}
-                    {% for i in materialreportdetails %}
-                    <tr>
-                        <td class="text-center">{{i.report.date|date:"n/j/Y"}}</td>
-                        <td class="text-center">{{i.quantity}}</td>
-                        <td class="text-center">{{i.articles}}</td>
-                        <td class="text-center">{{i.articles.unit}}</td>
-                        {% if i.remarks != None %}
-                        <td class="text-center">{{i.remarks}}</td>
-                        {% else %}
-                        <td class="text-center">N/A</td>
-                        {% endif %}
-                    </tr>
-                    {% endfor %}
-                {% else %}
+                {% for i in materialreportdetails %}
                 <tr>
-                    <td colspan="5" class="text-center">NO RECORDS AVAILABLE</td>
+                    <td class="text-center">{{i.report.date|date:"n/j/Y"}}</td>
+                    <td class="text-center">{{i.quantity}}</td>
+                    <td class="text-center">{{i.articles}}</td>
+                    <td class="text-center">{{i.articles.unit}}</td>
+                    {% if i.remarks != None %}
+                    <td class="text-center">{{i.remarks}}</td>
+                    {% else %}
+                    <td class="text-center">N/A</td>
+                    {% endif %}
                 </tr>
-                {% endif %}
+                {% endfor %}
         </table>
         <br>
+        {% endif %}
 
+        {% if externalorder %}
         <br>
         <table>
             <tr>
@@ -287,29 +265,25 @@
                 <td class="text-center font-weight-bold" style="width: 60px;">UNIT</td>
                 <td class="text-center font-weight-bold" style="width: 100px;">UNIT PRICE</td>
             </tr>
-                {% if externalorder_details%}
-                    {% for i in externalorder_details %}
-                    <tr>
-                        <td class="text-center">{{i.externalorder.supplier}}</td>
-                        <td class="text-center">{{i.externalorder.date|date:"n/j/Y"}}</td>
-                        <td class="text-center">{{i.quantity}}</td>
-                        <td class="text-center">{{i.articles}}</td>
-                        {% if i.unit != None %}
-                            <td class="text-center">{{i.unit}}</td>
-                        {% else %}
-                            <td class="text-center">N/A</td>
-                        {% endif %}
-                        <td class="text-center">{{i.unitprice}}</td>
-                    </tr>
-                    {% endfor %}
-                {% else %}
+                {% for i in externalorder_details %}
                 <tr>
-                    <td colspan="6" class="text-center">NO RECORDS AVAILABLE</td>
+                    <td class="text-center">{{i.externalorder.supplier}}</td>
+                    <td class="text-center">{{i.externalorder.date|date:"n/j/Y"}}</td>
+                    <td class="text-center">{{i.quantity}}</td>
+                    <td class="text-center">{{i.articles}}</td>
+                    {% if i.unit != None %}
+                        <td class="text-center">{{i.unit}}</td>
+                    {% else %}
+                        <td class="text-center">N/A</td>
+                    {% endif %}
+                    <td class="text-center">{{i.unitprice}}</td>
                 </tr>
-                {% endif %}
+                {% endfor %}
         </table>
         <br>
+        {% endif %}
 
+        {% if externalprojectinventory %}
         <br>
         <table>
             <tr>
@@ -323,22 +297,18 @@
                 <td class="text-center font-weight-bold">ARTICLES</td>
                 <td class="text-center font-weight-bold" style="width: 200px;">UNIT</td>
             </tr>
-                {% if externalprojectinventorydetails %}
-                    {% for i in externalprojectinventorydetails %}
-                    <tr>
-                        <td class="text-center">{{i.quantity}}</td>
-                        <td class="text-center">{{i.articles}}</td>
-                        <td class="text-center">{{i.unit}}</td>
-                    </tr>
-                    {% endfor %}
-                {% else %}
+                {% for i in externalprojectinventorydetails %}
                 <tr>
-                    <td colspan="5" class="text-center">NO RECORDS AVAILABLE</td>
+                    <td class="text-center">{{i.quantity}}</td>
+                    <td class="text-center">{{i.articles}}</td>
+                    <td class="text-center">{{i.unit}}</td>
                 </tr>
-                {% endif %}
+                {% endfor %}
         </table>
         <br>
+        {% endif %}
 
+        {% if externalmaterialreport %}
         <br>
         <table>
             <tr>
@@ -351,26 +321,21 @@
                 <td class="text-center font-weight-bold" style="width: 60px;">UNIT</td>
                 <td class="text-center font-weight-bold" style="width: 80px;">Remarks</td>
             </tr>
-                {% if externalmaterialreportdetails %}
-                    {% for i in externalmaterialreportdetails %}
-                    <tr>
-                        <td class="text-center">{{i.report.date|date:"n/j/Y"}}</td>
-                        <td class="text-center">{{i.quantity}}</td>
-                        <td class="text-center">{{i.articles}}</td>
-                        <td class="text-center">{{i.articles.unit}}</td>
-                        {% if i.remarks != None %}
-                        <td class="text-center">{{i.remarks}}</td>
-                        {% else %}
-                        <td class="text-center">N/A</td>
-                        {% endif %}
-                    </tr>
-                    {% endfor %}
-                {% else %}
+                {% for i in externalmaterialreportdetails %}
                 <tr>
-                    <td colspan="5" class="text-center">NO RECORDS AVAILABLE</td>
+                    <td class="text-center">{{i.report.date|date:"n/j/Y"}}</td>
+                    <td class="text-center">{{i.quantity}}</td>
+                    <td class="text-center">{{i.articles}}</td>
+                    <td class="text-center">{{i.articles.unit}}</td>
+                    {% if i.remarks != None %}
+                    <td class="text-center">{{i.remarks}}</td>
+                    {% else %}
+                    <td class="text-center">N/A</td>
+                    {% endif %}
                 </tr>
-                {% endif %}
+                {% endfor %}
         </table>
         <br>
+        {% endif %}
     </body>
     </html>

@@ -2381,50 +2381,125 @@ class ProjectReportPDF(TemplateView, LoginRequiredMixin):
     redirect_field_name="redirect_to"
     
     def get(self, request, *args, **kwargs):
+        report = self.request.GET.getlist('report')
         project = self.request.GET.get('project')
         datefrom = self.request.GET.get('date_from')
         datefrom = datetime.datetime.strptime(datefrom, "%Y-%m-%d")
         dateto =  self.request.GET.get('date_to')
         dateto = datetime.datetime.strptime(dateto, "%Y-%m-%d")
         project = Project.objects.get(id=project)
-        try:
-            requisition = Requisition.objects.filter(project_id=project.id, date__range=[datefrom, dateto])
-            requisitiondetails = RequisitionDelivery.objects.filter(requisition__in=requisition)
-            externalorder = ExternalOrder.objects.filter(project_id=project.id, date__range=[datefrom, dateto])
-            externalorder_details = ExternalOrderDetails.objects.filter(externalorder__in=externalorder)
-            joborder = JobOrder.objects.filter(project_id=project.id, date__range=[datefrom, dateto])
-            jobordertask = JobOrderTask.objects.filter(joborder__in=joborder)
-            rework = Rework.objects.filter(project_id=project.id, date__range=[datefrom, dateto])
-            sitephotos = SitePhotos.objects.filter(project_id=project.id, date__range=[datefrom, dateto])
-            sitephotosdetails = SitePhotosDetails.objects.filter(sitephotos__in=sitephotos)
-            projectissues = ProjectIssues.objects.filter(project_id=project.id, date__range=[datefrom, dateto])
-            materialreport = MaterialReport.objects.filter(project_id=project.id, date__range=[datefrom, dateto])
-            materialreportdetails = MaterialReportDetails.objects.filter(report__in=materialreport)
-            externalmaterialreport = ExternalMaterialReport.objects.filter(project_id=project.id, date__range=[datefrom, dateto])
-            externalmaterialreportdetails = ExternalMaterialReportDetails.objects.filter(report__in=externalmaterialreport)
-            projectinventory = ProjectInventory.objects.get(project_id=project.id)
-            projectinventorydetails = ProjectInventoryDetails.objects.filter(inventory_id=projectinventory.id)
-            externalprojectinventory = ExternalProjectInventory.objects.get(project_id=project.id)
-            externalprojectinventorydetails = ExternalProjectInventoryDetails.objects.filter(inventory_id=externalprojectinventory.id)
-            data={
-                'project':project, 'datefrom':datefrom, 'dateto':dateto,
-                'requisition':requisition, 'requisitiondetails':requisitiondetails, 
-                'externalorder':externalorder, 'externalorder_details':externalorder_details,
-                'joborder':joborder, 'jobordertask':jobordertask,
-                'rework':rework, 'projectissues':projectissues,
-                'sitephotos':sitephotos, 'sitephotosdetails':sitephotosdetails,
-                'materialreport':materialreport,'externalmaterialreport':externalmaterialreport,
-                'materialreportdetails':materialreportdetails, 'externalmaterialreportdetails':externalmaterialreportdetails,
-                'projectinventorydetails':projectinventorydetails, 'externalprojectinventorydetails': externalprojectinventorydetails,
-                'projectinventory': projectinventory, 'externalprojectinventory':externalprojectinventory,
-            }
-            pdf = render_to_pdf('pdf_template.html', data)
-            return HttpResponse(pdf, content_type='application/pdf')
-        except ObjectDoesNotExist:
-            messages.warning(request, "Input dates does not match on data or does not exist at all.")
-            return redirect('projectreport')
-		
+        if "requisition" in report:
+            try:
+                requisition = Requisition.objects.filter(project_id=project.id, date__range=[datefrom, dateto])
+                requisitiondetails = RequisitionDelivery.objects.filter(requisition__in=requisition)
+            except ObjectDoesNotExist:
+                messages.warning(request, "Input dates does not exist on Requisition")
+                return redirect('projectreport')
+        else:
+            requisition=Requisition.objects.none()
+            requisitiondetails = RequisitionDelivery.objects.none()
+        if "externalorder" in report:
+            try:
+                externalorder = ExternalOrder.objects.filter(project_id=project.id, date__range=[datefrom, dateto])
+                externalorder_details = ExternalOrderDetails.objects.filter(externalorder__in=externalorder)
+            except ObjectDoesNotExist:
+                messages.warning(request, "Input dates does not exist on External Order")
+                return redirect('projectreport')
+        else:
+            externalorder = ExternalOrder.objects.none()
+            externalorder_details = ExternalOrderDetails.objects.none()
+        if "joborder" in report:
+            try:
+                joborder = JobOrder.objects.filter(project_id=project.id, date__range=[datefrom, dateto])
+                jobordertask = JobOrderTask.objects.filter(joborder__in=joborder)
+            except ObjectDoesNotExist:
+                messages.warning(request, "Input dates does not exist on Job Order")
+                return redirect('projectreport')
+        else:
+            joborder = JobOrder.objects.none()
+            jobordertask = JobOrderTask.objects.none()
+        if "rework" in report:
+            try:
+                rework = Rework.objects.filter(project_id=project.id, date__range=[datefrom, dateto])
+            except ObjectDoesNotExist:
+                messages.warning(request, "Input dates does not exist on Rework")
+                return redirect('projectreport')
+        else:
+            rework = Rework.objects.none()
+        if "sitephotos" in report:
+            try:
+                sitephotos = SitePhotos.objects.filter(project_id=project.id, date__range=[datefrom, dateto])
+                sitephotosdetails = SitePhotosDetails.objects.filter(sitephotos__in=sitephotos)
+            except ObjectDoesNotExist:
+                messages.warning(request, "Input dates does not exist on Site Photos")
+                return redirect('projectreport')
+        else:
+            sitephotos = SitePhotos.objects.none()
+            sitephotosdetails = SitePhotosDetails.objects.none()
+        if "projectissues" in report:
+            try:
+                projectissues = ProjectIssues.objects.filter(project_id=project.id, date__range=[datefrom, dateto])
+            except ObjectDoesNotExist:
+                messages.warning(request, "Input dates does not exist on Project Issues")
+                return redirect('projectreport')
+        else:
+            projectissues = ProjectIssues.objects.none()
+        if "materialreport" in report:
+            try:
+                materialreport = MaterialReport.objects.filter(project_id=project.id, date__range=[datefrom, dateto])
+                materialreportdetails = MaterialReportDetails.objects.filter(report__in=materialreport)
+            except ObjectDoesNotExist:
+                messages.warning(request, "Input dates does not exist on Material Report")
+                return redirect('projectreport')
+        else:
+            materialreport = MaterialReport.objects.none()
+            materialreportdetails = MaterialReportDetails.objects.none()
+        if "externalmaterialreport" in report:
+            try:
+                externalmaterialreport = ExternalMaterialReport.objects.filter(project_id=project.id, date__range=[datefrom, dateto])
+                externalmaterialreportdetails = ExternalMaterialReportDetails.objects.filter(report__in=externalmaterialreport)
+            except ObjectDoesNotExist:
+                messages.warning(request, "Input dates does not exist on External Material Report")
+                return redirect('projectreport')
+        else:
+            externalmaterialreport = ExternalMaterialReport.objects.none()
+            externalmaterialreportdetails = ExternalMaterialReportDetails.objects.none()
+        if "projectinventory" in report:
+            try:
+                projectinventory = ProjectInventory.objects.get(project_id=project.id)
+                projectinventorydetails = ProjectInventoryDetails.objects.filter(inventory_id=projectinventory.id)
+            except ObjectDoesNotExist:
+                messages.warning(request, "Input dates does not exist on Project Inventory")
+                return redirect('projectreport')
+        else:
+            projectinventory = ProjectInventory.objects.none()
+            projectinventorydetails = ProjectInventoryDetails.objects.none()
+        if "externalprojectinventory" in report:
+            try:
+                externalprojectinventory = ExternalProjectInventory.objects.get(project_id=project.id)
+                externalprojectinventorydetails = ExternalProjectInventoryDetails.objects.filter(inventory_id=externalprojectinventory.id)
+            except ObjectDoesNotExist:
+                messages.warning(request, "Input dates does not exist on External Project Inventory")
+                return redirect('projectreport')
+        else:
+            externalprojectinventory = ExternalProjectInventory.objects.none()
+            externalprojectinventorydetails = ExternalProjectInventoryDetails.objects.none()
 
+        data={
+            'project':project, 'datefrom':datefrom, 'dateto':dateto,
+            'requisition':requisition, 'requisitiondetails':requisitiondetails, 
+            'externalorder':externalorder, 'externalorder_details':externalorder_details,
+            'joborder':joborder, 'jobordertask':jobordertask,
+            'rework':rework, 'projectissues':projectissues,
+            'sitephotos':sitephotos, 'sitephotosdetails':sitephotosdetails,
+            'materialreport':materialreport,'externalmaterialreport':externalmaterialreport,
+            'materialreportdetails':materialreportdetails, 'externalmaterialreportdetails':externalmaterialreportdetails,
+            'projectinventorydetails':projectinventorydetails, 'externalprojectinventorydetails': externalprojectinventorydetails,
+            'projectinventory': projectinventory, 'externalprojectinventory':externalprojectinventory,
+        }
+        pdf = render_to_pdf('pdf_template.html', data)
+        return HttpResponse(pdf, content_type='application/pdf')
+        
 # class DownloadPDF(View):
 # 	def get(self, request, *args, **kwargs):
 # 		pdf = render_to_pdf('pdf_template.html', data)
