@@ -229,9 +229,7 @@ span#notif-count {
         width: 320px;
         height: 65px;
     }
-    a.dropdown-item {
-        white-space: pre-wrap;
-    }
+    
     #notification {
         width: 100%!important;
         height: 150px!important;
@@ -244,4 +242,7 @@ span#notif-count {
     .dropdown-menu{
         display: none;
     }
+}
+a.dropdown-item {
+    white-space: pre-wrap;
 }

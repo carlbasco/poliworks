@@ -212,9 +212,9 @@ QuotationFormSet = inlineformset_factory(Quotation, QuotationDetails,
     can_delete=True,
     widgets={
         'unit':forms.TextInput(attrs={'class':'form-control',}),
-        'quantity':forms.NumberInput( attrs={'class':'form-control qty','required': 'true', 'min':0, "oninput":"validity.valid||(value='');"}),
-        'amount':forms.NumberInput(attrs={'class':'form-control amount','readonly':'true'}),
-        'unit_cost':forms.NumberInput(attrs={'class':'form-control unit_cost','readonly':'true'}),
+        'quantity':forms.NumberInput( attrs={'class':'form-control qty','required': True, 'min':0, "oninput":"validity.valid||(value='');"}),
+        'amount':forms.NumberInput(attrs={'class':'form-control amount','readonly': True}),
+        'unit_cost':forms.NumberInput(attrs={'class':'form-control unit_cost','readonly':True}),
     }
 )
 #################################################################################################################################
@@ -263,7 +263,7 @@ class RequisitionAdminForm(forms.ModelForm):
 
 class RequisitionNewForm(forms.ModelForm):
     unit = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control unit','readonly':'true', 'required':'false'}))
-    articles = forms.ModelChoiceField(queryset=Inventory.objects.all(), widget=forms.Select(attrs={'class':'form-control art'}))
+    articles = forms.ModelChoiceField(queryset=Inventory.objects.all(), widget=forms.Select(attrs={'class':'form-control art', 'required':True}))
     class Meta:
         model = Requisition
         fields ='__all__'
@@ -274,7 +274,7 @@ RequisitionFormSet = inlineformset_factory(Requisition, RequisitionDetails,
     can_delete = True,
     exclude = ('status', 'status2', 'quantity2', 'requisition_no', 'amount'),
     widgets={
-        'quantity':forms.NumberInput(attrs={'class':'form-control', 'min':0, "oninput":"validity.valid||(value='');"}),
+        'quantity':forms.NumberInput(attrs={'class':'form-control', 'min':0, "oninput":"validity.valid||(value='');", 'required':True}),
     }
 )
 class RequisitionUpdateForm(forms.ModelForm):
@@ -288,7 +288,7 @@ RequisitionUpdateFormSet = inlineformset_factory(Requisition, RequisitionDetails
     can_delete=True,
     exclude = ('status', 'status2', 'quantity2', 'requisition_no', 'amount'),
     widgets={
-        'quantity':forms.NumberInput(attrs={'class':'form-control', 'required':'true', 'min':0, "oninput":"validity.valid||(value='');"}),
+        'quantity':forms.NumberInput(attrs={'class':'form-control', 'required':True, 'min':0, "oninput":"validity.valid||(value='');"}),
         'articles':forms.Select(attrs={'class':'form-control art'})
     }
 )
@@ -365,7 +365,7 @@ ExternalOrderFormSet = inlineformset_factory(ExternalOrder, ExternalOrderDetails
     can_delete=True,
     widgets={
         'quantity':forms.NumberInput(attrs={'class':'form-control','required': 'true'}),
-        'unit':forms.TextInput(attrs={'class':'form-control'}),
+        'unit':forms.TextInput(attrs={'class':'form-control', 'required':True}),
         'articles':forms.TextInput(attrs={'class':'form-control','required': 'true'}),
         'remarks':forms.TextInput(attrs={'class':'form-control'}),
         'unitprice':forms.NumberInput(attrs={'class':'form-control','required': 'true'})
@@ -422,9 +422,9 @@ JobOrderFormSet = inlineformset_factory(JobOrder, JobOrderTask,
     can_delete=True,
     widgets={
         'personnel':forms.Select(attrs={'class':'form-control personnel', 'required':True}),
-        'activity':forms.TextInput( attrs={'class':'form-control'}),
-        'date':forms.DateInput( attrs={'class':'form-control dateinput'}),
-        'date2':forms.DateInput( attrs={'class':'form-control dateinput'}),
+        'activity':forms.TextInput( attrs={'class':'form-control', 'required':True}),
+        'date':forms.DateInput( attrs={'class':'form-control dateinput', 'required':True}),
+        'date2':forms.DateInput( attrs={'class':'form-control dateinput', 'required':True}),
         'remarks':forms.TextInput( attrs={'class':'form-control'}),
     }  
 )
@@ -433,21 +433,7 @@ class JobOrderUpdateForm(forms.ModelForm):
     class Meta:
         model=JobOrder
         fields='__all__'
-
-JobOrderUpdateFormSet = inlineformset_factory(JobOrder, JobOrderTask,
-    form=JobOrderUpdateForm,
-    exclude=('completion_date', 'status',),
-    extra=0,
-    can_delete=True,
-    widgets={
-        'personnel':forms.Select(attrs={'class':'form-control personnel', 'required':True}),
-        'activity':forms.TextInput( attrs={'class':'form-control'}),
-        'date':forms.DateInput( attrs={'class':'form-control dateinput'}),
-        'date2':forms.DateInput( attrs={'class':'form-control dateinput'}),
-        'remarks':forms.TextInput( attrs={'class':'form-control'}),
-    }  
-)
-
+        
 class JobOrderTasksForm(forms.ModelForm):
     class Meta:
         model=JobOrderTask
@@ -607,16 +593,16 @@ class InventoryAdminForm(forms.ModelForm):
 
 class WeeklyReportForm(forms.Form):
     report_type_choices=[
-        ('requisition','requisition'),
-        ('externalorder','extrenal order'),
-        ('joborder','joborder'),
-        ('rework','rework'),
-        ('sitephotos','site photos'),
-        ('projectissues','project issues'),
-        ('materialreport','material report'),
-        ('externalmaterialreport','external material report'),
-        ('projectinventory', 'project inventory'),
-        ('externalprojectinventory', 'external project inventory'),
+        ('requisition','Requisition'),
+        ('externalorder','External order'),
+        ('joborder','Joborder'),
+        ('rework','Rework'),
+        ('sitephotos','Site photos'),
+        ('projectissues','Project issues'),
+        ('materialreport','Material report'),
+        ('externalmaterialreport','External material report'),
+        ('projectinventory', 'Project inventory'),
+        ('externalprojectinventory', 'External project inventory'),
     ]
     project = forms.ModelChoiceField(Project.objects.none(), label="Project Name")
     report = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=report_type_choices, label="Type of Report")

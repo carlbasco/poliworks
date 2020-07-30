@@ -500,8 +500,7 @@ def ProgressDeleteView(request,pk):
         return redirect('project_detail', pk=data3.id)
     else:
         formset = ProgressFormset(instance=data)
-    
-    context={'formset':formset, 'data':data, 'data2':data2,}
+    context={'formset':formset, 'data':data, 'data2':data2, 'data3':data3}
     return render(request, 'backoffice/project_pages/progress_delete.html', context)
 
 #################################################################################################################################
@@ -1319,53 +1318,13 @@ class JobOrderCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
                 personnel_joborder = PersonnelJobOrder.objects.create(personnel=i.personnel, joborder=i)
             personnel = Personnel.objects.all()
             for i in personnel:
-                count = JobOrderTask.objects.filter(personnel=i).count()
+                count = JobOrderTask.objects.filter(Q(personnel=i, status="Pending") | Q(personnel=i,status="On-going")).count()
                 i.joborder_count = count
                 i.save()
             return super(JobOrderCreateView, self).form_valid(form)
 
     def get_success_url(self):
         return reverse_lazy("joborder_create")
-
-class JobOrderUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
-    login_url ="signin"
-    redirect_field_name = "redirect_to"
-    model = JobOrder
-    fields = '__all__'
-    template_name ='backoffice/joborder_pages/joborder_update.html'
-    success_message = "Job Order has been updated."
-    
-    @method_decorator(staff_only, name='dispatch')
-    def dispatch(self, *args, **kwargs):
-        return super(JobOrderUpdateView, self).dispatch(*args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        if self.request.POST:
-            data["formset"] = JobOrderUpdateFormSet(self.request.POST, instance=self.object)
-        else:
-            data["formset"] = JobOrderUpdateFormSet(instance=self.object)
-        return data
-
-    def form_valid(self, form):
-        context = self.get_context_data()
-        formset = context["formset"]
-        joborder = form.save()
-        if formset.is_valid():
-            formset.instance = joborder
-            joborder_task = formset.save()
-            for i in joborder_task:
-                personnel_joborder = PersonnelJobOrder.objects.create(personnel=i.personnel, joborder=i)
-            personnel = Personnel.objects.all()
-            for i in personnel:
-                count = JobOrderTask.objects.filter(Q(personnel=i, status="Pending") | Q(personnel=i,status="On-going")).count()
-                i.joborder_count = count
-                i.save()
-            return super(JobOrderUpdateView, self).form_valid(form)
-
-    def get_success_url(self):
-        data=self.kwargs['pk']
-        return reverse_lazy("joborder_detail", kwargs={'pk': data})
 
 @login_required(login_url = 'signin')
 @admin_only
@@ -2158,7 +2117,7 @@ def ClientProjectView(request,pk):
         except ObjectDoesNotExist:
             context = {'data':data, 'data2':data2, 'data5':data5, 'blueprint':blueprint, 'rework':rework}
             return render(request, 'client/client-view_project.html', context)
-        context={'data':data, 'data2':data2, 'data3':data3, 'data4':data4, 'data5':data5, 'blueprint':blueprint}
+        context={'data':data, 'data2':data2, 'data3':data3, 'data4':data4, 'data5':data5, 'blueprint':blueprint, 'rework':rework}
         return render(request, 'client/client-view_project.html', context)
     except ObjectDoesNotExist:
         return render(request, "404.html")

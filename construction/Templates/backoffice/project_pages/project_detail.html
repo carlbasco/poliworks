@@ -209,7 +209,7 @@
                         <tr>
                             <td>{{i.subject}}</td>
                             <td>{{i.date|date:"F d, Y"}}</td>
-                            <td class="text-right">{{i.total}}</td>
+                            <td class="text-right">{{i.total|intcomma}}</td>
                             {% if i.status == "Rejected"%}
                                 <td><span class="badge badge-danger">{{i.status}}</span></td>
                             {% elif i.status == "Pending"%}
