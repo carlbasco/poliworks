@@ -103,3 +103,5 @@ delete from sqlite_sequence where name='`construction_reworkafterimage`';
 
 delete from `construction_externalorderimage`; 
 delete from sqlite_sequence where name='`construction_reworkafterimage`';
+
+UPDATE 'construction_personnel' SET joborder_count=0 WHERE joborder_count=1;
