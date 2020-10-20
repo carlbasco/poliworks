@@ -1,6 +1,4 @@
-from django.contrib.auth.models import PermissionsMixin
-from django.contrib.auth.models import (AbstractBaseUser)
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import PermissionsMixin, (AbstractBaseUser), User, Group
 from .managers import UserManager
 from django.conf import settings
 from django.db import models

@@ -140,7 +140,7 @@ urlpatterns = [
     path('pm/joborder_list', views.JobOrderListView_PM, name="joborder_list_pm"),
     path('pm/task/rework_list', views.ReworkListView_PM, name="rework_list_pm"),
     path('pm/reports/issues_list', views.ProjectIssuesList_PM, name="issues_list_pm"),
-    path('pm/reports/materialreport_list', views. MaterialReportListView_PM, name="materialreport_list_pm"),
+    path('pm/reports/materialreport_list', views.MaterialReportListView_PM, name="materialreport_list_pm"),
     path('pm/reports/external_report_list', views.ExternalMaterialReportListView_PM, name="external_report_list_pm"),
     path('pm/reports/sitephotos_list', views.dailysitephotosListView_PM, name="sitephotos_list_pm"),
 

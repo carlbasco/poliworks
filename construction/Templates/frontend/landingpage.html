@@ -3,12 +3,15 @@
 {% load crispy_forms_tags%}
 {% block content %}
 <header class="header">
-    <nav class="navbar navbar-expand-lg fixed-top"><a href="index.html" class="navbar-brand"></a>
+	<nav class="navbar navbar-expand-lg fixed-top"><a href="index.html" class="navbar-brand"></a>
 		<a class="navbar-brand" href="{%url 'home'%}">
-			<img src="{% static 'images-poli/logo-poliworks.png' %}" width="70" height="35" class="d-inline-block align-top" alt="">
+			<img src="{% static 'images-poli/logo-poliworks.png' %}" width="70" height="35" class="d-inline-block align-top"
+				alt="">
 			Poliworks
 		</a>
-      	<button type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler navbar-toggler-right"><span></span><span></span><span></span></button>
+		<button type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+			aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
+			class="navbar-toggler navbar-toggler-right"><span></span><span></span><span></span></button>
 		<div id="navbarSupportedContent" class="collapse navbar-collapse">
 			<ul class="navbar-nav ml-auto ">
 				<li class="nav-item"><a href="#about-us" class="nav-link link-scroll">About Us</a></li>
@@ -19,7 +22,7 @@
 			</ul>
 			<div class="navbar-text"></div>
 		</div>
-    </nav>
+	</nav>
 </header>
 <section id="hero" class="hero hero-home bg-gray">
 	<div class="container">
@@ -27,8 +30,9 @@
 			<div class="col-lg-6 text order-2 order-lg-1">
 				<h1 id="title">We Look Forward To Serving You!</h1>
 				<p class="hero-text">
-				Poliworks Inc. is a provider of solutions for every client's construction and facilities maintenance requirements,
-				while also valuing each customer's specific needs and wants for their project.
+					Poliworks Inc. is a provider of solutions for every client's construction and facilities maintenance
+					requirements,
+					while also valuing each customer's specific needs and wants for their project.
 				</p>
 				<a href="#footer" class="btn btn-primary btn-rounded">Contact Us</a>
 			</div>
@@ -39,44 +43,54 @@
 <section id="about-us" class="about-us bg-gray">
 	<div class="container">
 		<h2>About Us</h2> <br><br>
-		<a class="navbar-brand" id="bullet"> 
-			<img src="{% static 'images-poli/bullet.png' %}" width="50" height="50" class="d-inline-block align-top" >Who are we?
+		<a class="navbar-brand" id="bullet">
+			<img src="{% static 'images-poli/bullet.png' %}" width="50" height="50" class="d-inline-block align-top">Who are
+			we?
 		</a>
 		<div class="row">
-			<p class="lead col-lg-10">Poliworks Inc. is a private corporation, PCAB licensed contractor, established in October 2012.
-				The company began serving its customers through simple maintenance and minor facilities repair; 
-				then it slowly expanded by offering more extensive construction services adding interior repairs, renovation and project fit outs. 
+			<p class="lead col-lg-10">Poliworks Inc. is a private corporation, PCAB licensed contractor, established in
+				October 2012.
+				The company began serving its customers through simple maintenance and minor facilities repair;
+				then it slowly expanded by offering more extensive construction services adding interior repairs, renovation and
+				project fit outs.
 				Today, Poliworksis now capable to cater more clients.
-				Being able to cater several industries; from commercial units, warehouses, medical laboratories and clinics, residential condo units and houses.
+				Being able to cater several industries; from commercial units, warehouses, medical laboratories and clinics,
+				residential condo units and houses.
 			</p>
 		</div>
 		<a href="{%url 'about'%}" class="btn btn-primary btn-rounded">Discover More</a>
 	</div>
 </section>
 
-<section id="features" class="features" >
+<section id="features" class="features">
 	<div class="container">
 		<div class="row d-flex align-items-center" data-aos="fade-right">
 			<div class="text col-lg-6 order-2 order-lg-1">
-				<a class="navbar-brand" id="bullet-sm"> 
-				<img src="{% static 'images-poli/bullet.png' %}" width="30" height="30" class="d-inline-block align-top" >Our Mission
+				<a class="navbar-brand" id="bullet-sm">
+					<img src="{% static 'images-poli/bullet.png' %}" width="30" height="30" class="d-inline-block align-top">Our
+					Mission
 				</a>
 				<p>Our mission is to provide our clients with quiality construction services by consistently improving
-				on the result of each project that we do. PoliworksInc. aspires to have its employees to be the best they can
-				and engaging in sustainable practices and anticipate the needs of our customer.
+					on the result of each project that we do. PoliworksInc. aspires to have its employees to be the best they can
+					and engaging in sustainable practices and anticipate the needs of our customer.
 				</p>
 			</div>
-		<div class="image col-lg-6 order-1 order-lg-2"><img src="{% static 'images-poli/mission.webp' %}" alt="..." class="img-fluid" width="556" height="448"></div>
+			<div class="image col-lg-6 order-1 order-lg-2"><img src="{% static 'images-poli/mission.webp' %}" alt="..."
+					class="img-fluid" width="556" height="448"></div>
 		</div>
 		<div class="row d-flex align-items-center" data-aos="fade-left">
-			<div class="image col-lg-6"><img src="{% static 'images-poli/vision.webp' %}" alt="..." class="img-fluid" width="556" height="448"></div>
+			<div class="image col-lg-6"><img src="{% static 'images-poli/vision.webp' %}" alt="..." class="img-fluid"
+					width="556" height="448"></div>
 			<div class="text col-lg-6">
-				<a class="navbar-brand" id="bullet-sm"> 
-					<img src="{% static 'images-poli/bullet.png' %}" width="30" height="30" class="d-inline-block align-top" >Our Vision
+				<a class="navbar-brand" id="bullet-sm">
+					<img src="{% static 'images-poli/bullet.png' %}" width="30" height="30" class="d-inline-block align-top">Our
+					Vision
 				</a>
-				<p>Our vision is to help clients take pleasure in the construction phase of their project, while also offering them an affordable solution to their requirements;
-				At the same time increasing the value for each employee through innovation, process improvements, constant training and product-knowledge expansion; and finally
-				to serve and bring honor and glory to Our Lord
+				<p>Our vision is to help clients take pleasure in the construction phase of their project, while also offering
+					them an affordable solution to their requirements;
+					At the same time increasing the value for each employee through innovation, process improvements, constant
+					training and product-knowledge expansion; and finally
+					to serve and bring honor and glory to Our Lord
 				</p>
 			</div>
 		</div>
@@ -130,22 +144,23 @@
 		</div>
 	</div>
 </section>
-  
-<section id="projects" class="browser" >
+
+<section id="projects" class="browser">
 	<div class="container-fluid">
 		<div class="d-flex justify-content-center">
-			<div class="col-lg-6" >
+			<div class="col-lg-6">
 				<div data-aos="fade-down-left">
 					<div id="carouselMedical" class="carousel slide mt-5 mb-5" data-ride="carousel">
-						<h1 id=titleproject>Medical</h1>
+						<h2 id=titleproject>Medical</h2>
 						<div class="carousel-inner">
 							{% for i in medical%}
-							<div {% if forloop.first %} class="carousel-item active"{% else %}class="carousel-item" data-interval="20000"{% endif %}>
+							<div {% if forloop.first %} class="carousel-item active" {% else %}class="carousel-item"
+								data-interval="20000" {% endif %}>
 								<img src="{{i.image.url}}" class="d-block w-100" alt="...">
 								<div class="carousel-caption  d-md-block">
 									<h3>{{i.title.name}}</h3>
 									{% if i.tittle.address %}
-										<p>{{i.title.address}}</p>
+									<p>{{i.title.address}}</p>
 									{% endif %}
 								</div>
 							</div>
@@ -161,18 +176,19 @@
 						</a>
 					</div>
 				</div>
-				
+
 				<div data-aos="fade-down-right">
-					<div id="carouselExampleCaptions2" class="carousel slide mt-5 mb-5" data-ride="carousel" >
-						<h1 id=titleproject>Commercial</h1>
+					<div id="carouselExampleCaptions2" class="carousel slide mt-5 mb-5" data-ride="carousel">
+						<h2 id=titleproject>Commercial</h2>
 						<div class="carousel-inner">
 							{% for i in commercial%}
-							<div {% if forloop.first %} class="carousel-item active"{% else %}class="carousel-item" data-interval="20000"{% endif %}>
+							<div {% if forloop.first %} class="carousel-item active" {% else %}class="carousel-item"
+								data-interval="20000" {% endif %}>
 								<img src="{{i.image.url}}" class="d-block w-100" alt="...">
 								<div class="carousel-caption  d-md-block">
 									<h3>{{i.title.name}}</h3>
 									{% if i.tittle.address %}
-										<p>{{i.title.address}}</p>
+									<p>{{i.title.address}}</p>
 									{% endif %}
 								</div>
 							</div>
@@ -191,15 +207,16 @@
 
 				<div data-aos="fade-down-left">
 					<div id="carouselExampleCaptions3" class="carousel slide mt-5 mb-5" data-ride="carousel">
-						<h1 id=titleproject>Residential</h1>
+						<h2 id=titleproject>Residential</h2>
 						<div class="carousel-inner">
 							{% for i in residential%}
-							<div {% if forloop.first %} class="carousel-item active"{% else %}class="carousel-item" data-interval="20000"{% endif %}>
+							<div {% if forloop.first %} class="carousel-item active" {% else %}class="carousel-item"
+								data-interval="20000" {% endif %}>
 								<img src="{{i.image.url}}" class="d-block w-100" alt="...">
 								<div class="carousel-caption  d-md-block">
 									<h3>{{i.title.name}}</h3>
 									{% if i.tittle.address %}
-										<p>{{i.title.address}}</p>
+									<p>{{i.title.address}}</p>
 									{% endif %}
 								</div>
 							</div>
@@ -217,16 +234,17 @@
 				</div>
 
 				<div data-aos="fade-down-right">
-					<div id="carouselExampleCaptions4" class="carousel slide mt-5 mb-5" data-ride="carousel" >
-						<h1 id=titleproject>Office Area</h1>
+					<div id="carouselExampleCaptions4" class="carousel slide mt-5 mb-5" data-ride="carousel">
+						<h2 id=titleproject>Office Area</h2>
 						<div class="carousel-inner">
 							{% for i in office%}
-							<div {% if forloop.first %} class="carousel-item active"{% else %}class="carousel-item" data-interval="20000"{% endif %}>
+							<div {% if forloop.first %} class="carousel-item active" {% else %}class="carousel-item"
+								data-interval="20000" {% endif %}>
 								<img src="{{i.image.url}}" class="d-block w-100" alt="...">
 								<div class="carousel-caption  d-md-block">
 									<h3>{{i.title.name}}</h3>
 									{% if i.tittle.address %}
-										<p>{{i.title.address}}</p>
+									<p>{{i.title.address}}</p>
 									{% endif %}
 								</div>
 							</div>

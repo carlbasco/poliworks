@@ -1,40 +1,46 @@
 {% load static %}
 <footer id="footer">
-    <div row id="feet" >
+    <div row id="feet">
         <div class="footer-top">
             <div class="col-md-12 mx-auto">
                 <div class="col-md-12 text-center">
-                    <a><img src="{% static 'images-poli/logo-2.png' %}" class="brand-logo pb-3" alt="logo"  width="200" height="150" id="logo-footer"></a>
+                    <a><img src="{% static 'images-poli/logo-2.png' %}" class="brand-logo pb-3" alt="logo" width="200"
+                            height="150" id="logo-footer"></a>
                 </div>
                 <h5 class="text-center">do you have any question regarding our service?</h5>
                 <h2 class="text-center">CONTACT US/ INQUIRE NOW</h2>
                 <p class="text-center">Don't hesitate to give us a call</p>
                 <div class="col-md-6 mx-auto">
                     <ul class="list-unstyled ">
-                        <li class="li-contact"><i class="fa fa-map-marker"> </i> #78E Kaingin Road, Balintawak, Quezon City</li>
+                        <li class="li-contact"><i class="fa fa-map-marker"> </i> #78E Kaingin Road, Balintawak, Quezon
+                            City</li>
                         <li class="li-contact"><i class="fa fa-phone"> </i> 416-16-43 / 782-6046 / 275-47-32</li>
-                        <li class="li-contact"><i class="fa fa-envelope" aria-hidden="true"></i> poliworksinc@gmail.com</li>
+                        <li class="li-contact"><i class="fa fa-envelope" aria-hidden="true"></i> poliworksinc@gmail.com
+                        </li>
                     </ul>
                     <p class="text-center">or just use the contact form below</p>
                 </div>
-                <div id="form"class="col-lg-5 mx-auto">
+                <div id="form" class="col-lg-5 mx-auto">
                     <form action="" method="post" id="form-message">
                         <div class="form-group ">
-                            <input type="text" class="form-control" id="name" aria-describedby="helpId" placeholder="Name" required>
+                            <input type="text" class="form-control" id="name" aria-describedby="helpId"
+                                placeholder="Name" required>
                         </div>
                         <div class="form-group">
-                            <input type="text"
-                            class="form-control" id="phone" aria-describedby="helpId" placeholder="Contact Number" required>
+                            <input type="text" class="form-control" id="phone" aria-describedby="helpId"
+                                placeholder="Contact Number" required>
                         </div>
                         <div class="form-group">
-                            <input type="email"
-                            class="form-control" id="email" aria-describedby="helpId" placeholder="Email" required>
+                            <input type="email" class="form-control" id="email" aria-describedby="helpId"
+                                placeholder="Email" required>
                         </div>
                         <div class="form-group">
-                            <textarea class="form-control" id="message" rows="5" placeholder="Your Message" style="resize: none;" required></textarea>
+                            <textarea class="form-control" id="message" rows="5" placeholder="Your Message"
+                                style="resize: none;" required></textarea>
                         </div>
                         <div class="form-group">
-                            <button class="btn btn-outline-primary btn-rounded btn-lg btn-block" type="submit">Submit Message</button>
+                            <button class="btn btn-outline-primary btn-rounded btn-lg btn-block" type="submit">Submit
+                                Message</button>
                         </div>
                     </form>
                 </div>
@@ -42,11 +48,11 @@
         </div>
     </div>
     <div class="py-4 footer-bottom">
-      <div class="col-md-8 mx-auto">
-          <span class="d-block text-center text-sm-left">Copyright © 2020
-            <a href="{% url 'home'%}">Poliworks Inc.</a> All rights reserved.
-          </span>
-      </div>
+        <div class="col-md-8 mx-auto">
+            <span class="d-block text-center text-sm-left">Copyright © 2020
+                <a href="{% url 'home'%}">Poliworks Inc.</a> All rights reserved.
+            </span>
+        </div>
     </div>
 </footer>
 <script>
@@ -66,8 +72,8 @@
     }
     const csrftoken = getCookie('csrftoken');
 
-    var form =  document.getElementById('form-message')
-    form.addEventListener('submit', function(e){
+    var form = document.getElementById('form-message')
+    form.addEventListener('submit', function (e) {
         e.preventDefault()
         var url = "{% url 'inquiry_create_api'%}"
         var success_message = document.getElementById('success_message')
@@ -76,21 +82,21 @@
         var email = document.getElementById('email').value;
         var message = document.getElementById('message').value;
         fetch(url, {
-            method:"POST",
-            headers:{
-                'Content-type':'application/json',
-                'X-CSRFToken':csrftoken,
+            method: "POST",
+            headers: {
+                'Content-type': 'application/json',
+                'X-CSRFToken': csrftoken,
             },
-            body:JSON.stringify({
+            body: JSON.stringify({
                 'name': name,
-                'phone' : phone,
-                'email' : email,
-                'message' : message,
+                'phone': phone,
+                'email': email,
+                'message': message,
             })
         })
         var html = document.getElementById('form').innerHTML;
-        document.getElementById('form').insertAdjacentHTML("beforeBegin", 
-        '<div class="col-lg-5 mx-auto"><div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Success! </strong> Your message has been submitted. We will be in touch soon<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div></div>');
+        document.getElementById('form').insertAdjacentHTML("beforeBegin",
+            '<div class="col-lg-5 mx-auto"><div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Success! </strong> Your message has been submitted. We will be in touch soon<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div></div>');
         form.reset();
     })
 </script>
