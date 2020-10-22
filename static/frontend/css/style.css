@@ -463,12 +463,6 @@ section.extra-features .item {
   cursor: default;
 }
 
-section.extra-features .item:hover {
-  background: #4c80e3;
-  -webkit-box-shadow: -5.665px 9.429px 35px 0px rgba(0, 0, 0, 0.2);
-  box-shadow: -5.665px 9.429px 35px 0px rgba(0, 0, 0, 0.2);
-}
-
 section.extra-features .item p {
   font-weight: 300;
   margin: 20px 0;

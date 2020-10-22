@@ -1,4 +1,4 @@
-a#bullet.navbar-brand{
+#bullet.navbar-brand{
     font-weight: bolder;
     font-size: xx-large;
 }
@@ -6,7 +6,7 @@ nav.navbar .navbar-brand {
     font-weight: bolder;
     font-size: x-large;
 }
-a#bullet-sm.navbar-brand{
+#bullet-sm.navbar-brand{
     font-weight: bolder;
     font-size: x-large;
 }
@@ -114,7 +114,7 @@ img#design_img {
 .btn-rounded{
     border-radius: 50px;
 }
-#top-scroller a{
+#top-scroller button{
     position: fixed; /* Position them relative to the browser window */
     right: -90px; 
     top:400px;
@@ -123,6 +123,6 @@ img#design_img {
     font-size: 20px; /* Increase font size */
     color: white; /* White text color */
 }
-#top-scroller a:hover{
+#top-scroller button:hover{
     right: -45px;
 }
