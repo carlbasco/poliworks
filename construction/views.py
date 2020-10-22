@@ -1,3 +1,9 @@
+from django.contrib.staticfiles import finders
+from xhtml2pdf import pisa
+from django.template.loader import get_template
+from django.conf import settings
+from io import BytesIO
+import os
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.decorators import login_required
@@ -33,9 +39,12 @@ from django.db.models import Max
 
 def home(request):
     medical = LandingPageImage.objects.filter(title__category__name="Medical")
-    residential = LandingPageImage.objects.filter(title__category__name="Residential")
-    office = LandingPageImage.objects.filter(title__category__name="Office Area")
-    commercial = LandingPageImage.objects.filter(title__category__name="Commercial")
+    residential = LandingPageImage.objects.filter(
+        title__category__name="Residential")
+    office = LandingPageImage.objects.filter(
+        title__category__name="Office Area")
+    commercial = LandingPageImage.objects.filter(
+        title__category__name="Commercial")
     context = {
         "medical": medical,
         "commercial": commercial,
@@ -132,7 +141,8 @@ def SignupView(request):
                     email_template_name="email/welcome.html",
                     subject_template_name="email/welcome_subject.txt",
                 )
-                messages.success(request, f"{group.name} account has been created.")
+                messages.success(
+                    request, f"{group.name} account has been created.")
                 return redirect("signup")
     else:
         user = SignupForm()
@@ -158,7 +168,8 @@ def editprofile(request):
     user = request.user
     profile = request.user.profile
     if request.method == "POST":
-        profile_form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
+        profile_form = ProfileUpdateForm(
+            request.POST, request.FILES, instance=profile)
         user_form = UserEditForm(request.POST, instance=user)
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
@@ -295,7 +306,8 @@ def ProjectListView_PM(request):
     data2 = Project.objects.filter(pm=request.user, status="Completed")
     data3 = Project.objects.filter(pm=request.user, status="On-going")
     data4 = Project.objects.filter(pm=request.user, status="Pending")
-    data5 = Project.objects.filter(pm=request.user, status="Completed (Overdue)")
+    data5 = Project.objects.filter(
+        pm=request.user, status="Completed (Overdue)")
     completed = data2.count()
     ongoing = data3.count()
     pending = data4.count()
@@ -317,7 +329,8 @@ def ProjectListView_PIC(request):
     data2 = Project.objects.filter(pic=request.user, status="Completed")
     data3 = Project.objects.filter(pic=request.user, status="On-going")
     data4 = Project.objects.filter(pic=request.user, status="Pending")
-    data5 = Project.objects.filter(pic=request.user, status="Completed (Overdue)")
+    data5 = Project.objects.filter(
+        pic=request.user, status="Completed (Overdue)")
     completed = data2.count()
     ongoing = data3.count()
     pending = data4.count()
@@ -339,7 +352,8 @@ def ProjectListView_WHM(request):
     data2 = Project.objects.filter(whm=request.user, status="Completed")
     data3 = Project.objects.filter(whm=request.user, status="On-going")
     data4 = Project.objects.filter(whm=request.user, status="Pending")
-    data5 = Project.objects.filter(whm=request.user, status="Completed (Overdue)")
+    data5 = Project.objects.filter(
+        whm=request.user, status="Completed (Overdue)")
     completed = data2.count()
     ongoing = data3.count()
     pending = data4.count()
@@ -362,7 +376,8 @@ def ProjectDetailView(request, pk):
         blueprint = ProjectBlueprint.objects.filter(project_id=data.id)
         quotation = Quotation.objects.filter(project_id=data.id)
         inventory = ProjectInventory.objects.filter(project_id=data.id)
-        ex_inventory = ExternalProjectInventory.objects.filter(project_id=data.id)
+        ex_inventory = ExternalProjectInventory.objects.filter(
+            project_id=data.id)
         requisition = Requisition.objects.filter(project_id=data.id)
         external_order = ExternalOrder.objects.filter(project_id=data.id)
         joborder = JobOrder.objects.filter(project_id=data.id)
@@ -370,7 +385,8 @@ def ProjectDetailView(request, pk):
         sitephotos = SitePhotos.objects.filter(project_id=data.id)
         try:
             data2 = ProjectProgress.objects.get(project_id=data.id)
-            data3 = ProjectProgressDetails.objects.filter(projectprogress=data2.id)
+            data3 = ProjectProgressDetails.objects.filter(
+                projectprogress=data2.id)
         except ObjectDoesNotExist:
             context = {
                 "data": data,
@@ -412,7 +428,8 @@ def ProjectBlueprintUpdateView(request, pk):
     project = Project.objects.get(id=pk)
     data = ProjectBlueprint.objects.filter(project=project)
     if request.method == "POST":
-        formset = ProjectBlueprintFormset(request.POST, request.FILES, instance=project)
+        formset = ProjectBlueprintFormset(
+            request.POST, request.FILES, instance=project)
         if formset.is_valid():
             data = formset.save()
             messages.success(request, "Blueprint has been updated")
@@ -624,7 +641,8 @@ def ProgressDeleteView(request, pk):
         return redirect("project_detail", pk=data3.id)
     else:
         formset = ProgressFormset(instance=data)
-    context = {"formset": formset, "data": data, "data2": data2, "data3": data3}
+    context = {"formset": formset, "data": data,
+               "data2": data2, "data3": data3}
     return render(request, "backoffice/project_pages/progress_delete.html", context)
 
 
@@ -853,7 +871,8 @@ def RequisitionListView_PM(request):
     data = Requisition.objects.filter(project__in=project).order_by("-date")
     data2 = RequisitionDetails.objects.all()
     data3 = Requisition.objects.filter(project__in=project, status="Pending")
-    data4 = Requisition.objects.filter(project__in=project, status="To be Delivered")
+    data4 = Requisition.objects.filter(
+        project__in=project, status="To be Delivered")
     data5 = Requisition.objects.filter(project__in=project, status="Closed")
     data6 = Requisition.objects.filter(
         project__in=project, status="Incomplete Order (Closed)"
@@ -882,7 +901,8 @@ def RequisitionListView_PIC(request):
     data = Requisition.objects.filter(project__in=project).order_by("-date")
     data2 = RequisitionDetails.objects.all()
     data3 = Requisition.objects.filter(project__in=project, status="Pending")
-    data4 = Requisition.objects.filter(project__in=project, status="To be Delivered")
+    data4 = Requisition.objects.filter(
+        project__in=project, status="To be Delivered")
     data5 = Requisition.objects.filter(project__in=project, status="Closed")
     data6 = Requisition.objects.filter(
         project__in=project, status="Incomplete Order (Closed)"
@@ -911,7 +931,8 @@ def RequisitionListView_WHM(request):
     data = Requisition.objects.filter(project__in=project).order_by("-date")
     data2 = RequisitionDetails.objects.all()
     data3 = Requisition.objects.filter(project__in=project, status="Pending")
-    data4 = Requisition.objects.filter(project__in=project, status="To be Delivered")
+    data4 = Requisition.objects.filter(
+        project__in=project, status="To be Delivered")
     data5 = Requisition.objects.filter(project__in=project, status="Closed")
     data6 = Requisition.objects.filter(
         project__in=project, status="Incomplete Order (Closed)"
@@ -967,7 +988,8 @@ def RequisitionDeleteView(request, pk):
     )
     if request.method == "POST":
         data.delete()
-        messages.success(request, "Requisition has been deleted.", extra_tags="success")
+        messages.success(
+            request, "Requisition has been deleted.", extra_tags="success")
         group = request.user.groups.all()[0].name
         if group == "Warehouseman":
             return redirect("requisition_list_whm")
@@ -1157,7 +1179,8 @@ def RequisitionActionView_WHM(request, pk):
                     )
                     return redirect("requisition_detail", pk=data.id)
                 except ObjectDoesNotExist:
-                    data3 = ProjectInventory.objects.create(project=data.project)
+                    data3 = ProjectInventory.objects.create(
+                        project=data.project)
                     for k in data2:
                         if (
                             k.status2 != "Not Received"
@@ -1212,7 +1235,8 @@ def RequisitionActionView_WHM(request, pk):
             return redirect("requisition_detail", pk=data.id)
     else:
         form = RequisitionImageForm()
-        formset = RequisitionActionFormSet_whm(instance=data, queryset=queryset)
+        formset = RequisitionActionFormSet_whm(
+            instance=data, queryset=queryset)
     context = {
         "form": form,
         "formset": formset,
@@ -1380,7 +1404,8 @@ def ExternalProjectInventoryDetailView(request, pk):
 @whm_only
 def ProjectInventoryReport_WHM(request, pk):
     data = ProjectInventory.objects.get(id=pk)
-    data2 = ProjectInventoryDetails.objects.filter(inventory=data).order_by("articles")
+    data2 = ProjectInventoryDetails.objects.filter(
+        inventory=data).order_by("articles")
     if request.method == "POST":
         form = DailyReportForm(request.POST)
         formset = DailyReportFormSet(request.POST)
@@ -1438,12 +1463,14 @@ def ProjectInventoryReport_WHM(request, pk):
                 description=f"Material Report at project {project.project} has been created ",
                 url=f"/reports/materialreport/{form.id}",
             )
-            messages.success(request, "Daily Material Report has been created.")
+            messages.success(
+                request, "Daily Material Report has been created.")
             return redirect("inventory_whm_detail", pk=data.id)
         else:
             print(form.errors, formset.errors)
     else:
-        form = DailyReportForm(initial={"project": data.project, "whm": request.user})
+        form = DailyReportForm(
+            initial={"project": data.project, "whm": request.user})
         formset = DailyReportFormSet()
         for f in formset:
             f.fields["articles"].queryset = ProjectInventoryDetails.objects.filter(
@@ -1508,7 +1535,8 @@ def ExternalProjectInventoryReport_WHM(request, pk):
                     description=f"Material Report has been created at project {project.project}",
                     url=f"/reports/materialreport/external/{data.id}",
                 )
-            messages.success(request, "Daily Material Report has been created.")
+            messages.success(
+                request, "Daily Material Report has been created.")
             return redirect("external_inventory_whm_detail", pk=data.id)
     else:
         form = ExternalMaterialReportForm(
@@ -1551,7 +1579,8 @@ class ExternalOrderCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateVie
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         if self.request.POST:
-            data["form"] = self.form_class(self.request.POST, self.request.FILES)
+            data["form"] = self.form_class(
+                self.request.POST, self.request.FILES)
             data["files"] = self.request.FILES.getlist("image")
             data["formset"] = ExternalOrderFormSet(self.request.POST)
         else:
@@ -1750,7 +1779,8 @@ class JobOrderCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
             personnel = Personnel.objects.all()
             for i in personnel:
                 count = JobOrderTask.objects.filter(
-                    Q(personnel=i, status="Pending") | Q(personnel=i, status="On-going")
+                    Q(personnel=i, status="Pending") | Q(
+                        personnel=i, status="On-going")
                 ).count()
                 i.joborder_count = count
                 i.save()
@@ -1832,7 +1862,8 @@ def JobOrderReportView(request, pk):
             personnel = Personnel.objects.all()
             for i in personnel:
                 count = JobOrderTask.objects.filter(
-                    Q(personnel=i, status="Pending") | Q(personnel=i, status="On-going")
+                    Q(personnel=i, status="Pending") | Q(
+                        personnel=i, status="On-going")
                 ).count()
                 i.joborder_count = count
                 i.save()
@@ -1890,7 +1921,8 @@ def JobOrderDeleteView(request, pk):
         personnel = Personnel.objects.all()
         for i in personnel:
             count = JobOrderTask.objects.filter(
-                Q(personnel=i, status="Pending") | Q(personnel=i, status="On-going")
+                Q(personnel=i, status="Pending") | Q(
+                    personnel=i, status="On-going")
             ).count()
             i.joborder_count = count
             i.save()
@@ -1966,7 +1998,8 @@ def PersonnelUpdateView(request, pk):
         form = PersonnelForm(request.POST, instance=data)
         if form.is_valid():
             form.save()
-            messages.success(request, "Personnel Information has been updated.")
+            messages.success(
+                request, "Personnel Information has been updated.")
             return redirect("personnel_detail", pk=data.id)
     else:
         form = PersonnelForm(instance=data)
@@ -2004,7 +2037,8 @@ class ReworkCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         if self.request.POST:
-            data["form"] = self.form_class(self.request.POST, self.request.FILES)
+            data["form"] = self.form_class(
+                self.request.POST, self.request.FILES)
             data["files"] = self.request.FILES.getlist("image")
         return data
 
@@ -2092,7 +2126,8 @@ def ReworkDetailView(request, pk):
             if form.is_valid():
                 form.save(False)
                 for f in files:
-                    image = ReworkAfterImage.objects.create(rework=data, image=f)
+                    image = ReworkAfterImage.objects.create(
+                        rework=data, image=f)
                 admin = User.objects.filter(groups__name="Admin")
                 for i in admin:
                     adnin_notif = Notification.objects.create(
@@ -2105,7 +2140,8 @@ def ReworkDetailView(request, pk):
                     description=f"Rework at project {data.project} has been updated",
                     url=f"/task/rework/{data.id}",
                 )
-                messages.success(request, "Rework After Image has been updated")
+                messages.success(
+                    request, "Rework After Image has been updated")
                 return redirect("rework_detail", pk=data.id)
         else:
             form = ReworkAfterImageForm()
@@ -2132,7 +2168,8 @@ def ReworkDeleteView(request, pk):
 def ReworkBeforeUpdateView(request, pk):
     data = Rework.objects.get(id=pk)
     if request.method == "POST":
-        formset = ReworkBeforeFormset(request.POST, request.FILES, instance=data)
+        formset = ReworkBeforeFormset(
+            request.POST, request.FILES, instance=data)
         if formset.is_valid():
             formset.save()
             admin = User.objects.filter(groups__name="Admin")
@@ -2160,7 +2197,8 @@ def ReworkBeforeUpdateView(request, pk):
 def ReworkAfterUpdateView(request, pk):
     data = Rework.objects.get(id=pk)
     if request.method == "POST":
-        formset = ReworkAfterFormset(request.POST, request.FILES, instance=data)
+        formset = ReworkAfterFormset(
+            request.POST, request.FILES, instance=data)
         if formset.is_valid():
             formset.save()
             admin = User.objects.filter(groups__name="Admin")
@@ -2593,7 +2631,8 @@ def ExternalMaterialReportListView(request):
 @pm_only
 def ExternalMaterialReportListView_PM(request):
     project = Project.objects.filter(pm=request.user)
-    data = ExternalMaterialReport.objects.filter(project__in=project).order_by("-date")
+    data = ExternalMaterialReport.objects.filter(
+        project__in=project).order_by("-date")
     context = {"data": data}
     return render(
         request,
@@ -2606,7 +2645,8 @@ def ExternalMaterialReportListView_PM(request):
 @pic_only
 def ExternalMaterialReportListView_PIC(request):
     project = Project.objects.filter(pic=request.user)
-    data = ExternalMaterialReport.objects.filter(project__in=project).order_by("-date")
+    data = ExternalMaterialReport.objects.filter(
+        project__in=project).order_by("-date")
     context = {"data": data}
     return render(
         request,
@@ -2619,7 +2659,8 @@ def ExternalMaterialReportListView_PIC(request):
 @whm_only
 def ExternalMaterialReportListView_WHM(request):
     project = Project.objects.filter(whm=request.user)
-    data = ExternalMaterialReport.objects.filter(project__in=project).order_by("-date")
+    data = ExternalMaterialReport.objects.filter(
+        project__in=project).order_by("-date")
     context = {"data": data}
     return render(
         request,
@@ -2705,7 +2746,8 @@ def LandingPageImageDetailView(request, pk):
 def LandingPageImageUpdateView(request, pk):
     data = LandingPageTitle.objects.get(id=pk)
     if request.method == "POST":
-        formset = LandingPageImageFormset(request.POST, request.FILES, instance=data)
+        formset = LandingPageImageFormset(
+            request.POST, request.FILES, instance=data)
         if formset.is_valid():
             formset.save()
             messages.success(request, "Landing Page Image has been Update.")
@@ -2754,7 +2796,8 @@ def ClientProjectView(request, pk):
         rework = Rework.objects.filter(project_id=data.id)
         try:
             data3 = ProjectProgress.objects.get(project_id=data.id)
-            data4 = ProjectProgressDetails.objects.filter(projectprogress=data3.id)
+            data4 = ProjectProgressDetails.objects.filter(
+                projectprogress=data3.id)
         except ObjectDoesNotExist:
             context = {
                 "data": data,
@@ -2783,7 +2826,8 @@ def ClientProjectView(request, pk):
 def ClientSitePhotosView(request, pk):
     try:
         data = SitePhotos.objects.get(id=pk)
-        data2 = SitePhotosDetails.objects.filter(sitephotos=data, reveal="True")
+        data2 = SitePhotosDetails.objects.filter(
+            sitephotos=data, reveal="True")
         context = {"data": data, "data2": data2}
         return render(request, "client/client-sitephotos.html", context)
     except ObjectDoesNotExist:
@@ -2871,7 +2915,8 @@ def ClientProfileUpdateView(request):
     user = request.user
     profile = request.user.profile
     if request.method == "POST":
-        profile_form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
+        profile_form = ProfileUpdateForm(
+            request.POST, request.FILES, instance=profile)
         user_form = UserEditForm(request.POST, instance=user)
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
@@ -2980,13 +3025,6 @@ def City_api(request, pk):
 
 #################################################################################################################################
 #################################################################################################################################
-import os
-from io import BytesIO
-from django.conf import settings
-from django.http import HttpResponse
-from django.template.loader import get_template
-from xhtml2pdf import pisa
-from django.contrib.staticfiles import finders
 
 
 def link_callback(uri, rel):
@@ -3061,7 +3099,8 @@ class ProjectReportPDF(TemplateView, LoginRequiredMixin):
                     requisition__in=requisition
                 )
             except ObjectDoesNotExist:
-                messages.warning(request, "Input dates does not exist on Requisition")
+                messages.warning(
+                    request, "Input dates does not exist on Requisition")
                 return redirect("projectreport")
         else:
             requisition = Requisition.objects.none()
@@ -3087,9 +3126,11 @@ class ProjectReportPDF(TemplateView, LoginRequiredMixin):
                 joborder = JobOrder.objects.filter(
                     project_id=project.id, date__range=[datefrom, dateto]
                 )
-                jobordertask = JobOrderTask.objects.filter(joborder__in=joborder)
+                jobordertask = JobOrderTask.objects.filter(
+                    joborder__in=joborder)
             except ObjectDoesNotExist:
-                messages.warning(request, "Input dates does not exist on Job Order")
+                messages.warning(
+                    request, "Input dates does not exist on Job Order")
                 return redirect("projectreport")
         else:
             joborder = JobOrder.objects.none()
@@ -3100,7 +3141,8 @@ class ProjectReportPDF(TemplateView, LoginRequiredMixin):
                     project_id=project.id, date__range=[datefrom, dateto]
                 )
             except ObjectDoesNotExist:
-                messages.warning(request, "Input dates does not exist on Rework")
+                messages.warning(
+                    request, "Input dates does not exist on Rework")
                 return redirect("projectreport")
         else:
             rework = Rework.objects.none()
@@ -3113,7 +3155,8 @@ class ProjectReportPDF(TemplateView, LoginRequiredMixin):
                     sitephotos__in=sitephotos
                 )
             except ObjectDoesNotExist:
-                messages.warning(request, "Input dates does not exist on Site Photos")
+                messages.warning(
+                    request, "Input dates does not exist on Site Photos")
                 return redirect("projectreport")
         else:
             sitephotos = SitePhotos.objects.none()
@@ -3164,7 +3207,8 @@ class ProjectReportPDF(TemplateView, LoginRequiredMixin):
             externalmaterialreportdetails = ExternalMaterialReportDetails.objects.none()
         if "projectinventory" in report:
             try:
-                projectinventory = ProjectInventory.objects.get(project_id=project.id)
+                projectinventory = ProjectInventory.objects.get(
+                    project_id=project.id)
                 projectinventorydetails = ProjectInventoryDetails.objects.filter(
                     inventory_id=projectinventory.id
                 )

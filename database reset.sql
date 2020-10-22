@@ -86,12 +86,6 @@ delete from sqlite_sequence where name='`construction_estimateimage`';
 delete from `construction_notification`; 
 delete from sqlite_sequence where name='`construction_notification`';
 
-delete from `construction_estimate`; 
-delete from sqlite_sequence where name='`construction_estimate`';
-
-delete from `construction_inquiry`; 
-delete from sqlite_sequence where name='`construction_inquiry`';
-
 delete from `construction_personneljoborder`; 
 delete from sqlite_sequence where name='`construction_personneljoborder`';
 
@@ -103,5 +97,11 @@ delete from sqlite_sequence where name='`construction_reworkafterimage`';
 
 delete from `construction_externalorderimage`; 
 delete from sqlite_sequence where name='`construction_reworkafterimage`';
+
+delete from `construction_project`; 
+delete from sqlite_sequence where name='`construction_project`';
+
+delete from `construction_projectblueprint`; 
+delete from sqlite_sequence where name='`construction_projectblueprint`';
 
 UPDATE 'construction_personnel' SET joborder_count=0 WHERE joborder_count=1;

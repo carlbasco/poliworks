@@ -1,4 +1,4 @@
-from django.contrib.auth.models import PermissionsMixin, (AbstractBaseUser), User, Group
+from django.contrib.auth.models import PermissionsMixin, AbstractBaseUser, User, Group
 from .managers import UserManager
 from django.conf import settings
 from django.db import models
@@ -143,7 +143,7 @@ class Notification(models.Model):
     is_read = models.BooleanField(default=False)
     
 class ProjectType(models.Model):
-    projecttype = models.CharField(max_length=255, null=True)
+    projecttype = models.CharField(max_length=255)
     class Meta:
         verbose_name_plural='Admin - Project Type'
 
@@ -179,17 +179,17 @@ class EstimateImage(models.Model):
     image = models.FileField(verbose_name='Image/Design/Reference', upload_to=estimate_upload_path, null=True, blank=True)
 
 class Project(models.Model):
-    project = models.CharField(('Project Name'),max_length=255, null=True)
+    project = models.CharField(('Project Name'),max_length=255)
     address = models.CharField(('Address'), max_length=255, null=True, help_text='Apartment, suite, unit, building, floor, street, barangay')
     province = models.ForeignKey(Province, on_delete=models.SET_NULL, verbose_name='Province', null=True)
     city = models.ForeignKey(City, on_delete=models.SET_NULL, verbose_name='City', null=True)
-    pm = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='project_pm', 
+    pm = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='project_pm', 
         verbose_name='Project Manager', limit_choices_to={'groups__name': "Project Manager"})
     pic = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True,blank=True,
         related_name='project_pic', verbose_name='Person In Charge', limit_choices_to={'groups__name': "Person In-Charge"})
     whm = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True,blank=True,
         related_name='project_whm', verbose_name='Warehouseman',limit_choices_to={'groups__name': "Warehouseman"})
-    client = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE, 
+    client = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.SET_NULL, null=True, 
         related_name='project_client', verbose_name='Client',limit_choices_to={'groups__name': "Client"})
     status = {('Pending','Pending'),('On-going','On-going'),('Completed','Completed'),('Completed (Overdue)','Completed (Overdue)')}
     status = models.CharField(max_length=255, choices=status, blank=True ,default='Pending')
@@ -204,13 +204,13 @@ class Project(models.Model):
         verbose_name_plural='Project'
 
     def __str__(self):
-        return self.project
+        return str(self.project)
 
 class ProjectBlueprint(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     image = models.FileField(upload_to=project_upload_path, blank=True, null=True, verbose_name="Blueprint/ Design/ Reference")
     def __str__(self):
-        return self.project
+        return str(self.project)
 
 class ScopeOfWorkCategory(models.Model):
     category = models.CharField(('Category'), max_length=255)
@@ -218,7 +218,7 @@ class ScopeOfWorkCategory(models.Model):
         verbose_name_plural='Admin - Category(Scope of Work)'
         verbose_name='Admin - Category(Scope of Work)'
     def __str__(self):
-        return self.category
+        return self(self.category)
 
 class ScopeOfWork(models.Model):
     category = models.ForeignKey(ScopeOfWorkCategory, on_delete=models.CASCADE)
@@ -234,7 +234,7 @@ class ScopeOfWork(models.Model):
     def get_scope(self):
         return self.scope
     def __str__(self):
-        return self.scope
+        return self(self.scope)
 
 class Quotation(models.Model):
     status_choice = {('Pending','Pending'),('Accepted','Accepted'),('Rejected','Rejected')}
@@ -268,6 +268,9 @@ class ProjectProgress(models.Model):
     project = models.OneToOneField(Project, on_delete=models.CASCADE)
     total_progress = models.FloatField(default=0)
 
+    def __str__(self):
+        return str(self.project)
+
 class ProjectProgressDetails(models.Model):
     choice = {(1,'low'),(3,'medium'),(5,'high')}
     status_choice = {('Pending','Pending'),('On-going','On-going'),('Done','Done')}
@@ -284,7 +287,7 @@ class PersonnelSkill(models.Model):
         verbose_name_plural = 'Admin - Personnel Skills'
         verbose_name = 'Admin - Personnel Skills'
     def __str__(self):
-        return self.skill
+        return str(self.skill)
     def __unicode__(self):
         return self.skill
 
@@ -294,7 +297,7 @@ class PersonnelType(models.Model):
         verbose_name='Admin - Personnel Type'
         verbose_name_plural = 'Admin - Personnel Type'
     def __str__(self):
-        return self.personneltype
+        return str(self.personneltype)
 
 class Personnel(models.Model):
     first_name = models.CharField(('First Name'), max_length=255)
@@ -330,7 +333,7 @@ class JobOrder(models.Model):
         verbose_name = 'Project - Job Order'
         verbose_name_plural = 'Project - Job Order'
     def __str__(self):
-        return self.project.__str__()
+        return str(self.project).__str__()
 
 class JobOrderTask(models.Model):
     joborder = models.ForeignKey(JobOrder, on_delete=models.CASCADE, related_name='jobordertask', verbose_name='Joborder')
@@ -362,6 +365,8 @@ class Rework(models.Model):
     class Meta:
         verbose_name_plural='Project - Rework'
         verbose_name='Project - Rework'
+    def __str__(self):
+        return str(self.project)
 
 class ReworkBeforeImage(models.Model):
     rework = models.ForeignKey(Rework, on_delete=models.CASCADE)
@@ -395,6 +400,8 @@ class Requisition(models.Model):
     class Meta:
         verbose_name_plural = 'Project - Requisition'
         verbose_name = 'Project - Requisition'
+    def __str__(self):
+        return str(self.project)
 
 class RequisitionDetails(models.Model):
     requisition = models.ForeignKey(Requisition, on_delete=models.CASCADE, related_name='requisitiondetail', verbose_name='Requesition')
@@ -440,6 +447,8 @@ class ExternalOrder(models.Model):
     class Meta:
         verbose_name_plural = 'Project - External Order'
         verbose_name = 'Project - External Order'
+    def __str__(self):
+        return str(self.project)
 
 
 class ExternalOrderImage(models.Model):
@@ -477,7 +486,7 @@ class ProjectIssues(models.Model):
     def get_problem(self):
         return self.problem
     def get_project(self):
-        return self.project
+        return str(self.project)
     class Meta:
         verbose_name = "Project - Project Issues"
         verbose_name_plural = "Project - Project Issues"
@@ -490,7 +499,7 @@ class SitePhotos(models.Model):
         verbose_name = 'Project - SitePhotos'
         verbose_name_plural = 'Project - SitePhotos'
     def __str__(self):
-        return self.project
+        return str(self.project)
 
 
 class SitePhotosDetails(models.Model):
@@ -509,6 +518,8 @@ class ProjectInventory(models.Model):
     class Meta:
         verbose_name_plural='Project - Material Inventory(onsite)'
         verbose_name='Project - Material Inventory(onsite)'
+    def __str__(self):
+        return str(self.project)
     
 
 class ProjectInventoryDetails(models.Model):
@@ -529,6 +540,8 @@ class MaterialReport(models.Model):
     class Meta:
         verbose_name = 'Project - Material Report(Inventory - onsite)'
         verbose_name_plural = 'Project - Material Report(Inventory - onsite)'
+    def __str__(self):
+        return str(self.project)
 
 class MaterialReportDetails(models.Model):
     report = models.ForeignKey(MaterialReport, on_delete=models.CASCADE, null=True)
@@ -543,6 +556,8 @@ class ExternalProjectInventory(models.Model):
     class Meta:
         verbose_name_plural='Project - External Inventory(onsite)'
         verbose_name='Project - External Inventory(onsite)'
+    def __str__(self):
+        return str(self.project)
     
 
 class ExternalProjectInventoryDetails(models.Model):
@@ -562,6 +577,8 @@ class ExternalMaterialReport(models.Model):
     class Meta:
         verbose_name = 'Project - Material Report(External Inventory - onsite)'
         verbose_name_plural = 'Project - Material Report(External Inventory - onsite)'
+    def __str__(self):
+        return str(self.project)
 
 class ExternalMaterialReportDetails(models.Model):
     report = models.ForeignKey(ExternalMaterialReport, on_delete=models.CASCADE, null=True)
