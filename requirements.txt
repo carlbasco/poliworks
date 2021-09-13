@@ -40,7 +40,7 @@ pylint==2.5.3
 pylint-plugin-utils==0.6
 PyPDF2==1.26.0
 pytz==2020.1
-PyYAML==5.3.1
+PyYAML==5.4
 reportlab==3.5.44
 requests==2.24.0
 six==1.15.0
